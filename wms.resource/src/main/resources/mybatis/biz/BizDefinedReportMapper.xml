@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizDefinedReportMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizDefinedReport">
+    <id column="defined_id" jdbcType="INTEGER" property="definedId" />
+    <result column="defined_code" jdbcType="VARCHAR" property="definedCode" />
+    <result column="defined_name" jdbcType="VARCHAR" property="definedName" />
+    <result column="defined_type" jdbcType="TINYINT" property="definedType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  </resultMap>
+  
+  <!-- 自定义映射 -->
+  <resultMap type="com.inossem.wms.model.vo.BizDefinedReportVo" id="BaseResultMapVo" extends="BaseResultMap">
+  	<result column="defined_type_name" jdbcType="VARCHAR" property="definedTypeName"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    defined_id, defined_code, defined_name, defined_type, create_time, modify_time, create_user, 
+    modify_user, is_delete
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMapVo">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_defined_report
+    where defined_id = #{definedId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_defined_report
+    where defined_id = #{definedId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizDefinedReport">
+    insert into biz_defined_report (defined_id, defined_code, defined_name, 
+      defined_type, create_time, modify_time, 
+      create_user, modify_user, is_delete
+      )
+    values (#{definedId,jdbcType=INTEGER}, #{definedCode,jdbcType=VARCHAR}, #{definedName,jdbcType=VARCHAR}, 
+      #{definedType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR}, #{modifyUser,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizDefinedReport" keyProperty="definedId" useGeneratedKeys="true">
+    insert into biz_defined_report
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="definedId != null">
+        defined_id,
+      </if>
+      <if test="definedCode != null">
+        defined_code,
+      </if>
+      <if test="definedName != null">
+        defined_name,
+      </if>
+      <if test="definedType != null">
+        defined_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="modifyUser != null">
+        modify_user,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="definedId != null">
+        #{definedId,jdbcType=INTEGER},
+      </if>
+      <if test="definedCode != null">
+        #{definedCode,jdbcType=VARCHAR},
+      </if>
+      <if test="definedName != null">
+        #{definedName,jdbcType=VARCHAR},
+      </if>
+      <if test="definedType != null">
+        #{definedType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizDefinedReport">
+    update biz_defined_report
+    <set>
+      <if test="definedCode != null">
+        defined_code = #{definedCode,jdbcType=VARCHAR},
+      </if>
+      <if test="definedName != null">
+        defined_name = #{definedName,jdbcType=VARCHAR},
+      </if>
+      <if test="definedType != null">
+        defined_type = #{definedType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    where defined_id = #{definedId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizDefinedReport">
+    update biz_defined_report
+    set defined_code = #{definedCode,jdbcType=VARCHAR},
+      defined_name = #{definedName,jdbcType=VARCHAR},
+      defined_type = #{definedType,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      modify_user = #{modifyUser,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT}
+    where defined_id = #{definedId,jdbcType=INTEGER}
+  </update>
+ 
+  <select id="getDefinedReportListOnPaging" parameterType="map" resultMap="BaseResultMapVo">
+  	select
+  	  <include refid="Base_Column_List" />,
+  	  case defined_type 
+  	  	when '1' then '库存报表'
+  	  	when '2' then '出库单查询'
+  	  	when '3' then '入库单查询'
+  	  	when '4' then '转运及物料转储单查询'
+  	  	when '5' then '作业单查询'
+  	  	end as defined_type_name
+  		from biz_defined_report 
+  			where is_delete=0
+  			<if test="keyword != null and keyword !=''">
+				and (
+		      		defined_code LIKE CONCAT('%',#{keyword},'%') OR 
+		      	   	defined_name LIKE CONCAT('%',#{keyword},'%') 
+	      	   		)
+  			</if>
+  			<if test="createTime !=null and createTime !=''">
+	  			and DATE(create_time) = #{createTime}
+	  	    </if>
+	  	    <if test="createUser !=null and createUser !=''">
+	  			and create_user = #{createUser}
+	  	    </if>
+		    <if test="userId != null and userId !=''">
+		    	and defined_id in
+		    		(select defined_id from rel_defined_user where user_id=#{userId})
+		    </if>
+		    <if test="typeList != null and typeList.size()>0">
+		   		and defined_type in
+		   		<foreach collection="typeList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+		    </if>	
+	  order by defined_code desc	    
+  </select>
+  
+  <select id="getDefinedField" resultType="map">
+  		select
+  			field_id,field_en,field_ch,is_must,style  
+		from dic_defined_field 
+  			where 
+  		type = #{type} and style =#{type1}
+  </select>
+  
+  <insert id="insertRelReportUser" parameterType="map">
+  		insert into rel_defined_user(defined_id,user_id) 
+  		values
+  		<foreach collection="list" item="item" index="index" separator=",">
+            (#{definedId}, #{item})
+        </foreach>
+  </insert>
+  
+  <delete id="deleteRelReportUser" >
+  	delete from rel_defined_user where defined_id=#{definedId}
+  </delete>
+  
+  <insert id="insertRelReportField" parameterType="map">
+  		insert into rel_defined_field(defined_id,field_id) 
+  		values
+  		<foreach collection="list" item="item" index="index" separator=",">
+            (#{definedId}, #{item})
+        </foreach>
+  </insert>
+  
+  <delete id="deleteRelReportField">
+  	delete from rel_defined_field where defined_id=#{definedId}
+  </delete>
+  
+  <select id="getDefinedFieldBySearch" resultType="map">
+  		select
+  			field_id,field_en,field_ch,is_must,style  
+		from dic_defined_field 
+  			where 
+  		type = #{type} and style =0 
+  		and field_id in(select field_id rel_defined_field where defined_id=#{definedId})
+  </select>
+  
+  <select id="getDefinedFieldByQuery" resultType="map">
+  		select
+  			field_id,field_en,field_ch,is_must,style  
+		from dic_defined_field 
+  			where 
+  		type = #{type} and style =1 
+  		and field_id in(select field_id rel_defined_field where defined_id=#{definedId})
+  </select>
+</mapper>

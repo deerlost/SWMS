@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockTransportItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockTransportItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="stock_transport_id" jdbcType="INTEGER" property="stockTransportId" />
+    <result column="stock_transport_rid" jdbcType="INTEGER" property="stockTransportRid" />
+    <result column="stock_position_id" jdbcType="INTEGER" property="stockPositionId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="transport_qty" jdbcType="DECIMAL" property="transportQty" />
+    <result column="fty_input" jdbcType="INTEGER" property="ftyInput" />
+    <result column="location_input" jdbcType="INTEGER" property="locationInput" />
+    <result column="mat_input" jdbcType="INTEGER" property="matInput" />
+    <result column="spec_stock_code_input" jdbcType="VARCHAR" property="specStockCodeInput" />
+    <result column="spec_stock_input" jdbcType="VARCHAR" property="specStockInput" />
+    <result column="spec_stock_code_output" jdbcType="VARCHAR" property="specStockCodeOutput" />
+    <result column="spec_stock_name_output" jdbcType="VARCHAR" property="specStockNameOutput" />
+    <result column="spec_stock_output" jdbcType="VARCHAR" property="specStockOutput" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  </resultMap>
+  <resultMap id="BaseResultMapVO" type="com.inossem.wms.model.vo.BizStockTransportItemVo" extends="BaseResultMap" >
+	    <result column="stock_transport_code" jdbcType="VARCHAR" property="stockTransportCode" />
+	    <result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+	    <result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+	    <result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+	    <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+	    <result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+	    <result column="mat_name" jdbcType="VARCHAR" property="matName" />
+	    <result column="wh_code" jdbcType="VARCHAR" property="whCode" />
+	    <result column="wh_name" jdbcType="VARCHAR" property="whName" />
+	    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+	    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+	    <result column="position_code" jdbcType="VARCHAR" property="positionCode" />
+	    <result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+	    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+	    <result column="input_fty_code" jdbcType="VARCHAR" property="inputFtyCode" />
+	    <result column="input_fty_name" jdbcType="VARCHAR" property="inputFtyName" />
+	    <result column="input_location_code" jdbcType="VARCHAR" property="inputLocationCode" />
+	    <result column="input_location_name" jdbcType="VARCHAR" property="inputLocationName" />
+	    <result column="input_mat_code" jdbcType="VARCHAR" property="inputMatCode" />
+	    <result column="input_mat_name" jdbcType="VARCHAR" property="inputMatName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item.item_id, item.stock_transport_id, item.stock_transport_rid, item.stock_position_id, 
+    item.mat_id, item.fty_id,item.location_id, item.batch, 
+    item.wh_id, item.area_id, item.position_id, item.transport_qty, 
+    item.fty_input,item.location_input, 
+    item.mat_input, item.spec_stock_code_input, item.spec_stock_input, 
+    item.spec_stock_code_output, item.spec_stock_name_output, 
+    item.spec_stock_output, item.unit_id, item.create_time, item.modify_time, item.is_delete
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_transport_item item
+    where item.is_delete = 0
+    <if test="itemPositionId != null" >
+	 and item.item_id = #{itemId,jdbcType=INTEGER}
+	</if>
+    <if test="stockTransportId != null" >
+	 and item.stock_transport_id = #{stockTransportId,jdbcType=INTEGER}
+	</if>
+	<if test="stockTransportRid != null" >
+	 and item.stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER}
+	</if>
+	<if test="stockPositionId != null" >
+	 and item.stock_position_id = #{stockPositionId,jdbcType=INTEGER}
+	</if>
+  </select>
+  
+  <select id="selectItemById" parameterType="map" resultMap="BaseResultMapVO">
+    select head.stock_transport_code,
+    	   wo.wh_code,
+    	   wo.wh_name,
+    	   ao.area_code,
+    	   ao.area_name,
+    	   po.position_code,
+    	   fo.fty_code,
+		   fo.fty_name,
+		   lo.location_code,
+		   lo.location_name,
+		   mo.mat_code,
+		   mo.mat_name,
+		   uo.unit_code,
+		   uo.name_zh unit_name,
+		   fi.fty_code input_fty_code,
+		   fi.fty_name input_fty_name,
+		   li.location_code input_location_code,
+		   li.location_name input_location_name,
+		   mi.mat_code input_mat_code,
+		   mi.mat_name input_mat_name,
+    <include refid="Base_Column_List" />
+    from biz_stock_transport_item item
+    inner join biz_stock_transport_head head on head.stock_transport_id= item.stock_transport_id
+    inner join dic_factory fo on fo.fty_id = item.fty_id
+    inner join dic_stock_location lo on lo.location_id = item.location_id
+    inner join dic_material mo on mo.mat_id = item.mat_id
+    inner join dic_unit uo on uo.unit_id = item.unit_id
+    inner join dic_warehouse_area ao on ao.area_id = item.area_id 
+    inner join dic_warehouse_position po on po.position_id = item.position_id
+	inner join dic_warehouse wo on wo.wh_id = item.wh_id
+    left join dic_factory fi on fi.fty_id = item.fty_input
+    left join dic_stock_location li on li.location_id = item.location_input
+    left join dic_material mi on mi.mat_id = item.mat_id
+    where item.is_delete = 0
+    <if test="itemPositionId != null" >
+	 and item.item_id = #{itemId,jdbcType=INTEGER}
+	</if>
+    <if test="stockTransportId != null" >
+	 and item.stock_transport_id = #{stockTransportId,jdbcType=INTEGER}
+	</if>
+	<if test="stockTransportRid != null" >
+	 and item.stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER}
+	</if>
+	<if test="stockPositionId != null" >
+	 and item.stock_position_id = #{stockPositionId,jdbcType=INTEGER}
+	</if>
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockTransportItem">
+    insert into biz_stock_transport_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="stockTransportId != null">
+        stock_transport_id,
+      </if>
+      <if test="stockTransportRid != null">
+        stock_transport_rid,
+      </if>
+      <if test="stockPositionId != null">
+        stock_position_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="areaId != null">
+        area_id,
+      </if>
+      <if test="positionId != null">
+        position_id,
+      </if>
+      <if test="transportQty != null">
+        transport_qty,
+      </if>
+      <if test="ftyInput != null">
+        fty_input,
+      </if>
+      <if test="locationInput != null">
+        location_input,
+      </if>
+      <if test="matInput != null">
+        mat_input,
+      </if>
+      <if test="specStockCodeInput != null">
+        spec_stock_code_input,
+      </if>
+      <if test="specStockInput != null">
+        spec_stock_input,
+      </if>
+      <if test="specStockCodeOutput != null">
+        spec_stock_code_output,
+      </if>
+      <if test="specStockNameOutput != null">
+        spec_stock_name_output,
+      </if>
+      <if test="specStockOutput != null">
+        spec_stock_output,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTransportId != null">
+        #{stockTransportId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTransportRid != null">
+        #{stockTransportRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockPositionId != null">
+        #{stockPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="transportQty != null">
+        #{transportQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ftyInput != null">
+        #{ftyInput,jdbcType=INTEGER},
+      </if>
+      <if test="locationInput != null">
+        #{locationInput,jdbcType=INTEGER},
+      </if>
+      <if test="matInput != null">
+        #{matInput,jdbcType=INTEGER},
+      </if>
+      <if test="specStockCodeInput != null">
+        #{specStockCodeInput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockInput != null">
+        #{specStockInput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCodeOutput != null">
+        #{specStockCodeOutput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockNameOutput != null">
+        #{specStockNameOutput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockOutput != null">
+        #{specStockOutput,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockTransportItem">
+    update biz_stock_transport_item
+    <set>
+      <if test="stockTransportId != null">
+        stock_transport_id = #{stockTransportId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTransportRid != null">
+        stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockPositionId != null">
+        stock_position_id = #{stockPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="transportQty != null">
+        transport_qty = #{transportQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ftyInput != null">
+        fty_input = #{ftyInput,jdbcType=INTEGER},
+      </if>
+      <if test="locationInput != null">
+        location_input = #{locationInput,jdbcType=INTEGER},
+      </if>
+      <if test="matInput != null">
+        mat_input = #{matInput,jdbcType=INTEGER},
+      </if>
+      <if test="specStockCodeInput != null">
+        spec_stock_code_input = #{specStockCodeInput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockInput != null">
+        spec_stock_input = #{specStockInput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCodeOutput != null">
+        spec_stock_code_output = #{specStockCodeOutput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockNameOutput != null">
+        spec_stock_name_output = #{specStockNameOutput,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockOutput != null">
+        spec_stock_output = #{specStockOutput,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    where is_delete = 0
+    <if test="itemId != null" >
+	 and item_id = #{itemId,jdbcType=INTEGER}
+	</if>
+    <if test="stockTransportId != null " >
+	 and stock_transport_id = #{stockTransportId,jdbcType=INTEGER}
+	</if>
+	<if test="stockTransportRid != null " >
+	 and stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER}
+	</if>
+	<if test="stockPositionId != null " >
+	 and stock_position_id = #{stockPositionId,jdbcType=INTEGER}
+	</if>
+  </update>
+</mapper>

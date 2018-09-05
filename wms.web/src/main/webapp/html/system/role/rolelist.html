@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>角色管理</title>
+		<meta charset="utf-8" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../js/page/system/role/rolelist.js"></script>
+	</head>
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article">
+				<div class="search searchstyle1">
+					<a href="javascript:void(0)" data-title="新建" data-href="editrole.html?action=add&role_id=" data-size="700px,500px" class="btn_table_edit btn-lay-blue">添加角色</a>
+					<input class="search ico ico-search" placeholder="角色/角色名称" type="text" />
+                	<a href="javascript:void(0)" class="search"></a>
+				</div>
+				<div id="id_div_grid"></div>
+				<div class="text-center" id="J_ListPagination"></div>
+			</div>
+
+		</div>
+
+	</body>
+
+</html>

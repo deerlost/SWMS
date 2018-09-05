@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>工厂</title>
+		<meta charset="utf-8" />
+		<script src="../../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../../part/layer/layer.js"></script>
+		<script src="../../../../js/common.js"></script>
+		<link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../../css/common.css" rel="stylesheet" />
+		<link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../../js/jquery.inossem.grid.js"></script>
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			.search {
+				padding: 10px 0px;
+				overflow-y: auto;
+				overflow-x: hidden;
+			}
+			
+			.search div {
+				min-height: 42px;
+				line-height: 30px;
+			}
+			
+			.col-xs-2 {
+				padding-right: 0px;
+				text-align: right;
+			}
+			
+			.col-xs-3 {
+				padding-left: 10px;
+				padding-right: 0px;
+			}
+			
+			.row .btn-lay-blue {
+				margin-top: -3px;
+				float: left;
+			}
+			
+			.search div.clearfx {
+				min-height: 1px;
+			}
+			
+			.row {
+				margin-right: 0px;
+			}
+			
+			table.tablestyle3 th,
+			table.tablestyle3 td {
+				padding: 7px 4px;
+			}
+			
+			td .form-control {
+				width: 70px;
+				text-align: center;
+			}
+			div.row {
+				margin-bottom: 10px;
+			}
+			/*input.form-control[disabled]{
+			border: none;
+			box-shadow: none;
+			background: transparent;
+		}*/
+		</style>
+		<script>
+			var indexdata = null,
+				pardata = null,
+				indexesinfo = [],
+				g1=null,
+			args = [];
+			$(function() {
+				databind();
+				pardata = parent.getCargo(parseInt(GetQueryString("index")));
+				if(pardata.output_qty=="输入"){
+					pardata.output_qty=0
+				}
+				if(pardata.location_id==""){
+					layer.msg("请先选择库存地点");
+					setTimeout(function(){
+						$(".btn_iframe_close_window").click();
+					},1000)
+					return false;
+				}
+				if(pardata.erp_batch===""||pardata.erp_batch==null){
+					layer.msg("请先选择ERP批次");
+					setTimeout(function(){
+						$(".btn_iframe_close_window").click();
+					},1000)
+					return false;
+				}
+				indexesinfo = parent.menginfo();
+				//当前选择第几条数据
+				if(indexesinfo[GetQueryString("index")] != undefined && indexesinfo[GetQueryString("index")].length > 0) {
+					args = indexesinfo[GetQueryString("index")]
+				}
+				console.log(args)
+				var cargotype = parseInt(GetQueryString("cargotype"));
+				if(cargotype == 0) {
+					$(".divcount").html("未出库数量");
+				}
+				CApp.initBase("base", pardata);
+				showloading();
+				getdata();
+				/*if(pardata.enmng!=undefined){
+					$(".ishasenmng").before("<th>已出库数量</th>")
+				}*/
+
+				$(".btnSubmit").click(function() {
+					var isChecked = true;
+					var count = 0;
+					$.each(indexdata.body,function(i,item) {
+						if(item.output_qty==undefined||item.output_qty == "") {
+							item.cksl = "";
+							return true;
+						}
+							var num = item.output_qty * 1000;
+							var num2 = item.qty * 1000;
+							var msgtext = "出库数量不能大于库存数量";
+							/*if(pardata.enmng!=undefined){
+								num2-=pardata.enmng * 1000
+								msgtext="出库数量不能大于（库存数量 - 已出库数量）";
+							}*/
+			 			if(num2 < num) {
+								layersMoretips(msgtext, $(".qtys").eq(i));
+								isChecked = false;
+							} else {
+								count += num;
+								item.cksl = num / 1000;
+							}
+						if(countData.mod(item.output_qty,item.package_standard)!=0){
+			                layersMoretips("出库数量为包装规格的整数倍", $(".qtys").eq(i))
+			                isChecked=false
+			            }
+					});
+				if(count>pardata.order_qty*1000){
+						layer.msg("出库数量总和不能大于交货数量");
+						isChecked=false
+					}
+					if(isChecked == false) {
+						return false;
+					}
+					parent.setCargo(indexdata, parseInt(GetQueryString("index")));
+					$(".btn_iframe_close_window").click();
+				});
+
+			});
+
+			function layertck(stext) {
+				layer.msg(stext, {
+					time: 5000
+				});
+			}
+
+			function getdata() {
+				var url = uriapi; //?werks=" + pardata.werks + "&matnr=" + pardata.matnr + "&lgort=" + pardata.lgort + "&SOBKZ=E&ZTSKC=1";
+				var cargotype = parseInt(GetQueryString("cargotype"));
+				var jsondata = {};
+				//console.log(url)
+				switch(cargotype) {
+					case 1:
+						{
+							url = url + "/biz/output/urgent/get_mat_list_position";
+							jsondata.keyword1 = pardata.mat_code;
+							jsondata.keyword2 = pardata.erp_batch;
+							jsondata.fty_id = pardata.fty_id;
+							jsondata.location_id=pardata.location_id;
+							jsondata.stock_type_id = 1;
+							jsondata.is_urgent=pardata.is_urgent;
+							break;
+						}
+					default:
+						{
+							break;
+						}
+				}
+				console.log(url)
+				//var isHasValue = pardata.menges != null;
+				ajax(url, "POST", JSON.stringify(jsondata), function(data) {
+					layer.close(indexloading);
+					indexdata = data;
+					$(".tablestyle3 tr:gt(0)").remove();
+					$.each(indexdata.body, function(i, item) {
+						if(args.length == 0) { //反选字段
+							$.each(pardata.position_list, function(j, jtem) {
+								if(item.unique_id==jtem.unique_id) {
+									item.output_qty = jtem.output_qty;
+									item.numbercount=jtem.numbercount;
+								}
+							})
+						} else {
+							$.each(args, function(j, jtem) {
+								if(item.unique_id==jtem.unique_id) {
+								if(jtem.cksl==0){
+										item.output_qty="";
+										item.numbercount="";
+									}else{
+										item.output_qty = jtem.cksl;
+										item.numbercount=jtem.numbercount
+									}
+								}
+							})
+						}
+					});
+				 databind()
+				}, function(e) {
+					layer.msg("请求失败！");
+					setTimeout(function() {
+						layer.close(indexloading);
+					}, 50);
+				});
+			}
+	function databind(){
+			if(g1==null){
+		    	g1=$("#id_div_grid").iGrid({
+		            columns: [
+		                { th: '库存类型', col: 'stock_type_name', sort:false },
+		                { th: '生产批次', col: 'product_batch', sort:false },
+		                { th: '批次', col: 'batch', sort:false },
+		                { th: '包装类型', col: 'package_type_code', sort:false},
+		            	{ th: '包装规格', col: 'package_standard_ch', sort:false},
+		                { th: '库存数量',type:"number", col: 'qty',align:"right", sort:false},
+		            	{ th: '入库时间',col: 'input_date',sort:false},
+		            	{ th: '件数',type:"text", col:'numbercount',align:"right", sort:false},
+		            	{ th: '出库数量',type:"text", col: 'output_qty',align:"right", sort:false,class:"qtys"}
+		            ],
+		            data: null,
+		            checkbox:false,
+		            rownumbers:true,
+		            percent:30,
+		            absolutelyWidth:true,
+		            resizehead:true,
+		            absolutelyWidth:true,
+		            skin:"tablestyle4",//皮肤
+		            loadcomplete:function(){//页面绘制完成，返回所有数据。
+						
+		            },
+		           clickbutton(a,b,c){//Button点击后触发 
+		//			console.log(a); //返回的字段名
+		//			console.log(b); //行的索引
+		//			console.log(c);//当前的对象
+					},
+					cselect:function(a,b,c,d,e){
+					},
+					cblur:function(a,b,c,d,e,f){//文本框失去焦点触发
+				  	var test1=/^\d+(?:\.\d{0,3})?$/;
+				  	var test2=/^[0-9]+\d*$/;
+					  if(a=="output_qty"){
+						if(f.val() == "") {
+							e.numbercount= "";
+							e.output_qty= "";
+						}else{
+							if(!test1.test(f.val())){
+								e.numbercount= "";
+								e.output_qty= "";
+								layersMoretips("出库数量不能大于3位小数",f)
+								return false;
+							}else{
+								e.output_qty=f.val();
+								e.numbercount=Math.ceil(countData.div(f.val(),e.package_standard));
+							}
+						}
+						g1.showdata(indexdata.body)
+					}
+				 if(a=="numbercount"){
+					if(f.val() == "") {
+						e.output_qty= "";
+						e.numbercount="";
+					}else{
+						if(!test2.test(f.val())){
+							e.numbercount= "";
+							e.output_qty= "";
+							layersMoretips("件数必须为整数",f)
+							return false;
+						}else{
+							e.numbercount=f.val();
+							e.output_qty=countData.mul(f.val(),e.package_standard)
+						}	
+					}
+					g1.showdata(indexdata.body)
+				  }
+				}	
+		        })
+		   }else{
+		        g1.showdata(indexdata.body)
+     	}
+	 }
+	</script>
+	</head>
+
+	<body class="dialog">
+		<div c-app="base" class="searchinfo">
+			<div class="col-xs-12 row">
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>物料编码:&nbsp;&nbsp;</span>
+						<span c-model="mat_code">-</span>
+					</div>
+				</div>
+				<div class="col-lg-5 col-xs-6">
+					<div class="input-group">
+						<span>物料描述:&nbsp;&nbsp;</span>
+						<span c-model="mat_name">-</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 row">
+				<div class="col-lg-3 col-xs-4 div-group">
+					<div class="input-group">
+						<span>ERP备注:&nbsp;&nbsp;</span>
+						<span c-model="erp_remark">-</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 row">
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>ERP批次:&nbsp;&nbsp;</span>
+						<span c-model="erp_batch">-</span>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>交货数量:&nbsp;&nbsp;</span>
+						<span c-model="order_qty">-</span>&nbsp;&nbsp;
+						<span c-model="unit_name">-</span>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>出库数量:&nbsp;&nbsp;</span>
+						<span c-model="output_qty">-</span>&nbsp;&nbsp;
+						<span c-model="unit_name">-</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="id_div_grid"></div>
+		<div class="submitbutton fixed">
+			<a href="javascript:void(0)" class="btn-lay-blue btnSubmit">　确定　</a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+		</div>
+	</body>
+
+</html>

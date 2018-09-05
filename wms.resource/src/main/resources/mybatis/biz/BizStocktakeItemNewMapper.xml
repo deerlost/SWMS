@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStocktakeItemNewMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStocktakeItemNew">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="purchase_order_code" jdbcType="VARCHAR" property="purchaseOrderCode" />
+    <result column="contract_code" jdbcType="VARCHAR" property="contractCode" />
+    <result column="supplier_code" jdbcType="VARCHAR" property="supplierCode" />
+    <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+    <result column="demand_dept" jdbcType="VARCHAR" property="demandDept" />
+    <result column="corp_id" jdbcType="INTEGER" property="corpId" />
+    <result column="input_time" jdbcType="TIMESTAMP" property="inputTime" />
+    <result column="production_time" jdbcType="TIMESTAMP" property="productionTime" />
+    <result column="validity_time" jdbcType="TIMESTAMP" property="validityTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, item_id, purchase_order_code, contract_code, supplier_code, supplier_name, demand_dept, 
+    corp_id, input_time, production_time, validity_time, remark, is_delete, create_time, 
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stocktake_item_new
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stocktake_item_new
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStocktakeItemNew">
+    insert into biz_stocktake_item_new (id, item_id, purchase_order_code, 
+      contract_code, supplier_code, supplier_name, 
+      demand_dept, corp_id, input_time, 
+      production_time, validity_time, remark, 
+      is_delete, create_time, modify_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{purchaseOrderCode,jdbcType=VARCHAR}, 
+      #{contractCode,jdbcType=VARCHAR}, #{supplierCode,jdbcType=VARCHAR}, #{supplierName,jdbcType=VARCHAR}, 
+      #{demandDept,jdbcType=VARCHAR}, #{corpId,jdbcType=INTEGER}, #{inputTime,jdbcType=TIMESTAMP}, 
+      #{productionTime,jdbcType=TIMESTAMP}, #{validityTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStocktakeItemNew">
+    insert into biz_stocktake_item_new
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code,
+      </if>
+      <if test="contractCode != null">
+        contract_code,
+      </if>
+      <if test="supplierCode != null">
+        supplier_code,
+      </if>
+      <if test="supplierName != null">
+        supplier_name,
+      </if>
+      <if test="demandDept != null">
+        demand_dept,
+      </if>
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="inputTime != null">
+        input_time,
+      </if>
+      <if test="productionTime != null">
+        production_time,
+      </if>
+      <if test="validityTime != null">
+        validity_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderCode != null">
+        #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDept != null">
+        #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="inputTime != null">
+        #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productionTime != null">
+        #{productionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validityTime != null">
+        #{validityTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="insertSelectiveVo" parameterType="com.inossem.wms.model.biz.BizStocktakeItemNewVo">
+    insert into biz_stocktake_item_new
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code,
+      </if>
+      <if test="contractCode != null">
+        contract_code,
+      </if>
+      <if test="supplierCode != null">
+        supplier_code,
+      </if>
+      <if test="supplierName != null">
+        supplier_name,
+      </if>
+      <if test="demandDept != null">
+        demand_dept,
+      </if>
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="inputTime != null">
+        input_time,
+      </if>
+      <if test="productionTime != null">
+        production_time,
+      </if>
+      <if test="validityTime != null">
+        validity_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderCode != null">
+        #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDept != null">
+        #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="inputTime != null">
+        #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productionTime != null">
+        #{productionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validityTime != null">
+        #{validityTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelectiveVo" parameterType="com.inossem.wms.model.biz.BizStocktakeItemNewVo">
+    update biz_stocktake_item_new
+    <set>
+      <if test="itemId != null">
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        contract_code = #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDept != null">
+        demand_dept = #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null">
+        corp_id = #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="inputTime != null">
+        input_time = #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productionTime != null">
+        production_time = #{productionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validityTime != null">
+        validity_time = #{validityTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStocktakeItemNew">
+    update biz_stocktake_item_new
+    <set>
+      <if test="itemId != null">
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        contract_code = #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDept != null">
+        demand_dept = #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null">
+        corp_id = #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="inputTime != null">
+        input_time = #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productionTime != null">
+        production_time = #{productionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validityTime != null">
+        validity_time = #{validityTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStocktakeItemNew">
+    update biz_stocktake_item_new
+    set item_id = #{itemId,jdbcType=INTEGER},
+      purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      contract_code = #{contractCode,jdbcType=VARCHAR},
+      supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      supplier_name = #{supplierName,jdbcType=VARCHAR},
+      demand_dept = #{demandDept,jdbcType=VARCHAR},
+      corp_id = #{corpId,jdbcType=INTEGER},
+      input_time = #{inputTime,jdbcType=TIMESTAMP},
+      production_time = #{productionTime,jdbcType=TIMESTAMP},
+      validity_time = #{validityTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据盘点凭证号查询新增物料ID列表 -->
+	<select id="findStocktakeItemNewListByStocktakeId" resultType="com.inossem.wms.model.biz.BizStocktakeItemNew" parameterType="java.lang.Integer">
+		select a.ID as id
+		from biz_stocktake_item_new as a
+		join biz_stocktake_item as b on a.item_id = b.item_id
+		join biz_stocktake_head as c on b.stocktake_id = c.stocktake_id and c.stocktake_id = #{stocktakeId}
+	</select>
+	
+	
+	<!-- 根据ID数组批量逻辑删除 -->
+	<update id="batchSoftDelItemNewByIdArray" >
+		update biz_stocktake_item_new set is_delete=1 where id in 
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 批量添加  -->
+	<insert id="addBatch">
+		insert into s_linv (item_id, stocktake_id, wh_id, area_id, position_id, mat_id, batch, stock_qty,
+			stocktake_qty, unit_id, spec_stock, spec_stock_code, spec_stock_name, take_delivery_date, actual_stocktake_time, stocktake_user, remark, status, last_qty,
+			prefix, suffix
+		)
+		values 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item.itemId,jdbcType=INTEGER}, #{item.stocktakeId,jdbcType=INTEGER}, #{item.whId,jdbcType=INTEGER},
+				#{item.areaId,jdbcType=INTEGER}, #{item.positionId,jdbcType=INTEGER}, #{item.matId,jdbcType=INTEGER},
+				#{item.batch,jdbcType=BIGINT}, #{item.stockQty,jdbcType=DECIMAL},
+				#{item.stocktakeQty,jdbcType=DECIMAL}, #{item.unitId,jdbcType=INTEGER}, 
+				#{item.specStock,jdbcType=VARCHAR}, #{item.specStockCode,jdbcType=VARCHAR}, #{item.specStockName,jdbcType=VARCHAR},
+				#{item.takeDeliveryDate,jdbcType=VARCHAR}, #{item.actualStocktakeTime,jdbcType=TIMESTAMP}, #{item.stocktakeUser,jdbcType=VARCHAR},
+				#{item.remark,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT}, #{item.lastQty,jdbcType=DECIMAL},
+				#{item.prefix,jdbcType=VARCHAR}, #{item.suffix,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	
+	
+	<!-- 根据盘点明细表的id删除数据，此表属于与盘点明细表1对1 -->
+	<delete id="deleteByItemId" parameterType="java.lang.Integer">
+		delete from biz_stocktake_item_new
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</delete>
+	<!-- 根据盘点明细表的id删除数据，此表属于与盘点明细表1对1 -->
+	<delete id="deleteBySLinvId" parameterType="java.lang.Integer">
+		delete from biz_stocktake_item_new 
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</delete>
+	
+	<select id="selectBySLinvId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from biz_stocktake_item_new
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</select>
+	
+	
+	<!-- 根据盘点明细表主键更新  -->
+	<update id="updateBySLinvId" parameterType="com.inossem.wms.model.biz.BizStocktakeItemNew">
+		update biz_stocktake_item_new
+		<set>
+			<if test="supplierCode != null">
+				supplier_code = #{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				supplier_name = #{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="inputTime != null">
+				input_time = #{inputTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</update>
+</mapper>

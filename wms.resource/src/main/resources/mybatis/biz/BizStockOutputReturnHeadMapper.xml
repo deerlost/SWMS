@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockOutputReturnHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockOutputReturnHead">
+    <id column="return_id" jdbcType="INTEGER" property="returnId" />
+    <result column="return_code" jdbcType="CHAR" property="returnCode" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="stock_output_id" jdbcType="INTEGER" property="stockOutputId" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="refer_receipt_code" jdbcType="VARCHAR" property="referReceiptCode" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="preorder_id" jdbcType="VARCHAR" property="preorderId" />
+    <result column="customer_code" jdbcType="VARCHAR" property="customerCode" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="sale_org" jdbcType="VARCHAR" property="saleOrg" />
+    <result column="sale_org_name" jdbcType="VARCHAR" property="saleOrgName" />
+    <result column="sale_group" jdbcType="VARCHAR" property="saleGroup" />
+    <result column="sale_group_name" jdbcType="VARCHAR" property="saleGroupName" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="order_type_name" jdbcType="VARCHAR" property="orderTypeName" />   
+    <result column="request_source" jdbcType="TINYINT" property="requestSource" />
+    <result column="reserve_cost_obj_code" jdbcType="VARCHAR" property="reserveCostObjCode" />
+    <result column="reserve_cost_obj_name" jdbcType="VARCHAR" property="reserveCostObjName" />
+    <result column="reserve_create_user" jdbcType="VARCHAR" property="reserveCreateUser" />
+    <result column="reserve_create_time" jdbcType="DATE" property="reserveCreateTime" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="class_type_id" jdbcType="INTEGER" property="classTypeId" />
+    <result column="syn_type" jdbcType="TINYINT" property="synType" />
+    <result column="product_line_id" jdbcType="INTEGER" property="productLineId" />
+    <result column="installation_id" jdbcType="INTEGER" property="installationId" />
+    <result column="product_line_name" jdbcType="VARCHAR" property="productLineName" />
+    <result column="class_type_name" jdbcType="VARCHAR" property="classTypeName" />
+    <result column="installation_name" jdbcType="VARCHAR" property="installationName" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    return_id, return_code, receipt_type, stock_output_id, create_user, remark, status, 
+    refer_receipt_code, fty_id, preorder_id, customer_code, customer_name, sale_org, 
+    sale_org_name, sale_group, sale_group_name, order_type, order_type_name, 
+    request_source, reserve_cost_obj_code, reserve_cost_obj_name,reserve_create_user ,reserve_create_time , 
+    is_delete, create_time, modify_time,class_type_id,syn_type,product_line_id,installation_id
+  </sql>
+  
+  <select id="selectByReturnCode" resultMap="BaseResultMap">
+  	select
+ 	 <include refid="Base_Column_List" />
+    from biz_stock_output_return_head
+    where return_code = #{returnCode,jdbcType=VARCHAR} and is_delete = 0
+  
+  </select>
+  
+  <select id="selectCountForDelivery"  resultType ="java.util.Map">
+  	select count(*) as cnt from biz_stock_output_return_head where refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR} and  status in  (10,2,3,0) and is_delete = 0
+  </select>
+  
+  <select id="selectReturnHeadListOnPaging" parameterType="com.inossem.wms.model.vo.BizStockOutputReturnHeadVo"  resultType="com.inossem.wms.model.vo.BizStockOutputReturnHeadVo">
+    SELECT 
+	  tk.return_id returnId,tk.return_code returnCode,tk.receipt_type receiptType,tk.stock_output_id stockOutputId,
+	  tk.create_user createUser,tk.remark,tk.status,tk.refer_receipt_code referReceiptCode,tk.fty_id ftyId,tk.preorder_id preorderId,
+	  tk.customer_code customerCode, tk.customer_name customerName,tk.sale_org saleOrg,tk.sale_org_name saleOrgName,
+	  tk.sale_group saleGroup,tk.sale_group_name saleGroupName,tk.order_type orderType,tk.order_type_name orderTypeName,tk.request_source requestSource ,
+	  tk.reserve_cost_obj_code reserveCostObjCode,tk.reserve_cost_obj_name reserveCostObjName ,tk.reserve_create_user reserveCreateUser ,tk.reserve_create_time reserveCreateTime ,
+	  tk.is_delete isDelete,tk.create_time createTime,tk.modify_time modifyTime,
+	  u.user_name userName
+	  <if test="receiptType == 61">
+	  ,fy.fty_code ftyCode,
+	  fy.fty_name ftyName,
+	  ck.stock_output_code stockOutputCode,
+	  mt.mat_req_code matReqCode,
+	  mt.dept_code deptCode,
+	  mt.dept_name deptName,
+	  mm.mat_type_name matTypeName
+	  </if>
+  FROM 
+  	biz_stock_output_return_head tk 
+  	INNER JOIN wms_user u on tk.create_user = u.user_id
+  <if test="receiptType == 61"> 
+  LEFT JOIN biz_stock_output_head ck on ck.stock_output_id = tk.stock_output_id
+  LEFT JOIN biz_mat_req_head mt on tk.refer_receipt_code = mt.mat_req_id
+  LEFT JOIN dic_factory fy on mt.mat_req_fty_id = fy.fty_id
+  LEFT JOIN dic_material_req_mat_type mm on mt.mat_req_mat_type_id = mm.mat_req_mat_type_id
+  where  tk.receipt_type = 61 and ck.is_delete = 0 and ck.receipt_type = 41 
+  </if>
+  <if test="receiptType == 62">
+  where tk.receipt_type = 62
+  </if>
+  <if test="receiptType == 63">
+  where tk.receipt_type = 63
+  </if>
+  <if test="condition != null and receiptType == 61 ">
+  and ( tk.return_code like CONCAT('%',#{condition},'%' ) 
+	 or ck.stock_output_code like CONCAT('%',#{condition},'%' ) 
+	 or mt.mat_req_code like CONCAT('%',#{condition},'%' ) 
+	 or fy.fty_name like CONCAT('%',#{condition},'%' ) 
+	 or mt.dept_name like CONCAT('%',#{condition},'%' ) 
+	 or mm.mat_type_name like CONCAT('%',#{condition},'%' ) 
+	 or u.user_name like CONCAT('%',#{condition},'%' ) 
+	 )
+  </if>
+   <if test="condition != null and receiptType > 61 ">
+  and ( tk.return_code like CONCAT('%',#{condition},'%' ) 
+	 or tk.refer_receipt_code like CONCAT('%',#{condition},'%' ) 
+	 or u.user_name like CONCAT('%',#{condition},'%' ) 
+	 or tk.preorder_id like CONCAT('%',#{condition},'%' )
+	 or tk.customer_name like CONCAT('%',#{condition},'%' )
+	 or tk.reserve_cost_obj_code like CONCAT('%',#{condition},'%' ) 
+	 or tk.reserve_cost_obj_name like CONCAT('%',#{condition},'%' ) 
+	 or tk.reserve_create_user like CONCAT('%',#{condition},'%' ) 
+	 )
+  </if>
+  <if test="isFinishSql !=null and isFinishSql != ''">
+  	and tk.status in ${isFinishSql} 
+  </if>
+  
+  order by tk.create_time desc 
+  </select>
+  
+  <select id="selectReturnHeadListForCWOnPaging" parameterType="com.inossem.wms.model.vo.BizStockOutputReturnHeadVo"  resultType="com.inossem.wms.model.vo.BizStockOutputReturnHeadVo">
+   SELECT 
+	  tk.return_id returnId,tk.return_code returnCode,tk.receipt_type receiptType,tk.stock_output_id stockOutputId,
+	  tk.create_user createUser,tk.remark,tk.status,tk.refer_receipt_code referReceiptCode,tk.fty_id ftyId,tk.preorder_id preorderId,
+	  tk.customer_code customerCode, tk.customer_name customerName,tk.sale_org saleOrg,tk.sale_org_name saleOrgName,
+	  tk.sale_group saleGroup,tk.sale_group_name saleGroupName,tk.order_type orderType,tk.order_type_name orderTypeName,tk.request_source requestSource ,
+	  tk.reserve_cost_obj_code reserveCostObjCode,tk.reserve_cost_obj_name reserveCostObjName ,tk.reserve_create_user reserveCreateUser ,tk.reserve_create_time reserveCreateTime ,
+	  tk.is_delete isDelete,tk.create_time createTime,tk.modify_time modifyTime,
+	  u.user_name userName,im.mat_doc_code matDocCode,im.mes_doc_code mesDocCode	  
+  FROM 
+  	biz_stock_output_return_head tk 
+  	INNER JOIN wms_user u on tk.create_user = u.user_id
+  	INNER JOIN (select return_id,any_value(mat_doc_code)mat_doc_code,
+  		any_value(mes_doc_code)mes_doc_code from biz_stock_output_return_item group by return_id) im on im.return_id = tk.return_id
+  where tk.is_delete = 0 
+  <if test="receiptType > 0 and receiptType != null">
+    and tk.receipt_type = #{receiptType}
+  </if>
+  <if test="condition != null and condition != '' ">
+  	and ( tk.return_code like CONCAT('%',#{condition},'%' ) 
+	 or tk.refer_receipt_code like CONCAT('%',#{condition},'%' ) 
+	 or u.user_name like CONCAT('%',#{condition},'%' ) 
+	 or tk.customer_name like CONCAT('%',#{condition},'%' )
+	 
+	 or im.mat_doc_code like CONCAT('%',#{condition},'%' ) 
+	 or im.mes_doc_code like CONCAT('%',#{condition},'%' )
+	 )
+  </if>
+  <if test="statusStr !=null and statusStr != ''">
+	and tk.status in ${statusStr} 
+  </if>
+ 
+  order by tk.create_time desc 
+  
+  
+  </select>
+  <select id="selectByReturnId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+ 	select 
+    return_id, return_code, receipt_type, stock_output_id, create_user, remark, status, 
+    refer_receipt_code, fty_id, preorder_id, customer_code, customer_name, sale_org, 
+    sale_org_name, sale_group, sale_group_name, order_type, order_type_name, 
+    request_source, reserve_cost_obj_code, reserve_cost_obj_name,reserve_create_user ,reserve_create_time , 
+    re.is_delete, re.create_time, re.modify_time,re.class_type_id,re.syn_type,re.product_line_id,re.installation_id,    
+    pro.product_line_name,
+	ins.installation_name ,
+		CONCAT(cla.class_type_name,'(' ,
+		DATE_FORMAT(cla.start_time,'%H:%i'),'-',DATE_FORMAT(cla.end_time,'%H:%i')
+		, ')') AS class_type_name
+    
+    from biz_stock_output_return_head re
+    LEFT JOIN dic_product_line pro ON pro.product_line_id = re.product_line_id
+	LEFT JOIN dic_installation ins ON ins.installation_id = re.installation_id
+	LEFT JOIN dic_class_type cla ON cla.class_type_id = re.class_type_id
+    where return_id = #{returnId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_output_return_head
+    where return_id = #{returnId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_output_return_head
+    where return_id = #{returnId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnHead">
+    insert into biz_stock_output_return_head (return_id, return_code, receipt_type, 
+      stock_output_id, create_user, remark, 
+      status, refer_receipt_code, fty_id, 
+      preorder_id, customer_code, customer_name, 
+      sale_org, sale_org_name, sale_group, 
+      sale_group_name, order_type, order_type_name, 
+      is_delete, create_time, modify_time
+      )
+    values (#{returnId,jdbcType=INTEGER}, #{returnCode,jdbcType=CHAR}, #{receiptType,jdbcType=TINYINT}, 
+      #{stockOutputId,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{referReceiptCode,jdbcType=VARCHAR}, #{ftyId,jdbcType=INTEGER}, 
+      #{preorderId,jdbcType=VARCHAR}, #{customerCode,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, 
+      #{saleOrg,jdbcType=VARCHAR}, #{saleOrgName,jdbcType=VARCHAR}, #{saleGroup,jdbcType=VARCHAR}, 
+      #{saleGroupName,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, #{orderTypeName,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnHead" useGeneratedKeys="true" keyProperty="returnId">
+    insert into biz_stock_output_return_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="returnId != null">
+        return_id,
+      </if>
+      <if test="returnCode != null">
+        return_code,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="stockOutputId != null">
+        stock_output_id,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="preorderId != null">
+        preorder_id,
+      </if>
+      <if test="customerCode != null">
+        customer_code,
+      </if>
+      <if test="customerName != null">
+        customer_name,
+      </if>
+      <if test="saleOrg != null">
+        sale_org,
+      </if>
+      <if test="saleOrgName != null">
+        sale_org_name,
+      </if>
+      <if test="saleGroup != null">
+        sale_group,
+      </if>
+      <if test="saleGroupName != null">
+        sale_group_name,
+      </if>
+      <if test="orderType != null">
+        order_type,
+      </if>
+      <if test="orderTypeName != null">
+        order_type_name,
+      </if>
+
+
+       <if test="requestSource != null">
+        request_source,
+      </if>
+      <if test="reserveCostObjCode != null">
+        reserve_cost_obj_code,
+      </if>
+      <if test="reserveCostObjName != null">
+        reserve_cost_obj_name,
+      </if>
+      <if test="reserveCreateUser != null">
+        reserve_create_user,
+      </if>
+      <if test="reserveCreateTime != null">
+        reserve_create_time,
+      </if>     
+ 
+      
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="classTypeId != null">
+        class_type_id,
+      </if>
+      <if test="synType != null">
+        syn_type,
+       </if>
+       <if test="productLineId != null">
+        product_line_id,
+      </if>
+       <if test="installationId != null">
+        installation_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="returnId != null">
+        #{returnId,jdbcType=INTEGER},
+      </if>
+      <if test="returnCode != null">
+        #{returnCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="stockOutputId != null">
+        #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="referReceiptCode != null">
+        #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="preorderId != null">
+        #{preorderId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerCode != null">
+        #{customerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrg != null">
+        #{saleOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrgName != null">
+        #{saleOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleGroup != null">
+        #{saleGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="saleGroupName != null">
+        #{saleGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTypeName != null">
+        #{orderTypeName,jdbcType=VARCHAR},
+      </if>
+
+      
+       <if test="requestSource != null">
+        #{requestSource,jdbcType=TINYINT},
+      </if>
+      <if test="reserveCostObjCode != null">
+        #{reserveCostObjCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveCostObjName != null">
+        #{reserveCostObjName,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveCreateUser != null">
+        #{reserveCreateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveCreateTime != null">
+        #{reserveCreateTime,jdbcType=DATE},
+      </if>
+      
+      
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test=" classTypeId != null">
+        #{ classTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="synType != null">
+         #{synType,jdbcType=TINYINT},
+      </if>
+      <if test="productLineId != null">
+        #{productLineId,jdbcType=TINYINT},
+      </if>
+       <if test="installationId != null">
+        #{installationId,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnHead">
+    update biz_stock_output_return_head
+    <set>
+      <if test="returnCode != null">
+        return_code = #{returnCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="stockOutputId != null">
+        stock_output_id = #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="preorderId != null">
+        preorder_id = #{preorderId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerCode != null">
+        customer_code = #{customerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrg != null">
+        sale_org = #{saleOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrgName != null">
+        sale_org_name = #{saleOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleGroup != null">
+        sale_group = #{saleGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="saleGroupName != null">
+        sale_group_name = #{saleGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTypeName != null">
+        order_type_name = #{orderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="classTypeId != null">
+     	 class_type_id= #{classTypeId,jdbcType=INTEGER},
+      </if>
+       <if test="synType != null">
+         syn_type=#{synType,jdbcType=TINYINT},
+      </if>    
+       <if test="productLineId != null">
+        product_line_id= #{productLineId,jdbcType=INTEGER},
+      </if>
+       <if test="installationId != null">
+        installation_id= #{installationId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where return_id = #{returnId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnHead">
+    update biz_stock_output_return_head
+    set return_code = #{returnCode,jdbcType=CHAR},
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      stock_output_id = #{stockOutputId,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      preorder_id = #{preorderId,jdbcType=VARCHAR},
+      customer_code = #{customerCode,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      sale_org = #{saleOrg,jdbcType=VARCHAR},
+      sale_org_name = #{saleOrgName,jdbcType=VARCHAR},
+      sale_group = #{saleGroup,jdbcType=VARCHAR},
+      sale_group_name = #{saleGroupName,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      order_type_name = #{orderTypeName,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where return_id = #{returnId,jdbcType=INTEGER}
+  </update>
+  <select id="selectMatreqReturnInfoByReturnId" parameterType="map" resultType ="map">
+  	select 	
+      		 ifnull(ri.return_rid,'') return_rid,
+      		 ifnull(ri.batch,'') batch_return, 
+      		 ifnull(ri.batch_output,'') batch_output,
+      		 ifnull(ri.qty,'') return_qty,
+  	  	
+      		 ifnull(oi.stock_output_rid,'') stock_output_rid,
+      		 ifnull(mri.mat_req_rid,'') refer_receipt_rid,
+      		 ifnull(oi.item_id,'') item_id,
+			 ifnull(oi.fty_id,'') fty_id,
+			 ifnull(f.fty_code,'') fty_code,
+			 ifnull(f.fty_name,'') fty_name,
+			 ifnull(oi.location_id,'') location_id,
+			 ifnull(l.location_code,'') location_code,
+			 ifnull(l.location_name,'') location_name,
+			 ifnull(oi.move_type_id,'') move_type_id,
+			 ifnull(m.move_type_code,'') move_type_code,
+			 ifnull(m.move_type_name,'') move_type_name,
+			 ifnull(oi.mat_id,'') mat_id,
+			 ifnull(mat.mat_code,'') mat_code,
+			 ifnull(mat.mat_name,'') mat_name,
+			 ifnull(oi.unit_id,'') unit_id,
+			 ifnull(u.name_en,'') unit_name,
+			 ifnull(u.decimal_place,'') decimal_place,
+			 ifnull(oi.refer_price,0) refer_price,
+             ifnull(mri.demand_qty,0) demand_qty,
+			 ifnull(mri.take_delivery_qty,0) send_qty,
+			 ifnull(mri.cost_obj_code,'') cost_obj_code,
+			 ifnull(mri.cost_obj_name,'') cost_obj_name,
+			 ifnull(mri.reserve_code,'') reserve_id,
+			 ifnull(mri.reserve_rid,'') reserve_rid,
+			 ifnull(mri.purchase_order_code,'') purchase_order_code,
+			 ifnull(mri.purchase_order_rid,'') purchase_order_rid,
+		     ifnull(w.plan_output,0) is_focus_batch,
+			 ifnull(oi.output_qty,0) output_qty,
+			 			 
+			 ifnull(oi.return_qty,0) have_return_qty, -- 已退库数量
+			 ifnull(oi.output_qty-oi.return_qty,0) can_return_qty, -- 可退库数量
+			 ifnulL((
+	       		SELECT GROUP_CONCAT(DISTINCT batch) 
+				FROM biz_stock_output_position 
+				WHERE stock_output_id = oi.stock_output_id and stock_output_rid = oi.stock_output_rid
+			 ),'') batch, -- 出库批次号
+			 			 
+			 ifnull(oi.write_off,0) write_off,
+		     ifnull(oi.remark,'') remark
+		from 
+        biz_stock_output_return_item ri 
+  inner join biz_stock_output_item oi on ri.stock_output_rid = oi.stock_output_rid and ri.stock_output_id = oi.stock_output_id
+  inner join biz_mat_req_item mri on mri.mat_req_id = oi.refer_receipt_code 
+  		and mri.mat_req_rid = oi.refer_receipt_rid and mri.is_delete=0 and oi.is_delete = 0 
+  <if test="returnId!= null" >
+	     and ri.return_id = #{returnId,jdbcType=INTEGER}
+	</if>
+	<if test="stockOutputId != null" >
+	     and oi.stock_output_id = #{stockOutputId,jdbcType=INTEGER}
+	</if>
+	<if test="matReqId != null" >
+	     and mri.mat_req_id = #{matReqId,jdbcType=VARCHAR}
+	</if> 	
+  inner join dic_factory f on f.fty_id = mri.fty_id
+  inner join dic_stock_location l on l.location_id = mri.location_id
+  inner join dic_move_type m on m.move_type_id = mri.move_type_id
+  inner join dic_material mat on mat.mat_id = mri.mat_id
+  inner join dic_unit u on u.unit_id = mri.unit_id 
+  inner join dic_warehouse w on w.wh_id = l.wh_id
+		 and CONCAT(ri.fty_id , '-' ,ri.location_id) in
+	  <foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+                #{item}  
+      </foreach>
+     order by ri.return_rid
+
+  </select>
+  
+</mapper>

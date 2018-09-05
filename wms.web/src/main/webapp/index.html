@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scorll">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>仓储管理系统</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link href="part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/common.css" type="text/css"/>
+	<link href="css/datetimepicker.css" rel="stylesheet" />
+	<script src="js/jquery-1.11.0.min.js"></script>
+    <script src="part/layer/layer.js"></script>
+	<script src="js/datetimepicker.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/echarts.min.js"></script>
+	<style>
+		body{background-color:#f2f2f2;}
+		.banner{background-color:#fff;}
+		.messagebox{margin-top:20px;}
+		.ico-set{background-image: url(img/ico-set.png);background-repeat: no-repeat;}
+		div.titiebox{height:40px;padding:0px 10px 0px 20px;line-height:40px;font-size:18px;}
+		div.titiebox a{color:#08c;font-size:12px;float:right;}
+		div.titiebox a.btn-lay-blue{color: #fff;font-size: 14px;height: 32px;line-height: 32px;margin-top: 7px;margin-left: 6px;min-width:auto}
+		div.backlog{background-color:#fff;border-radius:5px;padding:24px 0px 0px 20px;}
+		div.backlog div.item{height:142px;padding-top:24px;}
+		div.backlog div.item span.title{display:block;height:30px;font-size:16px;color:#666;padding-left:20px;}
+		div.backlog div.item a{font-size:36px;color:#08c;display:inline-block;width:50px;text-decoration:none;}
+		div.backlog div.item a sup{color: #08c;}
+		div.backlog div.item span.state{font-size:18px;color:#333;}
+		div.backlog div.item span.title-ico1{background-position: 0px -1156px;}
+		div.backlog div.item span.title-ico2{background-position: 0px -1202px;}
+		div.shortcut{}
+		div.shortcut div.item{height:161px;}
+		div.shortcut div.item a{display:block;height:146px;background-color:#2db7f5;border-radius:5px;text-decoration:none;}
+		div.shortcut div.item span.title{display:block;height:62px;text-align:center;font-size:18px;color:#fff;line-height:70px;}
+		div.shortcut span.img{display:block;height:70px;}
+		div.shortcut span.img-ico20101{background-position: center -14px;}		/*包装单*/
+		div.shortcut span.img-ico20201{background-position: center -103px;}		/*生产入库*/
+		div.shortcut span.img-ico20203{background-position: center -189px;}		/*其它入库*/
+		div.shortcut span.img-ico20301{background-position: center -277px;}		/*销售出库*/
+		div.shortcut span.img-ico20302{background-position: center -364px;}		/*报废出库*/
+		div.shortcut span.img-ico20303{background-position: center -451px;}		/*其它出库*/
+		div.shortcut span.img-ico20401{background-position: center -539px;}		/*生产转运*/
+		div.shortcut span.img-ico20402{background-position: center -625px;}		/*物料转储*/
+		div.shortcut span.img-ico20202{background-position: center -713px;}		/*转储入库*/
+		div.shortcut span.img-ico20501{background-position: center -802px;}		/*销售退货*/
+		div.shortcut span.img-ico20601{background-position: center -893px;}		/*虚拟生产入库*/
+		div.shortcut span.img-ico20602{background-position: center -982px;}		/*虚拟转储入库*/
+		div.shortcut span.img-ico20603{background-position: center -1064px;}		/*生产直发入库*/
+		div.shortcut span.img-ico20604{background-position: center -1153px;}		/*生产直发出库*/
+		div.shortcut span.img-ico20701{background-position: center -1237px;}		/*临时作业生产入库*/
+		div.shortcut span.img-ico20702{background-position: center -1324px;}		/*临时作业生产转运*/
+		div.shortcut span.img-ico20703{background-position: center -1412px;}		/*临时作业转储入库*/
+		div.shortcut span.img-ico20704{background-position: center -1500px;}		/*临时作业销售出库*/
+		div.shortcut span.img-ico20801{background-position: center -1589px;}		/*紧急记账生产入库*/
+		div.shortcut span.img-ico20802{background-position: center -1676px;}		/*紧急记账转储入库*/
+		div.shortcut span.img-ico20803{background-position: center -1761px;}		/*紧急记账销售出库*/
+		div.shortcut span.img-ico20902{background-position: center -1845px;}		/*组盘上架*/
+		div.shortcut span.img-ico20903{background-position: center -1934px;}		/*配货单管理*/
+		div.shortcut span.img-ico20904{background-position: center -2022px;}		/*下架作业*/
+		div.shortcut span.img-ico20905{background-position: center -2111px;}		/*仓库整理*/
+		div.shortcut span.img-ico21001{background-position: center -2196px;}		/*库存盘点*/
+		div.chart{background-color:#fff;border-radius:5px;height:330px;padding-bottom:20px;}
+		div.chart{background-color:#fff;border-radius:5px;height:330px;padding-bottom:20px;}
+	</style>
+	<script>
+	var indexdata=null;
+	$(function(){
+		var url = uriapi + "/biz/auth/count";
+		showloading();
+		ajax(url, "GET", null, function (data) {
+			indexdata=data;
+			$.each(data.body.un_c_num_list,function(i,item){
+				var strText="<div class='col-md-3 col-xs-6 item'>";
+				strText+="<span class='title ico title-ico1'>"+item.type_name+"</span>";
+				if(item.num>99){
+					strText+="<a href='"+(uriapi+item.url)+"' style='width:70px;margin-left:-20px'>"+item.num+"</a><span class='state'>待处理</span></div>";
+				}else{
+					strText+="<a href='"+(uriapi+item.url)+"'>"+item.num+"</a><span class='state'>待处理</span></div>";
+				}
+				$(".backlog").append(strText);
+			});
+			$(".backlog").append("<div class='clearfx'></div>");
+			
+			var datatext=[],datavalue=[];
+			$.each(data.body.c_num_list,function(i,item){
+				datatext.push(item.type_name);
+				datavalue.push(item.num);
+			});
+
+			$.each(data.body.resources_short_cut,function(i,item){
+				var strtxt="";
+				strtxt+="<div class='col-xs-6 item'>";
+				if(i==0)strtxt+="<a href='"+(urlPrdfix+item.resources_url)+"' style='background: #2db7f5'>";
+				if(i==1)strtxt+="<a href='"+(urlPrdfix+item.resources_url)+"' style='background: #df7b6e'>";
+				if(i==2)strtxt+="<a href='"+(urlPrdfix+item.resources_url)+"' style='background: #69c4a4'>";
+				if(i==3)strtxt+="<a href='"+(urlPrdfix+item.resources_url)+"' style='background: #eb9b55'>";
+				strtxt+="<span class='title'>"+item.resources_name+"</span>";
+				strtxt+="<span class='img ico-set img-ico"+item.resources_id+"'></span>";
+				strtxt+="</a>";
+				strtxt+="</div>"
+				$(".shortcut").append(strtxt)
+			});
+			drawChar(datatext,datavalue);
+								
+			setTimeout(function () {layer.close(indexloading); }, 50);
+		}, function (e) {
+			setTimeout(function () {layer.close(indexloading); }, 50);
+		});
+
+		tableedit($("body"));
+
+		$(".start_date").val(GetCurrData2());
+		$(".end_date").val(GetCurrData());
+		bindDatePicker();
+		checkDateDifference("begin_date","end_date");
+		$(".data-search").click(function(){
+			var url=uriapi+"/biz/auth/data"
+			var obj={
+				start_date:$(".start_date").val(),
+				end_date:$(".end_date").val()
+			}
+			ajax(url,"get",obj,function(data){
+				var datatext=[],datavalue=[];
+				$.each(data.body.c_num_list,function(i,item){
+					datatext.push(item.type_name);
+					datavalue.push(item.num);
+				});
+				drawChar(datatext,datavalue);
+			})
+		})
+	});
+
+	function GetCurrData2() {
+		var ndate = new Date;
+		ndate.setMonth(ndate.getMonth()-1);
+		var m=(ndate.getMonth() + 1);
+		var d=ndate.getDate();
+		m=(m.toString().length==1)?("0"+m.toString()):m;
+		d=(d.toString().length==1)?("0"+d.toString()):d;
+		return ndate.getFullYear() + "-" + m + "-" + d;
+	}
+
+
+
+		
+	function drawChar(datatext,datavalue){
+		// 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('mainchart'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            /*title: {
+                text: 'ECharts 入门示例'
+            },*/
+            /*tooltip: {},
+            legend: {
+                data:['销量']
+            },*/
+			label:{
+				normal:{
+				show: true,
+				position:'top'}
+			},
+			backgroundColor:['rgba(255,255,255,1.0)'],
+			color: ['#3398DB'],
+			tooltip : {
+				trigger: 'axis',
+				axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+					type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+				}
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				containLabel: true
+			},
+            xAxis: {
+                data: datatext
+            },
+            yAxis : [
+				{
+				   type : 'value' 
+				}
+			],
+            series: [{
+                name: '数量',
+                type: 'bar',
+				barWidth:50,
+                data: datavalue
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+		
+		myChart.on('click',  function option(param) {
+			$.each(indexdata.body.c_num_list,function(i,item){
+				if(item.type_name==param.name) location.href=uriapi+item.url;
+			})
+		});
+	}
+	</script>
+</head>
+
+<body>
+    <div c-template="menu"></div>
+	<div class="articlebox">
+		<div class="article">
+			<div class="messagebox">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-md-8 col-xs-12">
+							<div class="titiebox">
+								待办事项
+								<a href="javascript:void(0)" class="btn_table_edit" data-title="数据浏览" data-href="html/common/setdesktop.html" data-size="750px,550px">编辑</a>
+							</div>
+							<div class="backlog">
+								
+								
+							</div>
+						</div>
+						<div class="col-md-4 col-xs-12">
+							<div class="titiebox">
+								快捷方式
+								<a href="javascript:void(0)" class="btn_table_edit" data-title="快捷方式" data-href="html/common/setshortcut.html" data-size="750px,550px">编辑</a>
+							</div>
+							<div class="shortcut row">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="titiebox">
+								数据统计
+							</div>
+							<div class="chart" id="mainchart"></div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfx"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

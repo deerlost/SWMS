@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件处理</title>
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+</head>
+<style>
+    .btn-lay-blue{width:100%;margin: 10px auto;}
+</style>
+<script>
+    $(function(){
+        $("[name='type']").val(GetQueryString("type"))
+        $("#download").attr("action",uriapi+"/conf/data/down_template");
+        $("#download").submit();
+        setTimeout(function(){$(".btn_iframe_close_window").click()},2000)
+    })
+</script>
+<body class="dialog">
+<form id="download" method="get">
+    <input type="hidden" name="type">
+</form>
+<a href="javascript:void(0)" class="btn-lay-blue btn_iframe_close_window">　取消　</a>
+</body>
+</html>

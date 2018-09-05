@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>备注</title>
+	<meta charset="utf-8" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../js/common.js"></script>
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <style>
+        body {
+            padding:20px;
+        }
+        textarea.form-control {height:220px;}
+        .form-control[disabled], .form-control[readonly] {
+            background-color: #fff;
+            border:0px;
+            -webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,.0),0 0 0px rgba(0,0,0,.0);
+            box-shadow: inset 0 0px 0px rgba(0,0,0,.0),0 0 0px rgba(0,0,0,.0);
+        }
+    </style>
+    <script>
+        $(function () {
+			var index=GetQueryString("index");
+			if(index!=null)index=parseInt(index);
+            var note = parent.GetNote(index);
+            if (GetQueryString("view") != null&&GetQueryString("view")=='1') {
+                $("textarea").attr("readonly", "readonly");
+                $(".btn_submit_note").hide();
+                $(".btn_iframe_close_window").html("关闭");
+            }
+            $("textarea").val(note);
+            $(".btn_submit_note").click(function () {
+				if($("textarea").val().length>200){
+					layer.msg("字数最多200字。");
+					return false;
+				}
+                parent.SetNote(index,$("textarea").val());
+                $(".btn_iframe_close_window").click();
+            });
+        });
+    </script>
+</head>
+<body>
+    <textarea class="form-control" maxlength="100"></textarea>
+    <div class="submitbutton">
+        <a href="javascript:void(0)" class="btn-lay-blue btn_submit_note">　添加　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</body>
+</html>

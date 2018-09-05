@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.auth.VersionMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.auth.Version">
+    <id column="version_code" jdbcType="INTEGER" property="versionCode" />
+    <result column="version_name" jdbcType="VARCHAR" property="versionName" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="md5" jdbcType="VARCHAR" property="md5" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_id" jdbcType="VARCHAR" property="createId" />
+    <result column="create_date" jdbcType="DATE" property="createDate" />
+    <result column="focuse" jdbcType="VARCHAR" property="focuse" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="size" jdbcType="VARCHAR" property="size" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    version_code, version_name, url, md5, description, create_id, create_date, focuse,file_name,size
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wms_version
+    where version_code = #{versionCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wms_version
+    where version_code = #{versionCode,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.auth.Version">
+    insert into wms_version (version_code, version_name, url, 
+      md5, description, create_id, 
+      create_date, focuse)
+    values (#{versionCode,jdbcType=INTEGER}, #{versionName,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{md5,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{createId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=DATE}, #{focuse,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.auth.Version">
+    insert into wms_version
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="versionCode != null">
+        version_code,
+      </if>
+      <if test="versionName != null">
+        version_name,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="md5 != null">
+        md5,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="focuse != null">
+        focuse,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="versionCode != null">
+        #{versionCode,jdbcType=INTEGER},
+      </if>
+      <if test="versionName != null">
+        #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="focuse != null">
+        #{focuse,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.auth.Version">
+    update wms_version
+    <set>
+      <if test="versionName != null">
+        version_name = #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null">
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="focuse != null">
+        focuse = #{focuse,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where version_code = #{versionCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.auth.Version">
+    update wms_version
+    set version_name = #{versionName,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      md5 = #{md5,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      create_id = #{createId,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=DATE},
+      focuse = #{focuse,jdbcType=VARCHAR}
+    where version_code = #{versionCode,jdbcType=INTEGER}
+  </update>
+  <select id="selectForMaxVersion" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wms_version
+    where version_code = (select max(version_code) from wms_version)
+  </select>
+</mapper>

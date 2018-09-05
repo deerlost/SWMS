@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicMaterialGroupMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicMaterialGroup">
+    <id column="mat_group_id" jdbcType="INTEGER" property="matGroupId" />
+    <result column="mat_group_code" jdbcType="VARCHAR" property="matGroupCode" />
+    <result column="mat_group_name" jdbcType="VARCHAR" property="matGroupName" />
+    <result column="batch_specific_classify_id" jdbcType="INTEGER" property="batchSpecificClassifyId" />
+    <result column="mat_check" jdbcType="TINYINT" property="matCheck" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    mat_group_id, mat_group_code, mat_group_name, batch_specific_classify_id, mat_check
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_material_group
+    where mat_group_id = #{matGroupId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_material_group
+    where mat_group_id = #{matGroupId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicMaterialGroup">
+    insert into dic_material_group (mat_group_id, mat_group_code, mat_group_name, 
+      batch_specific_classify_id, mat_check)
+    values (#{matGroupId,jdbcType=INTEGER}, #{matGroupCode,jdbcType=VARCHAR}, #{matGroupName,jdbcType=VARCHAR}, 
+      #{batchSpecificClassifyId,jdbcType=INTEGER}, #{matCheck,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicMaterialGroup" keyProperty="matGroupId" useGeneratedKeys="true">
+    insert into dic_material_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matGroupId != null">
+        mat_group_id,
+      </if>
+      <if test="matGroupCode != null">
+        mat_group_code,
+      </if>
+      <if test="matGroupName != null">
+        mat_group_name,
+      </if>
+      <if test="batchSpecificClassifyId != null">
+        batch_specific_classify_id,
+      </if>
+      <if test="matCheck != null">
+        mat_check,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matGroupId != null">
+        #{matGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="matGroupCode != null">
+        #{matGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="matGroupName != null">
+        #{matGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecificClassifyId != null">
+        #{batchSpecificClassifyId,jdbcType=INTEGER},
+      </if>
+      <if test="matCheck != null">
+        #{matCheck,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicMaterialGroup">
+    update dic_material_group
+    <set>
+      <if test="matGroupCode != null">
+        mat_group_code = #{matGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="matGroupName != null">
+        mat_group_name = #{matGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecificClassifyId != null">
+        batch_specific_classify_id = #{batchSpecificClassifyId,jdbcType=INTEGER},
+      </if>
+      <if test="matCheck != null">
+        mat_check = #{matCheck,jdbcType=TINYINT},
+      </if>
+    </set>
+    where mat_group_id = #{matGroupId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicMaterialGroup">
+    update dic_material_group
+    set mat_group_code = #{matGroupCode,jdbcType=VARCHAR},
+      mat_group_name = #{matGroupName,jdbcType=VARCHAR},
+      batch_specific_classify_id = #{batchSpecificClassifyId,jdbcType=INTEGER},
+      mat_check = #{matCheck,jdbcType=TINYINT}
+    where mat_group_id = #{matGroupId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectIdByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select 
+    	mat_group_id
+    from dic_material_group
+    where mat_group_code = #{matGroupCode,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

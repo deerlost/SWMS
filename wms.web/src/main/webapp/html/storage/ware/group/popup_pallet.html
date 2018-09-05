@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <style>
+        .search div{min-height: 35px;line-height: 35px}
+        div.submitbutton.fixed{border:none}
+        .table.tablestyle4 th div, table.tablestyle4 td div{height:auto}
+        input.ico-search{background-position:right -515px}
+        a.search {position:absolute;top:2px;right:16px;height:30px;width:30px}
+    </style>
+    <script>
+        var indexdata=null,g1=null,location_id=null
+        //绑定表格
+        function search(){
+            if($(".ico-search").val()=="") return false
+            var url=uriapi+"/biz/group_task/check_code_type"
+            var obj={
+                location_id:location_id,
+                condition:$(".ico-search").val()
+            }
+            showloading()
+            ajax(url,"post",JSON.stringify(obj),function(data){
+                if(data.head.status==true){
+                    layer.close(indexloading);
+                    if(data.body.type==1){
+                        indexdata=[]
+                        indexdata.push(data.body)
+                        dataBindTable()
+                    }else{
+                        layer.msg("请填写托盘")
+                    }
+                }else{
+                    layer.close(indexloading)
+                }
+            }, function(e) {
+                layer.close(indexloading);
+            })
+        }
+
+        function dataBindTable(){
+            if(g1==null){
+                g1=$("#id_div_grid").iGrid({
+                    columns: [
+                        { th: '托盘编号', col: 'pallet_code', sort:false,width:250},
+                        { th: '量大载重', col: 'max_payload', sort:false},
+                    ],
+                    data:null,
+                    radio:true,
+                    isHideRadio:true,
+                    mb_YesNoCancelRadio:true,
+                    rownumbers:false,
+                    skin:"tablestyle4"
+                })
+            }else{
+                g1.showdata(indexdata)
+            }
+        }
+
+        function submit(){
+            var data=[]
+            if($(".body .rdo input:checked").length==0){
+                layer.msg("至少选择一条托盘")
+                return false
+            }
+            $(".body .rdo input:checked").each(function(){
+                var index=$(".body .rdo input:checked").val();
+                data.push(indexdata[index])
+            })
+
+            parent.setPallet(data)
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+            location_id=parent.getPallet()
+            dataBindTable()
+
+            $("input.ico-search").keyup(function (e) {
+                var keycode = e.which;
+                if (keycode == 13) {
+                    search();
+                }
+            });
+            $("a.search").click(function () {
+                search();
+            });
+
+            $(".btn_submit").click(function(){
+                submit()
+            })
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="col-xs-12 keyinput">
+        <div class="col-xs-12" style="position: relative"><input type="text" class="ico ico-search form-control" placeholder="请输入托盘"><a href="javascript:void(0)" class="search"></a></div>
+    </div>
+</div>
+    <div class="clearfix"></div>
+    <div class="tablebox">
+        <div id="id_div_grid"></div>
+    </div>
+    <div class="submitbutton fixed">
+        <div class="col-xs-12">
+            <a href="javascript:void(0)" class="btn-lay-blue btn_submit">　添加　</a>
+            <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="msapplication-tap-highlight" content="no" />
+	<title>库存容量预警</title>
+	<link rel="stylesheet" type="text/css" href="../../css/index.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/title.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/stockEwarn.css" />
+	<script src="../../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="../../js/common.js" type="text/javascript"></script>
+	<script src="../../js/layer/layer.js"></script>
+	<script src="../../js/page/stockEwarn/detailstart.js" type="text/javascript"></script>
+	<script src="../../js/rem.js" type="text/javascript"></script>
+	<script src="../../js/echarts.common.min.js" type="text/javascript"></script>
+</head>
+<style type="text/css">
+		.tablestyle1 th{
+		text-align: left;
+	}
+</style>
+<body>
+	<div class="homebox">
+		<div class="title">
+			<a href="../index.html" class="back">返回</a>
+			库存容量预警
+		</div>
+		<div class="title_b"><p>概览</p></div>
+		<div class="f4">
+			<div class="f4_li" data-type="two_map">
+				<div class="c1">
+					<p class="nub num1">3</p>
+					<p class="level">超出二级容量预警</p>
+				</div>
+			</div>
+			<div class="f4_li" data-type="one_map">
+				<div class="c2">
+					<p class="nub num2">0</p>
+					<p class="level">超出一级容量预警</p>
+				</div>
+			</div>
+			<div class="f4_li"  data-type="min_map">
+				<div class="c3">
+					<p class="nub num3">2</p>
+					<p class="level color999">低于最小存储容量</p>
+				</div>
+			</div>
+			<div class="f4_li"   data-type="normal_map">
+				<div class="c4">
+					<p class="nub num4">8</p>
+					<p class="level color999">库容使用正常范围</p>
+				</div>
+			</div>
+		</div>
+	<table class="tablestyle1" style="overflow-y: auto;">
+			<th>仓库号</th><th>使用率</th>
+	</table>
+</body>
+</html>

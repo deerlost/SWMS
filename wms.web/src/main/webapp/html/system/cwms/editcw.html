@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>仓库修改</title>
+    <meta charset="utf-8" />
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <link href="../../../css/datetimepicker.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/datetimepicker.js"></script>
+    <script src="../../../js/common.js"></script>
+    
+    <style>
+        .form-group div {
+            min-height: 52px;
+            line-height: 30px;
+        }
+        .col-xs-3 {
+            text-align:right;
+        }
+        .col-xs-2 {
+            font-size:20px;
+            color:#f00;
+            font-family:"宋体";
+            padding-left:0px;
+        }
+		input.form-control[disabled], fieldset[disabled] input.form-control {
+			background-color: #eee;
+			opacity: 1;
+		}
+        .add{
+            margin-bottom:20px;
+        }
+        .form-inline .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+            width:90px
+        }
+    </style>
+
+    <script>
+        var indexdata=null,indexbase=null,area_data=null;
+
+        //基础数据加载
+        function baseload(){
+            var url=uriapi+"/conf/position/get_position_by_id/"+GetQueryString("position_id");
+            showloading();
+            ajax(url,"GET",null,function(data){
+                layer.close(indexloading);
+                indexdata=data.body
+                indexdata.storage_type=indexdata.storage_type_code+"-"+indexdata.storage_type_name;
+                baseBind()
+            })
+        }
+
+        //绑定数据
+        function baseBind(){
+            $(".lgnum").after("<input type='text' disabled class='form-control' c-model='wh_code'>")
+            $(".lgtyp").after("<input type='text' disabled class='form-control' c-model='area_code'>")
+            $(".storage_type").after("<input type='text' disabled class='form-control' c-model='storage_type'>")
+            $(".lgnum_name").val(indexdata.wh_name);
+            $(".lgtyp_name").val(indexdata.area_name);
+            $(".position_code").val(indexdata.position_code)
+            $(".lgnum").remove();
+            $(".lgtyp").remove();
+            $(".storage_type").remove();
+            CApp.initBase("dwzh",indexdata);
+            if(indexdata.freeze_input==1){
+                $(".skzse").attr("checked","checked")
+            }
+            if(indexdata.freeze_output==1){
+                $(".skzsa").attr("checked","checked")
+            }
+        }
+
+        //基础下拉数据
+        function baseinit(){
+            var url=uriapi+"/conf/position/warehouse_and_area_list";
+            showloading();
+            ajax(url,"get",null,function(data){
+                layer.close(indexloading);
+                indexbase=data.body;
+                lgnum()
+                $(".lgnum").change(function(){
+                    lgtyp()
+                })
+                $(".lgtyp").change(function(){
+                    getarea_name()
+                })
+            })
+        }
+        //存储类型
+		function getstroge(){
+			var url=uriapi+"/conf/position/select_storage_type_list";
+            showloading();
+            ajax(url,"get",null,function(data){
+                	layer.close(indexloading);
+	                $.each(data.body,function(i,item){
+	                $(".storage_type").append("<option value='"+item.storage_type_id+"'>"+item.storage_type_code+"-"+item.storage_type_name+"</option>")
+	             });
+            })
+		}
+        //获取仓库号
+        function lgnum(){
+            $.each(indexbase,function(i,item){
+                $(".lgnum").append("<option value='"+item.wh_id+"'>"+item.wh_code+"</option>")
+            });
+            lgtyp()
+        }
+
+        //获取仓储区
+        function lgtyp(){
+            $(".lgtyp option").remove();
+            var index=$(".lgnum option:selected").index();
+            $(".lgnum_name").val(indexbase[index].wh_name);
+            area_data=indexbase[index].area_info;
+            $.each(indexbase[index].area_info,function(i,item){
+                $(".lgtyp").append("<option value='"+item.area_id+"'>"+item.area_code+"</option>")
+            })
+            getarea_name()
+        }
+		//获取仓储区描述
+		function getarea_name(){
+			var index=$(".lgtyp option:selected").index();
+			$(".lgtyp_name").val(area_data[index].area_name);
+		}
+        //提交
+        function submit(){
+            var ischecked=true,cw={};
+            if($("[c-model='lgpla']").val()==""){
+                layersMoretips("必填项",$("[c-model='lgpla']"));
+                ischecked=false;
+            }
+            if(ischecked==false)return false
+            cw.freeze_output=$(".skzsa").is(":checked")?"1":"0";//出库冻结标识
+            cw.freeze_input=$(".skzse").is(":checked")?"1":"0";//入库冻结标识
+            cw.position_code=$(".position_code").val();//仓位
+            if(GetQueryString("position_id")!=null){
+				cw.position_id=GetQueryString("position_id");
+				cw.wh_id=indexdata.wh_id;
+				cw.area_id=indexdata.area_id;
+				cw.storage_type_id=indexdata.storage_type_id;
+            }else{
+            	cw.position_id=0;
+            	cw.wh_id=$(".lgnum").val();
+				cw.area_id=$(".lgtyp").val();
+				cw.storage_type_id=$(".storage_type").val();
+            }
+            var url=uriapi+"/conf/position/add_or_update_position"
+            showloading();
+            ajax(url,"post",JSON.stringify(cw),function(data){
+                layer.close(indexloading);
+                if(data.head.error_code==0){
+                    layer.msg("操作成功");
+                    setTimeout(function(){$(".btn_iframe_close_window").click()},1000)
+                    window.parent.actionpager()
+                }
+            })
+        }
+
+
+
+        $(function(){
+            if(GetQueryString("position_id")==null){
+                baseinit()
+                getstroge()
+            }else{
+                baseload()
+            }
+            $(".btnsubmit").click(function(){
+                submit()
+            })
+        })
+    </script>
+
+</head>
+<body class="dialog" c-app="dwzh">
+    <div class="form-group">
+        <div class="col-xs-3">仓库号：</div>
+        <div class="col-xs-7"><select class="form-control lgnum"></select></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-3">仓库号描述：</div>
+        <div class="col-xs-7"><input class="form-control lgnum_name" readonly="readonly"></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-3">存储区：</div>
+        <div class="col-xs-7"><select class="form-control lgtyp"></select></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-3">存储区描述：</div>
+        <div class="col-xs-7"><input class="form-control lgtyp_name" readonly="readonly"></div>
+        <div class="col-xs-2"></div>
+       	<div class="col-xs-3">仓储类型：</div>
+        <div class="col-xs-7"><select class="form-control storage_type"></select></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-3">仓位：</div>
+        <div class="col-xs-7"><input type="text" class="form-control position_code" maxlength="30"></div>
+        <div class="col-xs-2">*</div>
+    </div>
+    <hr style="width: 100%;clear: both;">
+    <div class="form-group">
+        <div class="col-xs-3">入库冻结：</div>
+        <div class="col-xs-7"><input type="checkbox" maxlength="30" class="skzse"></div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-3">出库冻结：</div>
+        <div class="col-xs-7"><input type="checkbox" maxlength="30" class="skzsa"></div>
+        <div class="col-xs-2"></div>
+    </div>
+
+
+
+    <br><br><br><br><br><br><br><br>
+    <div class="submitbutton fixed">
+        <a href="javascript:void(0)" class="btn-lay-blue btnsubmit">　保存　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</body>
+</html>

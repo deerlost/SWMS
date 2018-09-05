@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>采购订单信息</title>
+		<meta charset="utf-8" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<style>
+		body {
+				padding: 4px;
+			}
+			
+			div.form-search {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form-search div {
+				height: 45px;
+			}
+			
+			div.form-search div.clearfx {
+				height: 0px;
+			}
+		</style>
+		<script>
+			$(function(){
+				var parentwl=parent.printwl();
+				if(parentwl.length==0){
+					layer.msg("请选择打印的数据")
+					setTimeout(function(){
+						$(".btn_iframe_close_window").click();
+					},1500)
+					return false;
+				}
+				var url=uriapi+"/auth/get_printer_list";
+				    showloading();
+				    ajax(url,"GET",null,function(data){
+				        layer.close(indexloading);
+						if(data.head.status==true){
+							$.each(data.body,function(i,item){
+								$(".print_name").append(returnOption(item.printer_id,item.printer_name))
+							})
+							
+						}
+				    }, function(e) {
+						layer.close(indexloading);
+					})
+				$(".btnSave").click(function() {
+					submit();
+				});
+			})
+				function returnOption(value, text) {
+					return "<option value='" + value + "'>" + text + "</option>";
+			}
+			function submit(){
+				if($(".print_name").val()==""){
+					layer.msg("请选择打印机");
+					return false
+				}else{
+					parent.printf($(".print_name option:selected").html())
+					$(".btn_iframe_close_window").click();
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="form-search">
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<span class="input-group-addon">打印机名称：</span>
+				</div>
+				<div class="col-xs-8">
+					<select type="text" class="form-control print_name" />
+						<option value="">请选择</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="submitbutton fixed">
+			<a href="javascript:void(0)" class="btn-lay-blue btnSave">　确定　</a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+		</div>
+	</body>
+
+</html>

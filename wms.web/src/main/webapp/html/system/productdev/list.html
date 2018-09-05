@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>生产线&装置管理</title>
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../js/page/system/productdev/list.js"></script>
+		<style>
+			a:hover{
+				text-decoration:none;	
+			}
+			.search div {
+				min-height: 35px;
+				line-height: 35px
+			}
+			
+			input.ico-search {
+				background-position: right -515px
+			}
+			
+			a.search {
+				position: absolute;
+				top: 2px;
+				right: 20px;
+				height: 20px;
+				width: 20px
+			}
+			
+			.btn-lay-default {
+				padding: 0;
+				height: 35px;
+				line-height: 35px
+			}
+			
+			.border_color {
+				height: 495px;
+				border: 1px solid #ccc;
+				padding: 0;
+				overflow-x: hidden;
+				overflow-y: auto;
+				position: relative
+			}
+			
+			div.submitbutton.fixed {
+				border: none
+			}
+			.btn_add {
+				background: url(../../../img/ico-addordel.png) no-repeat right;
+			}
+			a.relevance {
+				width: 360px;
+				height: 40px;
+				line-height: 40px;
+				position: absolute;
+				bottom: 12px;
+				left: 20px;
+			}
+			.search .col-xs-5,.search .col-xs-12{
+				padding-left:0px ;
+			}
+		</style>
+	</head>
+
+	<body>
+<div c-template="menu"></div>		
+<div class="articlebox">
+	<div class="article">
+		<div class="col-xs-8">
+			<div class="search" style="margin-top:20px;">
+				<div class="col-xs-5">
+					<label class="col-xs-5" style="font-size: 20px;">产品线:</label>
+					<div class="col-xs-12" style="position: relative"><input type="text" class="form-control product_info">
+					<a href="javascript:void(0)" class="search product glyphicon glyphicon-plus" style="font-size: 20px;color:blue"></a>
+					</div>
+				</div>
+				<div class="col-xs-1"></div>
+				<div class="col-xs-5">
+					<label class="col-xs-5" style="font-size:20px;">装置:</label>
+					<div class="col-xs-12">
+						<input type="text" class="col-xs-8 form-control device_info" />
+						<a href="javascript:void(0)" class="search device glyphicon glyphicon-plus" style="font-size: 20px;color:blue"></a>
+					</div>
+				</div>
+			</div>
+
+			<div class="clearfix"></div>
+				<div class="col-lg-5 border_color">
+					<div id="id_div_grid_position"></div>
+				</div>
+				<div class="col-lg-1 text-center glyphicon glyphicon-arrow-right" style="font-size:30px;color:skyblue;margin-top:100px"></div>
+				<div class="col-lg-5 border_color">
+					<div id="id_div_grid_pack"></div>
+				</div>
+		</div>
+		<div class="submitbutton col-xs-12">
+				<a href="javascript:void(0)" class="btn-lay-blue btn_submit">　保存　</a>
+		</div>
+	</div>
+ </div>		
+	</body>
+
+</html>

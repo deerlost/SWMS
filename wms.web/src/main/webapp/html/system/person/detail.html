@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/page/system/person/detail.js"></script>
+		<style>
+			body {
+				padding: 4px;
+				padding-top: 20px;
+			}		
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+			div.form .col-xs-3{text-align: right}
+		</style>
+	</head>
+	<body class="dialog">
+	<div class="form">
+		<div class="col-xs-3 name">
+			叉车工：
+		</div>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" id="driver_name" maxlength="10">
+		</div>
+		<div class="col-xs-3 warehouse_hide">
+			仓库描述：
+		</div>
+		<div class="col-xs-8 warehouse_hide">
+			<select class="form-control" id="warehouse"></select>
+		</div>
+		<div class="col-xs-3 product_line_hide">
+			产品线：
+		</div>
+		<div class="col-xs-8 product_line_hide">
+			<select class="form-control" id="product_line"></select>
+		</div>
+
+		<div class="clearfx"></div>
+	</div>
+
+
+		<div class="clearfx"></div>
+		<div class="submitbutton fixed">
+			<a href="javascript:void(0)" class="btn-lay-blue btn_submit"> 确定 </a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window"> 取消 </a>
+		</div>
+	</body>
+
+</html>

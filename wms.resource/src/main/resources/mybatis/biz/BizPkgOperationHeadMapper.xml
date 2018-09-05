@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizPkgOperationHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizPkgOperationHead">
+    <id column="pkg_operation_id" jdbcType="INTEGER" property="pkgOperationId" />
+    <result column="pkg_operation_code" jdbcType="VARCHAR" property="pkgOperationCode" />
+    <result column="refer_receipt_type" jdbcType="TINYINT" property="referReceiptType" />
+    <result column="refer_receipt_id" jdbcType="INTEGER" property="referReceiptId" />
+    <result column="refer_receipt_code" jdbcType="VARCHAR" property="referReceiptCode" />
+    <result column="package_team" jdbcType="VARCHAR" property="packageTeam" />
+    <result column="product_line" jdbcType="INTEGER" property="productLine" />
+    <result column="class_type_id" jdbcType="INTEGER" property="classTypeId" />
+    <result column="installation" jdbcType="INTEGER" property="installation" />
+    <result column="syn_type" jdbcType="TINYINT" property="synType" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_pallet" jdbcType="TINYINT" property="isPallet" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="product_batch" jdbcType="VARCHAR" property="productBatch" />
+    <result column="document_type" jdbcType="VARCHAR" property="documentType" />
+    <result column="before_order_id" jdbcType="INTEGER" property="beforeOrderId" />
+    <result column="before_order_code" jdbcType="VARCHAR" property="beforeOrderCode" />
+    <result column="before_order_rid" jdbcType="INTEGER" property="beforeOrderRid" />
+    <result column="before_order_type" jdbcType="TINYINT" property="beforeOrderType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pkg_operation_id, pkg_operation_code, refer_receipt_type, refer_receipt_id, refer_receipt_code,
+    package_team, product_line, class_type_id, installation, syn_type, create_user, is_delete,
+    create_time, modify_time, status, remark, product_batch,document_type,is_pallet,
+    before_order_id,before_order_code,before_order_rid,before_order_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from biz_pkg_operation_head
+    where pkg_operation_id = #{pkgOperationId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_pkg_operation_head
+    where pkg_operation_id = #{pkgOperationId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizPkgOperationHead" keyProperty="pkgOperationId" useGeneratedKeys="true">
+    insert into biz_pkg_operation_head (pkg_operation_id, pkg_operation_code,
+      refer_receipt_type, refer_receipt_id, refer_receipt_code,
+      package_team, product_line, class_type_id,
+      installation, syn_type, create_user,
+      is_delete, create_time, modify_time,
+      status, remark, product_batch,document_type,is_pallet,
+      before_order_id,before_order_code,before_order_rid,before_order_type
+      )
+    values (#{pkgOperationId,jdbcType=INTEGER}, #{pkgOperationCode,jdbcType=VARCHAR},
+      #{referReceiptType,jdbcType=TINYINT}, #{referReceiptId,jdbcType=INTEGER}, #{referReceiptCode,jdbcType=VARCHAR},
+      #{packageTeam,jdbcType=VARCHAR}, #{productLine,jdbcType=INTEGER}, #{classTypeId,jdbcType=INTEGER},
+      #{installation,jdbcType=INTEGER}, #{synType,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR},
+      #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{productBatch,jdbcType=VARCHAR},#{documentType,jdbcType=VARCHAR},#{isPallet,jdbcType=TINYINT},
+      ,#{beforeOrderId,jdbcType=INTEGER},#{beforeOrderCode,jdbcType=VARCHAR},#{beforeOrderRid,jdbcType=INTEGER},#{beforeOrderType,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizPkgOperationHead" keyProperty="pkgOperationId" useGeneratedKeys="true">
+    insert into biz_pkg_operation_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pkgOperationId != null">
+        pkg_operation_id,
+      </if>
+      <if test="pkgOperationCode != null">
+        pkg_operation_code,
+      </if>
+      <if test="referReceiptType != null">
+        refer_receipt_type,
+      </if>
+      <if test="referReceiptId != null">
+        refer_receipt_id,
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code,
+      </if>
+      <if test="packageTeam != null">
+        package_team,
+      </if>
+      <if test="productLine != null">
+        product_line,
+      </if>
+      <if test="classTypeId != null">
+        class_type_id,
+      </if>
+      <if test="installation != null">
+        installation,
+      </if>
+      <if test="synType != null">
+        syn_type,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isPallet != null">
+        is_pallet,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="productBatch != null">
+        product_batch,
+      </if>
+      <if test="documentType != null">
+        document_type,
+      </if>
+
+      <if test="beforeOrderId != null">
+          before_order_id,
+      </if>
+      <if test="beforeOrderCode != null">
+          before_order_code,
+      </if>
+      <if test="beforeOrderType != null">
+            before_order_type,
+      </if>
+      <if test="beforeOrderRid != null">
+            before_order_rid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pkgOperationId != null">
+        #{pkgOperationId,jdbcType=INTEGER},
+      </if>
+      <if test="pkgOperationCode != null">
+        #{pkgOperationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptType != null">
+        #{referReceiptType,jdbcType=TINYINT},
+      </if>
+      <if test="referReceiptId != null">
+        #{referReceiptId,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="packageTeam != null">
+        #{packageTeam,jdbcType=VARCHAR},
+      </if>
+      <if test="productLine != null">
+        #{productLine,jdbcType=INTEGER},
+      </if>
+      <if test="classTypeId != null">
+        #{classTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="installation != null">
+        #{installation,jdbcType=INTEGER},
+      </if>
+      <if test="synType != null">
+        #{synType,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+       <if test="isPallet != null">
+        #{isPallet,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="productBatch != null">
+        #{productBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null">
+        #{documentType,jdbcType=VARCHAR},
+      </if>
+
+      <if test="beforeOrderId != null">
+          #{beforeOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="beforeOrderCode != null">
+          #{beforeOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeOrderType != null">
+          #{beforeOrderType,jdbcType=TINYINT},
+      </if>
+      <if test="beforeOrderRid != null">
+          #{beforeOrderRid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizPkgOperationHead">
+    update biz_pkg_operation_head
+    <set>
+      <if test="pkgOperationCode != null">
+        pkg_operation_code = #{pkgOperationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptType != null">
+        refer_receipt_type = #{referReceiptType,jdbcType=TINYINT},
+      </if>
+      <if test="referReceiptId != null">
+        refer_receipt_id = #{referReceiptId,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="packageTeam != null">
+        package_team = #{packageTeam,jdbcType=VARCHAR},
+      </if>
+      <if test="productLine != null">
+        product_line = #{productLine,jdbcType=INTEGER},
+      </if>
+      <if test="classTypeId != null">
+        class_type_id = #{classTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="installation != null">
+        installation = #{installation,jdbcType=INTEGER},
+      </if>
+      <if test="synType != null">
+        syn_type = #{synType,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isPallet != null">
+        is_pallet= #{isPallet,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="productBatch != null">
+        product_batch = #{productBatch,jdbcType=VARCHAR},
+      </if>
+       <if test="documentType != null">
+        document_type = #{documentType,jdbcType=VARCHAR},
+      </if>
+
+      <if test="beforeOrderId != null">
+        before_order_id=#{beforeOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="beforeOrderCode != null">
+        before_order_code=#{beforeOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeOrderType != null">
+        before_order_type=#{beforeOrderType,jdbcType=TINYINT},
+      </if>
+      <if test="beforeOrderRid != null">
+        before_order_rid=#{beforeOrderRid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where pkg_operation_id = #{pkgOperationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizPkgOperationHead">
+    update biz_pkg_operation_head
+    set pkg_operation_code = #{pkgOperationCode,jdbcType=VARCHAR},
+      refer_receipt_type = #{referReceiptType,jdbcType=TINYINT},
+      refer_receipt_id = #{referReceiptId,jdbcType=INTEGER},
+      refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      package_team = #{packageTeam,jdbcType=VARCHAR},
+      product_line = #{productLine,jdbcType=INTEGER},
+      class_type_id = #{classTypeId,jdbcType=INTEGER},
+      installation = #{installation,jdbcType=INTEGER},
+      syn_type = #{synType,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      is_pallet = #{isPallet,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      product_batch = #{productBatch,jdbcType=VARCHAR},
+      document_type = #{documentType,jdbcType=VARCHAR},
+      before_order_id=#{beforeOrderId,jdbcType=INTEGER},
+      before_order_code=#{beforeOrderCode,jdbcType=VARCHAR},
+      before_order_type=#{beforeOrderType=TINYINT},
+      before_order_rid=#{beforeOrderRid,jdbcType=INTEGER}
+    where pkg_operation_id = #{pkgOperationId,jdbcType=INTEGER}
+  </update>
+  
+  <!--显示字段 -->
+  <resultMap extends="BaseResultMap" id="BaseResultMapVO" type="com.inossem.wms.model.vo.BizPkgOperationHeadVo">
+	    <result column="product_line_name" jdbcType="VARCHAR" property="productLineName" />
+	  	<result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+	  	<result column="user_name" jdbcType="VARCHAR" property="createName" />
+	  	<result column="installation_name" jdbcType="VARCHAR" property="installationName" />
+	  	<result column="receipt_type_name" jdbcType="VARCHAR" property="receiptTypeName" />
+  		<result column="create_time_str" jdbcType="VARCHAR" property="pkgCreateTime" />
+  		<result column="modify_time_str" jdbcType="VARCHAR" property="pkgModifyTime" />
+  		<result column="status_str" jdbcType="VARCHAR" property="statusName" />
+  		<result column="fty_id" jdbcType="VARCHAR" property="ftyId" />
+		<result column="class_type_name" jdbcType="VARCHAR" property="classTypeName" />
+  </resultMap>
+  
+  <resultMap type="com.inossem.wms.model.vo.BizPkgOperationHeadVo" id="BaseResultMapDetailVO" extends="BaseResultMapVO">
+  		<collection property="itemList" column="pkg_operation_id" select="com.inossem.wms.dao.biz.BizPkgOperationItemMapper.selectBizPkgOperationItemList"/>
+  </resultMap>
+  
+  <!-- 查询包装单集合信息 -->
+  <select id="selectPkgListOnPaging" resultMap="BaseResultMapVO" parameterType="map">
+	  SELECT
+	  	DISTINCT 
+	  	biz_pkg_operation_head.pkg_operation_id,
+	  	biz_pkg_operation_head.pkg_operation_code,
+	  	biz_pkg_operation_head.refer_receipt_type,
+	  	biz_pkg_operation_head.refer_receipt_id,
+	  	biz_pkg_operation_head.refer_receipt_code,
+	  	biz_pkg_operation_head.package_team,
+	  	biz_pkg_operation_head.product_line,
+	  	biz_pkg_operation_head.class_type_id,
+	  	biz_pkg_operation_head.installation,
+	  	biz_pkg_operation_head.syn_type,
+	  	biz_pkg_operation_head.create_user,
+	  	biz_pkg_operation_head.is_delete,
+	  	biz_pkg_operation_head.create_time,
+	  	biz_pkg_operation_head.modify_time,
+	  	biz_pkg_operation_head.status,
+	  	biz_pkg_operation_head.remark,
+	  	biz_pkg_operation_head.product_batch,
+	  	biz_pkg_operation_head.document_type,
+	  	biz_pkg_operation_head.is_pallet,
+	  	date_format(biz_pkg_operation_head.create_time,'%Y-%m-%d %H:%i:%s') as create_time_str,
+	  	date_format(biz_pkg_operation_head.modify_time,'%Y-%m-%d %H:%i:%s') as modify_time_str,
+        CASE biz_pkg_operation_head.status WHEN 1 THEN "草稿" WHEN 4 THEN "已关联" ELSE "已提交" END as status_str,
+	  	CONCAT(class_type_name,'(' , DATE_FORMAT(dic_class_type.start_time,'%H:%i'),'-',DATE_FORMAT(dic_class_type.end_time,'%H:%i') , ')') AS class_type_name,
+	 	dic_factory.fty_name,
+	 	dic_factory.fty_id,
+	 	dic_product_line.product_line_name,
+	 	wms_user.user_name,
+	 	dic_installation.installation_name,
+	 	dic_receipt_type.receipt_type_name
+	   FROM biz_pkg_operation_head
+		 INNER JOIN biz_pkg_operation_item ON biz_pkg_operation_item.pkg_operation_id=biz_pkg_operation_head.pkg_operation_id AND biz_pkg_operation_item.is_delete=0
+		 INNER JOIN wms_user ON biz_pkg_operation_head.create_user=wms_user.user_id 
+		 INNER JOIN dic_class_type ON dic_class_type.class_type_id=biz_pkg_operation_head.class_type_id AND dic_class_type.is_delete=0
+		 INNER JOIN dic_product_line ON dic_product_line.product_line_id=biz_pkg_operation_head.product_line AND dic_product_line.is_delete=0
+		 INNER JOIN dic_installation ON dic_installation.installation_id=biz_pkg_operation_head.installation AND dic_installation.is_delete=0
+	     INNER JOIN dic_receipt_type ON dic_receipt_type.receipt_type=biz_pkg_operation_head.refer_receipt_type
+	     INNER JOIN dic_factory ON dic_factory.fty_id=biz_pkg_operation_item.fty_id
+	  WHERE biz_pkg_operation_head.is_delete=0
+	    <if test="userId!=null and userId!=''">		
+   			and 
+	   			if((select product_line_id from rel_product_user where user_id=#{userId})!=0
+	   			,(select product_line_id from rel_product_user where user_id=biz_pkg_operation_head.create_user) =(select product_line_id from rel_product_user where user_id=#{userId})
+	   			,1=1)
+   		 
+        </if>	
+	    <!-- 状态 -->
+	    <if test="statusList != null and statusList.size()>0">
+		   		AND biz_pkg_operation_head.status in
+		   		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+		</if>	
+	  	<!-- 输入值 -->
+	  	<if test="keyword!=null and keyword!=''">
+	  		and (
+	  		biz_pkg_operation_head.pkg_operation_code like CONCAT('%',#{keyword},'%' ) 
+	  		or biz_pkg_operation_head.refer_receipt_code like CONCAT('%',#{keyword},'%' ) 
+	  		or wms_user.user_name like CONCAT('%',#{keyword},'%' ) 
+	  		)
+	  	</if>
+	  	<if test="createTime !=null and createTime !=''">
+	  		and DATE(biz_pkg_operation_head.create_time) = #{createTime}
+	  	</if>
+	  	ORDER BY biz_pkg_operation_head.create_time DESC
+  </select>
+  
+  <!-- 查询包装单详情 -->
+  <select id="selectDetailById" resultMap="BaseResultMapDetailVO" parameterType="int">
+	  SELECT 
+	    DISTINCT
+	  	biz_pkg_operation_head.pkg_operation_id,
+	  	biz_pkg_operation_head.pkg_operation_code,
+	  	biz_pkg_operation_head.refer_receipt_type,
+	  	biz_pkg_operation_head.refer_receipt_id,
+	  	biz_pkg_operation_head.refer_receipt_code,
+	  	biz_pkg_operation_head.package_team,
+	  	biz_pkg_operation_head.product_line,
+	  	biz_pkg_operation_head.class_type_id,
+	  	biz_pkg_operation_head.installation,
+	  	biz_pkg_operation_head.syn_type,
+	  	biz_pkg_operation_head.create_user,
+	  	biz_pkg_operation_head.is_delete,
+	  	biz_pkg_operation_head.create_time,
+	  	biz_pkg_operation_head.modify_time,
+	  	biz_pkg_operation_head.status,
+	  	biz_pkg_operation_head.remark,
+	  	biz_pkg_operation_head.product_batch,
+  		biz_pkg_operation_head.document_type,
+		biz_pkg_operation_head.is_pallet,
+  		date_format(biz_pkg_operation_head.create_time,'%Y-%m-%d %H:%i:%s') as create_time_str,
+		date_format(biz_pkg_operation_head.modify_time,'%Y-%m-%d %H:%i:%s') as modify_time_str,
+ 		CASE biz_pkg_operation_head.status WHEN 1 THEN "草稿" WHEN 4 THEN "已关联" ELSE "已提交" END as status_str,
+ 		CONCAT(class_type_name,'(' , DATE_FORMAT(dic_class_type.start_time,'%H:%i'),'-',DATE_FORMAT(dic_class_type.end_time,'%H:%i') , ')') AS class_type_name,
+	 	dic_factory.fty_name,
+	 	dic_factory.fty_id,
+	 	dic_product_line.product_line_name,
+	 	wms_user.user_name,
+	 	dic_installation.installation_name,
+	 	dic_receipt_type.receipt_type_name
+	   FROM biz_pkg_operation_head
+	   	 INNER JOIN biz_pkg_operation_item ON biz_pkg_operation_item.pkg_operation_id=biz_pkg_operation_head.pkg_operation_id AND biz_pkg_operation_item.is_delete=0
+		 INNER JOIN wms_user ON biz_pkg_operation_head.create_user=wms_user.user_id 
+		 INNER JOIN dic_class_type ON dic_class_type.class_type_id=biz_pkg_operation_head.class_type_id AND dic_class_type.is_delete=0
+		 INNER JOIN dic_product_line ON dic_product_line.product_line_id=biz_pkg_operation_head.product_line AND dic_product_line.is_delete=0
+		 INNER JOIN dic_installation ON dic_installation.installation_id=biz_pkg_operation_head.installation AND dic_installation.is_delete=0
+	     INNER JOIN dic_receipt_type ON dic_receipt_type.receipt_type=biz_pkg_operation_head.refer_receipt_type
+	     INNER JOIN dic_factory ON dic_factory.fty_id=biz_pkg_operation_item.fty_id
+	  WHERE biz_pkg_operation_head.pkg_operation_id = #{pkgOperationId,jdbcType=INTEGER}
+  </select>
+  
+  <update id="deleteBizPkgOperationHead">
+  	update biz_pkg_operation_head set is_delete=1 where pkg_operation_id=#{pkgOperationId}
+  </update>
+  
+  <select id="getProductionInfo" resultType="map">
+  		SELECT 
+  			packageitem.production_batch as production_batch,
+  			packageitem.quality_batch as quality_batch,
+  			date_format(inputitem.create_time,'%Y-%m-%d') as create_time
+  			FROM biz_pkg_operation_head pkghead 
+			INNER JOIN biz_pkg_operation_item pkgitem on pkgitem.pkg_operation_id=pkghead.pkg_operation_id and pkgitem.is_delete=0
+			INNER JOIN biz_pkg_operation_position pkgposition on pkgposition.pkg_operation_id=pkghead.pkg_operation_id and pkgposition.is_delete=0
+			INNER JOIN biz_stock_input_item inputitem on inputitem.stock_input_rid=pkghead.before_order_rid and inputitem.stock_input_id=pkghead.before_order_id and inputitem.is_delete=0
+		  	INNER JOIN biz_stock_input_package_item packageitem on packageitem.stock_input_item_id=inputitem.item_id 
+		WHERE pkgposition.package_id=#{packageId}
+  </select>
+  
+</mapper>

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockTransportPositionCwMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockTransportPositionCw">
+    <id column="item_position_id" jdbcType="INTEGER" property="itemPositionId" />
+    <result column="stock_transport_id" jdbcType="INTEGER" property="stockTransportId" />
+    <result column="stock_transport_rid" jdbcType="INTEGER" property="stockTransportRid" />
+    <result column="stock_id" jdbcType="INTEGER" property="stockId" />
+    <result column="stock_sn_id" jdbcType="INTEGER" property="stockSnId" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="sn_id" jdbcType="INTEGER" property="snId" />
+    <result column="pallet_id" jdbcType="INTEGER" property="palletId" />
+    <result column="package_id" jdbcType="INTEGER" property="packageId" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_position_id, stock_transport_id, stock_transport_rid, stock_id, stock_sn_id, 
+    batch, sn_id, pallet_id, package_id, qty, wh_id, remark, is_delete, create_time, 
+    modify_time, create_user
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_transport_position_cw
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByParams" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+		p.item_position_id,
+		p.stock_transport_id,
+		p.stock_transport_rid,
+		p.stock_id,
+		p.stock_sn_id,
+		p.batch,
+		p.sn_id,
+		p.pallet_id,
+		p.package_id,
+		p.qty,
+		p.remark,
+		p.is_delete,
+		sp.package_code,
+		IFNULL(wp.pallet_code, '') pallet_code,
+		IFNULL(wp.max_weight, '') max_weight,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_type_code,
+		u.name_zh unit_zh
+	FROM
+		biz_stock_transport_position_cw p
+	INNER JOIN biz_stock_transport_item_cw i ON i.stock_transport_id = p.stock_transport_id
+	
+	AND i.stock_transport_rid = p.stock_transport_rid and i.is_delete=0 and p.is_delete=0
+	<if test="stockTransportId != null">
+        AND p.stock_transport_id = #{stockTransportId,jdbcType=INTEGER}
+    </if>
+    <if test="stockTransportRid != null">
+        AND p.stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER}
+    </if>
+    INNER JOIN dic_unit u2 ON i.unit_id = u2.unit_id
+	INNER JOIN dic_package_type pt ON i.package_type_id = pt.package_type_id
+	INNER JOIN serial_package sp ON p.package_id = sp.package_id
+	inner join dic_unit u on pt.unit_id = u.unit_id
+	LEFT JOIN dic_warehouse_pallet wp ON wp.pallet_id = p.pallet_id
+    where p.is_delete=0
+  </select>
+  
+  
+  <select id="selectVoByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+		p.item_position_id,
+		p.stock_transport_id,
+		p.stock_transport_rid,
+		p.stock_id,
+		p.stock_sn_id,
+		p.batch,
+		p.sn_id,
+		p.pallet_id,
+		p.package_id,
+		p.qty,
+		p.remark,
+		p.is_delete,
+		sp.package_code,
+		IFNULL(wp.pallet_code, '') pallet_code,
+		IFNULL(wp.max_weight, '') max_weight,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_type_code,
+		u.name_zh unit_zh
+	FROM
+		biz_stock_transport_position_cw p
+	INNER JOIN biz_stock_transport_item_cw i ON i.stock_transport_id = p.stock_transport_id
+	
+	AND i.stock_transport_rid = p.stock_transport_rid and i.is_delete=0 and p.is_delete=0
+	<if test="stockTransportId != null">
+        AND p.stock_transport_id = #{stockTransportId,jdbcType=INTEGER}
+    </if>
+    <if test="stockTransportRid != null">
+        AND p.stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER}
+    </if>
+    INNER JOIN dic_unit u2 ON i.unit_id = u2.unit_id
+	INNER JOIN dic_package_type pt ON i.package_type_id = pt.package_type_id
+	INNER JOIN serial_package sp ON p.package_id = sp.package_id
+	inner join dic_unit u on pt.unit_id = u.unit_id
+	LEFT JOIN dic_warehouse_pallet wp ON wp.pallet_id = p.pallet_id
+    where p.is_delete=0
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_transport_position_cw
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockTransportPositionCw">
+    insert into biz_stock_transport_position_cw (item_position_id, stock_transport_id, 
+      stock_transport_rid, stock_id, stock_sn_id, 
+      batch, sn_id, pallet_id, 
+      package_id, qty, wh_id, 
+      remark, is_delete, create_time, 
+      modify_time, create_user)
+    values (#{itemPositionId,jdbcType=INTEGER}, #{stockTransportId,jdbcType=INTEGER}, 
+      #{stockTransportRid,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{stockSnId,jdbcType=INTEGER}, 
+      #{batch,jdbcType=BIGINT}, #{snId,jdbcType=INTEGER}, #{palletId,jdbcType=INTEGER}, 
+      #{packageId,jdbcType=INTEGER}, #{qty,jdbcType=DECIMAL}, #{whId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockTransportPositionCw">
+    insert into biz_stock_transport_position_cw
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemPositionId != null">
+        item_position_id,
+      </if>
+      <if test="stockTransportId != null">
+        stock_transport_id,
+      </if>
+      <if test="stockTransportRid != null">
+        stock_transport_rid,
+      </if>
+      <if test="stockId != null">
+        stock_id,
+      </if>
+      <if test="stockSnId != null">
+        stock_sn_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="snId != null">
+        sn_id,
+      </if>
+      <if test="palletId != null">
+        pallet_id,
+      </if>
+      <if test="packageId != null">
+        package_id,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemPositionId != null">
+        #{itemPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTransportId != null">
+        #{stockTransportId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTransportRid != null">
+        #{stockTransportRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="stockSnId != null">
+        #{stockSnId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="snId != null">
+        #{snId,jdbcType=INTEGER},
+      </if>
+      <if test="palletId != null">
+        #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="packageId != null">
+        #{packageId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockTransportPositionCw">
+    update biz_stock_transport_position_cw
+    <set>
+      <if test="stockTransportId != null">
+        stock_transport_id = #{stockTransportId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTransportRid != null">
+        stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        stock_id = #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="stockSnId != null">
+        stock_sn_id = #{stockSnId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="snId != null">
+        sn_id = #{snId,jdbcType=INTEGER},
+      </if>
+      <if test="palletId != null">
+        pallet_id = #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="packageId != null">
+        package_id = #{packageId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTransportPositionCw">
+    update biz_stock_transport_position_cw
+    set stock_transport_id = #{stockTransportId,jdbcType=INTEGER},
+      stock_transport_rid = #{stockTransportRid,jdbcType=INTEGER},
+      stock_id = #{stockId,jdbcType=INTEGER},
+      stock_sn_id = #{stockSnId,jdbcType=INTEGER},
+      batch = #{batch,jdbcType=BIGINT},
+      sn_id = #{snId,jdbcType=INTEGER},
+      pallet_id = #{palletId,jdbcType=INTEGER},
+      package_id = #{packageId,jdbcType=INTEGER},
+      qty = #{qty,jdbcType=DECIMAL},
+      wh_id = #{whId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR}
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateDeleteByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTransportPositionCw">
+		update
+		biz_stock_transport_position_cw
+		set 
+		is_delete =
+		#{isDelete,jdbcType=TINYINT}
+		where stock_transport_id =
+		#{stockTransportId,jdbcType=INTEGER}
+	</update>
+  
+  
+</mapper>

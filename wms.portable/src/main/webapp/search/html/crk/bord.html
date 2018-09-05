@@ -1,0 +1,164 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="msapplication-tap-highlight" content="no" />
+	<link rel="stylesheet" type="text/css" href="../../css/index.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/title.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrapgrid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/stockAnalysis.css" />
+	<script src="../../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="../../js/layer/layer.js"></script>
+	<script src="../../js/rem.js" type="text/javascript"></script>
+	<script src="../../js/common.js" type="text/javascript"></script>
+	<script src="../../js/echarts.common.min.js" type="text/javascript"></script>
+</head>
+<style type="text/css">
+	.submit{
+		text-align:center;
+	}
+	.submit,.fixed{
+		border-top: 1px solid #f0f0f0;
+	    position: fixed;
+	    bottom: 0px;
+	    left: 0px;
+	    height:1.5rem;
+	    width:100%;
+	    padding: 0.2rem 0rem;
+	    background: #fff;
+	}
+	.btn-lay-blue{
+		display: inline-block;
+	    height: 1rem;
+	    line-height: 1rem;
+	    width: 1.5rem;
+	    padding: 0 0.2rem;
+	    background-color: #0088cc;
+	    color: #fff;
+	    white-space: nowrap;
+	    text-align: center;
+	    font-size: 0.3rem;
+	    border: 1px solid #0088cc;
+	    border-radius: 3px;
+	    cursor: pointer;
+	    opacity: .9;
+	}
+	.btn-lay-default{
+		display: inline-block;
+	    height: 1rem;
+	    line-height: 1rem;
+	    width: 1.5rem;
+	    padding: 0 0.2rem;
+	    background-color: #fff;
+	    color: #0088cc;
+	    white-space: nowrap;
+	    text-align: center;
+	    font-size: 0.3rem;
+	    border: 1px solid #0088cc;
+	    border-radius: 3px;
+	    cursor: pointer;
+	    opacity: .9;
+	}
+	.form-group div{
+		display: inline-block;
+		padding: 0rem 0.3rem;
+		margin-top:0.5rem;
+	}
+	.name{
+		width:30%;
+		height:1rem;
+		font-size: 0.4rem;
+	}
+	.bord{
+		width:65%;
+		height:1rem;
+	}
+	.bord select{
+		width:100%;
+		height:80%;
+		border-radius: 3px;
+	}
+	.comp{
+		width:65%;
+		height:1rem
+	}
+	.comp select{
+		width:100%;
+		height:80%;
+		border-radius: 3px;
+	}
+</style>
+<script type="text/javascript">
+	var selectdata=null
+	function getDataSelect(){
+		    showloading()
+		    var url=uriapi+"/biz/query/stock_analyse/base_info"
+		    ajax(url,"get",null,function(data){
+		        layer.close(indexloading)
+		        selectdata=data.body
+		        dataBindSelect()
+		    })
+		}
+	function dataBindSelect(){
+    $.each(selectdata.board_list,function(i,item){
+        $(".bordinfo").append("<option value='"+item.board_id+"' data-index='"+i+"'>"+item.board_name+"</option>")
+    })
+	}
+	function getcompinfo(){
+		$(".compinfo option:gt(0)").remove();
+		var index=parseInt($(".bordinfo option:selected").attr("data-index"))
+		if(index!=-1){
+			$.each(selectdata.board_list[index].corp_list,function(i,item){
+		        $(".compinfo").append("<option value='"+item.corp_id+"'>"+item.corp_name+"</option>")
+		    })
+		}
+	}
+	function submit(){
+		if($(".bordinfo").val()==""){
+			layer.msg("请选择板块")
+			return false
+		}
+		if($(".compinfo").val()==""){
+			layer.msg("请选择公司")
+			return false
+		}
+		parent.getbord($(".bordinfo").val(),$(".compinfo").val())
+		$(".btn_iframe_close_window").click()
+	}
+	$(function(){
+		$(".btn_iframe_close_window").click(function() {
+		parent.layer.close(parseInt(parent.$(".layui-layer-iframe").attr("times")));
+	});
+		getDataSelect()
+		 $(".bordinfo").change(function(){
+		 	getcompinfo()
+		 })
+		 $(".btnsubmit").click(function(){
+		 	submit()
+		 }) 
+	})
+</script>
+<body>
+	<div class="form-group">
+        <div class="name">板块：</div>
+        <div class="bord"><select class="bordinfo">
+        	<option value="" data-index="-1">请选择</option>
+        </select></div>
+        <div class="name">公司：</div>
+        <div class="comp"><select class="compinfo">
+        	<option value="">请选择</option>
+        </select></div>
+    </div>
+    <div class="submit fixed">
+        <a href="javascript:void(0)" class="btn-lay-blue btnsubmit">　确定　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</body>
+</html>

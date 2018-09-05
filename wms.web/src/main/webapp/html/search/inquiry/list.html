@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../js/page/search/inquiry/list.js"></script>
+	</head>
+	<style type="text/css">
+
+	</style>
+
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article">
+				<div class="mapadress">
+					<h2 class="h2black">交货单配货查询</h2>
+				</div>
+				<div class="col-xs-12">&nbsp;</div>
+				<div class="form-search">
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">交货单号：</span>
+								<input class="form-control refer_receipt_code" type="text" />
+							</div>
+						</div>
+						<div class="col-lg-4 col-xs-5 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">查询时间：</span>
+								<input type="text" class="form-control txtdatepicker txtstartdate" readonly data-date-format="yyyy-mm-dd" />
+								<span class="input-group-addon" style="min-width:auto;">-</span>
+								<input type="text" class="form-control txtdatepicker txtenddate" readonly data-date-format="yyyy-mm-dd" />
+							</div>
+						</div>
+						<div class="col-xs-3 div-group" style="float: right;">
+							<div class="input-group">
+								<a href="javascript:void(0)" class="btn-lay-blue btn_search">查询</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="javascript:void(0)" class="btn-lay-default btn_files">批量导出</a>
+							</div>	
+						</div>
+					</div>
+				</div>
+					<div class="col-xs-12">
+						<hr/>
+					</div>
+					<div id="id_div_grid"></div>
+					<!-- 分页 -->
+					<div class="text-center" id="J_ListPagination"></div>
+				</div>
+			</div>
+			<form id="download" method="get" class="hidden">
+				<input type="hidden" name="keyword">
+				<input type="hidden" name="create_time_s">
+				<input type="hidden" name="create_time_e">
+			</form>
+	</body>
+
+</html>

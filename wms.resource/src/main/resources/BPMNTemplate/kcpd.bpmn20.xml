@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn"
+	typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+	targetNamespace="http://www.flowable.org/processdef">
+
+	<process id="kcpdApprove" name="KCPD Approve" isExecutable="true">
+
+		<startEvent id="startEvent" />
+		<sequenceFlow sourceRef="startEvent" targetRef="userApproveTask" />
+		<userTask id="userApproveTask" name="盘点" flowable:assignee="${approvePerson}">
+			<multiInstanceLoopCharacteristics
+				isSequential="false" flowable:collection="approvePersons"
+				flowable:elementVariable="approvePerson">
+				<completionCondition>
+					${rejectCount > 0 || nrOfCompletedInstances ==
+					nrOfInstances}
+				</completionCondition>
+			</multiInstanceLoopCharacteristics>
+		</userTask>
+
+		<sequenceFlow id="approveTask" name="Approve Task"
+			sourceRef="userApproveTask" targetRef="approveEnd">
+			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejectCount == 0 }]]></conditionExpression>
+		</sequenceFlow>
+
+		<sequenceFlow id="rejectTask" name="Reject Task"
+			sourceRef="userApproveTask" targetRef="rejectEnd">
+			<conditionExpression xsi:type="tFormalExpression"><![CDATA[${rejectCount > 0}]]></conditionExpression>
+		</sequenceFlow>
+
+		<endEvent id="approveEnd" />
+
+		<endEvent id="rejectEnd" />
+
+	</process>
+
+</definitions>

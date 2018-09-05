@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>文件处理</title>
+    <meta charset="utf-8" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <style>
+        .btn-lay-blue{width:100%;margin: 10px auto;}
+    </style>
+    <script>
+        $(function(){
+            //type   1.物料主数据    2.仓位主数据    3.仓位库存
+            $(".btn-lay-blue").click(function(){$("#file").click();});
+            $("[name='type']").val(GetQueryString("type"));
+            $("#upload").attr("action",uriapi+"/conf/data/upload_excel");
+            $("#file").change(function(){
+                $("#upload").submit()
+            })
+        })
+    </script>
+    <!--1 成功 2 失败 3 文件太大 4 文件类型出错 5 服务器错误 6 文件错误 7 网络错误 8 异常-->
+    <script>//parent.getExcelData(1);</script>
+</head>
+<body class="dialog">
+<form id="upload" method="post"  enctype="multipart/form-data">
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="file" id="file" name="file" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <input type="text" name="type">
+    </div>
+</form>
+<a class="btn btn-lay-blue">点击选择文件</a>
+<div class="submitbutton fixed">
+    <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+</div>
+</body>
+</html>

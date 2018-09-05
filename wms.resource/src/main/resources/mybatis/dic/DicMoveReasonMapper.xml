@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicMoveReasonMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicMoveReason">
+    <id column="reason_id" jdbcType="INTEGER" property="reasonId" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="reason_code" jdbcType="VARCHAR" property="reasonCode" />
+    <result column="reason_name" jdbcType="VARCHAR" property="reasonName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    reason_id, move_type_id, reason_code, reason_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_move_reason
+    where reason_id = #{reasonId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_move_reason
+    where reason_id = #{reasonId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicMoveReason">
+    insert into dic_move_reason (reason_id, move_type_id, reason_code, 
+      reason_name)
+    values (#{reasonId,jdbcType=INTEGER}, #{moveTypeId,jdbcType=INTEGER}, #{reasonCode,jdbcType=VARCHAR}, 
+      #{reasonName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicMoveReason">
+    insert into dic_move_reason
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="reasonId != null">
+        reason_id,
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id,
+      </if>
+      <if test="reasonCode != null">
+        reason_code,
+      </if>
+      <if test="reasonName != null">
+        reason_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="reasonId != null">
+        #{reasonId,jdbcType=INTEGER},
+      </if>
+      <if test="moveTypeId != null">
+        #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reasonCode != null">
+        #{reasonCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reasonName != null">
+        #{reasonName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicMoveReason">
+    update dic_move_reason
+    <set>
+      <if test="moveTypeId != null">
+        move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reasonCode != null">
+        reason_code = #{reasonCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reasonName != null">
+        reason_name = #{reasonName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where reason_id = #{reasonId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicMoveReason">
+    update dic_move_reason
+    set move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      reason_code = #{reasonCode,jdbcType=VARCHAR},
+      reason_name = #{reasonName,jdbcType=VARCHAR}
+    where reason_id = #{reasonId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByMoveTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_move_reason
+    where move_type_id = #{moveTypeId,jdbcType=INTEGER}
+  </select>
+  
+  
+</mapper>

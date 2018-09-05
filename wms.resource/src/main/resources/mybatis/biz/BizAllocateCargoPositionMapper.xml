@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.inossem.wms.dao.biz.BizAllocateCargoPositionMapper">
+
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.biz.BizAllocateCargoPosition">
+		<id column="item_position_id" jdbcType="INTEGER"
+			property="itemPositionId" />
+		<result column="allocate_cargo_id" jdbcType="INTEGER"
+			property="allocateCargoId" />
+		<result column="allocate_cargo_rid" jdbcType="INTEGER"
+			property="allocateCargoRid" />
+		<result column="allocate_cargo_position_id" jdbcType="INTEGER"
+			property="allocateCargoPositionId" />
+		<result column="stock_id" jdbcType="INTEGER" property="stockId" />
+		<result column="batch" jdbcType="BIGINT" property="batch" />
+		<result column="cargo_qty" jdbcType="DECIMAL"
+			property="cargoQty" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="is_delete" jdbcType="TINYINT"
+			property="isDelete" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="modify_time" jdbcType="TIMESTAMP"
+			property="modifyTime" />
+		<result column="create_user" jdbcType="VARCHAR"
+			property="createUser" />
+		<result column="modify_user" jdbcType="VARCHAR"
+			property="modifyUser" />
+
+		<result column="mat_id" jdbcType="INTEGER" property="matId" />
+		<result column="package_type_id" jdbcType="INTEGER"
+			property="packageTypeId" />
+		<result column="location_id" jdbcType="INTEGER"
+			property="locationId" />
+		<result column="stock_qty" jdbcType="DECIMAL"
+			property="stockQty" />
+		
+		<result column="input_date" jdbcType="VARCHAR"
+			property="inputDate" />
+		<result column="stock_type_id" jdbcType="INTEGER"
+			property="stockTypeId" />
+		<result column="product_batch" jdbcType="VARCHAR"
+			property="productBatch" />	
+
+	</resultMap>
+	<resultMap id="MyResultMap" type="HashMap">
+		<result column="status" property="status" />
+		<result column="location_id" property="location_id" />
+
+		<result column="package_type_id" property="package_type_id" />
+		<result column="batch" property="batch" />
+		<result column="mat_id" property="mat_id" />
+		<result column="mat_code" property="mat_code" />
+		<result column="mat_name" property="mat_name" />
+		<result column="package_type_id" property="package_type_id" />
+		<result column="package_type_code" property="package_type_code" />
+		<result column="package_standard_ch"
+			property="package_standard_ch" />
+		<result column="package_type_name" property="package_type_name" />
+		<result column="package_type_id" property="package_type_id" />
+		<result column="stock_id" property="stock_id" />
+		<result column="qty" property="qty" />
+		<result column="create_time" property="create_time" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		item_position_id, allocate_cargo_id, allocate_cargo_rid,
+		allocate_cargo_position_id,
+		stock_id, batch, cargo_qty, remark,
+		is_delete, create_time,
+		modify_time, create_user,
+		modify_user
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from biz_allocate_cargo_position
+		where item_position_id =
+		#{itemPositionId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectPositionBySuperId" parameterType="map"
+		resultType="map">
+			SELECT
+		    ifnull(ANY_VALUE(p.location_id), '')   location_id,
+            ifnull(ANY_VALUE(sl.fty_id), '')   fty_id,
+            ifnull(ANY_VALUE(u.unit_id), '')   unit_id,
+		    ifnull(ANY_VALUE(p.input_date), '')   input_date,
+			 ifnull(ANY_VALUE(p.stock_qty) , '')  stock_qty,
+			 ifnull(ANY_VALUE(p.product_batch), '') product_batch,
+			 ifnull(ANY_VALUE(p.batch), '') batch,
+			 ifnull(ANY_VALUE(pt.package_type_id), '') package_type_id,
+			 ifnull(ANY_VALUE (pt.package_type_code),'') package_type_code,
+			 ifnull(ANY_VALUE (pt.package_standard_ch),'') package_standard_ch,
+			 ifnull(ANY_VALUE (pt.package_type_name),'') package_type_name,
+			 ifnull(ANY_VALUE(p.cargo_qty), 0) cargo_qty,
+			 ifnull(ANY_VALUE(p.cargo_qty), 0) output_qty,
+			 ifnull(ANY_VALUE (st.stock_type_name),'') stock_type_name,
+			 ANY_VALUE (p.allocate_cargo_rid) allocate_cargo_rid,
+			 ANY_VALUE (p.allocate_cargo_id) allocate_cargo_id,
+			 p.mat_id mat_id,
+			 ifnull(ANY_VALUE (st.stock_type_id),'') stock_type_id,
+			 ifnull(ANY_VALUE(i.erp_batch), '') erp_batch,
+			 ifnull(ANY_VALUE(pt.package_standard),0)/ (case when u.unit_code = 'KG' then 1 else 1000 end)  package_standard
+			FROM
+				biz_allocate_cargo_position p
+			INNER JOIN biz_allocate_cargo_item i ON p.allocate_cargo_id = i.allocate_cargo_id
+			AND p.allocate_cargo_rid = i.allocate_cargo_rid
+			 left JOIN dic_material_package_type mpt ON p.mat_id = mpt.mat_id
+			 left  JOIN dic_package_type pt ON p.package_type_id = pt.package_type_id
+			left JOIN stock_type st ON p.stock_type_id = st.stock_type_id
+            inner  join dic_material m on p.mat_id=m.mat_id
+           inner join dic_unit u on u.unit_id=m.unit_id
+           inner join dic_stock_location sl on sl.location_id=p.location_id
+         
+			WHERE
+				p.is_delete = 0
+			AND i.is_delete = 0
+		<if test="allocate_cargo_id!=null">
+			and p.allocate_cargo_id=
+			#{allocate_cargo_id,jdbcType=INTEGER}
+		</if>
+		<if test="allocate_cargo_rid!=null">
+			and p.allocate_cargo_rid
+			=#{allocate_cargo_rid,jdbcType=INTEGER}
+		</if>
+		group by p.mat_id,p.batch,p.package_type_id,p.location_id
+	</select>
+	<select id="selectByCondition" parameterType="Map"
+		resultMap="MyResultMap">
+		SELECT
+		s.location_id,
+		s.id stock_id,
+		bm.product_batch,
+		bm.batch,
+		m.mat_id,
+		m.mat_code,
+		m.mat_name,
+		bm.quality_batch,
+		p.package_type_id,
+		p.package_type_code,
+		p.package_standard_ch,
+		p.package_type_name,
+		s.wh_id,
+		s.package_type_id,
+		s.qty,
+		DATE_FORMAT(s.input_date,'%Y-%m-%d')
+		create_time
+		FROM stock_position s
+		LEFT JOIN batch_material bm ON
+		bm.mat_id=s.mat_id and bm.batch=s.batch
+		LEFT JOIN dic_material
+		m ON
+		s.mat_id=m.mat_id
+		LEFT
+		JOIN
+		dic_material_package_type pt on
+		s.mat_id=pt.mat_id
+		left join
+		dic_package_type p ON
+		s.package_type_id=p.package_type_id
+		WHERE
+		m.is_delete=0 and s.qty>0 and
+		s.`status`=1
+		<if test="mat_id!=null and mat_id!='' ">
+			and m.mat_id= #{mat_id,jdbcType=VARCHAR}
+		</if>
+
+		<if test="location_id!=null and location_id!=''">
+			and s.location_id=#{location_id,jdbcType=VARCHAR}
+		</if>
+
+		<if test="erp_batch!=null and erp_batch!=''">
+			and bm.erp_batch=#{erp_batch,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from biz_allocate_cargo_position
+		where
+		item_position_id = #{itemPositionId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoPosition">
+		insert into biz_allocate_cargo_position
+		(item_position_id,
+		allocate_cargo_id,
+		allocate_cargo_rid,
+		allocate_cargo_position_id,
+		stock_id, batch, cargo_qty,
+		remark,
+		is_delete, create_time,
+		modify_time, create_user, modify_user
+		)
+		values
+		(#{itemPositionId,jdbcType=INTEGER},
+		#{allocateCargoId,jdbcType=INTEGER},
+		#{allocateCargoRid,jdbcType=INTEGER},
+		#{allocateCargoPositionId,jdbcType=INTEGER},
+		#{stockId,jdbcType=INTEGER}, #{batch,jdbcType=BIGINT},
+		#{cargoQty,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR},
+		#{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+		#{modifyUser,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoPosition"
+		useGeneratedKeys="true" keyProperty="itemPositionId">
+		insert into biz_allocate_cargo_position
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="itemPositionId != null">
+				item_position_id,
+			</if>
+			<if test="allocateCargoId != null">
+				allocate_cargo_id,
+			</if>
+			<if test="allocateCargoRid != null">
+				allocate_cargo_rid,
+			</if>
+			<if test="allocateCargoPositionId != null">
+				allocate_cargo_position_id,
+			</if>
+			<if test="stockId != null">
+				stock_id,
+			</if>
+			<if test="batch != null">
+				batch,
+			</if>
+			<if test="cargoQty != null">
+				cargo_qty,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="modifyUser != null">
+				modify_user,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="packageTypeId != null">
+				package_type_id,
+			</if>
+			<if test="locationId != null">
+				location_id,
+			</if>
+			<if test="stockQty != null">
+				stock_qty,
+			</if>
+			
+			<if test="inputDate != null">
+				input_date,
+			</if>
+			<if test="stockTypeId != null">
+				stock_type_id,
+			</if>
+			<if test="productBatch != null">
+				product_batch,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="itemPositionId != null">
+				#{itemPositionId,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoId != null">
+				#{allocateCargoId,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoRid != null">
+				#{allocateCargoRid,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoPositionId != null">
+				#{allocateCargoPositionId,jdbcType=INTEGER},
+			</if>
+			<if test="stockId != null">
+				#{stockId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				#{batch,jdbcType=BIGINT},
+			</if>
+			<if test="cargoQty != null">
+				#{cargoQty,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyUser != null">
+				#{modifyUser,jdbcType=VARCHAR},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeId != null">
+				#{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="stockQty != null">
+				#{stockQty,jdbcType=DECIMAL},
+			</if>
+			
+			<if test="inputDate != null">
+				#{inputDate,jdbcType=VARCHAR},
+			</if>
+			<if test="stockTypeId != null">
+				#{stockTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="productBatch != null">
+				#{productBatch,jdbcType=VARCHAR},
+			</if>			
+			
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoPosition">
+		update biz_allocate_cargo_position
+		<set>
+			<if test="allocateCargoId != null">
+				allocate_cargo_id = #{allocateCargoId,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoRid != null">
+				allocate_cargo_rid =
+				#{allocateCargoRid,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoPositionId != null">
+				allocate_cargo_position_id =
+				#{allocateCargoPositionId,jdbcType=INTEGER},
+			</if>
+			<if test="stockId != null">
+				stock_id = #{stockId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				batch = #{batch,jdbcType=BIGINT},
+			</if>
+			<if test="cargoQty != null">
+				cargo_qty = #{cargoQty,jdbcType=DECIMAL},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyUser != null">
+				modify_user = #{modifyUser,jdbcType=VARCHAR},
+			</if>
+			<if test="matId != null">
+				mat_id=#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeId != null">
+				package_type_id=#{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				location_id=#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="stockQty != null">
+				stock_qty = #{stockQty,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoPosition">
+		update biz_allocate_cargo_position
+		set allocate_cargo_id
+		= #{allocateCargoId,jdbcType=INTEGER},
+		allocate_cargo_rid =
+		#{allocateCargoRid,jdbcType=INTEGER},
+		allocate_cargo_position_id =
+		#{allocateCargoPositionId,jdbcType=INTEGER},
+		stock_id =
+		#{stockId,jdbcType=INTEGER},
+		batch = #{batch,jdbcType=BIGINT},
+		cargo_qty = #{cargoQty,jdbcType=DECIMAL},
+		remark =
+		#{remark,jdbcType=VARCHAR},
+		is_delete = #{isDelete,jdbcType=TINYINT},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP},
+		create_user =
+		#{createUser,jdbcType=VARCHAR},
+		modify_user =
+		#{modifyUser,jdbcType=VARCHAR}
+		where item_position_id =
+		#{itemPositionId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByAllocateCargoId" parameterType="map">
+		update biz_allocate_cargo_position
+		set is_delete=1 ,
+		<if test="moditiUser!=null and moditiUser!=''">
+			modify_user=#{moditiUser,jdbcType=INTEGER},
+		</if>
+		modify_time=SYSDATE()
+		WHERE is_delete=0
+		<if test="allocateCargoId!=null and allocateCargoId!=''">
+			and allocate_cargo_id=#{allocateCargoId,jdbcType=INTEGER}
+		</if>
+
+	</update>
+	<update id="deleteAllocatePositionByHeadId" parameterType="java.lang.Integer">
+	  update biz_allocate_cargo_position
+		set is_delete=1
+	 where allocate_cargo_id=#{id}
+	</update>
+	<select id="selectPositionByCargoId"  parameterType="java.lang.Integer"  resultType="java.util.Map">
+		SELECT
+	ifnull(
+		ANY_VALUE (p.location_id),
+		''
+	) location_id,
+	ifnull(ANY_VALUE(sp.fty_id), '') fty_id,
+	ifnull(ANY_VALUE(p.input_date), '') input_date,
+	ifnull(ANY_VALUE(p.stock_qty), '') stock_qty,
+	ifnull(
+		ANY_VALUE (p.product_batch),
+		''
+	) product_batch,
+	ifnull(ANY_VALUE(p.batch), '') batch,
+	ifnull(
+		ANY_VALUE (pt.package_type_code),
+		''
+	) package_type_code,
+	ifnull(
+		ANY_VALUE (pt.package_type_name),
+		''
+	) package_type_name,
+	ifnull(ANY_VALUE(p.cargo_qty), 0) cargo_qty,
+	p.mat_id mat_id,
+	ifnull(ANY_VALUE(i.erp_batch), '') erp_batch,
+	ifnull(ANY_VALUE(p.cargo_qty), 0) output_qty,
+	ANY_VALUE (i.order_qty) order_qty,
+	ifnull(
+		ANY_VALUE (
+			pt.package_standard / (
+				CASE
+				WHEN u.unit_code = 'KG' THEN
+					1
+				ELSE
+					1000
+				END
+			)
+		),
+		''
+	) package_standard,
+	ANY_VALUE (m.mat_code) mat_code,
+	ANY_VALUE (m.mat_name) mat_name,
+	ANY_VALUE (ware.wh_code) wh_code,
+	ANY_VALUE (ware.wh_name) wh_name,
+	ANY_VALUE (wa.area_code) area_code,
+	ANY_VALUE (fac.fty_code) fty_code,
+	ANY_VALUE (fac.fty_name) fty_name,
+	ANY_VALUE (wp.position_code) position_code,
+	IFNULL(ANY_VALUE(i.remark), '') remark
+FROM
+	biz_allocate_cargo_position p
+INNER JOIN biz_allocate_cargo_item i ON p.allocate_cargo_id = i.allocate_cargo_id
+AND p.allocate_cargo_rid = i.allocate_cargo_rid
+INNER JOIN dic_material_package_type mpt ON p.mat_id = mpt.mat_id
+INNER JOIN dic_package_type pt ON p.package_type_id = pt.package_type_id
+INNER JOIN dic_material m ON p.mat_id = m.mat_id
+INNER JOIN dic_unit u ON u.unit_id = m.unit_id
+INNER JOIN dic_stock_location sp ON sp.location_id = p.location_id
+INNER JOIN dic_warehouse ware ON ware.wh_id = sp.wh_id
+INNER JOIN dic_warehouse_area wa ON wa.wh_id = sp.wh_id
+INNER JOIN dic_warehouse_position wp ON wp.area_id = wa.area_id
+INNER JOIN dic_factory fac ON fac.fty_id = sp.fty_id
+WHERE
+	p.is_delete = 0
+AND i.is_delete = 0
+GROUP BY
+	p.mat_id,
+	p.batch,
+	p.package_type_id,
+	p.location_id
+
+	</select>
+
+	<select id="selectPositionByCargoIdForPrint"  parameterType="java.lang.Integer"  resultType="java.util.Map">
+		SELECT
+			ifnull(
+				ANY_VALUE (p.location_id),
+				''
+			) location_id,
+			ifnull(ANY_VALUE(sp.fty_id), '') fty_id,
+			ifnull(ANY_VALUE(p.input_date), '') input_date,
+			ifnull(ANY_VALUE(p.stock_qty), '') stock_qty,
+			ifnull(
+				ANY_VALUE (p.product_batch),
+				''
+			) product_batch,
+			ifnull(ANY_VALUE(p.batch), '') batch,
+			ifnull(
+				ANY_VALUE (pt.package_type_code),
+				''
+			) package_type_code,
+			ifnull(
+				ANY_VALUE (pt.package_type_name),
+				''
+			) package_type_name,
+			ifnull(
+			ANY_VALUE (
+					p.cargo_qty * (
+						CASE
+						WHEN u.unit_code = 'KG' THEN
+							1
+						ELSE
+							1000
+						END
+					)
+				),
+				0
+			) cargo_qty,
+			p.mat_id mat_id,
+			ifnull(ANY_VALUE(i.erp_batch), '') erp_batch,
+			ifnull(ANY_VALUE(p.cargo_qty* (
+				CASE
+				WHEN u.unit_code = 'KG' THEN
+					1
+				ELSE
+					1000
+				END
+			)
+			), 0) output_qty,
+			ANY_VALUE (i.order_qty) order_qty,
+			ifnull(
+				ANY_VALUE (pt.package_standard),
+				''
+			)  package_standard,
+			ANY_VALUE (m.mat_code) mat_code,
+			ANY_VALUE (m.mat_name) mat_name,
+			ANY_VALUE (ware.wh_code) wh_code,
+			ANY_VALUE (ware.wh_name) wh_name,
+			ANY_VALUE (wa.area_code) area_code,
+			ANY_VALUE (fac.fty_code) fty_code,
+			ANY_VALUE (fac.fty_name) fty_name,
+			ANY_VALUE (wp.position_code) position_code,
+			IFNULL(ANY_VALUE (i.remark),'')remark
+		FROM
+			biz_allocate_cargo_position p
+		INNER JOIN biz_allocate_cargo_item i ON p.allocate_cargo_id = i.allocate_cargo_id
+		AND p.allocate_cargo_rid = i.allocate_cargo_rid
+		INNER JOIN dic_material_package_type mpt ON p.mat_id = mpt.mat_id
+		INNER JOIN dic_package_type pt ON p.package_type_id = pt.package_type_id
+		INNER JOIN dic_material m ON p.mat_id = m.mat_id
+		INNER JOIN dic_unit u ON u.unit_id = m.unit_id
+		INNER JOIN dic_stock_location sp ON sp.location_id = p.location_id
+		INNER JOIN dic_warehouse ware ON ware.wh_id = sp.wh_id
+		INNER JOIN dic_warehouse_area wa ON wa.wh_id = sp.wh_id
+		INNER JOIN dic_warehouse_position wp ON wp.area_id = wa.area_id
+		INNER JOIN dic_factory fac on fac.fty_id = sp.fty_id
+		WHERE
+			p.is_delete = 0
+		AND i.is_delete =0
+		AND p.allocate_cargo_id = #{allocateCargoId}
+		GROUP BY
+			p.mat_id,
+			p.batch,
+			p.package_type_id,
+			p.location_id
+
+	</select>
+	
+</mapper>

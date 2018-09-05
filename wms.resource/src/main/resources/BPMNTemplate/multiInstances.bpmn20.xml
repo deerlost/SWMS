@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn"
+	typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+	targetNamespace="http://www.flowable.org/processdef">
+	<process id="multiInstances" name="multiText" isExecutable="true">
+		<startEvent id="startevent1" name="Start"></startEvent>
+		<sequenceFlow id="flow1" sourceRef="startevent1"
+			targetRef="A001"></sequenceFlow>
+		<serviceTask id="A001" name="set Peoples"
+			flowable:class="com.inossem.wms.auth.util.AssgineeMultiInstancePer"></serviceTask>
+		<userTask id="B001" name="multi node" flowable:assignee="${per}">
+			<extensionElements>
+				<flowable:taskListener event="complete" class="com.inossem.wms.auth.util.TestLinstener">
+				</flowable:taskListener>
+			</extensionElements>
+			<multiInstanceLoopCharacteristics isSequential="false" flowable:collection="pers" flowable:elementVariable="per">
+				<completionCondition>
+					${mulitiInstance.completeTask(execution)}
+				</completionCondition>
+			</multiInstanceLoopCharacteristics>
+		</userTask>
+		<sequenceFlow id="flow2" sourceRef="A001" targetRef="B001"></sequenceFlow>
+		<userTask id="C001" name="after multi node"
+			flowable:assignee="钱七"></userTask>
+		<sequenceFlow id="flow3" sourceRef="B001" targetRef="C001"></sequenceFlow>
+		<endEvent id="endevent1" name="End"></endEvent>
+		<sequenceFlow id="flow4" sourceRef="C001" targetRef="endevent1"></sequenceFlow>
+	</process>
+</definitions>

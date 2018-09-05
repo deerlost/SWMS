@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-cloak ng-app="app" id="app" ng-controller="pageCtrl">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>库存查询</title>
+		<meta charset="utf-8" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../js/page/search/ems/list.js"></script>
+		<style type="text/css">
+			
+		</style>
+	</head>
+
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article">
+				<!-- 内容区域 -->
+				<div class="mapadress">
+					<h2 class="h2black">MES失败记录</h2>
+				</div>
+				<div class="col-xs-12">&nbsp;</div>
+				<div class="form-search">
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">单据编号：</span>
+								<input class="form-control refer_receipt_code" type="text" maxlength="30" />
+							</div>
+						</div>
+						
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">创建人：</span>
+								<input class="form-control create_user" type="text" maxlength="30" />
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">创建日期：</span>
+								<input type="text" class="form-control txtdatepicker create_time" readonly data-date-format="yyyy-mm-dd"  />
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-xs-12 row submitbutton">
+						<a href="javascript:void(0)" class="btn-lay-blue btn_search">查询</a>
+					</div>
+					<div class="col-xs-12">
+						<hr/>
+					</div>
+					<div class="col-xs-12 count"></div>
+					<div id="id_div_grid"></div>
+					<div class="text-center" id="J_ListPagination"></div>
+
+				</div>
+			</div>
+
+	</body>
+
+</html>

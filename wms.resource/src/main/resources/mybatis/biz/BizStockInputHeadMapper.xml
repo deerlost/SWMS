@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockInputHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockInputHead">
+    <id column="stock_input_id" jdbcType="INTEGER" property="stockInputId" />
+    <result column="stock_input_code" jdbcType="CHAR" property="stockInputCode" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="doc_time" jdbcType="TIMESTAMP" property="docTime" />
+    <result column="purchase_org" jdbcType="VARCHAR" property="purchaseOrg" />
+    <result column="purchase_org_name" jdbcType="VARCHAR" property="purchaseOrgName" />
+    <result column="purchase_group" jdbcType="VARCHAR" property="purchaseGroup" />
+    <result column="purchase_group_name" jdbcType="VARCHAR" property="purchaseGroupName" />
+    <result column="posting_date" jdbcType="DATE" property="postingDate" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="refer_doc_id" jdbcType="INTEGER" property="referDocId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="supplier_code" jdbcType="VARCHAR" property="supplierCode" />
+    <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+    <result column="exempt_check" jdbcType="VARCHAR" property="exemptCheck" />
+    <result column="contract_code" jdbcType="VARCHAR" property="contractCode" />
+    <result column="purchase_order_code" jdbcType="VARCHAR" property="purchaseOrderCode" />
+    <result column="corp_id" jdbcType="INTEGER" property="corpId" />
+    <result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="purchase_order_type" jdbcType="VARCHAR" property="purchaseOrderType" />
+    <result column="purchase_order_type_name" jdbcType="VARCHAR" property="purchaseOrderTypeName" />
+    <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="inspect_time" jdbcType="TIMESTAMP" property="inspectTime" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="class_type_id" jdbcType="INTEGER" property="classTypeId" />
+    <result column="reason_id" jdbcType="INTEGER" property="reasonId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="allocate_id" jdbcType="INTEGER" property="allocateId" />
+    <result column="allocate_delivery_id" jdbcType="INTEGER" property="allocateDeliveryId" />
+    <result column="check_account" jdbcType="TINYINT" property="checkAccount" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="request_source" jdbcType="TINYINT" property="requestSource" />
+    <result column="move_type_code" jdbcType="VARCHAR" property="moveTypeCode" />
+    <result column="move_type_name" jdbcType="VARCHAR" property="moveTypeName" />
+    <result column="reason_code" jdbcType="VARCHAR" property="reasonCode" />
+    <result column="reason_name" jdbcType="VARCHAR" property="reasonName" />
+    <result column="spec_stock" jdbcType="VARCHAR" property="specStock" />
+    <result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+    <result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+    <result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+    <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+    <result column="class_type_id" jdbcType="VARCHAR" property="classTypeId" />
+    <result column="class_type_name" jdbcType="VARCHAR" property="classTypeName" />
+    <result column="installation_id" jdbcType="INTEGER" property="installationId" />
+    <result column="installation_name" jdbcType="VARCHAR" property="installationName" />
+    <result column="product_line_id" jdbcType="INTEGER" property="productLineId" />
+    <result column="product_line_name" jdbcType="VARCHAR" property="productLineName" />
+    <result column="afpos" jdbcType="VARCHAR" property="afpos" />
+    <result column="stck_type" jdbcType="TINYINT" property="stckType"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    stock_input_id, stock_input_code, receipt_type, status, doc_time, purchase_org, purchase_org_name, 
+    purchase_group, purchase_group_name, posting_date, create_user, refer_doc_id, remark, 
+    supplier_code, supplier_name, exempt_check, contract_code, purchase_order_code, corp_id, 
+    location_id, purchase_order_type, purchase_order_type_name, submit_time, inspect_time,class_type_id,
+    move_type_id, reason_id, fty_id, allocate_id, allocate_delivery_id, check_account, installation_id,product_line_id,
+    is_delete, create_time, modify_time, request_source,afpos,stck_type
+  </sql>
+  
+  <select id="selectByInputCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from biz_stock_input_head
+    where stock_input_code = #{stockInputCode,jdbcType=VARCHAR} 
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_input_head
+    where stock_input_id = #{stockInputId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByConditionOnPagIng" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select 
+   		DISTINCT
+	    sh.stock_input_id, sh.stock_input_code, sh.receipt_type, sh.status, sh.doc_time, sh.purchase_org, sh.purchase_org_name, 
+	    sh.purchase_group, sh.purchase_group_name, sh.posting_date, sh.create_user, sh.refer_doc_id, sh.remark, 
+	    sh.supplier_code, sh.supplier_name, sh.exempt_check, sh.contract_code, sh.purchase_order_code, sh.corp_id, 
+	    sh.location_id, sh.purchase_order_type, sh.purchase_order_type_name, sh.submit_time, sh.inspect_time, 
+	    sh.move_type_id, sh.reason_id, sh.fty_id, sh.allocate_id, sh.allocate_delivery_id, sh.check_account, 
+	    sh.is_delete, sh.create_time, sh.modify_time, sh.request_source,
+	    c.corp_name,
+	    mt.spec_stock,
+	    mt.move_type_code,
+		mt.move_type_name,
+	    u.user_name create_user_name,
+	    di.installation_name,
+	    dp.product_line_name,
+	    sh.installation_id,
+	    sh.product_line_id,
+	    r.reason_code,
+	    r.reason_name,
+	    f.fty_code,
+		f.fty_name,
+		l.location_code,
+		l.location_name,
+		sh.class_type_id,
+		CONCAT(ct.class_type_name,'(' , DATE_FORMAT(ct.start_time,'%H:%i:%s'),'-',DATE_FORMAT(ct.end_time,'%H:%i:%s') , ')') AS class_type_name
+    FROM biz_stock_input_head sh
+    INNER JOIN biz_stock_input_item item on item.stock_input_id= sh.stock_input_id
+    INNER JOIN dic_material mat on mat.mat_id =item.mat_id
+    INNER JOIN wms_user u  on u.user_id = sh.create_user 
+    LEFT JOIN dic_corp c on sh.corp_id = c.corp_id
+    LEFT JOIN dic_move_type mt on mt.move_type_id = sh.move_type_id 
+    LEFT JOIN dic_move_reason r on sh.reason_id = r.reason_id
+    LEFT JOIN dic_factory f on f.fty_id = sh.fty_id
+    LEFT JOIN dic_installation di on di.installation_id = sh.installation_id
+    LEFT JOIN dic_product_line dp on dp.product_line_id = sh.product_line_id
+	LEFT JOIN dic_stock_location l on l.location_id = sh.location_id
+	left join dic_class_type ct on sh.class_type_id = ct.class_type_id
+    WHERE sh.is_delete = 0 
+    <if test="receiptType != null">
+       AND sh.receipt_type = #{receiptType,jdbcType=TINYINT}
+    </if>
+    <if test="createUser != null">
+       AND sh.create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="stockInputId != null">
+       AND sh.stock_input_id = #{stockInputId,jdbcType=INTEGER}
+    </if>
+    <if test="stockInputCode != null">
+       AND sh.stock_input_code = #{stockInputCode,jdbcType=VARCHAR}
+    </if>
+   	<if test="statusList != null and statusList.size()>0">
+   		AND sh.status in 
+   		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </if>
+    <if test="condition != null and condition !='' ">
+       AND ( sh.stock_input_code like CONCAT('%',#{condition},'%') OR 
+       		 sh.purchase_order_code like CONCAT('%',#{condition},'%') OR 
+       		 sh.contract_code like CONCAT('%',#{condition},'%') OR 
+       		 u.user_name like CONCAT('%',#{condition},'%' ) OR 
+       		 sh.supplier_name LIKE CONCAT('%',#{condition},'%' ) OR 
+       		 c.corp_name like CONCAT('%',#{condition},'%' ) OR 
+       		 sh.create_user LIKE CONCAT('%',#{condition},'%' ) OR 
+       		 mat.mat_code LIKE CONCAT('%',#{condition},'%' ) OR 
+       		 mat.mat_name LIKE CONCAT('%',#{condition},'%' )
+	 	)
+    </if>
+    <if test="userId!=null and userId!=''">		
+   		and 
+ 			if((select product_line_id from rel_product_user where user_id=#{userId})!=0
+ 			,(select product_line_id from rel_product_user where user_id=sh.create_user) =(select product_line_id from rel_product_user where user_id=#{userId})
+ 			,1=1)
+    </if>	
+    ORDER BY sh.stock_input_code DESC;
+  </select>
+  
+  <select id="selectAllocateInputByConditionOnPagIng" parameterType="java.util.Map" resultType="java.util.Map">
+  	SELECT
+		sh.stock_input_id,
+		sh.stock_input_code,
+		t.allocate_code,
+		t.allocate_id,
+		t.allocate_delivery_id,
+		t.allocate_delivery_code,
+		fo.fty_name fty_output_name,
+		lo.location_name location_output_name,
+		fi.fty_name fty_input_name,
+		li.location_name location_input_name,
+		t.demand_date,
+		sh.status,
+		u.user_name create_user_name,
+		u1.user_name applicant,
+		u1.org_name 
+	FROM
+		biz_stock_input_head sh
+	LEFT JOIN (
+		SELECT
+			ai.allocate_id,
+			a.allocate_code,
+			di.allocate_delivery_id,
+			d.allocate_delivery_code,
+			ai.fty_output,
+			ai.location_output,
+			a.create_time,
+			a.create_user,
+			a.demand_date
+		FROM
+			biz_allocate_item ai
+		INNER JOIN biz_allocate_head a ON a.allocate_id = ai.allocate_id
+		LEFT JOIN biz_allocate_delivery_item di ON ai.delivery_item_id = di.item_id
+		LEFT JOIN biz_allocate_delivery_head d ON d.allocate_delivery_id = di.allocate_delivery_id
+		GROUP BY
+			ai.allocate_id,
+			a.allocate_code,
+			di.allocate_delivery_id,
+			d.allocate_delivery_code,
+			ai.fty_output,
+			ai.location_output,
+			a.create_time,
+			a.create_user,
+			a.demand_date
+	) t ON sh.allocate_id = t.allocate_id
+	AND ifnull(sh.allocate_delivery_id, 0) = ifnull(t.allocate_delivery_id, 0)
+	INNER JOIN wms_user u ON sh.create_user = u.user_id
+	INNER JOIN wms_user u1 ON t.create_user = u1.user_id
+	LEFT JOIN dic_factory fi ON fi.fty_id = sh.fty_id
+	LEFT JOIN dic_stock_location li ON li.location_id = sh.location_id
+	LEFT JOIN dic_factory fo ON fo.fty_id = t.fty_output
+	LEFT JOIN dic_stock_location lo ON lo.location_id = t.location_output
+	WHERE sh.is_delete = 0 
+    <if test="receiptType != null">
+       and sh.receipt_type = #{receiptType,jdbcType=TINYINT}
+    </if>
+    <if test="createUser != null">
+       and sh.create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="stockInputId != null">
+       and sh.stock_input_id = #{stockInputId,jdbcType=INTEGER}
+    </if>
+    <if test="stockInputCode != null">
+       and sh.stock_input_code = #{stockInputCode,jdbcType=VARCHAR}
+    </if>
+   	<if test="statusList != null and statusList.size()>0">
+   		and sh.status in 
+   		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </if>
+    <if test="condition != null and condition !='' ">
+       and ( sh.stock_input_code = #{condition}
+	 	)
+    </if>
+    ORDER BY sh.stock_input_code DESC;
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_input_head
+    where stock_input_id = #{stockInputId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockInputHead" useGeneratedKeys="true" keyProperty="stockInputId">
+    insert into biz_stock_input_head (stock_input_id, stock_input_code, receipt_type, 
+      status, doc_time, purchase_org, 
+      purchase_org_name, purchase_group, purchase_group_name, 
+      posting_date, create_user, refer_doc_id, 
+      remark, supplier_code, supplier_name, 
+      exempt_check, contract_code, purchase_order_code, 
+      corp_id, location_id, purchase_order_type, 
+      purchase_order_type_name, submit_time, inspect_time, 
+      move_type_id, reason_id, fty_id, 
+      allocate_id, allocate_delivery_id, check_account, 
+      is_delete, create_time, modify_time, request_source
+      )
+    values (#{stockInputId,jdbcType=INTEGER}, #{stockInputCode,jdbcType=CHAR}, #{receiptType,jdbcType=TINYINT}, 
+      #{status,jdbcType=TINYINT}, #{docTime,jdbcType=TIMESTAMP}, #{purchaseOrg,jdbcType=VARCHAR}, 
+      #{purchaseOrgName,jdbcType=VARCHAR}, #{purchaseGroup,jdbcType=VARCHAR}, #{purchaseGroupName,jdbcType=VARCHAR}, 
+      #{postingDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{referDocId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{supplierCode,jdbcType=VARCHAR}, #{supplierName,jdbcType=VARCHAR}, 
+      #{exemptCheck,jdbcType=VARCHAR}, #{contractCode,jdbcType=VARCHAR}, #{purchaseOrderCode,jdbcType=VARCHAR}, 
+      #{corpId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, #{purchaseOrderType,jdbcType=VARCHAR}, 
+      #{purchaseOrderTypeName,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{inspectTime,jdbcType=TIMESTAMP}, 
+      #{moveTypeId,jdbcType=INTEGER}, #{reasonId,jdbcType=INTEGER}, #{ftyId,jdbcType=INTEGER}, 
+      #{allocateId,jdbcType=INTEGER}, #{allocateDeliveryId,jdbcType=INTEGER}, #{checkAccount,jdbcType=TINYINT}, 
+      #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{requestSource,jdbcType=TINYINT} )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockInputHead" useGeneratedKeys="true" keyProperty="stockInputId">
+    insert into biz_stock_input_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stockInputId != null">
+        stock_input_id,
+      </if>
+      <if test="stockInputCode != null">
+        stock_input_code,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="docTime != null">
+        doc_time,
+      </if>
+      <if test="classTypeId != null">
+        class_type_id,
+      </if>
+      
+      <if test="purchaseOrg != null">
+        purchase_org,
+      </if>
+      <if test="purchaseOrgName != null">
+        purchase_org_name,
+      </if>
+      <if test="purchaseGroup != null">
+        purchase_group,
+      </if>
+      <if test="purchaseGroupName != null">
+        purchase_group_name,
+      </if>
+      <if test="postingDate != null">
+        posting_date,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="referDocId != null">
+        refer_doc_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="supplierCode != null">
+        supplier_code,
+      </if>
+      <if test="supplierName != null">
+        supplier_name,
+      </if>
+      <if test="exemptCheck != null">
+        exempt_check,
+      </if>
+      <if test="contractCode != null">
+        contract_code,
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code,
+      </if>
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="purchaseOrderType != null">
+        purchase_order_type,
+      </if>
+      <if test="purchaseOrderTypeName != null">
+        purchase_order_type_name,
+      </if>
+      <if test="submitTime != null">
+        submit_time,
+      </if>
+      <if test="inspectTime != null">
+        inspect_time,
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id,
+      </if>
+      <if test="reasonId != null">
+        reason_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="allocateId != null">
+        allocate_id,
+      </if>
+      <if test="allocateDeliveryId != null">
+        allocate_delivery_id,
+      </if>
+      <if test="checkAccount != null">
+        check_account,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="requestSource != null">
+        request_source,
+      </if>
+       <if test="productLineId != null">
+        product_line_id,
+      </if>
+       <if test="installationId != null">
+        installation_id,
+      </if>
+      <if test="sysStatus != null">
+        syn_status,
+      </if>
+      <if test="afpos != null">
+        afpos,
+      </if>
+      <if test="stckType != null">
+        stck_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stockInputId != null">
+        #{stockInputId,jdbcType=INTEGER},
+      </if>
+      <if test="stockInputCode != null">
+        #{stockInputCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="docTime != null">
+        #{docTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="classTypeId != null">
+        #{classTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="purchaseOrg != null">
+        #{purchaseOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrgName != null">
+        #{purchaseOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseGroup != null">
+        #{purchaseGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseGroupName != null">
+        #{purchaseGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="postingDate != null">
+        #{postingDate,jdbcType=DATE},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="referDocId != null">
+        #{referDocId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="exemptCheck != null">
+        #{exemptCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderType != null">
+        #{purchaseOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderTypeName != null">
+        #{purchaseOrderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null">
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inspectTime != null">
+        #{inspectTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moveTypeId != null">
+        #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reasonId != null">
+        #{reasonId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateId != null">
+        #{allocateId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateDeliveryId != null">
+        #{allocateDeliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="checkAccount != null">
+        #{checkAccount,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requestSource != null">
+        #{requestSource,jdbcType=TINYINT},
+      </if>
+       <if test="productLineId != null">
+        #{productLineId,jdbcType=TINYINT},
+      </if>
+       <if test="installationId != null">
+        #{installationId,jdbcType=TINYINT},
+      </if>
+       <if test="sysStatus != null">
+        #{sysStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="afpos != null">
+        #{afpos,jdbcType=VARCHAR},
+      </if>
+       <if test="stckType != null">
+        #{stckType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockInputHead">
+    update biz_stock_input_head
+    <set>
+      <if test="stockInputCode != null">
+        stock_input_code = #{stockInputCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="docTime != null">
+        doc_time = #{docTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="purchaseOrg != null">
+        purchase_org = #{purchaseOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrgName != null">
+        purchase_org_name = #{purchaseOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseGroup != null">
+        purchase_group = #{purchaseGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseGroupName != null">
+        purchase_group_name = #{purchaseGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="postingDate != null">
+        posting_date = #{postingDate,jdbcType=DATE},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="referDocId != null">
+        refer_doc_id = #{referDocId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="exemptCheck != null">
+        exempt_check = #{exemptCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        contract_code = #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpId != null">
+        corp_id = #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderType != null">
+        purchase_order_type = #{purchaseOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderTypeName != null">
+        purchase_order_type_name = #{purchaseOrderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null">
+        submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inspectTime != null">
+        inspect_time = #{inspectTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reasonId != null">
+        reason_id = #{reasonId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateId != null">
+        allocate_id = #{allocateId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateDeliveryId != null">
+        allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="checkAccount != null">
+        check_account = #{checkAccount,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requestSource != null">
+       	request_source = #{requestSource,jdbcType=TINYINT},
+      </if>
+    </set>
+    where stock_input_id = #{stockInputId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockInputHead">
+    update biz_stock_input_head
+    set stock_input_code = #{stockInputCode,jdbcType=CHAR},
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      doc_time = #{docTime,jdbcType=TIMESTAMP},
+      purchase_org = #{purchaseOrg,jdbcType=VARCHAR},
+      purchase_org_name = #{purchaseOrgName,jdbcType=VARCHAR},
+      purchase_group = #{purchaseGroup,jdbcType=VARCHAR},
+      purchase_group_name = #{purchaseGroupName,jdbcType=VARCHAR},
+      posting_date = #{postingDate,jdbcType=DATE},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      refer_doc_id = #{referDocId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      supplier_name = #{supplierName,jdbcType=VARCHAR},
+      exempt_check = #{exemptCheck,jdbcType=VARCHAR},
+      contract_code = #{contractCode,jdbcType=VARCHAR},
+      purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      corp_id = #{corpId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      purchase_order_type = #{purchaseOrderType,jdbcType=VARCHAR},
+      purchase_order_type_name = #{purchaseOrderTypeName,jdbcType=VARCHAR},
+      submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      inspect_time = #{inspectTime,jdbcType=TIMESTAMP},
+      move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      reason_id = #{reasonId,jdbcType=INTEGER},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      allocate_id = #{allocateId,jdbcType=INTEGER},
+      allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER},
+      check_account = #{checkAccount,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      request_source = #{requestSource,jdbcType=TINYINT} 
+    where stock_input_id = #{stockInputId,jdbcType=INTEGER}
+  </update>
+  <update id="deleteByStockInputId" parameterType="java.lang.Integer">
+    update biz_stock_input_head
+    set 
+      is_delete = 1 
+    where stock_input_id = #{stockInputId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByInputCodeUrgence" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from biz_stock_input_head
+    where stock_input_code = #{stockInputCode,jdbcType=VARCHAR} AND is_delete = 0
+  </select>
+  
+  <select id="selectMatNameBycode" parameterType="java.lang.String" resultType="java.lang.String">
+  	select 
+   	mat_name mat_info
+    from dic_material
+    where mat_code = #{mtrlCode} 
+  </select>
+  
+   <select id="getUnitRelSapAndWms" parameterType="map" resultType="java.lang.String">
+  	select 
+   	relation 
+    from rel_sap_mes_wms_unit
+    where wms_unit = #{wms_unit_code} 
+    and sap_unit=#{sap_unit_code}
+  </select>
+  
+  
+   <select id="getUnitRelMesAndWms" parameterType="map" resultType="java.lang.String">
+  	select 
+   	relation 
+    from rel_sap_mes_wms_unit
+    where wms_unit = #{wms_unit_code} 
+    and mes_unit=#{mes_unit_code}
+  </select>
+  
+  
+   <select id="getUnitCodeByName" parameterType="string" resultType="java.lang.String">
+  	select 
+   	unit_code 
+    from dic_unit
+    where 
+    name_zh=#{string}
+  </select>
+  
+  
+  <select id="selectByVirtualInputCode" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	u.user_name as create_user_name,
+     stock_input_code,
+    biz_stock_input_head.create_time,
+    status,
+    stock_input_id
+    from biz_stock_input_head 
+    inner join wms_user u on u.user_id =biz_stock_input_head.create_user
+    where stock_input_code = #{stockInputCode,jdbcType=VARCHAR} 
+    and receipt_type = #{receiptType}
+   <!--  and biz_stock_input_head.`status`!=5 -->
+  </select>
+</mapper>

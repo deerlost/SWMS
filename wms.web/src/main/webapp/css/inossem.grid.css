@@ -1,0 +1,56 @@
+#tablemenu{width:0;overflow:hidden;box-shadow:0 1px 1px #888,1px 0 1px #ccc;position:absolute;background:#fff;z-index:1;}
+.tablemenu{height: 25px;line-height: 25px;padding: 0 10px;}
+.noselect{-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+table.tablestyle4{border-collapse:collapse;min-width:100%;}
+table.tablestyle4 th{border:1px solid transparent;border-bottom:1px solid #ccc;border-top:1px solid #ccc;}
+table.tablestyle4 th.border{border-right:1px solid #ccc;}
+table.tablestyle4 th:first-child{border-left:1px solid #ccc;}
+table.tablestyle4 th:last-child:not(div){border-right:1px solid #ccc;}
+table.tablestyle4{border:1px solid #ccc;border-right: 0px none transparent;}
+table.tablestyle4 td{border-bottom: 1px solid #ccc;border-top: 1px solid #ccc;border-left: 1px solid transparent;border-right: 1px solid transparent;}/*border:1px solid #ccc;*/
+table.tablestyle4 td .form-control{margin:2px auto 0px;height: 30px;padding: 2px 12px;background-color: rgba(255,255,255,0.7);}
+table.tablestyle4 th div,table.tablestyle4 td div{position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:35px;width:100%;font-weight:normal;}
+table.tablestyle4 th div.col,table.tablestyle4 td div.col{line-height:35px;padding-left: 10px;padding-right: 10px;}
+table.tablestyle4 td div.multi{height: auto;min-height: 35px;white-space: normal;line-height: 22px;padding-top: 5px;padding-bottom: 5px;width: 353px;}
+table.tablestyle4 td div.colrichtext{cursor:pointer;}
+table.tablestyle4 td div.colrichtext .glyphicon{color:#0088cc;}
+table.tablestyle4 td div.colrichtext .glyphicon:hover{color:#ff9900;}
+/*table.tablestyle4 th div.colselect,table.tablestyle4 td div.colselect,table.tablestyle4 td div.colselectdisabled{padding-right:20px;}
+table.tablestyle4 td div.colselect{cursor:pointer;}
+table.tablestyle4 td div.colselect:hover div,table.tablestyle4 td div.colselect:hover span{color: #337ab7;font-weight:900;}*/
+table.tablestyle4 td .tableselbtn{position:absolute;right:5px;top:0px;display:block;width:20px;}
+table.tablestyle4 th div.num,table.tablestyle4 td div.num{width:25px;text-align:center;line-height:35px;}
+table.tablestyle4 th div.chk,table.tablestyle4 td div.chk{width:25px;text-align:center;line-height:35px;}
+table.tablestyle4 th div.rdo,table.tablestyle4 td div.rdo{width:25px;text-align:center;line-height:35px;}
+table.tablestyle4 th div.star,table.tablestyle4 td div.star{width:25px;text-align:center;line-height:35px;color:#F51C1F;font-size:30px;font-family: serif;}
+table.tablestyle4 th div.resize{position:absolute;right:0px;top:1px;width:5px;border-right:1px solid #ccc;cursor:col-resize;}
+table.tablestyle4 th div.resize:hover{border-right:1px solid #f00}
+table.tablestyle4 th div a span{color:#337ab7;}
+.resizewidth{width:1px;background:#f00;position:absolute;z-index:1;cursor:col-resize;box-shadow: 3px 3px 3px #888;}
+.resizeform{background-color:rgba(255, 255, 0,0.2);position:absolute;z-index:1;cursor:col-resize;}
+.tableselect{position: absolute;box-shadow: 3px 3px 3px #888;}
+.selectbg{position:fixed;top:0px;left:0px;height:100%;width:100%;background-color:rgba(255,255,255,0.1)}
+table.tablestyle4 th {color:#666;background:#e3e3e3;}
+table.tablestyle4 tr:nth-child(odd) {background:#f2f2f2;}
+table.tablestyle4 tr:nth-child(odd) {background:#fff;}
+table.tablestyle4 tr:nth-child(even) {background:#f2f2f2;}
+table.tablestyle4 tr.selected{background-color:rgba(255, 255, 0,0.3)}
+table.tablestyle4 tr.hover{background-color:#ddd;}
+table.tablestyle4 tr.selected.hover{background-color:rgba(255, 255, 0,0.45)}
+table.tablestyle4 th div.sort{display:inline-block;}
+table.tablestyle4 th.sumbg, table.tablestyle4 td.sumbg{background-color: #b5ebf6;border-bottom: 1px solid #b5ebf6;}
+table.tablestyle4 tr.bluebg{background-color:#8ED3F4;}
+table.tablestyle4 tr.pinkbg{background-color:#ffeee8;}
+table.tablestyle4 td.greenbg{background-color:#8EF9A4;}
+table.tablestyle4 td.redbg{background-color:#F98486;}
+table.tablestyle4 td.warningbg{background-color:#f9f02f;}
+table.wapper{min-width:100%;border-collapse:collapse;}
+table.wapper>div.head{}
+table.wapper>div.body{}
+table.wapper td{vertical-align:top;}
+table.wapper div.wapperleft{overflow:hidden;}
+/*.divtransspan div{display:inline;}*/
+.divtransspan table.tablestyle4 th div.resize{display:none;}
+/*table.wapper div.wapperleft table.tablestyle4 th div{border-left:1px solid #e3e3e3;}*/
+div.righrscroll{width:16px;position:fixed;top:38px;right:0px;overflow:hidden;overflow-y:auto;}
+div.righrscroll div{width:1px;}

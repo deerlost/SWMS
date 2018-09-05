@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加物料</title>
+    <meta charset="utf-8" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <style>
+        .search div {
+            min-height:42px;
+            line-height:30px;
+        }
+        .icon-search{
+            background: url(../../../../img/icon-search.png) 4px 4px no-repeat;
+            position: absolute;
+            top: 3px;
+            right: 0;
+            width: 29px;
+            height: 28px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        var indexdata=null,g1=null,loction=null;
+        //查找物料数据
+        function btn_search(){
+            showloading();
+            var url=uriapi+"/biz/urgent/product/transport/material_list";
+            var obj={
+                material_condition:$(".mat_code").val(),
+                production_batch:$(".batch").val(),
+                location_id:loction,
+            }
+            ajax(url,"post",JSON.stringify(obj),function(data){
+                if(data.head.status==true){
+                    layer.close(indexloading);
+                    indexdata=data.body
+                    dataBindTable()
+                }else{
+                    layer.close(indexloading)
+                }
+            }, function(e) {
+                layer.close(indexloading);
+            })
+        }
+
+        //绑定表格
+        function dataBindTable(){
+            if(g1==null){
+                g1=$("#id_div_grid").iGrid({
+                    columns: [
+                        { th: '物料编码', col: 'mat_code', sort:false,width:150 },
+                        { th: '物料描述', col: 'mat_name', sort:false},
+                        { th: '包装类型', col: 'package_type_name', sort:false,width:100},
+                        { th: '库存数量', col: 'stock_qty', sort:false,width:100,type:'number'},
+                        { th: '生产批次', col: 'product_batch', sort:false},
+                        { th: 'ERP批次', col: 'erp_batch', sort:false},
+                    ],
+                    data:null,
+                    checkbox:true,
+                    rownumbers:false,
+                    skin:"tablestyle4"
+                })
+            }else{
+                g1.showdata(indexdata)
+            }
+        }
+
+        //提交
+        function btn_submit(){
+            var data=[]
+            if($(".body .chk input:checked").length==0){
+                layer.msg("至少选择一条物料")
+                return false
+            }
+            $(".body .chk input:checked").each(function(i){
+                var index=$(".body .chk input:checked").eq(i).val();
+                data.push(indexdata[index])
+            })
+            parent.addMaterial(data)
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+            loction=parent.getLoction()
+            dataBindTable()
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="col-xs-5">
+        <div class="col-xs-4 text-right">物料信息：</div>
+        <div class="col-xs-8"><input type="text" class="form-control mat_code" placeholder="请输入物料编码或描述"></div>
+    </div>
+    <div class="col-xs-5">
+        <div class="col-xs-4 text-right">生产批次：</div>
+        <div class="col-xs-8"><input type="text" class="form-control batch" placeholder="请输入生产批次号"></div>
+    </div>
+    <div class="col-xs-2">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_search()">　搜索　</a>
+    </div>
+</div>
+<div id="id_div_grid"></div>
+<div class="submitbutton fixed">
+    <div class="col-xs-12">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　确定　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</div>
+</body>
+</html>

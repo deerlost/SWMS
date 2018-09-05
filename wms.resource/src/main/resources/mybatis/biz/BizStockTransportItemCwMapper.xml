@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockTransportItemCwMapper">
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.biz.BizStockTransportItemCw">
+		<id column="item_id" jdbcType="INTEGER" property="itemId" />
+		<result column="stock_transport_id" jdbcType="INTEGER"
+			property="stockTransportId" />
+		<result column="stock_transport_rid" jdbcType="INTEGER"
+			property="stockTransportRid" />
+		<result column="mat_id" jdbcType="INTEGER" property="matId" />
+		<result column="package_type_id" jdbcType="INTEGER" property="packageTypeId" />
+		<result column="stock_qty" jdbcType="DECIMAL" property="stockQty" />
+		<result column="production_batch_input" jdbcType="VARCHAR"
+			property="productionBatchInput" />
+		<result column="production_batch" jdbcType="VARCHAR" property="productionBatch" />
+		<result column="erp_batch_input" jdbcType="VARCHAR" property="erpBatchInput" />
+		<result column="erp_batch" jdbcType="VARCHAR" property="erpBatch" />
+		<result column="quality_batch_input" jdbcType="VARCHAR"
+			property="qualityBatchInput" />
+		<result column="quality_batch" jdbcType="VARCHAR" property="qualityBatch" />
+		<result column="fty_output" jdbcType="INTEGER" property="ftyOutput" />
+		<result column="location_output" jdbcType="INTEGER" property="locationOutput" />
+		<result column="batch" jdbcType="BIGINT" property="batch" />
+		<result column="transport_qty" jdbcType="DECIMAL" property="transportQty" />
+		<result column="fty_input" jdbcType="INTEGER" property="ftyInput" />
+		<result column="location_input" jdbcType="INTEGER" property="locationInput" />
+		<result column="mat_input" jdbcType="INTEGER" property="matInput" />
+		<result column="unit_id" jdbcType="INTEGER" property="unitId" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+		<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="mat_store_type" jdbcType="TINYINT" property="matStoreType" />
+		<result column="stock_input_id" jdbcType="INTEGER" property="stockInputId" />
+		<result column="stock_input_rid" jdbcType="INTEGER" property="stockInputRid" />
+	</resultMap>
+
+	<resultMap id="BaseResultMapVO"
+		type="com.inossem.wms.model.vo.BizStockTransportItemVo" extends="BaseResultMap">
+		<result column="stock_output_code" jdbcType="VARCHAR" property="stockOutputCode" />
+		<result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+		<result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+		<result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+		<result column="location_name" jdbcType="VARCHAR" property="locationName" />
+		<result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+		<result column="mat_name" jdbcType="VARCHAR" property="matName" />
+		<result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+		<result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+		<result column="input_fty_code" jdbcType="VARCHAR" property="inputFtyCode" />
+		<result column="input_fty_name" jdbcType="VARCHAR" property="inputFtyName" />
+		<result column="input_location_name" jdbcType="VARCHAR"
+			property="inputLocationCode" />
+		<result column="input_location_name" jdbcType="VARCHAR"
+			property="inputLocationName" />
+		<result column="input_mat_code" jdbcType="VARCHAR" property="inputMatCode" />
+		<result column="input_mat_name" jdbcType="VARCHAR" property="inputMatName" />
+		<result column="package_code" jdbcType="VARCHAR" property="packageCode" />
+
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		item_id, stock_transport_id, stock_transport_rid, mat_id,
+		package_type_id,
+		stock_qty,
+		production_batch_input, production_batch,
+		erp_batch_input, erp_batch, quality_batch_input,
+		quality_batch,
+		fty_output, location_output, batch, transport_qty,
+		fty_input,
+		location_input,
+		mat_input, unit_id, create_time, modify_time, is_delete
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from biz_stock_transport_item_cw
+		where item_id =
+		#{itemId,jdbcType=INTEGER}
+	</select>
+	<select id="getMaterial" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		SELECT DISTINCT
+			mater.mat_id,
+			mater.mat_code,
+			mater.mat_name,
+			mater.unit_id,
+			u.name_zh
+		FROM
+			dic_material mater
+		INNER JOIN dic_unit u on u.unit_id = mater.unit_id
+		where mat_code LIKE CONCAT('%',#{matcode},'%')  or mat_name LIKE CONCAT('%',#{matcode},'%')
+		<!-- #{matcode,jdbcType=VARCHAR} or mat_name=#{matcode,jdbcType=VARCHAR}) -->
+	</select>
+	<select id="selectByStockTaskId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		item_id, stock_transport_id, stock_transport_rid,
+		mat_id, package_type_id,
+		stock_qty,
+		production_batch_input,
+		production_batch, erp_batch_input, erp_batch, quality_batch_input,
+		quality_batch, fty_output, location_output, batch, transport_qty,
+		fty_input, location_input,
+		mat_input, unit_id, create_time,
+		modify_time, is_delete
+		from biz_stock_transport_item_cw ti
+		INNER JOIN (
+		SELECT DISTINCT
+		refer_receipt_id,
+		refer_receipt_rid
+		FROM
+		biz_stock_task_item_cw
+		WHERE
+		stock_task_id = #{stockTaskId}
+		) t ON
+		ti.stock_transport_id = t.refer_receipt_id
+		AND ti.stock_transport_rid =
+		t.refer_receipt_rid and ti.is_delete = 0
+
+	</select>
+
+
+	<select id="selectByStockTaskIdWriteOff" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		item_id, stock_transport_id, stock_transport_rid,
+		mat_id, package_type_id,
+		stock_qty,
+		production_batch_input,
+		production_batch, erp_batch_input, erp_batch, quality_batch_input,
+		quality_batch, fty_output, location_output, batch, transport_qty,
+		fty_input, location_input,
+		mat_input, unit_id, create_time,
+		modify_time, is_delete,
+		t.stock_input_id,
+		t.stock_input_rid
+		from biz_stock_transport_item_cw ti
+		INNER JOIN (
+		SELECT DISTINCT
+			riti.refer_receipt_id,
+			riti.refer_receipt_rid,
+			iti.refer_receipt_id stock_input_id,
+			iti.refer_receipt_rid stock_input_rid
+		FROM
+		biz_stock_task_item_cw iti 
+		inner join biz_stock_input_transport_item isiti on iti.refer_receipt_id = isiti.stock_transport_id and iti.refer_receipt_rid = isiti.stock_transport_rid
+		INNER JOIN biz_stock_task_item_cw riti on riti.stock_task_id = isiti.refer_receipt_id and riti.stock_task_rid = isiti.refer_receipt_rid 
+		WHERE
+		iti.stock_task_id = #{stockTaskId}
+		) t ON
+		ti.stock_transport_id = t.refer_receipt_id
+		AND ti.stock_transport_rid =
+		t.refer_receipt_rid and ti.is_delete = 0
+
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		biz_stock_transport_item_cw
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockTransportItemCw">
+		insert into
+		biz_stock_transport_item_cw (item_id, stock_transport_id,
+		stock_transport_rid,
+		mat_id, package_type_id, stock_qty,
+		production_batch_input, production_batch,
+		erp_batch_input, erp_batch,
+		quality_batch_input,
+		quality_batch, fty_output, location_output,
+		batch,
+		transport_qty, fty_input,
+		location_input, mat_input, unit_id,
+		create_time, modify_time, is_delete
+		)
+		values
+		(#{itemId,jdbcType=INTEGER}, #{stockTransportId,jdbcType=INTEGER},
+		#{stockTransportRid,jdbcType=INTEGER},
+		#{matId,jdbcType=INTEGER},
+		#{packageTypeId,jdbcType=INTEGER}, #{stockQty,jdbcType=DECIMAL},
+		#{productionBatchInput,jdbcType=VARCHAR},
+		#{productionBatch,jdbcType=VARCHAR},
+		#{erpBatchInput,jdbcType=VARCHAR}, #{erpBatch,jdbcType=VARCHAR},
+		#{qualityBatchInput,jdbcType=VARCHAR},
+		#{qualityBatch,jdbcType=VARCHAR}, #{ftyOutput,jdbcType=INTEGER},
+		#{locationOutput,jdbcType=INTEGER},
+		#{batch,jdbcType=BIGINT},
+		#{transportQty,jdbcType=DECIMAL}, #{ftyInput,jdbcType=INTEGER},
+		#{locationInput,jdbcType=INTEGER}, #{matInput,jdbcType=INTEGER},
+		#{unitId,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=TINYINT}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockTransportItemCw">
+		insert into biz_stock_transport_item_cw
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="itemId != null">
+				item_id,
+			</if>
+			<if test="stockTransportId != null">
+				stock_transport_id,
+			</if>
+			<if test="stockTransportRid != null">
+				stock_transport_rid,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="packageTypeId != null">
+				package_type_id,
+			</if>
+			<if test="stockQty != null">
+				stock_qty,
+			</if>
+			<if test="productionBatchInput != null">
+				production_batch_input,
+			</if>
+			<if test="productionBatch != null">
+				production_batch,
+			</if>
+			<if test="erpBatchInput != null">
+				erp_batch_input,
+			</if>
+			<if test="erpBatch != null">
+				erp_batch,
+			</if>
+			<if test="qualityBatchInput != null">
+				quality_batch_input,
+			</if>
+			<if test="qualityBatch != null">
+				quality_batch,
+			</if>
+			<if test="ftyOutput != null">
+				fty_output,
+			</if>
+			<if test="locationOutput != null">
+				location_output,
+			</if>
+			<if test="batch != null">
+				batch,
+			</if>
+			<if test="transportQty != null">
+				transport_qty,
+			</if>
+			<if test="ftyInput != null">
+				fty_input,
+			</if>
+			<if test="locationInput != null">
+				location_input,
+			</if>
+			<if test="matInput != null">
+				mat_input,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="workModel != null">
+				work_model,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="itemId != null">
+				#{itemId,jdbcType=INTEGER},
+			</if>
+			<if test="stockTransportId != null">
+				#{stockTransportId,jdbcType=INTEGER},
+			</if>
+			<if test="stockTransportRid != null">
+				#{stockTransportRid,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeId != null">
+				#{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="stockQty != null">
+				#{stockQty,jdbcType=DECIMAL},
+			</if>
+			<if test="productionBatchInput != null">
+				#{productionBatchInput,jdbcType=VARCHAR},
+			</if>
+			<if test="productionBatch != null">
+				#{productionBatch,jdbcType=VARCHAR},
+			</if>
+			<if test="erpBatchInput != null">
+				#{erpBatchInput,jdbcType=VARCHAR},
+			</if>
+			<if test="erpBatch != null">
+				#{erpBatch,jdbcType=VARCHAR},
+			</if>
+			<if test="qualityBatchInput != null">
+				#{qualityBatchInput,jdbcType=VARCHAR},
+			</if>
+			<if test="qualityBatch != null">
+				#{qualityBatch,jdbcType=VARCHAR},
+			</if>
+			<if test="ftyOutput != null">
+				#{ftyOutput,jdbcType=INTEGER},
+			</if>
+			<if test="locationOutput != null">
+				#{locationOutput,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				#{batch,jdbcType=BIGINT},
+			</if>
+			<if test="transportQty != null">
+				#{transportQty,jdbcType=DECIMAL},
+			</if>
+			<if test="ftyInput != null">
+				#{ftyInput,jdbcType=INTEGER},
+			</if>
+			<if test="locationInput != null">
+				#{locationInput,jdbcType=INTEGER},
+			</if>
+			<if test="matInput != null">
+				#{matInput,jdbcType=INTEGER},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="workModel != null">
+				#{workModel,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockTransportItemCw">
+		update biz_stock_transport_item_cw
+		<set>
+			<if test="stockTransportId != null">
+				stock_transport_id =
+				#{stockTransportId,jdbcType=INTEGER},
+			</if>
+			<if test="stockTransportRid != null">
+				stock_transport_rid =
+				#{stockTransportRid,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				mat_id = #{matId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeId != null">
+				package_type_id = #{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="stockQty != null">
+				stock_qty = #{stockQty,jdbcType=DECIMAL},
+			</if>
+			<if test="productionBatchInput != null">
+				production_batch_input =
+				#{productionBatchInput,jdbcType=VARCHAR},
+			</if>
+			<if test="productionBatch != null">
+				production_batch = #{productionBatch,jdbcType=VARCHAR},
+			</if>
+			<if test="erpBatchInput != null">
+				erp_batch_input = #{erpBatchInput,jdbcType=VARCHAR},
+			</if>
+			<if test="erpBatch != null">
+				erp_batch = #{erpBatch,jdbcType=VARCHAR},
+			</if>
+			<if test="qualityBatchInput != null">
+				quality_batch_input =
+				#{qualityBatchInput,jdbcType=VARCHAR},
+			</if>
+			<if test="qualityBatch != null">
+				quality_batch = #{qualityBatch,jdbcType=VARCHAR},
+			</if>
+			<if test="ftyOutput != null">
+				fty_output = #{ftyOutput,jdbcType=INTEGER},
+			</if>
+			<if test="locationOutput != null">
+				location_output = #{locationOutput,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				batch = #{batch,jdbcType=BIGINT},
+			</if>
+			<if test="transportQty != null">
+				transport_qty = #{transportQty,jdbcType=DECIMAL},
+			</if>
+			<if test="ftyInput != null">
+				fty_input = #{ftyInput,jdbcType=INTEGER},
+			</if>
+			<if test="locationInput != null">
+				location_input = #{locationInput,jdbcType=INTEGER},
+			</if>
+			<if test="matInput != null">
+				mat_input = #{matInput,jdbcType=INTEGER},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+		</set>
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTransportItemCw">
+		update
+		biz_stock_transport_item_cw
+		set stock_transport_id =
+		#{stockTransportId,jdbcType=INTEGER},
+		stock_transport_rid =
+		#{stockTransportRid,jdbcType=INTEGER},
+		mat_id =
+		#{matId,jdbcType=INTEGER},
+		package_type_id =
+		#{packageTypeId,jdbcType=INTEGER},
+		stock_qty =
+		#{stockQty,jdbcType=DECIMAL},
+		production_batch_input =
+		#{productionBatchInput,jdbcType=VARCHAR},
+		production_batch =
+		#{productionBatch,jdbcType=VARCHAR},
+		erp_batch_input =
+		#{erpBatchInput,jdbcType=VARCHAR},
+		erp_batch =
+		#{erpBatch,jdbcType=VARCHAR},
+		quality_batch_input =
+		#{qualityBatchInput,jdbcType=VARCHAR},
+		quality_batch =
+		#{qualityBatch,jdbcType=VARCHAR},
+		fty_output =
+		#{ftyOutput,jdbcType=INTEGER},
+		location_output =
+		#{locationOutput,jdbcType=INTEGER},
+		batch = #{batch,jdbcType=BIGINT},
+		transport_qty = #{transportQty,jdbcType=DECIMAL},
+		fty_input =
+		#{ftyInput,jdbcType=INTEGER},
+		location_input =
+		#{locationInput,jdbcType=INTEGER},
+		mat_input =
+		#{matInput,jdbcType=INTEGER},
+		unit_id = #{unitId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP},
+		is_delete =
+		#{isDelete,jdbcType=TINYINT}
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</update>
+	<update id="updateDeleteByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTransportItemCw">
+		update
+		biz_stock_transport_item_cw
+		set 
+		is_delete =
+		#{isDelete,jdbcType=TINYINT}
+		where stock_transport_id =
+		#{stockTransportId,jdbcType=INTEGER}
+	</update>
+	
+	
+	<select id="selectItemById" parameterType="java.lang.Integer"
+		resultType="map">
+		SELECT
+			item.item_id,
+			item.fty_output,
+			item.location_output,
+			item.stock_transport_id,
+			item.stock_transport_rid,
+			item.transport_qty,
+			item.stock_qty,
+			IFNULL(item.production_batch,'') product_batch,
+			item.erp_batch,
+			item.erp_batch_input,
+			item.production_batch_input,
+			item.package_type_id,
+			item.mat_id,
+			item.batch,
+			m.mat_code AS mat_input,
+			item.fty_input,
+			item.location_input,
+			item.work_model,
+			IFNULL(
+				CEIL(
+					IFNULL(item.stock_qty, 0) / (IFNULL(pack.package_standard, 1) / (case when unit.unit_code = 'KG' then 1 else 1000 end))
+				),
+				0
+			) pack_num,
+			IFNULL(
+				CEIL(
+					IFNULL(item.transport_qty, 0) / (IFNULL(pack.package_standard, 1)/ (case when unit.unit_code = 'KG' then 1 else 1000 end))
+				),
+				0
+			) transport_pack_num,
+			item.remark,
+			mat.mat_code,
+			mat.mat_name,
+			matin.mat_name AS mat_input_name,
+			unit.name_zh AS unit_name,
+			pack.sn_used,
+			pack.package_type_name,
+			pack.package_standard / (case when unit.unit_code = 'KG' then 1 else 1000 end) package_standard,
+			pack.package_standard_ch,
+			pack.package_type_code,
+			fty.fty_name,
+			fty.fty_code,
+			sl.location_code,
+			sl.location_name
+		FROM
+			biz_stock_transport_item_cw item
+		INNER JOIN dic_material m ON m.mat_id = item.mat_input
+		INNER JOIN dic_material mat ON mat.mat_id = item.mat_id
+		INNER JOIN dic_factory fty ON fty.fty_id = item.fty_input
+		INNER JOIN dic_stock_location sl ON sl.location_id = item.location_input
+		INNER JOIN dic_unit unit ON unit.unit_id = item.unit_id
+		INNER JOIN dic_package_type pack ON pack.package_type_id = item.package_type_id
+		INNER JOIN dic_material matin ON matin.mat_id = item.mat_input
+		WHERE
+			item.is_delete = 0
+
+		and item.stock_transport_id = #{stock_transport_id,jdbcType=INTEGER}
+
+	</select>
+	<select id="selectItemByIdForPrint" parameterType="java.lang.Integer"
+		resultType="map">
+		SELECT
+			item.item_id,
+			item.fty_output,
+			item.location_output,
+			item.stock_transport_id,
+			item.stock_transport_rid,
+			item.transport_qty
+			*(
+				CASE
+				WHEN unit.unit_code = 'KG' THEN
+					1
+				ELSE
+					1000
+				END
+			)transport_qty,
+			item.stock_qty,
+			IFNULL(item.production_batch,'') product_batch,
+			item.erp_batch,
+			item.erp_batch_input,
+			item.production_batch_input,
+			item.package_type_id,
+			item.mat_id,
+			item.batch,
+			m.mat_code AS mat_input,
+			item.fty_input,
+			item.location_input,
+			item.work_model,
+			IFNULL(
+				CEIL(
+					IFNULL(item.stock_qty, 0) / (IFNULL(pack.package_standard, 1) / (case when unit.unit_code = 'KG' then 1 else 1000 end))
+				),
+				0
+			) pack_num,
+			IFNULL(
+				CEIL(
+					IFNULL(item.transport_qty, 0) / (IFNULL(pack.package_standard, 1)/ (case when unit.unit_code = 'KG' then 1 else 1000 end))
+				),
+				0
+			) transport_pack_num,
+			item.remark,
+			mat.mat_code,
+			mat.mat_name,
+			matin.mat_name AS mat_input_name,
+			unit.name_zh AS unit_name,
+			pack.sn_used,
+			pack.package_type_name,
+			pack.package_standard / (case when unit.unit_code = 'KG' then 1 else 1000 end) package_standard,
+			pack.package_standard_ch,
+			pack.package_type_code,
+			fty.fty_name,
+			fty.fty_code,
+			sl.location_code,
+			sl.location_name
+		FROM
+			biz_stock_transport_item_cw item
+		INNER JOIN dic_material m ON m.mat_id = item.mat_input
+		INNER JOIN dic_material mat ON mat.mat_id = item.mat_id
+		INNER JOIN dic_factory fty ON fty.fty_id = item.fty_input
+		INNER JOIN dic_stock_location sl ON sl.location_id = item.location_input
+		INNER JOIN dic_unit unit ON unit.unit_id = item.unit_id
+		INNER JOIN dic_package_type pack ON pack.package_type_id = item.package_type_id
+		INNER JOIN dic_material matin ON matin.mat_id = item.mat_input
+		WHERE
+			item.is_delete = 0
+
+		and item.stock_transport_id = #{stock_transport_id,jdbcType=INTEGER}
+
+	</select>
+
+	<select id="selectItemVoById" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+			item.item_id,
+			item.stock_transport_id,
+			item.stock_transport_rid,
+			item.transport_qty,
+			item.package_type_id,
+			item.mat_id,
+			item.batch,
+			item.unit_id,
+			item.fty_output,
+			item.location_output,
+			item.fty_input,
+			item.location_input,
+			pack.sn_used mat_store_type
+		from biz_stock_transport_item_cw item
+		inner join dic_package_type pack on pack.package_type_id =
+		item.package_type_id
+		where item.is_delete =0
+		and item.stock_transport_id = #{stock_transport_id,jdbcType=INTEGER}
+
+	</select>
+	
+	
+	<select id="queryOutput"  parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT
+		head.allocate_cargo_code,
+		head.refer_receipt_code,
+		m.mat_code,
+		m.mat_name,
+		item.production_batch,
+		item.qty,
+		item.remark,
+		pack.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		area.area_name,
+		wp.position_code   
+FROM
+   	 	biz_allocate_cargo_head head
+   		 INNER JOIN biz_stock_task_item_cw item
+        ON (head.allocate_cargo_id = item.refer_receipt_id) AND (head.document_type = item.refer_receipt_type)
+  		INNER JOIN biz_stock_task_position_cw pos 
+        ON (item.stock_task_rid = pos.stock_task_rid) AND (item.stock_task_id = pos.stock_task_id)
+		INNER JOIN dic_material m on m.mat_id = item.mat_id
+		INNER JOIN dic_unit u2 ON m.unit_id = u2.unit_id
+		INNER JOIN dic_package_type pack on pack.package_type_id = item.package_type_id
+		INNER JOIN dic_warehouse_area area on area.area_id = pos.source_area_id
+		inner JOIN dic_warehouse_position wp on wp.position_id = pos.source_position_id
+
+	where
+	1=1 
+	and
+	head.delivery_vehicle=#{delivery_vehicle,jdbcType=VARCHAR}
+	
+	and head.receive_name=#{receive_name}
+	
+	and DATE_FORMAT(item.create_time,'%Y-%m-%d')=DATE_FORMAT(#{create_time},'%Y-%m-%d')
+	</select>
+<!-- 	查询所有转储单 -->	
+<select id="queryTransStockCwOutAndInOnPaging" parameterType="java.util.Map"  resultType="java.util.Map">
+ 
+	SELECT DISTINCT
+
+		move.biz_type,
+		move.move_type_code,
+		mat.mat_id,
+		mat.mat_code,
+		mat.mat_name,
+		fty.fty_name,
+		fty.fty_code,
+		loc.location_name,
+		loc.location_code,
+		item.batch,
+		item.stock_transport_id as refer_receipt_id,
+		item.stock_transport_rid as refer_receipt_rid,
+		item.production_batch as product_batch,
+		head.stock_transport_code as refer_receipt_code,
+		unit.name_zh,
+		item.transport_qty as qty,
+		DATE_FORMAT(item.create_time,'%Y-%m-%d')create_time,
+ 		head.receipt_type,
+		u.user_name
+		FROM biz_stock_transport_item_cw item
+		INNER JOIN biz_stock_transport_head_cw head on head.stock_transport_id =
+		item.stock_transport_id
+		INNER JOIN dic_move_type move on move.move_type_id = head.move_type_id
+		INNER JOIN dic_factory fty ON fty.fty_id = head.fty_id
+		INNER JOIN dic_stock_location loc on loc.location_id = head.location_id
+		LEFT JOIN dic_unit unit on unit.unit_id = item.unit_id
+		INNER JOIN dic_material mat on mat.mat_id = item.mat_id
+		INNER JOIN wms_user u on u.user_id = head.create_user
+		WHERE
+		item.is_delete =0
+		<if test="ftyId != null and ftyId !=''">
+			AND head.fty_id= #{ftyId,jdbcType=VARCHAR}
+		</if>
+		<if test="locationId != null and locationId !=''">
+			AND head.location_id = #{locationId,jdbcType=VARCHAR}
+		</if>
+		<if test="createTimeBegin != null">
+			AND item.create_time <![CDATA[>=]]>
+			#{createTimeBegin,jdbcType=TIMESTAMP}
+		</if>
+		<if test="createTimeEnd != null">
+			AND item.create_time <![CDATA[<=]]>
+			#{createTimeEnd,jdbcType=TIMESTAMP}
+		</if>
+		<if test="referReceiptCode != null and referReceiptCode !=''">
+			AND head.stock_transport_code = #{referReceiptCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="moveTypeCode != null and moveTypeCode !=''">
+			AND move.move_type_code = #{moveTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="matCode != null and matCode !=''">
+			AND (			
+			<foreach collection="utilMatCodes" item="item" index="index" separator="or">     	
+	    		  	(mat.mat_code BETWEEN #{item.begin} AND #{item.end} 
+	    		  	AND CHAR_LENGTH(mat.mat_code) IN (CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))  )   	
+	  		</foreach> 		   
+	  			 OR	mat.mat_code IN   				 
+	   		<foreach collection="utilMatCodes.get(0).strings" item="string" index="index" open="(" close=")" separator=",">  		
+	    			#{string}     			 
+	  		</foreach> 
+				)	
+		</if>
+<if test="matName != null and matName !=''">
+			AND mat.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>	
+<if test="userName != null and userName !=''">
+			AND u.user_name LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+		</if>
+		
+	
+	<if test="productBatch !=null and productBatch!='' ">
+			AND item.production_batch = #{productBatch}
+	</if>
+	<if test="matDocCode !=null and matDocCode !=''">
+			AND item.mat_doc_code=#{matDocCode}
+		</if>
+		
+	</select>
+	<!-- 根据转储单号、转储单行号或item逻辑删除物料转储单行信息 -->
+	<update id="deleteDumpItem"  parameterType="java.util.Map">
+	UPDATE biz_stock_transport_item_cw
+			SET is_delete = 1,
+			 modify_time = SYSDATE()
+			WHERE
+				is_delete = 0
+				<if test="stock_transport_id>0">
+				AND stock_transport_id = #{stock_transport_id}
+				</if>
+				<if test="item_id>0">
+				AND item_id=#{item_id}
+				</if>
+				<if test="stock_transport_rid >0">
+				AND stock_transport_rid=#{stock_transport_rid}
+				</if>	
+	
+	</update>
+
+</mapper>

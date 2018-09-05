@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="msapplication-tap-highlight" content="no" />
+	<title>出入库量统计</title>
+	<link rel="stylesheet" type="text/css" href="../../css/index.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/title.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/turnover.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/stockAnalysis.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/LCalendar/LCalendar/css/LCalendar.min.css" />
+	<script src="../../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="../../js/echarts.common.min.js" type="text/javascript"></script>
+	<script src="../../js/layer/layer.js"></script>
+	<script src="../../js/common.js" type="text/javascript"></script>
+	<script src="../../js/LCalendar/LCalendar/js/LCalendar.js" type="text/javascript"></script>
+	<script src="../../js/rem.js" type="text/javascript"></script>
+	<script src="../../js/page/crk/crk4.js" type="text/javascript"></script>
+</head>
+<style>
+	.fbox .banner ul li{height:0.8rem;line-height:0.8rem}
+	.li_tit p a.on{border-bottom: 0.03rem solid #59e;color: #59e;}
+	.tititia p a.on{border-bottom: 0.03rem solid #59e;}
+	.tititib p a.on{border-bottom: 0.03rem solid #59e;color: #59e;}
+</style>
+<body>
+	<div class="homebox">
+		<div class="title">
+			<a href="javascript:void(0)" class="back">返回</a>
+			出入库量统计
+			<a href="../index.html" style="font-size: 0.3rem; position: absolute;right:0.5rem;line-height:1rem;color:#fff">查询列表</a>
+		</div>
+		<div class="title_b wh"><p>全部库房</p></div>
+		<div id="u179_div">
+			<img src="../../images/details/u724.png" style="margin-left: 0.4rem;float: left;margin-top:.2rem;"/>
+			<input style="border: 0;float: left;height: 99%;width: 15%;font-size: .28rem;background: #f2f2f2;" type="text" name="start_date" id="start_date" placeholder="选择开始日期" readonly="readonly" value="" />
+			<span style="margin-right: 0.4rem;"></span>
+			<span datatype="2" class="type">数量</span><img src="../../images/details/u190.png" /><span datatype="1" class="type">金额</span>
+		</div>
+	</div>
+	<div class="tititib">
+			<p>
+				<a class="on" data-value="1">PAV库房 出库</a>
+			</p>
+			<p>
+				<a  data-value="2">PAV库房 入库</a>
+			</p>
+		</div>
+	<table class="tablestyle1">
+		<th align="left">序号</th><th align="left">产品名称</th><th align="right">出库量</th>
+	</table>
+	<!--弹框-->
+	<div class="fbox">
+		<div class="bg"></div>
+		<div class="banner">
+			<p>选择板块<img src="../../images/details/u102.png" /></p>
+			<ul></ul>
+		</div>
+	</div>
+	<!--弹框结束-->
+</body>
+</html>

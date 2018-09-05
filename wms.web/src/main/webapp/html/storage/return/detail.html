@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/bootstrapgrid.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../js/page/storage/return/detail.js"></script>
+		<style>
+			.input-group-addon {
+				padding: 0px 12px;
+			}
+			
+			.iswriteoff {
+				height: 120px;
+				padding: 0px 20px;
+				line-height: 120px;
+			}
+			
+			.btn_charge_against {
+				text-align: left;
+			}
+			
+			.resernum input {
+				height: 38px;
+				border-radius: 2px solid #ccc;
+			}
+			
+			input.ico-search {
+				background: url(../../../img/icon-search-blue.png) no-repeat right 5px center
+			}
+			
+			a.btn-search {
+				position: absolute;
+				width: 30px;
+				height: 30px;
+				right: 16px;
+				top: 2px;
+			}
+			.pinkbg{
+				background:#ffeee8 ;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article" c-app="zmkpf">
+				<div class="mapadress">
+					<a href="list.html">销售退货单列表</a>
+					<span>&nbsp;&nbsp;&nbsp;&rsaquo;&nbsp;&nbsp;&nbsp;</span>
+					<span class="spanno">创建销售退货单</span>
+				</div>
+				<h2 class="h2red" c-model="status_name">--</h2>
+				<div class="btnoperate" style="display: none;">
+					<a href="javascript:;" class="ico ico-del2 btndelete">删除</a>
+				</div>
+				<div class="form-search">
+					<div class="col-xs-12 row jhdh">
+							<div class="col-lg-3 col-xs-4 div-group">
+								<input type="text" class="ico-search form-control yldh" placeholder="输入交货单号" maxlength="10" />
+								<a href="javascript:void(0)" class="btn-search"></a>
+							</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">交货单号：</span>
+								<span class="deveryno">--</span>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">合同编号：</span>
+								<span class="applicant" c-model="preorder_id">--</span>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">客户名称：</span>
+								<span class="creattime" c-model="customer_name">--</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group shift">
+								<span class="input-group-addon">班次：</span>
+								<select class="shiftinfo form-control">
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">创建人：</span>
+								<span class="leading" c-model="create_user_name">--</span>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">创建日期：</span>
+								<span class="applicant" c-model="create_time">--</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group prodinfo">
+								<span class="input-group-addon">产品线：</span>
+								<select class=" form-control product_line">
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group devicinfo">
+								<span class="input-group-addon">装置：</span>
+								<select class=" form-control devices">
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group remarks">
+								<span class="input-group-addon">备注：</span>
+								<div class="remarkinfo">
+									<a href="javascript:void(0)" data-title="备注" data-href="note.html" data-size="500px,400px" class="btn_table_edit btn_remark">查看</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+							<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group syntype">
+								<span class="input-group-addon">同步类型：</span>
+								<select class="tbtype form-control" disabled="disabled">
+									<option value="2">同步ERP&MES</option>
+									<option value="1">同步ERP</option>
+									<option value="0">不同步</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group doc_code" style="display: none;">
+							<div class="input-group">
+								<span class="input-group-addon">退货ERP凭证：</span>
+								<span c-model="mat_doc_code">--</span>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group doc_code" style="display: none;">
+							<div class="input-group">
+								<span class="input-group-addon">退货MES凭证：</span>
+								<span c-model="mes_doc_code">--</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group write_doc_code" style="display: none;">
+							<div class="input-group">
+								<span class="input-group-addon">冲销ERP凭证：</span>
+								<span c-model="mat_write_off_code">--</span>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group write_doc_code" style="display: none;">
+							<div class="input-group">
+								<span class="input-group-addon">冲销MES凭证：</span>
+								<span c-model="mes_write_off_code">--</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<hr/>
+				</div>
+				 <div class="col-xs-12">
+					<h2 class="h2grey col-lg-11 col-xs-10"> 产品信息 </h2>
+				</div>
+			</div>
+			<div class="col-xs-12 clearfix"></div>
+			<div id="id_div_grid" class="col-xs-12"></div>
+			<div class="submitwriteoff col-xs-12">
+				<a class="delet" style="display:none" href="javascript:void(0)">删除选中物料</a>
+			</div>
+			<div class="col-xs-12 submitbutton ">
+				<a href="javascript:void(0)" class="btn-lay-blue btnsubmit">　过帐　</a>
+				<a href="javascript:void(0)" class="btn-lay-blue submission">　提交　</a>
+				<a href="javascript:void(0)" class="btn-lay-default synmes" style="display: none;">　同步退货MES　</a>
+				<a href="javascript:void(0)" class="btn-lay-default write_synmes" style="display: none;">　同步冲销MES　</a>
+				<a href="javascript:void(0)" class="btn-lay-blue against">　冲销　</a>
+				<a href="./list.html" class="btn-lay-default returns">　返回　</a>
+			</div>
+			</div>
+		</div>
+	</body>
+
+</html>

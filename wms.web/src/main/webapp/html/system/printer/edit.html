@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+			
+			.col-xs-3 {
+				text-align: right;
+			}
+		</style>
+		<script>
+			pardata = null
+			$(function() {
+				var index = GetQueryString('index')
+				var action = GetQueryString('action');
+				if(action == "create") {
+				} else {
+					pardata = parent.getinfo(index)
+					$(".printer_ip").val(pardata.printer_ip);
+					$(".printer_name").val(pardata.printer_name);
+					$(".type").val(pardata.type);
+				}
+				$(".btn_submit").click(function() {
+					submit();
+				});
+			});
+			function isValidIP(ip) {
+			    var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+			    return reg.test(ip);
+			} 
+			function submit(){
+				var isChecked=true
+				var printer_ip = $(".printer_ip").val();
+				if(printer_ip==""){
+					layersMoretips("请填写打印机ip",$(".printer_ip"));
+					isChecked=false;
+				} else {
+					if(isValidIP(printer_ip) == false){
+						layersMoretips("请填写正确的ip",$(".printer_ip"));
+						isChecked=false;
+					}
+				}
+				if($(".printer_name").val()==""){
+					layersMoretips("请填写打印机名称",$(".printer_name"));
+					isChecked=false;
+				}
+				var test="";
+				var jsondata = {};
+				if(GetQueryString('action')=="edit"){
+					test="修改成功";
+					jsondata.printer_id=pardata.printer_id;
+				}else{
+					test="创建成功";
+				}
+				jsondata.printer_ip =$(".printer_ip").val();
+				jsondata.printer_name = $(".printer_name").val();
+				jsondata.type = $(".type").val();
+				if(!isChecked){
+					return false;
+				}
+				showloading();
+				var url = (uriapi + '/conf/printer/save_or_update_printer');
+				ajax(url, 'POST', JSON.stringify(jsondata), function(data) {
+					setTimeout(function() {
+						layer.close(indexloading);
+					}, 50);
+					if(data.head.status == true) {
+						layer.msg(test, {
+							time: 2000
+						});
+						parent.actionpager();
+						setTimeout(function() {
+							$(".btn_iframe_close_window").click();
+						}, 2000);
+					}
+				},function(e) {
+					layer.close(indexloading);
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="form" c-app="zmkpf">
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>打印机名称：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="form-control printer_name" />
+				</div>
+			</div>
+			<div class="col-xs-12 package_code">
+				<div class="col-xs-3">
+					<label>打印机ip：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="printer_ip form-control">
+				</div>
+			</div>
+			<div class="col-xs-12 package_code">
+				<div class="col-xs-3">
+					<label>打印机类型：</label>
+				</div>
+				<div class="col-xs-8">
+					<select class="form-control type" >
+						<option value='1' selected="selected">纸张打印机</option>
+						<option value='2'>标签打印机</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<br /><br /><br /><br /><br /><br />
+		</div>
+		<div class="fixed submitbutton">
+			<a href="javascript:void(0)" class="btn-lay-blue btn_submit">　确定　</a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+		</div>
+	</body>
+</html>

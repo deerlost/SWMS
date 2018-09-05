@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/mod.css" rel="stylesheet" />
+    <link href="../../../css/bootstrapgrid.css" rel="stylesheet" />
+    <link href="../../../css/datetimepicker.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <link href="../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/datetimepicker.js"></script>
+
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/echarts.js"></script>
+    <script src="../../../js/jquery-bootstrap-pagination.js"></script>
+    <script src="../../../js/jquery.inossem.grid.js"></script>
+    <script src="../../../js/page/search/warning/list.js"></script>
+
+    <style>
+        .form-search{margin-top:20px}
+        .radio input{margin-right:3px}
+        .radio label{float:left;margin-left:20px}
+        .form-inline .form-group{width:44%}
+		.input-group.radio{margin:0px;}
+		.form-search .input-group-addon span.tiinfo {
+				font-size:14px;
+			}
+		table.tablestyle4 td.yellowbg {
+			background-color: #fdf381;}
+        .color span{width:18px;height:14px;background: red;display: inline-block;margin-right:5px}
+        .color span.color2{background: yellow;}
+    </style>
+
+</head>
+
+<body>
+<div c-template="menu"></div>
+<div class="articlebox">
+    <div class="article">
+        <div class="mapadress">
+            <h2 class="h2black">临期库存预警</h2>
+        </div>
+        <div class="form-search">
+            <div class="divbase" c-app="base">
+                <div class="col-xs-12 row">
+                    <div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">物料编码：</span>
+								<input class="form-control matnr" type="text" />
+								<span class="input-group-addon" style="padding: 0px 0px 0px 5px;min-width: auto;"><span class="tiinfo glyphicon glyphicon-info-sign" style="color:#0088cc"></span></span>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">物料描述：</span>
+								<input class="form-control maktx" type="text" />
+							</div>
+						</div>
+                    <div class="col-lg-3 col-xs-4 div-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">临期天数：</span>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input class="form-control" type="number" maxlength="30" min="0" id="day_start" />
+                                </div>
+                                到
+                                <div class="form-group">
+                                    <input class="form-control" type="number" maxlength="30" min="0" id="day_end"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 row">
+                	<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">仓库号：</span>
+								<select class="form-control selectwh">
+									<option value="">请选择</option>
+								</select>
+							</div>
+					</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">存储区：</span>
+								<select type="text" class="form-control areainfo">
+									<option value="">请选择</option>
+								</select>
+							</div>
+						</div>
+                    <div class="col-lg-6 col-xs-4 div-group">
+                        <div class="input-group radio">
+                            <label for="radio2"><input type="radio" value="" name="reminding" id="radio2" checked>全部库存</label>
+                            <label for="radio0"><input type="radio" value="1" name="reminding" id="radio0">一级临期库存</label>
+                            <label for="radio1"><input type="radio" value="2" name="reminding" id="radio1">二级临期库存</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">工厂：</span>
+								<select class="form-control selectwerks" id="fty" />
+									
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">库存地点：</span>
+								<select class="form-control selectlgort" id="location" data-parent="input">
+									
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">仓位：</span>
+								<input type="text" class="form-control position_code" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">库存类型：</span>
+								<select class="form-control invent_state">
+									<option value="">请选择</option>
+								</select>
+							</div>
+						</div>
+					</div>
+            </div>
+        </div>
+        <div class="col-xs-12 row submitbutton">
+            <a href="javascript:void(0)" class="btn-lay-blue btn_search">查询</a>
+            <a href="javascript:void(0)" class="btn-lay-default btn_files">批量导出</a>
+        </div>
+        <div class="col-xs-12 text-right">
+            <div class="color"><span class="color1"></span>一级临期库存　　<span class="color2"></span>二级临期库存</div>
+        </div>
+        <div id="id_div_grid"></div>
+        <div class="text-center" id="J_ListPagination"></div>
+    </div>
+</div>
+<form id="download" method="get" class="hidden">
+    <input type="text"  name="fty_id">
+    <input type="text"  name="location_id">
+    <input type="text"  name="position_code">
+    <input type="text"  name="area_id">
+    <input type="text"  name="mat_code">
+    <input type="text"  name="mat_name">
+    <input type="text"  name="day_start">
+    <input type="text"  name="day_end">
+    <input type="text"  name="is_reminding">
+    <input type="text" name="wh_id">
+    <input type="text"  name="stock_type_id">
+    <input type="text"  name="warranty_date">
+</form>
+
+
+</body>
+</html>

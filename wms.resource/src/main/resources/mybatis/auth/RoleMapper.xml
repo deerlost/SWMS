@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.auth.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.auth.Role">
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+  </resultMap>
+  <insert id="insert" parameterType="com.inossem.wms.model.auth.Role">
+    insert into wms_role (role_id, role_name)
+    values (#{roleId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.auth.Role">
+    insert into wms_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 查询所有角色(用户管理)--> 
+  <select id="selectAllRoles"  resultMap="BaseResultMap">
+  	select role_id,
+  		   role_name
+     from wms_role where  role_id !=0  order by   role_id 
+  </select>
+  
+    <!-- 条件查询角色列表 (角色管理列表页)--> 
+  <select id="selectRoleListOnPaging" parameterType="java.util.HashMap" resultType="java.util.Map">
+  	select role_id,
+  		   role_name
+      from wms_role 
+      where  role_id != 0
+      <if test="keyword != null">
+      	 and (role_name like CONCAT('%',#{keyword},'%' ) 
+      	 or role_id like CONCAT('%',#{keyword},'%' ))
+      </if>       
+      order by  role_id 
+      <if test="start != null" >
+	      limit #{start}, #{end}
+		</if> 
+		
+  </select>
+  
+  <select id="selectRole"  resultMap="BaseResultMap">
+  	SELECT role_id,
+  		   role_name
+    FROM wms_role 
+      
+  </select>
+  
+  <select id="selectRoleByUserId" parameterType="java.lang.String"  resultMap="BaseResultMap">
+  	SELECT r.role_id,
+  		   r.role_name
+    FROM wms_role r
+    INNER JOIN wms_user_role ur ON r. role_id = ur.role_id AND ur.user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  
+   <select id="selectRoleByRoleId"  resultMap="BaseResultMap">
+  	select role_id,
+  		   role_name
+      from wms_role 
+      where role_id = #{roleId,jdbcType=VARCHAR}
+      
+  </select>
+  
+  <select id="selectRoleByRoleName"  resultMap="BaseResultMap">
+  	select role_id,
+  		   role_name
+      from wms_role 
+      where role_name = #{roleName,jdbcType=VARCHAR}
+      
+  </select>
+  
+  
+  <update id="updateRole"  parameterType="com.inossem.wms.model.auth.Role">
+  	update wms_role
+    <set>
+      <if test="roleId != null">
+       	role_id = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  
+  </update>
+  
+  
+  	<!-- 查询角色总共行数 -->
+  <select id="selectRoleCount"  parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(1)
+      from wms_role 
+     where  role_id != 0
+      <if test="keyword != null">
+      	 and (role_name like CONCAT('%',#{keyword},'%' ) 
+      	 or role_id like CONCAT('%',#{keyword},'%' ))
+      </if>   
+  </select>
+  
+  
+</mapper>

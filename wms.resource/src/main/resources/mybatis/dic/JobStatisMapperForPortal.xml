@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.JobStatisMapperForPortal">
+
+	<select id="selectJobStatis" parameterType="java.util.Map"
+		resultType="java.util.Map" flushCache="true" >
+		select     
+		t.wh_id,
+		any_value(t.wh_code) wh_code,
+		any_value(t.wh_name) wh_name,
+		t.create_user ,
+		t.type,
+		any_value(u.user_name) create_user_name,
+		count(t.head_id) allnum,
+		sum( CASE WHEN t.request_source = 1 THEN 1 ELSE 0 END ) pdaNum
+		from
+		(
+		select
+		tt.head_id,
+		tt.wh_id,
+		any_value(tt.wh_code) wh_code,
+		any_value(tt.wh_name) wh_name,
+		tt.fty_id,
+		tt.create_user,
+		tt.request_source,
+		10 type from (
+		SELECT f.stock_input_id head_id, 
+		wh.wh_id,wh.wh_code,wh.wh_name,any_value(f.fty_id) fty_id,f.create_user, f.request_source
+		FROM
+		biz_stock_input_item g
+		INNER JOIN biz_stock_input_head f ON g.stock_input_id = f.stock_input_id
+		and f.is_delete = 0
+		inner join dic_stock_location sl on g.location_id=sl.location_id
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		WHERE 1 = 1
+		GROUP BY f.stock_input_id, wh.wh_id, f.create_user
+
+		union ALL
+
+		SELECT tf.stock_transport_id head_id,
+		wh.wh_id,wh.wh_code,wh.wh_name, any_value(ti.fty_input) fty_id, tf.create_user,tf.request_source
+		FROM
+		biz_stock_input_transport_item ti
+		INNER JOIN biz_stock_input_transport_head tf ON ti.stock_transport_id =
+		tf.stock_transport_id and tf.is_delete = 0
+		inner join dic_stock_location sl on ti.location_input=sl.location_id 
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		WHERE 1 = 1
+		GROUP BY tf.stock_transport_id, wh.wh_id, tf.create_user
+		) tt
+
+
+		union ALL
+
+		SELECT
+		f.stock_output_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(g.fty_id) fty_id,
+		f.create_user,
+		f.request_source,
+		20 type
+
+		FROM
+		biz_stock_output_item g
+		INNER JOIN biz_stock_output_head f ON g.stock_output_id = f.stock_output_id
+		and f.is_delete = 0 and f.receipt_type !=25
+		inner join dic_stock_location sl on sl.location_id=g.location_id
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		WHERE 1 = 1
+		GROUP BY f.stock_output_id, wh.wh_id, f.create_user
+		
+		union ALL
+		
+		SELECT
+		f.stock_output_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(p.fty_id) fty_id,
+		f.create_user,
+		f.request_source,
+		20 type
+
+		FROM
+		biz_stock_output_item g
+		INNER JOIN biz_stock_output_head f ON g.stock_output_id = f.stock_output_id
+		and f.is_delete = 0 and f.receipt_type =25
+		inner join biz_stock_output_position p on p.stock_output_id= f.stock_output_id and p.stock_output_rid = g.stock_output_rid and p.is_delete = 0
+		inner join dic_stock_location sl on sl.location_id=p.location_id
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		WHERE 1 = 1
+		GROUP BY f.stock_output_id, wh.wh_id, f.create_user
+		
+		union ALL
+
+		SELECT
+		p.stock_task_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(p.fty_id) fty_id,
+		k.create_user,
+		k.request_source,
+		33 type
+		FROM
+		biz_stock_task_item_cw p
+		INNER JOIN biz_stock_task_head_cw k ON k.stock_task_id = p.stock_task_id
+		AND k.receipt_type = 34 and k.is_delete = 0
+		inner join dic_stock_location sl on sl.location_id=p.location_id
+		inner join dic_warehouse wh on wh.wh_id=p.wh_id
+		WHERE
+		1 = 1
+		GROUP BY
+		p.stock_task_id,
+		wh.wh_id,
+		k.create_user
+
+		union ALL
+
+		SELECT
+		p.stock_task_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(p.fty_id) fty_id,
+		k.create_user,
+		k.request_source ,
+		34 type
+		FROM
+		biz_stock_task_item_cw p
+		INNER JOIN biz_stock_task_head_cw k ON k.stock_task_id = p.stock_task_id
+		AND (k.receipt_type = 33 or k.receipt_type = 35) and k.is_delete = 0
+		inner join dic_stock_location sl on sl.location_id=p.location_id
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		WHERE
+		1 = 1
+
+		GROUP BY
+		p.stock_task_id,
+		wh.wh_id,
+		k.create_user
+
+		union ALL
+
+		SELECT
+		h.stock_transport_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(l.fty_output) fty_id,
+
+		h.create_user,
+
+		h.request_source,
+		51 type
+		FROM
+		biz_stock_transport_item_cw l
+		INNER JOIN biz_stock_transport_head_cw h ON l.stock_transport_id =
+		h.stock_transport_id
+		AND h.is_delete = 0
+		inner join dic_stock_location sl on sl.location_id=l.location_output
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		WHERE
+		1 = 1 and (h.receipt_type=51 or h.receipt_type=52 or h.receipt_type=53
+		)
+		GROUP BY
+		h.stock_transport_id,
+		wh.wh_id,
+		h.create_user
+
+		union ALL
+
+		SELECT
+		h.stock_transport_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(l.fty_input) fty_id,
+
+		h.create_user,
+
+		h.request_source ,
+		52 type
+		FROM
+		biz_stock_transport_item_cw l
+		INNER JOIN biz_stock_transport_head_cw h ON l.stock_transport_id =
+		h.stock_transport_id
+		inner join dic_stock_location sl on sl.location_id=l.location_input
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		AND h.is_delete = 0
+		WHERE
+		1 = 1 and (h.receipt_type=51 or h.receipt_type=52 or h.receipt_type=53
+		)
+		GROUP BY
+		h.stock_transport_id,
+		wh.wh_id,
+		h.create_user
+
+
+		union ALL
+
+		SELECT
+		h.stock_transport_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(l.fty_output) fty_id,
+
+		h.create_user,
+
+		h.request_source ,
+		53 type
+		FROM
+		biz_stock_transport_item_cw l
+		INNER JOIN biz_stock_transport_head_cw h ON l.stock_transport_id =
+		h.stock_transport_id
+		inner join dic_stock_location sl on sl.location_id=l.location_output
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		AND h.is_delete = 0
+		WHERE
+		1 = 1 and h.receipt_type=54
+		GROUP BY
+		h.stock_transport_id,
+		wh.wh_id,
+		h.create_user
+
+		union ALL
+
+		SELECT
+		h.stock_transport_id head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(l.fty_input) fty_id,
+
+		h.create_user,
+
+		h.request_source ,
+		54 type
+		FROM
+		biz_stock_transport_item_cw l
+		INNER JOIN biz_stock_transport_head_cw h ON l.stock_transport_id =
+		h.stock_transport_id
+		inner join dic_stock_location sl on sl.location_id=l.location_input
+		inner join dic_warehouse wh on wh.wh_id=sl.wh_id
+		AND h.is_delete = 0
+		WHERE
+		1 = 1 and h.receipt_type=54
+		GROUP BY
+		h.stock_transport_id,
+		wh.wh_id,
+		h.create_user
+
+		union ALL
+
+		SELECT
+		
+		k.stock_take_id  head_id,
+		wh.wh_id,
+		wh.wh_code,
+		wh.wh_name,
+		any_value(k.fty_id) fty_id,
+
+		k.create_user,
+		any_value(v.request_source) request_source,
+		71 type
+		FROM
+		biz_stock_take_item v
+		INNER JOIN biz_stock_take_head k ON k.stock_take_id = v.stock_take_id
+		AND k.is_delete = 0
+		inner join dic_stock_location sl on sl.location_id =k.location_id
+		inner join dic_warehouse wh on wh.wh_id =sl.wh_id
+		WHERE
+		1 = 1
+		GROUP BY
+		k.stock_take_id,
+		wh.wh_id,
+		k.create_user
+		) t
+		inner join wms_user u on u.user_id = t.create_user
+		where 1 = 1
+	
+		GROUP BY t.wh_id,t.type,t.create_user
+	</select>
+
+	<select id="selectUserListByWhId"
+		parameterType="java.lang.Integer"
+		resultType="com.inossem.wms.model.auth.User">
+		SELECT DISTINCT
+		u.user_id userId,
+		u.user_name userName
+		FROM
+		wms_user u
+		INNER JOIN rel_user_stock_location ul ON u.user_id = ul.user_id
+		INNER JOIN dic_stock_location sl ON sl.`location_id` = ul.`location_id`
+
+		WHERE sl.`is_delete`=0
+		<if test="_parameter!=null and _parameter!=''">
+			AND sl.`wh_id`=#{whId}
+		</if>
+
+	</select>
+</mapper>

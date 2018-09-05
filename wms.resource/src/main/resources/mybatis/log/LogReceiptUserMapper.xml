@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.log.LogReceiptUserMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.log.LogReceiptUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="mat_doc_code" jdbcType="VARCHAR" property="matDocCode" />
+    <result column="receipt_code" jdbcType="VARCHAR" property="receiptCode" />
+    <result column="first_user_name" jdbcType="VARCHAR" property="firstUserName" />
+    <result column="first_time" jdbcType="TIMESTAMP" property="firstTime" />
+    <result column="second_user_name" jdbcType="VARCHAR" property="secondUserName" />
+    <result column="second_time" jdbcType="TIMESTAMP" property="secondTime" />
+    <result column="extra_user_name" jdbcType="VARCHAR" property="extraUserName" />
+    <result column="extra_time" jdbcType="TIMESTAMP" property="extraTime" />
+    <result column="move_type_code" jdbcType="VARCHAR" property="moveTypeCode" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, mat_doc_code, receipt_code, first_user_name, first_time, second_user_name, second_time, 
+    extra_user_name, extra_time, move_type_code, create_user_name, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from log_receipt_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+   <select id="selectAllLogReceiptUser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from log_receipt_user
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from log_receipt_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.log.LogReceiptUser">
+    insert into log_receipt_user (id, mat_doc_code, receipt_code, 
+      first_user_name, first_time, second_user_name, 
+      second_time, extra_user_name, extra_time, 
+      move_type_code, create_user_name, create_time, 
+      modify_time)
+    values (#{id,jdbcType=INTEGER}, #{matDocCode,jdbcType=VARCHAR}, #{receiptCode,jdbcType=VARCHAR}, 
+      #{firstUserName,jdbcType=VARCHAR}, #{firstTime,jdbcType=TIMESTAMP}, #{secondUserName,jdbcType=VARCHAR}, 
+      #{secondTime,jdbcType=TIMESTAMP}, #{extraUserName,jdbcType=VARCHAR}, #{extraTime,jdbcType=TIMESTAMP}, 
+      #{moveTypeCode,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.log.LogReceiptUser">
+    insert into log_receipt_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="matDocCode != null">
+        mat_doc_code,
+      </if>
+      <if test="receiptCode != null">
+        receipt_code,
+      </if>
+      <if test="firstUserName != null">
+        first_user_name,
+      </if>
+      <if test="firstTime != null">
+        first_time,
+      </if>
+      <if test="secondUserName != null">
+        second_user_name,
+      </if>
+      <if test="secondTime != null">
+        second_time,
+      </if>
+      <if test="extraUserName != null">
+        extra_user_name,
+      </if>
+      <if test="extraTime != null">
+        extra_time,
+      </if>
+      <if test="moveTypeCode != null">
+        move_type_code,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="matDocCode != null">
+        #{matDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptCode != null">
+        #{receiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="firstUserName != null">
+        #{firstUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstTime != null">
+        #{firstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="secondUserName != null">
+        #{secondUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="secondTime != null">
+        #{secondTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extraUserName != null">
+        #{extraUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="extraTime != null">
+        #{extraTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moveTypeCode != null">
+        #{moveTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.log.LogReceiptUser">
+    update log_receipt_user
+    <set>
+      <if test="matDocCode != null">
+        mat_doc_code = #{matDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptCode != null">
+        receipt_code = #{receiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="firstUserName != null">
+        first_user_name = #{firstUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstTime != null">
+        first_time = #{firstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="secondUserName != null">
+        second_user_name = #{secondUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="secondTime != null">
+        second_time = #{secondTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extraUserName != null">
+        extra_user_name = #{extraUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="extraTime != null">
+        extra_time = #{extraTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moveTypeCode != null">
+        move_type_code = #{moveTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.log.LogReceiptUser">
+    update log_receipt_user
+    set mat_doc_code = #{matDocCode,jdbcType=VARCHAR},
+      receipt_code = #{receiptCode,jdbcType=VARCHAR},
+      first_user_name = #{firstUserName,jdbcType=VARCHAR},
+      first_time = #{firstTime,jdbcType=TIMESTAMP},
+      second_user_name = #{secondUserName,jdbcType=VARCHAR},
+      second_time = #{secondTime,jdbcType=TIMESTAMP},
+      extra_user_name = #{extraUserName,jdbcType=VARCHAR},
+      extra_time = #{extraTime,jdbcType=TIMESTAMP},
+      move_type_code = #{moveTypeCode,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

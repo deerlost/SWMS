@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加物料</title>
+    <meta charset="utf-8" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <link href="../../../../css/datetimepicker.css" rel="stylesheet" />
+    <script src="../../../../js/datetimepicker.js"></script>
+    <style>
+        .search div {
+            min-height:42px;
+            line-height:30px;
+        }
+        .form-group{
+            margin:0px 10px;
+        }
+        .search .col-xs-3{padding:0;text-align: right}
+    </style>
+    <script>
+        var indexdata=[],g1=null,g2=null,sn_list=[],table={select:true},item_list=null;
+        //查找物料数据
+        function btn_search(){
+            showloading();
+            var url=uriapi+"/biz/input/production/get_package_list";
+            var obj={
+                package_time:$(".package_time").val(),
+                package_code:$(".package_code").val(),
+                production_batch:item_list.production_batch,
+                mat_id:item_list.mat_id,
+                package_type_id:item_list.package_type_id
+            }
+            ajax(url,"post",JSON.stringify(obj),function(data){
+                if(data.head.status==true){
+                    layer.close(indexloading);
+                    indexdata=data.body
+                    dataBindTable()
+                }else{
+                    layer.close(indexloading)
+                }
+            }, function(e) {
+                layer.close(indexloading);
+            })
+        }
+
+        //绑定表格
+        function dataBindTable(){
+            g1=$("#id_div_grid").iGrid({
+                columns: [
+                    { th: '包装单号', col: 'package_code', sort:false,width:150 },
+                    { th: '包装类型', col: 'package_type', sort:false},
+                    { th: '包装规格', col: 'package_standard', sort:false},
+                    { th: '件数', col: 'package_num', sort:false},
+                    { th: '生产批次', col: 'production_batch', sort:false},
+                    { th: '包装日期', col: 'package_time', sort:false,width:130},
+                    { th: '包装班组', col: 'package_group_name', sort:false}
+                ],
+                checkbox:table.select,
+                rownumbers:false,
+                skin:"tablestyle4",
+                data:indexdata,
+                GetSelectedData(){//选择行后触发
+                    if(g2!=null){
+                        selected()
+                    }else{
+                        g2=1
+                    }
+                }
+            })
+        }
+
+        //变色 选中
+        function selected(){
+            $.each(indexdata,function(i,item){
+                item.select=0
+            })
+            $(".body .chk input:checked").each(function(i){
+                var index=$(".body .chk input:checked").eq(i).val()
+                indexdata[index].select=1
+            })
+        }
+
+        //提交
+        function btn_submit(){
+            if($(".body .chk input:checked").length==0){
+                layer.msg("至少选择一条物料")
+                return false
+            }
+            var standard_num=0
+            $(".body .chk input:checked").each(function(i){
+                var index=$(this).val()
+                standard_num=countData.add(standard_num,countData.mul(indexdata[index].package_num,indexdata[index].standard_num))
+            })
+            parent.setPack(indexdata,GetQueryString("index"),standard_num)
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+
+            var data=parent.getPack(GetQueryString("index"))
+
+            if(data.production_batch=="" || data.production_batch==undefined){
+                parent.getPackTips(GetQueryString("index"))
+                $(".btn_iframe_close_window").click()
+                return false
+            }
+
+            item_list=data
+            if(GetQueryString("view")!=null){
+                $(".search").remove()
+                indexdata=data.ret_package_list
+                table.select=false
+                $(".btn-lay-blue").remove()
+                $(".btn_iframe_close_window").html("　关闭　")
+            }else{
+                $.each(data.pack_list,function(i,item){
+                    indexdata[i]={}
+                    indexdata[i].package_id=item.package_id
+                    indexdata[i].package_code=item.package_code
+                    indexdata[i].package_group_name=item.package_group_name
+                    indexdata[i].package_num=item.package_num
+                    indexdata[i].package_standard=item.package_standard
+                    indexdata[i].package_time=item.package_time
+                    indexdata[i].package_type=item.package_type
+                    indexdata[i].production_batch=item.production_batch
+                    indexdata[i].standard_num=item.standard_num
+                    indexdata[i].select=item.select
+                })
+            }
+            bindDatePicker();
+            dataBindTable()
+            $.each(indexdata,function(i,item){
+                if(item.select==1){
+                    $(".body .chk input").eq(i).prop("checked",true)
+                    $(".body tr").eq(i).addClass("selected")
+                }
+            })
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="col-xs-5">
+        <label class="col-xs-3">包装日期：</label>
+        <div class="col-xs-9"><input type="text" class="form-control package_time txtdatepicker" readonly="" data-date-format="yyyy-mm-dd" placeholder="请输入包装日期"></div>
+
+    </div>
+    <div class="col-xs-5">
+        <label class="col-xs-3">包装单号：</label>
+        <div class="col-xs-9"><input type="email" class="form-control package_code" placeholder="请输入包装单号"></div>
+    </div>
+    <div class="col-xs-2">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_search()">搜索</a>
+    </div>
+
+
+</div>
+<div id="id_div_grid"></div>
+<div class="submitbutton fixed">
+    <div class="col-xs-12">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　添加　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</div>
+</body>
+</html>

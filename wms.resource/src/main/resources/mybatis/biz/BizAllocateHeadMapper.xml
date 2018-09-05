@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizAllocateHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizAllocateHead">
+    <id column="allocate_id" jdbcType="INTEGER" property="allocateId" />
+    <result column="allocate_code" jdbcType="CHAR" property="allocateCode" />
+    <result column="corp_id" jdbcType="INTEGER" property="corpId" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="fty_input" jdbcType="INTEGER" property="ftyInput" />
+    <result column="location_input" jdbcType="INTEGER" property="locationInput" />
+    <result column="demand_date" jdbcType="TIMESTAMP" property="demandDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="distributed" jdbcType="TINYINT" property="distributed" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    allocate_id, allocate_code, corp_id, org_id, fty_input, location_input, demand_date, 
+    status, distributed, remark, create_user, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_allocate_head
+    where allocate_id = #{allocateId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_allocate_head
+    where allocate_id = #{allocateId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizAllocateHead">
+    insert into biz_allocate_head (allocate_id, allocate_code, corp_id, 
+      org_id, fty_input, location_input, 
+      demand_date, status, distributed, 
+      remark, create_user, is_delete, 
+      create_time, modify_time)
+    values (#{allocateId,jdbcType=INTEGER}, #{allocateCode,jdbcType=CHAR}, #{corpId,jdbcType=INTEGER}, 
+      #{orgId,jdbcType=VARCHAR}, #{ftyInput,jdbcType=INTEGER}, #{locationInput,jdbcType=INTEGER}, 
+      #{demandDate,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, #{distributed,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizAllocateHead">
+  	<selectKey keyProperty="allocateId" order="AFTER" resultType="java.lang.Integer">  
+        SELECT LAST_INSERT_ID()  
+    </selectKey> 
+    insert into biz_allocate_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="allocateId != null">
+        allocate_id,
+      </if>
+      <if test="allocateCode != null">
+        allocate_code,
+      </if>
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="ftyInput != null">
+        fty_input,
+      </if>
+      <if test="locationInput != null">
+        location_input,
+      </if>
+      <if test="demandDate != null">
+        demand_date,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="distributed != null">
+        distributed,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="allocateId != null">
+        #{allocateId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateCode != null">
+        #{allocateCode,jdbcType=CHAR},
+      </if>
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="ftyInput != null">
+        #{ftyInput,jdbcType=INTEGER},
+      </if>
+      <if test="locationInput != null">
+        #{locationInput,jdbcType=INTEGER},
+      </if>
+      <if test="demandDate != null">
+        #{demandDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="distributed != null">
+        #{distributed,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizAllocateHead">
+    update biz_allocate_head
+    <set>
+      <if test="allocateCode != null">
+        allocate_code = #{allocateCode,jdbcType=CHAR},
+      </if>
+      <if test="corpId != null">
+        corp_id = #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="ftyInput != null">
+        fty_input = #{ftyInput,jdbcType=INTEGER},
+      </if>
+      <if test="locationInput != null">
+        location_input = #{locationInput,jdbcType=INTEGER},
+      </if>
+      <if test="demandDate != null">
+        demand_date = #{demandDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="distributed != null">
+        distributed = #{distributed,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where allocate_id = #{allocateId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizAllocateHead">
+    update biz_allocate_head
+    set allocate_code = #{allocateCode,jdbcType=CHAR},
+      corp_id = #{corpId,jdbcType=INTEGER},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      fty_input = #{ftyInput,jdbcType=INTEGER},
+      location_input = #{locationInput,jdbcType=INTEGER},
+      demand_date = #{demandDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      distributed = #{distributed,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where allocate_id = #{allocateId,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  <select id="selectlistByConditionOnPaging" parameterType="map" resultType="com.inossem.wms.model.vo.BizAllocateHeadVo">
+    SELECT
+		a.allocate_id as allocateId,
+		a.allocate_code as allocateCode,
+		u.org_id as orgId,
+		u.org_name as orgName,
+		a.fty_input as ftyInput,
+		a.location_input as locationInput,
+		a.demand_date as demandDate,
+		a.create_user as createUser,
+		a.status ,
+		a.distributed,
+		a.remark,
+		a.create_time as createTime,
+		a.modify_time as modifyTime,
+		u.user_name as userName,
+		corp.corp_name as corpName,
+		w.fty_code as ftyInputCode,
+		w.fty_name as ftyName,
+		l.location_name as locationName,
+		l.location_code as locationInputCode,
+		temp.fty_output as ftyOutput,
+		temp.location_output as locationOutput,
+		wout.fty_name ftyOutputName,
+		lout.location_name locationOutputName
+	FROM biz_allocate_head a
+	INNER JOIN wms_user u ON u.user_Id = a.create_user	
+	<if test="allocateId != null">
+	    AND a.allocate_id = #{allocateId,jdbcType=INTEGER}
+	</if>
+	<if test="allocateCode != null">
+	    AND a.allocate_code = #{allocateCode,jdbcType=INTEGER}
+	</if>
+	<if test="createUser != null">
+		AND a.create_user = #{createUser,jdbcType=VARCHAR} 
+	</if>
+	INNER JOIN dic_corp corp ON corp.corp_id = u.corp_id
+	INNER JOIN dic_factory w ON w.fty_id = a.fty_input
+	INNER JOIN dic_stock_location l ON l.fty_id = a.fty_input AND l.location_id = a.location_input
+	INNER JOIN (
+		SELECT
+			ai.allocate_id,
+			ai.fty_output,
+			ai.location_output
+		FROM
+			biz_allocate_item ai
+		GROUP BY
+			ai.allocate_id,
+			ai.fty_output,
+			ai.location_output
+	) temp ON temp.allocate_id = a.allocate_id
+	LEFT JOIN dic_factory wout ON wout.fty_id = temp.fty_output
+	LEFT JOIN dic_stock_location lout ON lout.fty_id = temp.fty_output
+		AND lout.location_id = temp.location_output
+	ORDER BY a.allocate_code DESC
+  </select>
+  
+  <select id="getAllocateDeliveryCodeById" parameterType="java.lang.Integer" resultType="java.lang.String">
+    SELECT DISTINCT dh.allocate_delivery_code
+	FROM biz_allocate_item ai
+	INNER JOIN biz_allocate_delivery_item di ON ai.item_id = di.allocate_item_id AND ai.allocate_id = #{allocateId,jdbcType=INTEGER}
+	INNER JOIN biz_allocate_delivery_head dh ON di.allocate_delivery_id = dh.allocate_delivery_id
+
+  </select>
+  
+</mapper>

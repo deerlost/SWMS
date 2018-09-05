@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizUrgenceItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizUrgenceItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="urgence_id" jdbcType="INTEGER" property="urgenceId" />
+    <result column="urgence_rid" jdbcType="INTEGER" property="urgenceRid" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+     <result column="mat_name" jdbcType="VARCHAR" property="matName" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="position_code" jdbcType="VARCHAR" property="positionCode" />
+    
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="operation_date" jdbcType="TIMESTAMP" property="operationDate" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="relate_receipt_code" jdbcType="VARCHAR" property="relateReceiptCode" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_id, urgence_id, urgence_rid, mat_id, unit_id, qty, area_id, position_id, status, 
+    operation_date, operator, relate_receipt_code, is_delete, create_user, modify_user, 
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_urgence_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_urgence_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByUrgenceId" parameterType="java.lang.Integer">
+    delete from biz_urgence_item
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizUrgenceItem">
+    insert into biz_urgence_item (item_id, urgence_id, urgence_rid, 
+      mat_id, unit_id, qty, 
+      area_id, position_id, status, 
+      operation_date, operator, relate_receipt_code, 
+      is_delete, create_user, modify_user, 
+      create_time, modify_time)
+    values (#{itemId,jdbcType=INTEGER}, #{urgenceId,jdbcType=INTEGER}, #{urgenceRid,jdbcType=INTEGER}, 
+      #{matId,jdbcType=INTEGER}, #{unitId,jdbcType=INTEGER}, #{qty,jdbcType=DECIMAL}, 
+      #{areaId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
+      #{operationDate,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{relateReceiptCode,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR}, #{modifyUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizUrgenceItem">
+    insert into biz_urgence_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="urgenceId != null">
+        urgence_id,
+      </if>
+      <if test="urgenceRid != null">
+        urgence_rid,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="matName != null">
+        mat_name,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="unitCode != null">
+        unit_code,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="areaId != null">
+        area_id,
+      </if>
+      <if test="areaCode != null">
+        area_code,
+      </if>
+      <if test="positionId != null">
+        position_id,
+      </if>
+      <if test="positionCode != null">
+        position_code,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="operationDate != null">
+        operation_date,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="relateReceiptCode != null">
+        relate_receipt_code,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="modifyUser != null">
+        modify_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="urgenceId != null">
+        #{urgenceId,jdbcType=INTEGER},
+      </if>
+      <if test="urgenceRid != null">
+        #{urgenceRid,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="matName != null">
+        #{matName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="unitCode != null">
+       #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null">
+       #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="positionId != null">
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="positionCode != null">
+       #{positionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="operationDate != null">
+        #{operationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="relateReceiptCode != null">
+        #{relateReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizUrgenceItem">
+    update biz_urgence_item
+    <set>
+      <if test="urgenceId != null">
+        urgence_id = #{urgenceId,jdbcType=INTEGER},
+      </if>
+      <if test="urgenceRid != null">
+        urgence_rid = #{urgenceRid,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="areaId != null">
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="operationDate != null">
+        operation_date = #{operationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="relateReceiptCode != null">
+        relate_receipt_code = #{relateReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizUrgenceItem">
+    update biz_urgence_item
+    set urgence_id = #{urgenceId,jdbcType=INTEGER},
+      urgence_rid = #{urgenceRid,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      qty = #{qty,jdbcType=DECIMAL},
+      area_id = #{areaId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      operation_date = #{operationDate,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      relate_receipt_code = #{relateReceiptCode,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      modify_user = #{modifyUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="deleteItem" parameterType="com.inossem.wms.model.biz.BizUrgenceItem">
+    update biz_urgence_item
+    set 
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      modify_user = #{modifyUser,jdbcType=VARCHAR}
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByUrgenceId" parameterType="com.inossem.wms.model.biz.BizUrgenceItem">
+    update biz_urgence_item
+       set
+        operation_date = #{operationDate,jdbcType=TIMESTAMP},
+        operator = #{operator,jdbcType=VARCHAR},
+        relate_receipt_code = #{relateReceiptCode,jdbcType=VARCHAR},
+        relate_receipt_id = #{relateReceiptId,jdbcType=INTEGER},
+        status = #{status,jdbcType=TINYINT},
+        modify_user = #{modifyUser,jdbcType=VARCHAR}
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+    AND urgence_rid = #{urgenceRid,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

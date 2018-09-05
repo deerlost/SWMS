@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicStockLocationMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicStockLocation">
+    <id column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+    <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="city_id" jdbcType="INTEGER" property="cityId" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="freeze_input" jdbcType="TINYINT" property="freezeInput" />
+    <result column="freeze_output" jdbcType="TINYINT" property="freezeOutput" />
+    <result column="enabled" jdbcType="TINYINT" property="enabled" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="node_code" jdbcType="VARCHAR" property="nodeCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    location_id, fty_id, location_code, location_name, wh_id, city_id, address, status,node_code, 
+    freeze_input, freeze_output,enabled, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_stock_location
+    where location_id = #{locationId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByUserIdAndFtyId" parameterType="map" resultType="map">
+		  select 
+		 s.location_id,
+		 s.location_code,
+		 s.location_name
+		 from dic_stock_location s
+		where s.is_delete=0 and 
+		 s.location_id in 
+		 (select l.location_id from rel_user_stock_location l		 
+		 <where>
+		 <if test="userId!=null">
+		 and  l.user_id= #{userId,jdbcType=INTEGER}
+		 </if>
+		 <if test="ftyId!=null">
+		 and  l.fty_id= #{ftyId,jdbcType=INTEGER}
+		 </if>
+		 </where>		 
+		)
+  </select>
+  
+  <select id="selectByFtyId" parameterType="java.lang.Integer" resultType="com.inossem.wms.model.vo.RelUserStockLocationVo">
+    SELECT
+		f.fty_id ftyId,
+		f.fty_code ftyCode,
+		f.fty_name ftyName,
+		l.location_id locationId,
+		l.location_code locationCode,
+        l.location_name locationName,
+        dw.wh_id whId,
+        dw.wh_code whCode,
+        dw.wh_name whName,
+		l.status
+	FROM dic_stock_location l 
+	INNER JOIN dic_factory f ON f.fty_id = l.fty_id  AND f.fty_id = #{ftyId}
+	LEFT JOIN dic_warehouse dw ON dw.wh_id = l.wh_id
+	where l.is_delete=0
+  </select>
+  <select id="selectByFtyCodeAndLocationCode" resultType="com.inossem.wms.model.vo.RelUserStockLocationVo">
+   SELECT
+		f.fty_id ftyId,
+		f.fty_code ftyCode,
+		f.fty_name ftyName,
+		l.location_id locationId,
+		l.location_code locationCode,
+        l.location_name locationName,
+		l.status
+	FROM dic_stock_location l 
+	INNER JOIN dic_factory f ON f.fty_id = l.fty_id where f.is_delete=0 AND f.fty_code = #{ftyCode} AND l.location_code = #{locationCode}
+  </select>
+  <select id="selectAllList" resultType="com.inossem.wms.model.vo.RelUserStockLocationVo">
+  	select 
+    <include refid="Base_Column_List" />
+    from dic_stock_location
+    where is_delete = 0
+  </select>
+  <!-- 通过用户ID查询该用户下的所有库存地点信息 -->
+  <select id="selectLocationForUser" resultType="com.inossem.wms.model.vo.RelUserStockLocationVo">
+	SELECT
+		s.user_id userId,
+		s.fty_id ftyId,
+        f.fty_code ftyCode,
+		f.fty_name ftyName,
+		s.location_id locationId,
+		l.location_code locationCode,
+        l.location_name locationName,
+		l.status,
+        l.is_delete,
+		l.freeze_output freezeOutput,
+		l.freeze_input freezeInput,
+		p.board_id boardId
+	FROM
+		rel_user_stock_location s
+	INNER JOIN dic_factory f ON f.fty_id = s.fty_id
+	INNER JOIN dic_corp p on p.corp_id = f.corp_id
+	INNER JOIN dic_stock_location l ON s.fty_id = l.fty_id
+	AND s.location_id = l.location_id
+	AND s.user_id = #{user_id}
+	ORDER BY s.location_index	
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_stock_location
+    where location_id = #{locationId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicStockLocation">
+    insert into dic_stock_location (location_id, fty_id, location_code, 
+      location_name, wh_id, city_id, 
+      address, status, freeze_input, 
+      freeze_output, is_delete, create_time, 
+      modify_time)
+    values (#{locationId,jdbcType=INTEGER}, #{ftyId,jdbcType=INTEGER}, #{locationCode,jdbcType=VARCHAR}, 
+      #{locationName,jdbcType=VARCHAR}, #{whId,jdbcType=INTEGER}, #{cityId,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{freezeInput,jdbcType=TINYINT}, 
+      #{freezeOutput,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicStockLocation">
+    insert into dic_stock_location
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="ftyId != null and ftyId > -1">
+        fty_id,
+      </if>
+      <if test="locationCode != null">
+        location_code,
+      </if>
+      <if test="locationName != null">
+        location_name,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="cityId != null and cityId > -1">
+        city_id,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="freezeInput != null">
+        freeze_input,
+      </if>
+      <if test="freezeOutput != null">
+        freeze_output,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>      
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationCode != null">
+        #{locationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="locationName != null">
+        #{locationName,jdbcType=VARCHAR},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null">
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="freezeInput != null">
+        #{freezeInput,jdbcType=TINYINT},
+      </if>
+      <if test="freezeOutput != null">
+        #{freezeOutput,jdbcType=TINYINT},
+      </if>
+       <if test="enabled != null">
+        #{enabled,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicStockLocation">
+    update dic_stock_location
+    <set>
+      <if test="ftyId != null and ftyId > -1">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationCode != null">
+        location_code = #{locationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="locationName != null">
+        location_name = #{locationName,jdbcType=VARCHAR},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null and ftyId > -1">
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="freezeInput != null">
+        freeze_input = #{freezeInput,jdbcType=TINYINT},
+      </if>
+      <if test="freezeOutput != null">
+        freeze_output = #{freezeOutput,jdbcType=TINYINT},
+      </if>
+       <if test="enabled != null">
+       enabled =  #{enabled,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where location_id = #{locationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicStockLocation">
+    update dic_stock_location
+    set fty_id = #{ftyId,jdbcType=INTEGER},
+      location_code = #{locationCode,jdbcType=VARCHAR},
+      location_name = #{locationName,jdbcType=VARCHAR},
+      wh_id = #{whId,jdbcType=INTEGER},
+      city_id = #{cityId,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      freeze_input = #{freezeInput,jdbcType=TINYINT},
+      freeze_output = #{freezeOutput,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where location_id = #{locationId,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultType="com.inossem.wms.model.vo.DicStockLocationVo">
+	SELECT
+		l.fty_id ftyId,
+        f.fty_code ftyCode,
+		f.fty_name ftyName,
+		f.fty_type ftyType,
+		p.corp_code corpCode,
+		p.corp_name corpName,
+		l.location_id locationId,
+		l.location_code locationCode,
+        l.location_name locationName,
+		l.freeze_output freezeOutput,
+		l.freeze_input freezeInput,
+		p.board_id boardId,
+		l.wh_id whId, 
+		l.city_id cityId, 
+		l.address, 
+		l.status, 
+   		l.is_delete isDelete, 
+   		l.create_time createTime, 
+   		l.modify_time modifyTime
+	FROM dic_factory f 
+	INNER JOIN dic_corp p ON p.corp_id = f.corp_id AND p.is_delete = 0 AND f.is_delete = 0
+	INNER JOIN dic_stock_location l ON f.fty_id = l.fty_id AND l.is_delete = 0
+  </select>
+  <!-- 通过公司ID查询 -->
+  <select id="selectLocationsByCorpId" parameterType="Integer" resultType="com.inossem.wms.model.vo.DicStockLocationVo">
+  	SELECT 
+		l.fty_id as ftyId, -- 工厂ID
+    	w.fty_code ftyCode,
+    	w.fty_name ftyName,
+		l.location_code locationCode,
+		l.location_name locationName,
+		l.location_id locationId,
+		l.status
+	FROM dic_stock_location l 
+		INNER JOIN dic_factory w ON w.fty_id = l.fty_id AND w.corp_id = #{corpId,jdbcType=INTEGER} and w.is_delete=0
+	where l.is_delete = 0  	
+  </select>
+  <!-- 通过工厂ID查询 -->
+  <select id="selectLocationsByFtyId" parameterType="Integer" resultType="com.inossem.wms.model.vo.DicStockLocationVo">
+  	SELECT 
+		l.fty_id as ftyId, -- 工厂ID
+    	w.fty_code ftyCode,
+    	w.fty_name ftyName,
+    	l.location_id locationId,
+		l.location_code locationCode,
+		l.location_name locationName,
+		l.status,
+		l.wh_id whId
+	FROM dic_stock_location l 
+		INNER JOIN dic_factory w ON w.fty_id = l.fty_id AND w.fty_id = #{ftyId,jdbcType=INTEGER} and w.is_delete=0
+	where l.is_delete = 0  	
+  </select>
+  <!-- 通过仓位ID取得该仓位的库存地点信息 -->
+  <select id="selectLocationCodeByPositionId" parameterType="Integer" resultMap="BaseResultMap"> 
+    SELECT
+		p.wh_id,
+	    sl.location_id,
+		sl.location_code,
+		sl.location_name
+	FROM
+		dic_warehouse_position p
+	INNER JOIN dic_warehouse w ON w.wh_id = p.wh_id AND w.is_delete = 0
+	INNER JOIN dic_stock_location sl ON sl.wh_id = p.wh_id AND sl.is_delete = 0
+	INNER JOIN dic_warehouse_area wa ON wa.area_id = p.area_id AND wa.is_delete = 0
+	WHERE p.position_id = #{positionId,jdbcType=INTEGER}
+  	
+  </select>
+  
+  <!-- 根据库存地点得到批次信息是否强控 -->
+  <select id="selectPlanByLocation" parameterType="Integer" resultType="String">
+   SELECT IFNULL(w.plan_output,'0') is_focus_batch
+	 FROM dic_stock_location sl
+	 LEFT JOIN dic_warehouse w on w.wh_id = sl.wh_id AND w.is_delete = 0
+	WHERE sl.location_id = #{locationId,jdbcType=INTEGER} 
+  </select>
+  
+  
+  <!-- 库存地点分页查询 刘宇 2018.02.28 -->
+    <select id="selectLocationOnPaging" parameterType="java.util.Map" resultType="java.util.Map" >
+		SELECT 
+			dsl.location_id,
+			dsl.location_code,
+			dsl.location_name,
+			dsl.address address_location,
+			dsl.fty_id,
+			df.fty_code,
+			df.fty_name,
+			df.address address_factory,
+			dsl.create_time,
+			dc.corp_id,
+			dc.corp_code,
+			dc.corp_name
+		FROM dic_stock_location dsl 
+		inner join dic_factory df on df.fty_id = dsl.fty_id
+		and dsl.is_delete = 0
+		<if test="condition != null and condition !=''">
+			and
+			(dsl.location_code LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or dsl.location_name LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or df.fty_code LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			)
+		</if>
+		inner join dic_corp dc on dc.corp_id = df.corp_id
+		ORDER BY dsl.create_time DESC
+  </select>
+  
+  <select id="selectLocationIDByLocationCodeAndFtyId" parameterType="com.inossem.wms.model.dic.DicStockLocation" resultMap="BaseResultMap"> 
+		SELECT 
+			dsl.location_id
+		FROM dic_stock_location dsl 
+		where 
+		dsl.is_delete = 0		 
+     	and dsl.location_code = #{locationCode,jdbcType=VARCHAR}
+     	and dsl.fty_id= #{ftyId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectCorpListByBoardId" parameterType="java.lang.Integer" resultType="map">
+	select corp_id, corp_code,corp_name 
+	from dic_corp
+    where board_id = #{BoardId,jdbcType=INTEGER}   and is_delete = 0
+  </select>
+  
+  <!--根据公司代码查工厂  -->
+  <select id="selectFactoryListByCorpId" parameterType="java.lang.Integer" resultType="map">
+  	SELECT 
+		 fty_id, fty_code, fty_name, corp_id
+    FROM dic_factory f where corp_id = #{corpId,jdbcType=INTEGER} and is_delete = 0
+  </select>
+  
+  <select id="selectLocationListByFtyId" parameterType="java.lang.Integer" resultType="map">
+    select location_id , location_code , location_name
+    from dic_stock_location 
+    where fty_id = #{ftyId,jdbcType=INTEGER} and is_delete = 0
+  </select>
+  
+  <select id="selectMatGroup" parameterType="map" resultType="map">
+	SELECT mg.mat_group_id,mg.mat_group_code, mg.mat_group_name
+	FROM stock_position stock	
+	INNER JOIN dic_material m on stock.mat_id = m.mat_id
+	INNER JOIN dic_material_group mg on m.mat_group_id = mg.mat_group_id
+	WHERE 1=1
+	<if test="locationId!=null and locationId !=''">
+	AND stock.location_id = #{locationId,jdbcType=INTEGER}
+  	</if>
+  	<if test="ftyId!=null and ftyId !=''">
+	AND stock.fty_id = #{ftyId,jdbcType=INTEGER}
+  	</if> 
+  	<if test="whId!=null and whId!=''">
+  	AND stock.wh_id = #{whId,jdbcType=INTEGER}
+  	</if>
+	GROUP BY mg.mat_group_id
+  </select>
+  
+  <select id="selectNowAmountByParam" parameterType="map" resultType="map">
+	 select 
+		wh.wh_id,wh.wh_code,wh.wh_name, skl.fty_id,m.mat_group_id , mg.mat_group_name , sum(sb.qty*ifnull(p.price,0))as money
+		from  stock_batch sb 
+		inner join dic_stock_location skl on skl.location_id=sb.location_id 
+		inner join dic_warehouse wh on wh.wh_id=skl.wh_id
+		inner join dic_material m on sb.mat_id = m.mat_id
+		INNER JOIN dic_factory df on df.fty_id = skl.fty_id
+		INNER JOIN dic_corp c on c.corp_id = df.corp_id
+		left join dic_material_group mg on m.mat_group_id = mg.mat_group_id
+		left join buf_factory_mat_price p on skl.fty_id = p.fty_id and sb.mat_id = p.mat_id
+        where 1=1 and sb.status=1
+		<if test="boardId!=null and boardId !=''">
+		  and c.board_id = #{boardId,jdbcType=INTEGER}
+	  	</if>
+	   <if test="ftyId!=null and ftyId !=''">
+		and df.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	   <if test="locationId!=null and locationId !=''">
+		and skl.location_id = #{locationId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="matGroupId!=null and matGroupId !=''">
+		and mg.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="whId!=null and whId!=''">
+	  	and skl.wh_id=#{whId,jdbcType=INTEGER}
+	  	</if>
+   group by skl.fty_id,wh.wh_id,m.mat_group_id 
+  </select>
+  
+ 
+	
+</mapper>

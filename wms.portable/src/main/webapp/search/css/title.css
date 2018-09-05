@@ -1,0 +1,150 @@
+.homebox{
+	width: 100%;
+	height: auto;
+}
+.homebox .title{
+	width: 100%;
+	height:1rem; 
+	line-height: 1rem;
+	background: #2197d1;
+	color: #fff;
+	font-size: .34rem;
+	text-align: center;
+	position: relative;
+}
+.homebox .title .back{
+	line-height: 1rem;
+	position: absolute;
+	top: 0rem;
+	left: 0.5rem;
+	color: #fff;
+	font-size: .30rem;
+}
+.homebox .title_d{
+	width: 100%;
+	height: 1rem;
+	line-height: 1rem;
+	color: #5599ee;
+	border-bottom:.01rem solid #e3e3e3;
+	font-size: .32rem;
+	text-align: center;
+}
+.homebox .title_d p{
+	display: inline-block;
+	height: .92rem;
+	line-height: .92rem;
+	padding: 0rem 0.2rem;
+	border-bottom:.04rem solid #5599ee;
+}
+.homebox .title_d p img{
+	position: relative;
+	left: 0.3rem;
+}
+.li_tit{
+	width: 100%;
+	height: .8rem;
+	font-size: .28rem;
+	background: #f2f2f2;
+	border-top:.01rem solid #e3e3e3;
+	border-bottom:.01rem solid #e3e3e3;
+	color: #999;
+	line-height: .8rem;
+}
+.li_tit .ol1{
+	width: 60%;
+	float: left;
+	display: block;
+	text-align: center;
+}
+.li_tit .ol2{
+	width: 17%;
+	float: left;
+	display: block;
+	text-align: left;
+}
+.li_tit .ol3{
+	width: 23%;
+	float: left;
+	display: block;
+	text-align: center;
+}
+.li_tit .ol4{
+	display: block;
+	text-align: left;
+	float: left;
+	margin-left: .4rem;
+}
+.li_tit p{
+	width: 50%;
+	height: 100%;
+	float: left;
+	text-align: center;
+}
+.li_tit p a{
+	display: inline-block;
+	height: 100%;
+}
+.li_tit p a.aaa{
+	border-bottom: 0.03rem solid #59e;
+	color: #59e;
+}
+
+.list_ul{
+	width: 100%;
+	height: auto;
+	font-size: .25rem;
+	color: #666;
+	line-height: .8rem;
+}
+.list_ul li{
+	width: 95%;
+	height: .8rem;
+	margin: 0 auto;
+	border-bottom:.01rem solid #e3e3e3;
+	overflow: hidden;
+}
+.list_ul .ol1{
+	width: 60%;
+	float: left;
+	display: block;
+	text-align: center;
+}
+.list_ul .ol2{
+	width: 19%;
+	float: left;
+	display: block;
+	text-align: left;
+}
+.list_ul .ol3{
+	width: 21%;
+	float: left;
+	display: block;
+	text-align: center;
+}
+/*xia la*/
+.side{
+	display: none;
+	width: 3rem;
+	height: 3rem;
+	position: fixed;
+	z-index: 99;
+	top: 2rem;
+	left: 50%;
+	margin-left: -1.5rem;
+	overflow: auto;
+}
+.side>li{
+	width: 94%;
+	height: 24%;
+	border: .01rem solid #5599ee;
+	background: #fff;
+}
+.side>li a{
+	width: 90%;
+	height: 100%;
+	display: block;
+	font-size: .32rem;
+	color: #5599ee;
+	line-height: .7rem;
+	padding-left: .3rem;
+}

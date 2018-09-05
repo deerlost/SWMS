@@ -1,0 +1,1447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockInputItemMapper">
+	<resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockInputItem">
+		<id column="item_id" jdbcType="INTEGER" property="itemId" />
+		<result column="stock_input_id" jdbcType="INTEGER" property="stockInputId" />
+		<result column="stock_input_rid" jdbcType="INTEGER" property="stockInputRid" />
+		<result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+		<result column="move_reason_id" jdbcType="INTEGER" property="moveReasonId" />
+		<result column="mat_id" jdbcType="INTEGER" property="matId" />
+		<result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+		<result column="location_id" jdbcType="INTEGER" property="locationId" />
+		<result column="batch" jdbcType="BIGINT" property="batch" />
+		<result column="spec_stock_code" jdbcType="VARCHAR" property="specStockCode" />
+		<result column="spec_stock_name" jdbcType="VARCHAR" property="specStockName" />
+		<result column="supplier_code" jdbcType="VARCHAR" property="supplierCode" />
+		<result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+		<result column="customer_code" jdbcType="VARCHAR" property="customerCode" />
+		<result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+		<result column="demand_dept" jdbcType="VARCHAR" property="demandDept" />
+		<result column="sale_order_code" jdbcType="VARCHAR" property="saleOrderCode" />
+		<result column="sale_order_prject_code" jdbcType="VARCHAR"
+			property="saleOrderPrjectCode" />
+		<result column="sale_order_delivered_plan" jdbcType="VARCHAR"
+			property="saleOrderDeliveredPlan" />
+		<result column="standard_currency_money" jdbcType="DECIMAL"
+			property="standardCurrencyMoney" />
+		<result column="order_qty" jdbcType="DECIMAL" property="orderQty" />
+		<result column="qty" jdbcType="DECIMAL" property="qty" />
+		<result column="unit_id" jdbcType="INTEGER" property="unitId" />
+		<result column="purchase_order_code" jdbcType="VARCHAR"
+			property="purchaseOrderCode" />
+		<result column="purchase_order_rid" jdbcType="VARCHAR"
+			property="purchaseOrderRid" />
+		<result column="contract_code" jdbcType="VARCHAR" property="contractCode" />
+		<result column="contract_name" jdbcType="VARCHAR" property="contractName" />
+		<result column="refer_receipt_code" jdbcType="VARCHAR"
+			property="referReceiptCode" />
+		<result column="refer_receipt_rid" jdbcType="VARCHAR" property="referReceiptRid" />
+		<result column="mat_doc_id" jdbcType="INTEGER" property="matDocId" />
+		<result column="mat_doc_code" jdbcType="VARCHAR" property="matDocCode" />
+		<result column="mat_doc_rid" jdbcType="INTEGER" property="matDocRid" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="cost_obj_code" jdbcType="VARCHAR" property="costObjCode" />
+		<result column="cost_obj_name" jdbcType="VARCHAR" property="costObjName" />
+		<result column="cost_obj_level" jdbcType="VARCHAR" property="costObjLevel" />
+		<result column="reserve_id" jdbcType="VARCHAR" property="reserveId" />
+		<result column="reserve_rid" jdbcType="VARCHAR" property="reserveRid" />
+		<result column="inputed_qty" jdbcType="DECIMAL" property="inputedQty" />
+		<result column="manufacturer" jdbcType="VARCHAR" property="manufacturer" />
+		<result column="decimal_place" jdbcType="TINYINT" property="decimalPlace" />
+		<result column="status" jdbcType="TINYINT" property="status" />
+		<result column="write_off" jdbcType="TINYINT" property="writeOff" />
+		<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+		<result column="name_zh" jdbcType="VARCHAR" property="nameZh" />
+		<result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+		<result column="location_name" jdbcType="VARCHAR" property="locationName" />
+		<result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+		<result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+		<result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+		<result column="mat_name" jdbcType="VARCHAR" property="matName" />
+		<result column="mat_doc_code" jdbcType="VARCHAR" property="matDocCode" />
+		<result column="mat_doc_item_id" jdbcType="INTEGER" property="matDocItemId" />
+		<result column="allocate_item_id" jdbcType="INTEGER" property="allocateItemId" />
+		<result column="mes_location_id" jdbcType="VARCHAR" property="mesLocationId" />
+		<result column="mes_doc_code" jdbcType="VARCHAR" property="mesDocCode" />
+
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		item_id, stock_input_id, stock_input_rid, move_type_id, move_reason_id,
+		mat_id, fty_id,
+		location_id, batch, spec_stock_code, spec_stock_name, supplier_code,
+		supplier_name,
+		customer_code, customer_name, demand_dept, sale_order_code, sale_order_prject_code,
+		sale_order_delivered_plan, standard_currency_money, order_qty, qty,
+		unit_id, purchase_order_code,
+		purchase_order_rid, contract_code, contract_name, refer_receipt_code, refer_receipt_rid,
+		mat_doc_id, mat_doc_rid,mat_doc_code,mat_doc_year, remark, cost_obj_code, cost_obj_name,
+		cost_obj_level, reserve_id,mes_location_id,
+		reserve_rid, inputed_qty, manufacturer, decimal_place, status, write_off,mes_doc_code,
+		is_delete,
+		create_time, modify_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from biz_stock_input_item
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from biz_stock_input_item
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockInputItem">
+		insert into biz_stock_input_item (item_id, stock_input_id, stock_input_rid,
+		move_type_id, move_reason_id, mat_id,
+		fty_id, location_id, batch,
+		spec_stock_code, spec_stock_name, supplier_code,
+		supplier_name, customer_code, customer_name,
+		demand_dept, sale_order_code, sale_order_prject_code,
+		sale_order_delivered_plan, standard_currency_money,
+		order_qty, qty, unit_id,
+		purchase_order_code, purchase_order_rid, contract_code,
+		contract_name, refer_receipt_code, refer_receipt_rid,
+		mat_doc_id, mat_doc_rid, remark,
+		cost_obj_code, cost_obj_name, cost_obj_level,
+		reserve_id, reserve_rid, inputed_qty,
+		manufacturer, decimal_place, status,
+		write_off, is_delete, create_time,
+		modify_time)
+		values (#{itemId,jdbcType=INTEGER}, #{stockInputId,jdbcType=INTEGER},
+		#{stockInputRid,jdbcType=INTEGER},
+		#{moveTypeId,jdbcType=INTEGER}, #{moveReasonId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER},
+		#{ftyId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER},
+		#{batch,jdbcType=BIGINT},
+		#{specStockCode,jdbcType=VARCHAR}, #{specStockName,jdbcType=VARCHAR}, #{supplierCode,jdbcType=VARCHAR},
+		#{supplierName,jdbcType=VARCHAR}, #{customerCode,jdbcType=VARCHAR},
+		#{customerName,jdbcType=VARCHAR},
+		#{demandDept,jdbcType=VARCHAR}, #{saleOrderCode,jdbcType=VARCHAR},
+		#{saleOrderPrjectCode,jdbcType=VARCHAR},
+		#{saleOrderDeliveredPlan,jdbcType=VARCHAR},
+		#{standardCurrencyMoney,jdbcType=DECIMAL},
+		#{orderQty,jdbcType=DECIMAL}, #{qty,jdbcType=DECIMAL},
+		#{unitId,jdbcType=INTEGER},
+		#{purchaseOrderCode,jdbcType=VARCHAR}, #{purchaseOrderRid,jdbcType=VARCHAR},
+		#{contractCode,jdbcType=VARCHAR},
+		#{contractName,jdbcType=VARCHAR}, #{referReceiptCode,jdbcType=VARCHAR},
+		#{referReceiptRid,jdbcType=VARCHAR},
+		#{matDocId,jdbcType=INTEGER}, #{matDocRid,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},
+		#{costObjCode,jdbcType=VARCHAR}, #{costObjName,jdbcType=VARCHAR},
+		#{costObjLevel,jdbcType=VARCHAR},
+		#{reserveId,jdbcType=VARCHAR}, #{reserveRid,jdbcType=VARCHAR}, #{inputedQty,jdbcType=DECIMAL},
+		#{manufacturer,jdbcType=VARCHAR}, #{decimalPlace,jdbcType=TINYINT},
+		#{status,jdbcType=TINYINT},
+		#{writeOff,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockInputItem"
+		useGeneratedKeys="true" keyProperty="itemId">
+		insert into biz_stock_input_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="itemId != null">
+				item_id,
+			</if>
+			<if test="stockInputId != null">
+				stock_input_id,
+			</if>
+			<if test="stockInputRid != null">
+				stock_input_rid,
+			</if>
+			<if test="moveTypeId != null">
+				move_type_id,
+			</if>
+			<if test="moveReasonId != null">
+				move_reason_id,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="ftyId != null">
+				fty_id,
+			</if>
+			<if test="locationId != null">
+				location_id,
+			</if>
+			<if test="batch != null">
+				batch,
+			</if>
+			<if test="specStockCode != null">
+				spec_stock_code,
+			</if>
+			<if test="specStockName != null">
+				spec_stock_name,
+			</if>
+			<if test="supplierCode != null">
+				supplier_code,
+			</if>
+			<if test="supplierName != null">
+				supplier_name,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="customerName != null">
+				customer_name,
+			</if>
+			<if test="demandDept != null">
+				demand_dept,
+			</if>
+			<if test="saleOrderCode != null">
+				sale_order_code,
+			</if>
+			<if test="saleOrderPrjectCode != null">
+				sale_order_prject_code,
+			</if>
+			<if test="saleOrderDeliveredPlan != null">
+				sale_order_delivered_plan,
+			</if>
+			<if test="standardCurrencyMoney != null">
+				standard_currency_money,
+			</if>
+			<if test="orderQty != null">
+				order_qty,
+			</if>
+			<if test="qty != null">
+				qty,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="purchaseOrderCode != null">
+				purchase_order_code,
+			</if>
+			<if test="purchaseOrderRid != null">
+				purchase_order_rid,
+			</if>
+			<if test="contractCode != null">
+				contract_code,
+			</if>
+			<if test="contractName != null">
+				contract_name,
+			</if>
+			<if test="referReceiptCode != null">
+				refer_receipt_code,
+			</if>
+			<if test="referReceiptRid != null">
+				refer_receipt_rid,
+			</if>
+			<if test="matDocId != null">
+				mat_doc_id,
+			</if>
+			<if test="matDocRid != null">
+				mat_doc_rid,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="costObjCode != null">
+				cost_obj_code,
+			</if>
+			<if test="costObjName != null">
+				cost_obj_name,
+			</if>
+			<if test="costObjLevel != null">
+				cost_obj_level,
+			</if>
+			<if test="reserveId != null">
+				reserve_id,
+			</if>
+			<if test="reserveRid != null">
+				reserve_rid,
+			</if>
+			<if test="inputedQty != null">
+				inputed_qty,
+			</if>
+			<if test="manufacturer != null">
+				manufacturer,
+			</if>
+			<if test="decimalPlace != null">
+				decimal_place,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="writeOff != null">
+				write_off,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="mesLocationId != null">
+				mes_location_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="itemId != null">
+				#{itemId,jdbcType=INTEGER},
+			</if>
+			<if test="stockInputId != null">
+				#{stockInputId,jdbcType=INTEGER},
+			</if>
+			<if test="stockInputRid != null">
+				#{stockInputRid,jdbcType=INTEGER},
+			</if>
+			<if test="moveTypeId != null">
+				#{moveTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="moveReasonId != null">
+				#{moveReasonId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				#{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				#{batch,jdbcType=BIGINT},
+			</if>
+			<if test="specStockCode != null">
+				#{specStockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockName != null">
+				#{specStockName,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierCode != null">
+				#{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				#{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				#{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="demandDept != null">
+				#{demandDept,jdbcType=VARCHAR},
+			</if>
+			<if test="saleOrderCode != null">
+				#{saleOrderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="saleOrderPrjectCode != null">
+				#{saleOrderPrjectCode,jdbcType=VARCHAR},
+			</if>
+			<if test="saleOrderDeliveredPlan != null">
+				#{saleOrderDeliveredPlan,jdbcType=VARCHAR},
+			</if>
+			<if test="standardCurrencyMoney != null">
+				#{standardCurrencyMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="orderQty != null">
+				#{orderQty,jdbcType=DECIMAL},
+			</if>
+			<if test="qty != null">
+				#{qty,jdbcType=DECIMAL},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="purchaseOrderCode != null">
+				#{purchaseOrderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="purchaseOrderRid != null">
+				#{purchaseOrderRid,jdbcType=VARCHAR},
+			</if>
+			<if test="contractCode != null">
+				#{contractCode,jdbcType=VARCHAR},
+			</if>
+			<if test="contractName != null">
+				#{contractName,jdbcType=VARCHAR},
+			</if>
+			<if test="referReceiptCode != null">
+				#{referReceiptCode,jdbcType=VARCHAR},
+			</if>
+			<if test="referReceiptRid != null">
+				#{referReceiptRid,jdbcType=VARCHAR},
+			</if>
+			<if test="matDocId != null">
+				#{matDocId,jdbcType=INTEGER},
+			</if>
+			<if test="matDocRid != null">
+				#{matDocRid,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="costObjCode != null">
+				#{costObjCode,jdbcType=VARCHAR},
+			</if>
+			<if test="costObjName != null">
+				#{costObjName,jdbcType=VARCHAR},
+			</if>
+			<if test="costObjLevel != null">
+				#{costObjLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="reserveId != null">
+				#{reserveId,jdbcType=VARCHAR},
+			</if>
+			<if test="reserveRid != null">
+				#{reserveRid,jdbcType=VARCHAR},
+			</if>
+			<if test="inputedQty != null">
+				#{inputedQty,jdbcType=DECIMAL},
+			</if>
+			<if test="manufacturer != null">
+				#{manufacturer,jdbcType=VARCHAR},
+			</if>
+			<if test="decimalPlace != null">
+				#{decimalPlace,jdbcType=TINYINT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="writeOff != null">
+				#{writeOff,jdbcType=TINYINT},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mesLocationId != null">
+				#{mesLocationId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockInputItem">
+		update biz_stock_input_item
+		<set>
+			<if test="stockInputId != null">
+				stock_input_id = #{stockInputId,jdbcType=INTEGER},
+			</if>
+			<if test="stockInputRid != null">
+				stock_input_rid = #{stockInputRid,jdbcType=INTEGER},
+			</if>
+			<if test="moveTypeId != null">
+				move_type_id = #{moveTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="moveReasonId != null">
+				move_reason_id = #{moveReasonId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				mat_id = #{matId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				fty_id = #{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				location_id = #{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				batch = #{batch,jdbcType=BIGINT},
+			</if>
+			<if test="specStockCode != null">
+				spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockName != null">
+				spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierCode != null">
+				supplier_code = #{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				supplier_name = #{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				customer_code = #{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="demandDept != null">
+				demand_dept = #{demandDept,jdbcType=VARCHAR},
+			</if>
+			<if test="saleOrderCode != null">
+				sale_order_code = #{saleOrderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="saleOrderPrjectCode != null">
+				sale_order_prject_code = #{saleOrderPrjectCode,jdbcType=VARCHAR},
+			</if>
+			<if test="saleOrderDeliveredPlan != null">
+				sale_order_delivered_plan = #{saleOrderDeliveredPlan,jdbcType=VARCHAR},
+			</if>
+			<if test="standardCurrencyMoney != null">
+				standard_currency_money = #{standardCurrencyMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="orderQty != null">
+				order_qty = #{orderQty,jdbcType=DECIMAL},
+			</if>
+			<if test="qty != null">
+				qty = #{qty,jdbcType=DECIMAL},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="purchaseOrderCode != null">
+				purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="purchaseOrderRid != null">
+				purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+			</if>
+			<if test="contractCode != null">
+				contract_code = #{contractCode,jdbcType=VARCHAR},
+			</if>
+			<if test="contractName != null">
+				contract_name = #{contractName,jdbcType=VARCHAR},
+			</if>
+			<if test="referReceiptCode != null">
+				refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+			</if>
+			<if test="referReceiptRid != null">
+				refer_receipt_rid = #{referReceiptRid,jdbcType=VARCHAR},
+			</if>
+			<if test="matDocId != null">
+				mat_doc_id = #{matDocId,jdbcType=INTEGER},
+			</if>
+			<if test="matDocRid != null">
+				mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+			</if>
+			<if test="matDocCode != null">
+				mat_doc_code = #{matDocCode,jdbcType=VARCHAR},
+			</if>
+			<if test="matOffCode != null">
+				mat_off_code = #{matOffCode,jdbcType=VARCHAR},
+			</if>
+			<if test="matDocYear != null">
+				mat_doc_year = #{matDocYear,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="costObjCode != null">
+				cost_obj_code = #{costObjCode,jdbcType=VARCHAR},
+			</if>
+			<if test="costObjName != null">
+				cost_obj_name = #{costObjName,jdbcType=VARCHAR},
+			</if>
+			<if test="costObjLevel != null">
+				cost_obj_level = #{costObjLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="reserveId != null">
+				reserve_id = #{reserveId,jdbcType=VARCHAR},
+			</if>
+			<if test="reserveRid != null">
+				reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+			</if>
+			<if test="inputedQty != null">
+				inputed_qty = #{inputedQty,jdbcType=DECIMAL},
+			</if>
+			<if test="manufacturer != null">
+				manufacturer = #{manufacturer,jdbcType=VARCHAR},
+			</if>
+			<if test="decimalPlace != null">
+				decimal_place = #{decimalPlace,jdbcType=TINYINT},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="writeOff != null">
+				write_off = #{writeOff,jdbcType=TINYINT},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mesDocCode != null">
+				mes_doc_code = #{mesDocCode,jdbcType=VARCHAR},
+			</if>
+			<if test="mesFailCode != null">
+				mes_fail_code = #{mesFailCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockInputItem">
+		update biz_stock_input_item
+		set stock_input_id = #{stockInputId,jdbcType=INTEGER},
+		stock_input_rid = #{stockInputRid,jdbcType=INTEGER},
+		move_type_id = #{moveTypeId,jdbcType=INTEGER},
+		move_reason_id = #{moveReasonId,jdbcType=INTEGER},
+		mat_id = #{matId,jdbcType=INTEGER},
+		fty_id = #{ftyId,jdbcType=INTEGER},
+		location_id = #{locationId,jdbcType=INTEGER},
+		batch = #{batch,jdbcType=BIGINT},
+		spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+		spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+		supplier_code = #{supplierCode,jdbcType=VARCHAR},
+		supplier_name = #{supplierName,jdbcType=VARCHAR},
+		customer_code = #{customerCode,jdbcType=VARCHAR},
+		customer_name = #{customerName,jdbcType=VARCHAR},
+		demand_dept = #{demandDept,jdbcType=VARCHAR},
+		sale_order_code = #{saleOrderCode,jdbcType=VARCHAR},
+		sale_order_prject_code = #{saleOrderPrjectCode,jdbcType=VARCHAR},
+		sale_order_delivered_plan = #{saleOrderDeliveredPlan,jdbcType=VARCHAR},
+		standard_currency_money = #{standardCurrencyMoney,jdbcType=DECIMAL},
+		order_qty = #{orderQty,jdbcType=DECIMAL},
+		qty = #{qty,jdbcType=DECIMAL},
+		unit_id = #{unitId,jdbcType=INTEGER},
+		purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+		purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+		contract_code = #{contractCode,jdbcType=VARCHAR},
+		contract_name = #{contractName,jdbcType=VARCHAR},
+		refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+		refer_receipt_rid = #{referReceiptRid,jdbcType=VARCHAR},
+		mat_doc_id = #{matDocId,jdbcType=INTEGER},
+		mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+		remark = #{remark,jdbcType=VARCHAR},
+		cost_obj_code = #{costObjCode,jdbcType=VARCHAR},
+		cost_obj_name = #{costObjName,jdbcType=VARCHAR},
+		cost_obj_level = #{costObjLevel,jdbcType=VARCHAR},
+		reserve_id = #{reserveId,jdbcType=VARCHAR},
+		reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+		inputed_qty = #{inputedQty,jdbcType=DECIMAL},
+		manufacturer = #{manufacturer,jdbcType=VARCHAR},
+		decimal_place = #{decimalPlace,jdbcType=TINYINT},
+		status = #{status,jdbcType=TINYINT},
+		write_off = #{writeOff,jdbcType=TINYINT},
+		is_delete = #{isDelete,jdbcType=TINYINT},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectByStockInputId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		si.item_id,si.stock_input_id,si.stock_input_rid,si.move_type_id,si.move_reason_id,
+		si.mat_id,si.fty_id,si.location_id,si.batch,si.spec_stock_code,si.spec_stock_name,
+		si.supplier_code,si.supplier_name,si.customer_code,si.customer_name,si.demand_dept,
+		si.sale_order_code,si.sale_order_prject_code,si.sale_order_delivered_plan,si.standard_currency_money,
+		si.order_qty,si.qty,si.unit_id,si.purchase_order_code,
+		si.purchase_order_rid,si.contract_code,si.contract_name,
+		si.refer_receipt_code,si.refer_receipt_rid,
+		si.mat_doc_id,si.mat_doc_rid,si.remark,si.cost_obj_code,si.cost_obj_name,
+		si.cost_obj_level,si.reserve_id,si.reserve_rid,si.inputed_qty,si.manufacturer,
+		si.status,si.write_off,si.is_delete,si.create_time,si.modify_time,
+		du.name_zh,
+		du.decimal_place,
+		f.fty_code,
+		f.fty_name,
+		l.location_code,
+		l.location_name,
+		m.mat_code,
+		m.mat_name
+		FROM
+		biz_stock_input_item si
+		INNER JOIN dic_unit du on si.unit_id = du.unit_id
+		INNER JOIN dic_factory f on si.fty_id = f.fty_id
+		INNER JOIN dic_stock_location l on si.location_id = l.location_id
+		INNER JOIN dic_material m on si.mat_id = m.mat_id
+		where si.is_delete = 0 and si.stock_input_id =
+		#{stockInputId,jdbcType=INTEGER}
+	</select>
+	<update id="deleteByStockInputId" parameterType="java.lang.Integer">
+		update biz_stock_input_item set is_delete = 1
+		where stock_input_id = #{stockInputId,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectAllocateInputItemByStockInputId"
+		parameterType="java.lang.Integer" resultType="java.util.Map">
+		SELECT
+		si.item_id,
+		si.stock_input_rid,
+		si.stock_input_id,
+		si.mat_id,
+		m.mat_code,
+		m.mat_name,
+		si.unit_id,
+		du.unit_code,
+		du.decimal_place,
+		du.name_zh,
+		si.qty,
+		si.batch,
+		si.fty_id,
+		si.location_id,
+		fo.fty_code fty_output_code,
+		fo.fty_name
+		fty_output_name,
+
+		lo.location_code location_output_code,
+		lo.location_name location_output_name,
+		si.write_off,
+		ai.item_id allocate_item_id
+		FROM
+		biz_stock_input_item si
+		left JOIN biz_allocate_item ai ON ai.stock_input_id = si.stock_input_id
+		AND ai.stock_input_rid = si.stock_input_rid
+		INNER JOIN dic_material m ON m.mat_id = si.mat_id
+		INNER JOIN dic_unit du ON si.unit_id = du.unit_id
+		left JOIN dic_factory fo ON fo.fty_id = ai.fty_output
+		left JOIN dic_stock_location lo ON lo.location_id = ai.location_output
+		where si.is_delete = 0 and si.stock_input_id =
+		#{stockInputId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByItemIds" parameterType="java.util.List"
+		resultMap="BaseResultMap">
+		SELECT
+		si.item_id,si.stock_input_id,si.stock_input_rid,si.move_type_id,si.move_reason_id,
+		si.mat_id,si.fty_id,si.location_id,si.batch,si.spec_stock_code,si.spec_stock_name,
+		si.supplier_code,si.supplier_name,si.customer_code,si.customer_name,si.demand_dept,
+		si.sale_order_code,si.sale_order_prject_code,si.sale_order_delivered_plan,si.standard_currency_money,
+		si.order_qty,si.qty,si.unit_id,si.purchase_order_code,
+		si.purchase_order_rid,si.contract_code,si.contract_name,
+		si.refer_receipt_code,si.refer_receipt_rid,
+		si.mat_doc_id,si.mat_doc_rid,si.remark,si.cost_obj_code,si.cost_obj_name,
+		si.cost_obj_level,si.reserve_id,si.reserve_rid,si.inputed_qty,si.manufacturer,
+		si.status,si.write_off,si.is_delete,si.create_time,si.modify_time,
+		du.name_zh,
+		du.decimal_place,
+		f.fty_code,
+		f.fty_name,
+		l.location_code,
+		l.location_name,
+		m.mat_code,
+		m.mat_name,
+		mh.mat_doc_code,
+		mi.item_id
+		mat_doc_item_id
+		FROM
+		biz_stock_input_item si
+		INNER JOIN dic_unit du on si.unit_id = du.unit_id
+		INNER JOIN dic_factory f on si.fty_id = f.fty_id
+		INNER JOIN dic_stock_location l on si.location_id = l.location_id
+		INNER JOIN dic_material m on si.mat_id = m.mat_id
+		left JOIN biz_material_doc_head mh ON mh.mat_doc_id = si.mat_doc_id
+		left JOIN biz_material_doc_item mi ON mi.mat_doc_id = si.mat_doc_id and
+		mi.mat_doc_rid = si.mat_doc_rid
+		where si.item_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectInputItemByStockInputId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		si.item_id,
+		si.stock_input_rid,
+		si.stock_input_id,
+		ai.item_id allocate_item_id
+		FROM
+		biz_stock_input_item si
+		INNER JOIN biz_allocate_item ai ON ai.stock_input_id = si.stock_input_id
+		AND ai.stock_input_rid = si.stock_input_rid
+		where si.is_delete = 0 and si.stock_input_id =
+		#{stockInputId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectStockInputItemByStockInputID" parameterType="java.lang.Integer"
+		resultType="java.util.Map">
+		SELECT
+		item.item_id,
+		item.stock_input_id,
+		item.unit_id,
+		item.batch,
+		loc.wh_id,
+		head.stock_input_code,
+		item.mat_id,
+		head.fty_id,		
+		head.move_type_id,
+		item.location_id,		
+		mat.mat_code,
+		mat.mat_name,
+		pack.package_type_code,
+		pack.package_standard_ch,
+		pack.package_standard / (case when unit.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		p.package_type_id,
+		p.qty,
+		p.production_batch,
+		p.erp_batch,
+		p.quality_batch,
+		fty.fty_name as fty_output_name,
+		fty.fty_code as fty_output_code,
+		unit.unit_id,
+		unit.unit_code,
+		loc.location_name as location_output_name,
+		loc.location_code as location_output_code
+		FROM biz_stock_input_item item
+		LEFT JOIN dic_unit unit on unit.unit_id = item.unit_id
+		left join biz_stock_input_head head on head.stock_input_id = item.stock_input_id
+		left join biz_stock_input_package_item p on p.stock_input_item_id =
+		item.item_id
+		left JOIN dic_package_type pack on pack.package_type_id =
+		p.package_type_id
+		left join dic_factory fty on fty.fty_id = head.fty_id
+		left join dic_stock_location loc on loc.location_id = item.location_id
+		left JOIN dic_material mat on mat.mat_id = item.mat_id
+		where item.is_delete = 0 and item.stock_input_id=#{stockInputId,jdbcType=INTEGER}
+
+	</select>
+	
+	<select id="queryInputStockOutAndInOnPaging" parameterType="java.util.Map"  resultType="java.util.Map">
+			SELECT DISTINCT
+			
+				IFNULL(move.biz_type,'') biz_type,
+				IFNULL(move.move_type_code,'') move_type_code,
+				IFNULL(mat.mat_id,'') mat_id,
+				IFNULL(mat.mat_code,'') mat_code,
+				IFNULL(mat.mat_name,'') mat_name,
+				IFNULL(fty.fty_name,'') fty_input_name,
+				IFNULL(fty.fty_code,'') fty_input_code,
+				IFNULL(loc.location_name,'') location_input_name,
+				IFNULL(loc.location_code,'') location_input_code,
+				IFNULL(item.batch,'') batch,
+				IFNULL(item.mat_doc_rid,'') mat_doc_rid,
+				IFNULL(item.mat_doc_code,'') mat_doc_code,
+				IFNULL(item.stock_input_id,'') refer_receipt_id,
+			  IFNULL(item.stock_input_rid,'') refer_receipt_rid,
+			  IFNULL(head.stock_input_code,'') refer_receipt_code,
+				IFNULL(unit.name_zh,'') name_zh,
+				IFNULL(item.qty,'') qty,
+			 DATE_FORMAT(item.create_time,'%Y-%m-%d')create_time,
+			  IFNULL(bm.product_batch,'') product_batch,
+			  IFNULL(head.doc_time,'') doc_time,
+			  IFNULL(head.posting_date,'') posting_date,
+			   IFNULL(head.receipt_type,'') receipt_type,
+			head.remark as headremark,
+			item.remark as itemremark,
+			   
+				IFNULL(u.user_name,'') user_name,
+				CASE
+			WHEN head.`status` = '0' THEN
+				'未完成'
+			WHEN head.`status` = '10' THEN
+				'已完成'
+			WHEN head.`status` = '2' THEN
+				'已提交'
+			WHEN head.`status` = '3' THEN
+				'已作业'
+			WHEN head.`status` = '4' THEN
+				'已关联'
+			WHEN head.`status` = '5' THEN
+				'已转储'
+			WHEN head.`status` = '6' THEN
+				'已拣货'
+			WHEN head.`status` = '7' THEN
+				'待出库'
+			WHEN head.`status` = '20' THEN
+				'已冲销'
+			END status_name
+			FROM biz_stock_input_package_item pack
+			INNER JOIN biz_stock_input_item item on item.item_id = pack.stock_input_item_id
+			
+			INNER JOIN biz_stock_input_head head on head.stock_input_id = item.stock_input_id
+			left JOIN dic_move_type move on move.move_type_id = head.move_type_id
+			INNER JOIN dic_factory fty ON fty.fty_id = item.fty_id
+			INNER JOIN dic_stock_location loc on loc.location_id = item.location_id
+			LEFT JOIN dic_unit unit on unit.unit_id = item.unit_id
+			INNER JOIN dic_material mat on mat.mat_id = item.mat_id
+			INNER JOIN wms_user u on u.user_id = head.create_user
+			INNER JOIN batch_material bm on bm.mat_id = item.mat_id and pack.batch = bm.batch and item.fty_id = bm.fty_id
+					WHERE
+					item.is_delete =0
+		<if test="matDocCode !=null and matDocCode !=''">
+			AND item.mat_doc_code=#{matDocCode}
+		</if>
+		<if test="createTimeBegin != null">
+			AND item.create_time <![CDATA[>=]]>
+			#{createTimeBegin,jdbcType=TIMESTAMP}
+		</if>
+		<if test="createTimeEnd != null">
+			AND item.create_time <![CDATA[<=]]>
+			#{createTimeEnd,jdbcType=TIMESTAMP}
+		</if>
+		<if test="ftyInputId != null and ftyInputId !=''">
+			AND item.fty_id= #{ftyInputId,jdbcType=VARCHAR}
+		</if>
+		<if test="locationInputId != null and locationInputId !=''">
+			AND item.location_id = #{locationInputId,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="referReceiptCode != null and referReceiptCode !=''">
+			AND head.stock_input_code = #{referReceiptCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="moveTypeCode != null and moveTypeCode !=''">
+			AND move.move_type_code = #{moveTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="matCode != null and matCode !=''">
+			AND (			
+			<foreach collection="utilMatCodes" item="item" index="index" separator="or">     	
+	    		  	(mat.mat_code BETWEEN #{item.begin} AND #{item.end} 
+	    		  	AND CHAR_LENGTH(mat.mat_code) IN (CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))  )   	
+	  		</foreach> 		   
+	  			<!--  OR	mat.mat_code IN   				 
+	   		<foreach collection="utilMatCodes.get(0).strings" item="string" index="index" open="(" close=")" separator=",">  		
+	    			#{string}     			 
+	  		</foreach>  -->
+	  		or mat.mat_code like concat('%',#{matCode},'%')
+				)	
+		</if>
+<if test="matName != null and matName !=''">
+			AND mat.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>	
+<if test="userName != null and userName !=''">
+			AND u.user_name LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+		</if>
+		
+		<if test="productBatch !=null and productBatch!=''">
+		AND bm.product_batch=#{productBatch}
+		</if>
+			ORDER BY create_time DESC
+</select>
+
+
+<select id="getInputAmount" parameterType="map" resultType="map">
+
+   select 
+   <if test="groupWh!=null">
+   ANY_VALUE(t.wh_id) wh_id,ANY_VALUE(t.wh_code) wh_code,ANY_VALUE(t.wh_name) wh_name,
+   </if>
+   ANY_VALUE(t.mat_group_id) mat_group_id,
+	ANY_VALUE(t.mat_group_code) mat_group_code,ANY_VALUE(t.mat_group_name) mat_group_name,SUM(t.inputAmount) inputAmount,
+	
+	sum(ifnull(t.qty,0)) qty 
+	<if test="groupMat!=null ">
+	, t.mat_id, t.mat_code , t.mat_name
+	</if>
+	
+	from (
+	select 
+		<if test="groupWh!=null">
+		wh.wh_id,wh.wh_code,wh.wh_name,
+		</if>
+		m.mat_group_id ,g.mat_group_code,g.mat_group_name, 
+		sum(ifnull(i.qty,0) * ifnull(p.price,0)/10000) as inputAmount 
+		,sum(ifnull(i.qty*(case when u.unit_code = 'KG' then 1 else 1000 end),0)) qty 
+		<if test="groupMat!=null ">
+		, m.mat_id, m.mat_code, m.mat_name
+		</if>
+		 from biz_stock_input_item i  
+		inner join biz_stock_input_head h on i.stock_input_id=h.stock_input_id and h.is_delete=0 and i.is_delete=0
+		left join buf_factory_mat_price p on i.mat_id=p.mat_id and p.fty_id=i.fty_id
+		inner join dic_material m on i.mat_id=m.mat_id
+		inner join dic_unit u on m.unit_id = u.unit_id
+		inner join dic_factory f on f.fty_id=i.fty_id
+		inner join dic_corp cp on cp.corp_id=f.corp_id
+		inner join dic_stock_location l on l.location_id=i.location_id
+		inner join dic_material_group g on g.mat_group_id=m.mat_group_id	
+		inner join dic_warehouse wh on wh.wh_id=l.wh_id
+		 where 1=1 and h.status in (5,10)
+		<if test="timeFr!=null and timeFr !=''">
+		 and i.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  and i.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		<if test="ftyId!=null and ftyId !=''">
+		  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="boardId!=null and boardId !=''">
+		  and cp.board_id= #{boardId,jdbcType=INTEGER}
+	  	</if>
+		<if test="locationId!=null and locationId !=''">
+		  and l.location_id = #{locationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="whId!=null and whId!=''">
+	    and wh.wh_id=#{whId,jdbcType=INTEGER}
+	    </if>
+	  	<if test="matGroupId!=null and matGroupId !=''">
+		  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  	</if>	 
+		 GROUP BY 
+		 <if test="groupWh!=null">
+		 wh.wh_id,
+		 </if>
+		 m.mat_group_id
+		<if test="groupMat!=null ">
+		  , m.mat_id,m.mat_code,m.mat_name
+		</if>
+	 
+	 union all 
+	 select 
+			<if test="groupWh!=null">
+				wh.wh_id,wh.wh_code,wh.wh_name,
+			</if>
+			m.mat_group_id ,g.mat_group_code,g.mat_group_name
+			,sum(ifnull(op.stock_qty,0) * ifnull(p.price,0)/10000) as inputAmount 
+			
+			,sum(ifnull(op.stock_qty*(case when u.unit_code = 'KG' then 1 else 1000 end),0)) qty 
+			<if test="groupMat!=null ">
+			, m.mat_id,m.mat_code,m.mat_name
+			</if>
+			 from biz_stock_output_item o
+			inner join biz_stock_output_head h on o.stock_output_id=h.stock_output_id and h.is_delete=0 and o.is_delete=0
+			inner join biz_stock_output_position op on op.stock_output_id = o.stock_output_id and o.stock_output_rid = op.stock_output_rid and op.is_delete =0
+			left join buf_factory_mat_price p on o.mat_id=p.mat_id and p.fty_id=o.fty_id
+			inner join dic_material m on o.mat_id=m.mat_id
+			inner join dic_unit u on m.unit_id = u.unit_id
+			inner join dic_factory f on f.fty_id=o.fty_id
+			inner join dic_corp cp on cp.corp_id=f.corp_id
+			inner join dic_stock_location l on l.location_id=o.location_id
+			inner join dic_material_group g on g.mat_group_id=m.mat_group_id
+		
+			inner join dic_warehouse wh on wh.wh_id=l.wh_id
+			 where 1=1  and h.status=10 and  h.receipt_type =25
+				<if test="timeFr!=null and timeFr !=''">
+				 and o.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+				</if>
+				<if test="timeTo!=null and timeTo !=''">
+				  and o.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+				</if>	
+				<if test="ftyId!=null and ftyId !=''">
+				  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+			  	</if>
+			  	<if test="boardId!=null and boardId !=''">
+				  and cp.board_id= #{boardId,jdbcType=INTEGER}
+			  	</if>
+				<if test="locationId!=null and locationId !=''">
+				  and l.location_id = #{locationId,jdbcType=INTEGER}
+			  </if>
+			   <if test="whId!=null and whId!=''">
+			   and wh.wh_id=#{whId,jdbcType=INTEGER}
+			   </if>
+			  	<if test="matGroupId!=null and matGroupId !=''">
+				  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+			  	</if>	 
+			  GROUP BY 
+			  <if test="groupWh!=null">
+			  wh.wh_id,
+			  </if>
+			  m.mat_group_id
+		 	 <if test="groupMat!=null ">
+			  , m.mat_id,m.mat_code,m.mat_name
+			 </if>
+	 
+	
+	union all 
+	select 
+	 <if test="groupWh!=null">
+	 wh.wh_id,wh.wh_code,wh.wh_name,
+	 </if>
+	 m.mat_group_id ,g.mat_group_code,g.mat_group_name
+	 , sum(ifnull(ti.transport_qty,0) * ifnull(p.price,0)/10000) as inputAmount 
+	,sum(ifnull(ti.transport_qty*(case when u.unit_code = 'KG' then 1 else 1000 end) ,0)) qty 
+	<if test="groupMat!=null ">
+	, m.mat_id,m.mat_code,m.mat_name
+	 </if>
+
+	 from biz_stock_input_transport_item ti  
+	inner join biz_stock_input_transport_head th on ti.stock_transport_id=th.stock_transport_id and th.is_delete=0 and ti.is_delete=0
+	left join buf_factory_mat_price p on ti.mat_input=p.mat_id and p.fty_id=ti.fty_id
+	inner join dic_material m on ti.mat_input=m.mat_id
+	inner join dic_unit u on m.unit_id = u.unit_id
+	inner join dic_factory f on f.fty_id=ti.fty_input
+	inner join dic_corp cp on cp.corp_id=f.corp_id
+	inner join dic_stock_location l on l.location_id=ti.location_input
+	inner join dic_material_group g on g.mat_group_id=m.mat_group_id
+
+	inner join dic_warehouse wh on l.wh_id=wh.wh_id
+	 where 1=1 and th.status=10 
+		<if test="timeFr!=null and timeFr !=''">
+		 and ti.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  and ti.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		<if test="ftyId!=null and ftyId !=''">
+		  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="boardId!=null and boardId !=''">
+		  and cp.board_id= #{boardId,jdbcType=INTEGER}
+	  	</if>
+		<if test="locationId!=null and locationId !=''">
+		  and l.location_id = #{locationId,jdbcType=INTEGER}
+	  </if>
+	    <if test="whId!=null and whId!=''">
+	    and wh.wh_id=#{whId,jdbcType=INTEGER}
+	    </if>
+	  	<if test="matGroupId!=null and matGroupId !=''">
+		  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  	</if>	 
+	 GROUP BY 
+	 <if test="groupWh!=null">
+	 wh.wh_id,
+	 </if>
+	 m.mat_group_id
+	<if test="groupMat!=null ">
+	 , m.mat_id,m.mat_code,m.mat_name
+	</if>
+	
+	) t 
+	GROUP BY 
+	<if test="groupWh!=null">
+	t.wh_id,
+	</if>
+	t.mat_group_id
+	<if test="groupMat!=null ">
+	,t.mat_id,t.mat_code,t.mat_name
+	</if>
+
+</select>
+
+<select id="downloadTurnover" parameterType="map" resultType="map">
+	select 
+   wh.wh_id,wh.wh_code,wh.wh_name,
+   g.mat_group_code,g.mat_group_name, db.board_name, cp.corp_name, l.location_name,dt.move_type_code, m.mat_code,m.mat_name, i.mat_doc_code,i.mat_doc_rid,rt.receipt_type_name,
+	u.name_zh,i.qty,price.price,DATE_FORMAT(i.create_time,'%Y-%m-%d') create_time,wu.user_name,(i.qty*price.price) money,DATE_FORMAT(h.posting_date,'%Y-%m-%d') posting_date
+	 from biz_stock_input_item i  
+	inner join biz_stock_input_head h on i.stock_input_id=h.stock_input_id 
+	left join buf_factory_mat_price p on i.mat_id=p.mat_id and p.fty_id=i.fty_id
+	left join dic_material m on i.mat_id=m.mat_id
+	left join dic_factory f on f.fty_id=i.fty_id
+	left join dic_corp cp on cp.corp_id=f.corp_id
+	left join dic_stock_location l on l.location_id=i.location_id
+	left join dic_material_group g on g.mat_group_id=m.mat_group_id
+	left join dic_board db on db.board_id=cp.board_id
+	left join dic_move_type dt on dt.move_type_id=h.move_type_id
+	left join  dic_receipt_type rt on rt.receipt_type=h.receipt_type
+	inner join dic_unit u on m.unit_id=u.unit_id
+	left join buf_factory_mat_price price on price.mat_id=m.mat_id
+	inner join wms_user wu on wu.user_id=h.create_user
+  inner join dic_warehouse wh on wh.wh_id=l.wh_id
+	 where h.is_delete=0
+	   <if test="timeFr!=null and timeFr !=''">
+		 and i.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  and i.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		<if test="ftyId!=null and ftyId !=''">
+		  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="boardId!=null and boardId !=''">
+		  and cp.board_id= #{boardId,jdbcType=INTEGER}
+	  	</if>
+		<if test="locationId!=null and locationId !=''">
+		  and l.location_id = #{locationId,jdbcType=INTEGER}
+	  </if>
+	  	<if test="matGroupId!=null and matGroupId !=''">
+		  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="whId!=null and whId!=''">
+	  	  and wh.wh_id = #{whId,jdbcType=INTEGER}
+	  	</if>
+	union all 
+	select 
+  wh.wh_id,wh.wh_code,wh.wh_name,
+	g.mat_group_code,g.mat_group_name,db.board_name, cp.corp_name, l.location_name,dt.move_type_code, m.mat_code,m.mat_name, i.mat_doc_code,i.mat_doc_rid,rt.receipt_type_name,
+	u.name_zh,i.output_qty qty,price.price,DATE_FORMAT(i.create_time,'%Y-%m-%d') create_time,wu.user_name,(i.output_qty*price.price) money,DATE_FORMAT(h.posting_date,'%Y-%m-%d') posting_date
+	 from biz_stock_output_item i
+	inner join biz_stock_output_head h on i.stock_output_id=h.stock_output_id 
+	inner join buf_factory_mat_price p on i.mat_id=p.mat_id and p.fty_id=i.fty_id
+	inner join dic_material m on i.mat_id=m.mat_id
+	inner join dic_factory f on f.fty_id=i.fty_id
+	inner join dic_corp cp on cp.corp_id=f.corp_id
+	inner join dic_stock_location l on l.location_id=i.location_id
+	inner join dic_material_group g on g.mat_group_id=m.mat_group_id join dic_board db on db.board_id=cp.board_id
+	left join dic_move_type dt on dt.move_type_id=i.move_type_id
+	left join  dic_receipt_type rt on rt.receipt_type=h.receipt_type
+	inner join dic_unit u on m.unit_id=u.unit_id
+	left join buf_factory_mat_price price on price.mat_id=m.mat_id
+	inner join wms_user wu on wu.user_id=h.create_user
+  inner join dic_warehouse wh on wh.wh_id=l.wh_id
+	where h.is_delete=0
+		<if test="timeFr!=null and timeFr !=''">
+		 and i.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  and i.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		<if test="ftyId!=null and ftyId !=''">
+		  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="boardId!=null and boardId !=''">
+		  and cp.board_id= #{boardId,jdbcType=INTEGER}
+	  	</if>
+		<if test="locationId!=null and locationId !=''">
+		  and l.location_id = #{locationId,jdbcType=INTEGER}
+	  </if>
+	  <if test="matGroupId!=null and matGroupId !=''">
+		  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  </if>
+	  <if test="whId!=null and whId!=''">
+	  	  and wh.wh_id = #{whId,jdbcType=INTEGER}
+	  	</if>
+	union all
+
+	select
+  wh.wh_id,wh.wh_code,wh.wh_name,
+  g.mat_group_code,g.mat_group_name, db.board_name, cp.corp_name, l.location_name,dt.move_type_code, m.mat_code,m.mat_name, ti.mat_doc_code,ti.mat_doc_rid,rt.receipt_type_name,
+	u.name_zh,ti.transport_qty qty,price.price,DATE_FORMAT(ti.create_time,'%Y-%m-%d') create_time,wu.user_name,(ti.transport_qty*price.price) money,DATE_FORMAT(th.posting_date,'%Y-%m-%d') posting_date
+	 from biz_stock_input_transport_item ti  
+	inner join biz_stock_input_transport_head  th on ti.stock_transport_id=th.stock_transport_id 
+	left join buf_factory_mat_price p on ti.mat_id=p.mat_id and p.fty_id=ti.fty_id
+	left join dic_material m on ti.mat_id=m.mat_id
+	left join dic_factory f on f.fty_id=ti.fty_id
+	left join dic_corp cp on cp.corp_id=f.corp_id
+	left join dic_stock_location l on l.location_id=ti.location_id
+	left join dic_material_group g on g.mat_group_id=m.mat_group_id
+	left join dic_board db on db.board_id=cp.board_id
+	left join dic_move_type dt on dt.move_type_id=th.move_type_id
+	left join  dic_receipt_type rt on rt.receipt_type=th.receipt_type
+	inner join dic_unit u on m.unit_id=u.unit_id
+	left join buf_factory_mat_price price on price.mat_id=m.mat_id
+	inner join wms_user wu on wu.user_id=th.create_user
+  inner join dic_warehouse wh on l.wh_id=wh.wh_id
+	 where th.is_delete=0
+	   <if test="timeFr!=null and timeFr !=''">
+		 and ti.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  and ti.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		<if test="ftyId!=null and ftyId !=''">
+		  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="boardId!=null and boardId !=''">
+		  and cp.board_id= #{boardId,jdbcType=INTEGER}
+	  	</if>
+		<if test="locationId!=null and locationId !=''">
+		  and l.location_id = #{locationId,jdbcType=INTEGER}
+	  </if>
+	  	<if test="matGroupId!=null and matGroupId !=''">
+		  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  </if>
+	  	<if test="whId!=null and whId!=''">
+	  	  and wh.wh_id = #{whId,jdbcType=INTEGER}
+	  	</if>
+</select>
+<select id="queryFailMESOnPaging" parameterType="java.util.Map"  resultType="java.util.Map">
+		SELECT
+				fm.refer_receipt_code,
+				fm.refer_receipt_type,
+				fm.business_type,
+				u.user_name AS create_user,
+				DATE_FORMAT(
+					fm.create_time,
+					'%Y-%m-%d %H:%i:%S'
+				) create_time,
+				CASE fm.business_type
+			WHEN 1101 THEN
+				'入库'
+			WHEN 101 THEN
+				'入库'
+			WHEN 106 THEN
+				'销售退库'
+			WHEN 202 THEN
+				'销售出库'
+			WHEN 301 THEN
+				'移库'
+			END business_name,
+			 rt.receipt_type_name,
+			 error_info
+			FROM
+				biz_fail_mes fm
+			INNER JOIN dic_receipt_type rt ON rt.receipt_type = fm.refer_receipt_type
+			INNER JOIN wms_user u ON u.user_id = fm.create_user
+			WHERE
+				`status` = 0
+		 <if test="referReceiptCode != null and referReceiptCode !=''">
+		and fm.refer_receipt_code=#{referReceiptCode}
+		 </if>
+		 <if test="referReceiptType != null and referReceiptType !=''">
+		and fm.refer_receipt_type=#{referReceiptType}
+		 </if>
+		 <if test="createUser != null and createUser !=''">
+		and u.user_name=#{createUser}
+		 </if>
+		 <if test="createTime != null and createTime !=''">
+	   and	DATE_FORMAT(fm.create_time,'%Y-%m-%d')=#{createTime}
+		 </if>
+	ORDER BY create_time DESC
+	</select>
+
+
+<select id="getAllInput" parameterType="map" resultType="map">
+
+   select 
+   t.wh_id,t.wh_code,t.wh_name,
+	SUM(t.inputAmount) inputAmount,
+	
+	sum(ifnull(t.qty,0)) qty  
+	<if test="groupMat!=null ">
+	, t.mat_id,t.mat_code,t.mat_name
+	</if>
+	
+	from (
+		select 
+		wh.wh_id,wh.wh_code,wh.wh_name
+		, sum(ifnull(i.qty,0) * ifnull(p.price,0)/ 10000) as inputAmount 
+		,sum(ifnull(i.qty*(case when u.unit_code = 'KG' then 1 else 1000 end),0)) qty 
+		<if test="groupMat!=null ">
+		, m.mat_id,m.mat_code,m.mat_name
+		</if>
+		 from biz_stock_input_item i  
+		inner join biz_stock_input_head h on i.stock_input_id=h.stock_input_id and h.is_delete=0 and i.is_delete=0
+		left join buf_factory_mat_price p on i.mat_id=p.mat_id and p.fty_id=i.fty_id
+		inner join dic_material m on i.mat_id=m.mat_id
+		inner join dic_unit u on m.unit_id = u.unit_id
+		inner join dic_factory f on f.fty_id=i.fty_id
+		inner join dic_corp cp on cp.corp_id=f.corp_id
+		inner join dic_stock_location l on l.location_id=i.location_id
+		inner join dic_material_group g on g.mat_group_id=m.mat_group_id	
+		inner join dic_warehouse wh on wh.wh_id=l.wh_id
+		 where 1=1 and h.status in (5,10)
+		<if test="timeFr!=null and timeFr !=''">
+		 and i.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  and i.create_time <![CDATA[<]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		<if test="ftyId!=null and ftyId !=''">
+		  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="boardId!=null and boardId !=''">
+		  and cp.board_id= #{boardId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="coryId!=null and corpId !=''">
+		  and cp.corp_id= #{corpId,jdbcType=INTEGER}
+	  	</if>
+		<if test="locationId!=null and locationId !=''">
+		  and l.location_id = #{locationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="whId!=null and whId!=''">
+	    and wh.wh_id=#{whId,jdbcType=INTEGER}
+	    </if>
+	  	<if test="matGroupId!=null and matGroupId !=''">
+		  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  	</if>	 
+		 GROUP BY wh.wh_id 
+		 <if test="groupMat!=null ">
+		  , m.mat_id,m.mat_code,m.mat_name
+		</if>
+	 
+	 union all 
+	 select 
+			 wh.wh_id,wh.wh_code,wh.wh_name,  
+			 sum(ifnull(op.stock_qty,0) * ifnull(p.price,0)/10000) as inputAmount
+			
+			,sum(ifnull(op.stock_qty*(case when u.unit_code = 'KG' then 1 else 1000 end),0)) qty 
+			<if test="groupMat!=null ">
+			, m.mat_id,m.mat_code,m.mat_name
+			</if>
+			
+			 from biz_stock_output_item o
+			inner join biz_stock_output_head h on o.stock_output_id=h.stock_output_id and h.is_delete=0 and o.is_delete=0
+				inner join biz_stock_output_position op on op.stock_output_id = o.stock_output_id and o.stock_output_rid = op.stock_output_rid and op.is_delete =0
+			left join buf_factory_mat_price p on o.mat_id=p.mat_id and p.fty_id=o.fty_id
+			inner join dic_material m on o.mat_id=m.mat_id
+			inner join dic_unit u on m.unit_id = u.unit_id
+			inner join dic_factory f on f.fty_id=o.fty_id
+			inner join dic_corp cp on cp.corp_id=f.corp_id
+			inner join dic_stock_location l on l.location_id=o.location_id
+			inner join dic_material_group g on g.mat_group_id=m.mat_group_id
+		
+			inner join dic_warehouse wh on wh.wh_id=l.wh_id
+			 where 1=1  and h.status=10 and h.receipt_type =25
+				<if test="timeFr!=null and timeFr !=''">
+				 and o.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+				</if>
+				<if test="timeTo!=null and timeTo !=''">
+				  and o.create_time <![CDATA[<]]> #{timeTo,jdbcType=VARCHAR} 
+				</if>	
+				<if test="ftyId!=null and ftyId !=''">
+				  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+			  	</if>
+			  	<if test="boardId!=null and boardId !=''">
+				  and cp.board_id= #{boardId,jdbcType=INTEGER}
+			  	</if>
+			  	<if test="coryId!=null and corpId !=''">
+		  			and cp.corp_id= #{corpId,jdbcType=INTEGER}
+	  			</if>
+				<if test="locationId!=null and locationId !=''">
+				  and l.location_id = #{locationId,jdbcType=INTEGER}
+			  </if>
+			   <if test="whId!=null and whId!=''">
+			   and wh.wh_id=#{whId,jdbcType=INTEGER}
+			   </if>
+			  	<if test="matGroupId!=null and matGroupId !=''">
+				  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+			  	</if>	 
+			  GROUP BY wh.wh_id 
+			  <if test="groupMat!=null ">
+			  , m.mat_id,m.mat_code,m.mat_name
+			 </if>
+	
+	union all 
+	select 
+	 wh.wh_id,wh.wh_code,wh.wh_name
+	 ,sum(ifnull(ti.transport_qty,0) * ifnull(p.price,0) / 10000 ) as inputAmount 
+	,sum(ifnull(ti.transport_qty*(case when u.unit_code = 'KG' then 1 else 1000 end) ,0)) qty 
+	<if test="groupMat!=null ">
+	, m.mat_id,m.mat_code,m.mat_name
+	 </if>
+
+	 from biz_stock_input_transport_item ti  
+	inner join biz_stock_input_transport_head th on ti.stock_transport_id=th.stock_transport_id and th.is_delete=0 and ti.is_delete=0
+	left join buf_factory_mat_price p on ti.mat_input=p.mat_id and p.fty_id=ti.fty_id
+	inner join dic_material m on ti.mat_input=m.mat_id
+	inner join dic_unit u on m.unit_id = u.unit_id
+	inner join dic_factory f on f.fty_id=ti.fty_input
+	inner join dic_corp cp on cp.corp_id=f.corp_id
+	inner join dic_stock_location l on l.location_id=ti.location_input
+	inner join dic_material_group g on g.mat_group_id=m.mat_group_id
+
+	inner join dic_warehouse wh on l.wh_id=wh.wh_id
+	 where 1=1 and th.status=10 
+		<if test="timeFr!=null and timeFr !=''">
+		 and ti.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  and ti.create_time <![CDATA[<]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		<if test="ftyId!=null and ftyId !=''">
+		  and f.fty_id = #{ftyId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="boardId!=null and boardId !=''">
+		  and cp.board_id= #{boardId,jdbcType=INTEGER}
+	  	</if>
+	  	<if test="coryId!=null and corpId !=''">
+		  and cp.corp_id= #{corpId,jdbcType=INTEGER}
+	  	</if>
+		<if test="locationId!=null and locationId !=''">
+		  and l.location_id = #{locationId,jdbcType=INTEGER}
+	  </if>
+	    <if test="whId!=null and whId!=''">
+	    and wh.wh_id=#{whId,jdbcType=INTEGER}
+	    </if>
+	  	<if test="matGroupId!=null and matGroupId !=''">
+		  and g.mat_group_id = #{matGroupId,jdbcType=INTEGER}
+	  	</if>	 
+	 GROUP BY wh.wh_id
+	 <if test="groupMat!=null ">
+	 , m.mat_id,m.mat_code,m.mat_name
+	</if>
+	
+	) t 
+	GROUP BY t.wh_id,t.wh_code,t.wh_name
+	<if test="groupMat!=null ">
+	,t.mat_id,t.mat_code,t.mat_name
+	</if>
+	<if test="type!=null and type ==1 ">
+		  order by inputAmount Desc
+	</if>	 
+	<if test="type!=null and type ==2 ">
+		  order by qty Desc
+	</if>
+</select>
+
+</mapper>

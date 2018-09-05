@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.wf.FlowableMapper">
+	<!-- 当前人非领料单审批任务所有类型 -->
+	<select id="selectApproveTaskTypeByUserID" parameterType="java.lang.String"
+		resultType="com.inossem.wms.model.dic.DicReceiptType">
+		SELECT t.receipt_type receiptType,t.receipt_type_name receiptTypeName
+		FROM dic_receipt_type t
+		WHERE EXISTS (
+			SELECT receipt_type  
+			FROM wf_receipt_user 
+			WHERE user_id = #{id,jdbcType=CHAR}
+		    AND receipt_type NOT IN(33,34)
+		    AND receipt_type = t.receipt_type
+		)
+	</select>
+	<!-- 当前人领料单审批任务 -->
+	<select id="selectMatReqApproveTasksByUserIDOnPaging" parameterType="java.util.HashMap"
+		resultType="com.inossem.wms.model.vo.ApproveUserMatReqVo">
+		SELECT art.NAME_ nodeName,ari.USER_ID_ user_id,art.PROC_INST_ID_ piid,wh.receipt_id receiptId,wh.receipt_code receiptCode,wh.receipt_type receiptType,u.user_id createUserId,u.user_name createUserName,u.org_name orgName,wh.create_time createTime
+		FROM ACT_RU_TASK art
+		INNER JOIN ACT_RU_IDENTITYLINK ari 
+			ON ari.TASK_ID_ = art.ID_ AND ari.USER_ID_ = #{id,jdbcType=CHAR}
+		INNER JOIN wf_receipt wh 
+			ON art.PROC_INST_ID_ = wh.piid
+			<if test="beginDate != null and beginDate !='' and endDate != null and endDate !=''">
+				AND wh.create_time BETWEEN #{beginDate,jdbcType=VARCHAR} AND #{endDate,jdbcType=VARCHAR}
+		    </if>
+			AND wh.receipt_type = 33
+		LEFT OUTER JOIN wms_user u ON wh.receipt_user_id = u.user_id
+		ORDER BY wh.create_time DESC	
+	</select>
+	<!-- 当前人非领料单审批任务 -->
+	<select id="selectApproveTasksByUserIDOnPaging" parameterType="java.util.HashMap"
+		resultType="com.inossem.wms.model.vo.ApproveUserMatReqVo">
+		SELECT art.NAME_ nodeName,art.ASSIGNEE_ user_id,art.PROC_INST_ID_ piid,wh.receipt_id receiptId,wh.receipt_code receiptCode,wh.receipt_type receiptType,u.user_id createUserId,u.user_name createUserName,u.org_name orgName,wh.create_time createTime
+		FROM ACT_RU_TASK art
+		INNER JOIN wf_receipt wh 
+			ON art.PROC_INST_ID_ = wh.piid AND art.ASSIGNEE_ = #{id,jdbcType=CHAR}
+			<if test="beginDate != null and beginDate !='' and endDate != null and endDate !=''">
+				AND wh.create_time BETWEEN #{beginDate,jdbcType=VARCHAR} AND #{endDate,jdbcType=VARCHAR}
+		    </if>
+		    <if test="typeAry!=null and typeAry.size() > 0">
+                AND wh.receipt_type in
+	            <foreach collection="typeAry" item="type"
+	                    index="index" open="(" close=")" separator=",">
+	                    #{type}
+	            </foreach>
+        	</if>
+		LEFT OUTER JOIN wms_user u 
+			ON wh.receipt_user_id = u.user_id
+		ORDER BY wh.create_time DESC	
+	</select>
+	<!-- 当前人领料单已审批任务 -->
+	<select id="selectMatReqApprovedTasksByUserIDOnPaging" parameterType="java.util.HashMap"
+		resultType="com.inossem.wms.model.vo.ApproveUserMatReqVo">
+		SELECT aht.NAME_ nodeName,ra.user_id user_id,aht.PROC_INST_ID_ piid,wh.receipt_id receiptId,wh.receipt_code receiptCode,wh.receipt_type receiptType,u.user_id createUserId,u.user_name createUserName,u.org_name orgName,wh.create_time createTime
+		FROM ACT_HI_TASKINST aht
+		INNER JOIN wf_receipt wh 
+			ON aht.PROC_INST_ID_ = wh.piid
+			AND wh.receipt_type = 33
+			<if test="beginDate != null and beginDate !='' and endDate != null and endDate !=''">
+				AND wh.create_time BETWEEN #{beginDate,jdbcType=VARCHAR} AND #{endDate,jdbcType=VARCHAR}
+		    </if>
+		INNER JOIN wf_receipt_user ra 
+			ON ra.receipt_id = wh.receipt_id AND ra.task_id = aht.ID_
+            AND ra.user_id = #{id,jdbcType=CHAR}
+			AND ra.approve IS NOT NULL AND ra.approve_time IS NOT NULL
+		LEFT OUTER JOIN wms_user u ON wh.receipt_user_id = u.user_id
+		ORDER BY wh.create_time DESC	
+	</select>
+	<!-- 当前人非领料单已审批任务 -->
+	<select id="selectApprovedTasksByUserIDOnPaging" parameterType="java.util.HashMap"
+		resultType="com.inossem.wms.model.vo.ApproveUserMatReqVo">
+		SELECT aht.NAME_ nodeName,aht.ASSIGNEE_ user_id,aht.PROC_INST_ID_ piid,wh.receipt_id receiptId,wh.receipt_code receiptCode,wh.receipt_type receiptType,u.user_id createUserId,u.user_name createUserName,u.org_name orgName,wh.create_time createTime
+		FROM ACT_HI_TASKINST aht
+		INNER JOIN wf_receipt wh 
+			ON aht.PROC_INST_ID_ = wh.piid AND aht.ASSIGNEE_ = #{id,jdbcType=CHAR}
+			<if test="beginDate != null and beginDate !='' and endDate != null and endDate !=''">
+				AND wh.create_time BETWEEN #{beginDate,jdbcType=VARCHAR} AND #{endDate,jdbcType=VARCHAR}
+		    </if>
+		    <if test="typeAry!=null and typeAry.size() > 0">
+                AND wh.receipt_type in
+	            <foreach collection="typeAry" item="type"
+	                    index="index" open="(" close=")" separator=",">
+	                    #{type}
+	            </foreach>
+        	</if>
+		INNER JOIN wf_receipt_user ra 
+			ON ra.receipt_id = wh.receipt_id AND ra.task_id = aht.ID_
+            AND ra.user_id = aht.ASSIGNEE_
+			AND ra.approve IS NOT NULL AND ra.approve_time IS NOT NULL
+		LEFT OUTER JOIN wms_user u 
+			ON wh.receipt_user_id = u.user_id
+		ORDER BY wh.create_time DESC	
+	</select>
+	<select id="selectCandidateUsersByReceiptIDAndType" parameterType="java.util.HashMap"
+		resultType="com.inossem.wms.model.vo.ApproveUserMatReqVo">        
+		SELECT aht.NAME_ nodeName,
+			#aht.PROC_INST_ID_ zpiid,
+			wh.receipt_id receiptId,
+			wh.receipt_type receiptType,
+			u.user_id userId,
+			u.user_name userName,
+			u.org_name orgName,
+			wh.create_time,
+			ra.approve,
+			ra.approve_time approveTime,
+			t.corp_name corpName,
+			c.MESSAGE_ comment
+		FROM ACT_HI_TASKINST aht
+        INNER JOIN wf_receipt wh ON aht.PROC_INST_ID_ = wh.piid AND wh.receipt_id = #{receiptId,jdbcType=INTEGER} AND wh.receipt_type = #{receiptType,jdbcType=INTEGER}
+		INNER JOIN ACT_HI_IDENTITYLINK ahi ON ahi.TASK_ID_ = aht.ID_ 		
+		INNER JOIN wms_user u ON ahi.USER_ID_ = u.user_id
+        LEFT OUTER JOIN wf_receipt_user ra ON  wh.receipt_id = ra.receipt_id AND wh.receipt_type = ra.receipt_type 
+			AND ahi.USER_ID_ = ra.user_id AND ra.task_id = aht.ID_
+        LEFT OUTER JOIN dic_corp t ON u.corp_id = t.corp_id
+        LEFT OUTER JOIN ACT_HI_COMMENT c ON ra.comment_id = c.ID_
+        ORDER BY aht.ID_,ahi.ID_ ASC
+	</select>	
+ 	<select id="selectByReceiptIDAndReceiptType" parameterType="java.util.HashMap"
+		resultType="com.inossem.wms.model.vo.ApproveUserVo">		
+    SELECT 
+    	ru.id,
+        ru.user_id userId, 
+        ru.receipt_type receiptType,
+        ru.receipt_id receiptId,
+        IFNULL(DATE_FORMAT(ru.approve_time,'%Y-%m-%d'),'') approveTime, 
+        IFNULL(CASE WHEN ru.approve = 1 THEN '通过' WHEN ru.approve = 2 THEN '不通过' ELSE '未审批' END,'') approveName,
+        u.org_name orgName,
+        u.user_name userName,
+        t.corp_name corpName,
+        ahc.MESSAGE_ comment, 
+        wr.role_name roleName, 
+        wr.role_id roleId,
+        IFNULL(u.mobile,'') phone
+    FROM wf_receipt_user ru
+    INNER JOIN wms_user u ON ru.user_id = u.user_id 
+    	AND ru.receipt_id = #{receiptId,jdbcType=INTEGER} 
+    	AND ru.receipt_type = #{receiptType,jdbcType=INTEGER}
+    LEFT OUTER JOIN dic_corp t ON u.corp_id = t.corp_id
+    LEFT OUTER JOIN ACT_HI_COMMENT ahc ON ahc.ID_ = ru.comment_id
+    LEFT OUTER JOIN wms_role wr on wr.role_id = ru.role_id;
+	</select>
+	<select id="selectEmployerNumberForApproveUserByPiid" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT u.employer_number
+		FROM ACT_RU_TASK art 
+		INNER JOIN ACT_RU_IDENTITYLINK ari ON ari.TASK_ID_ = art.ID_ AND art.PROC_INST_ID_ = #{piid,jdbcType=VARCHAR}
+		INNER JOIN wms_user u ON ari.USER_ID_ = u.user_id 
+	</select>
+	 <select id="selectApproveUserByPiid" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT u.employer_number 
+		FROM ACT_HI_IDENTITYLINK a
+		INNER JOIN wms_user u ON u.user_id = a.USER_ID_ AND a.PROC_INST_ID_ = #{piid,jdbcType=VARCHAR};
+	</select>
+</mapper>

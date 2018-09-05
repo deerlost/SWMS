@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/mod.css" rel="stylesheet" />
+    <link href="../../../css/bootstrapgrid.css" rel="stylesheet" />
+    <link href="../../../css/datetimepicker.css" rel="stylesheet" />
+    <link href="../../../css/inossem.grid.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/datetimepicker.js"></script>
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/echarts.js"></script>
+    <script src="../../../js/jquery.inossem.grid.js"></script>
+    <script src="../../../js/page/search/inventory/list.js"></script>
+    <style>
+        .ico_name {
+            display: inline-block;
+            width: 30px;
+            height: 26px;
+            margin-top: 6px;
+            cursor: pointer;
+            position: absolute;
+            top: -3px;
+            right: -21px;
+        }
+        .form-search .input-group-addon{
+            min-width: 96px;
+        }
+        h4 span{
+            float: left;
+            width: 5px;
+            height: 20px;
+            background: #cbcbcb;
+            margin-right: 10px;
+        }
+        div.type{
+            display: inline;
+            font-size: 18px;
+        }
+        .form-search .btn-lay-blue{
+            height: 30px;
+            line-height: 30px;
+            min-width: 80px;
+            padding: 0 18px;
+        }
+        .overview .title{
+            display: block;
+            font-size:18px;
+            padding-left:20px;
+
+        }
+        .overview .state{
+            font-size:28px;
+            padding-left:5%;
+
+        }
+        .border-left{
+            border-left:1px solid #ccc;
+        }
+        .overview .col-xs-6{
+            margin:30px 0;
+            line-height: 40px;
+        }
+        .overview .overview1{
+            color:#2EC7C9
+        }
+        .overview .overview2{
+            color:#B6A2DE
+        }
+        .overview .overview3{
+            color:#5AB1EF
+        }
+        .overview .overview4{
+            color:#FFB980
+        }
+    </style>
+
+</head>
+
+<body>
+<div c-template="menu"></div>
+<div class="articlebox">
+    <div class="article">
+        <div class="u-p20" style="padding-bottom:0;">
+            <h2 class="h2black" style="display: inline-block; margin-right:20px">库存周转率分析</h2>
+        </div>
+        <div class="form-search" style="margin-top:20px;">
+            <div class="col-xs-12">
+                <div class="col-xs-12 row">
+                    <div class="col-lg-3 col-xs-4 div-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">板块：</span>
+                            <select class="form-control" type="text" id="board"></select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-4 div-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">公司：</span>
+                            <select class="form-control" type="text" id="corp"></select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-4 div-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">仓库号：</span>
+                            <select class="form-control" type="text" id="wh"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 row">
+                    <div class="col-lg-3 col-xs-4 div-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">统计方式：</span>
+                            <select class="form-control" type="text" id="type">
+                                <option value="1">金额</option>
+                                <option value="2">数量</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-4 div-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">统计年库：</span>
+                            <input type="text" class="form-control txtdatepicker" id="date" readonly="" data-date-format="yyyy-mm">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-4 div-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"></span>
+                            <a href="javascript:void(0)" class="btn-lay-blue btn_search">查询</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-xs-12">
+                <hr />
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="creatChart col-xs-6">
+                <div class="col-xs-12 row">
+                    <h4><span></span>概览</h4>
+                </div>
+                <div class="col-xs-12 overview" style="border: 1px solid #ccc;height: 300px;">
+                    <div class="col-xs-6">
+                        <span class="title">期初<div class="type">金额</div></span>
+                        <span class="state overview1"></span> <span class="unit"></span>
+                    </div>
+                    <div class="col-xs-6 border-left">
+                        <span class="title">期末<div class="type">金额</div></span>
+                        <span class="state overview2"></span> <span class="unit"></span>
+                    </div>
+                    <div class="col-xs-6">
+                        <span class="title">本期入库<div class="type">金额</div></span>
+                        <span class="state overview3"></span> <span class="unit"></span>
+                    </div>
+                    <div class="col-xs-6 border-left">
+                        <span class="title">本期出库<div class="type">金额</div></span>
+                        <span class="state overview4"></span> <span class="unit"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="col-xs-12 row">
+                    <h4><span></span>平均存货<div class="type">金额</div></h4>
+                </div>
+                <div class="col-xs-12" id="Chart1" style="border: 1px solid #ccc;height: 300px;padding:0;overflow: auto">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12" style="margin-top:20px;">
+            <div class="col-xs-6">
+                <div class="col-xs-12 row">
+                    <h4><span></span>周转率列表（前10名）</h4>
+                </div>
+                <div class="col-xs-12" style="border: 1px solid #ccc;height: 450px; overflow: auto;overflow-x:hidden;padding:0">
+                    <div id="id_div_grid"></div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="col-xs-12 row">
+                    <h4><span></span>周转率分析</h4>
+                </div>
+                <div class="col-xs-12" id="Chart2" style="border: 1px solid #ccc;height: 350px; overflow-y: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
