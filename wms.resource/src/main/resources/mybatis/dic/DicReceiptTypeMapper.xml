@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicReceiptTypeMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicReceiptType">
+    <id column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="receipt_type_name" jdbcType="VARCHAR" property="receiptTypeName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    receipt_type, receipt_type_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_receipt_type
+    where receipt_type = #{receiptType,jdbcType=TINYINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Byte">
+    delete from dic_receipt_type
+    where receipt_type = #{receiptType,jdbcType=TINYINT}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicReceiptType">
+    insert into dic_receipt_type (receipt_type, receipt_type_name)
+    values (#{receiptType,jdbcType=TINYINT}, #{receiptTypeName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicReceiptType">
+    insert into dic_receipt_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="receiptTypeName != null">
+        receipt_type_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="receiptTypeName != null">
+        #{receiptTypeName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicReceiptType">
+    update dic_receipt_type
+    <set>
+      <if test="receiptTypeName != null">
+        receipt_type_name = #{receiptTypeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where receipt_type = #{receiptType,jdbcType=TINYINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicReceiptType">
+    update dic_receipt_type
+    set receipt_type_name = #{receiptTypeName,jdbcType=VARCHAR}
+    where receipt_type = #{receiptType,jdbcType=TINYINT}
+  </update>
+  
+  <select id="selectDicReceiptTypeList" resultMap="BaseResultMap">
+  	select * from dic_receipt_type 
+  </select>
+</mapper>

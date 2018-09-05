@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../../css/bootstrapgrid.css" rel="stylesheet" />
+		<link href="../../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../../css/common.css" rel="stylesheet" />
+		<link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../../part/layer/layer.js"></script>
+		<script src="../../../../js/datetimepicker.js"></script>
+		<script src="../../../../js/common.js"></script>
+		<script src="../../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../../js/page/storage/output/other/detail.js"></script>
+		<style>
+			.input-group-addon {
+				padding: 0px 12px;
+			}
+			
+			.iswriteoff {
+				height: 120px;
+				padding: 0px 20px;
+				line-height: 120px;
+			}
+			
+			.wdbd {
+				display: none;
+			}
+			
+			.form-controls {
+				width: 50%;
+				margin-right: 20px;
+				height: 34px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article" c-app="zmkpf">
+				<div class="mapadress">
+					<a href="list.html?key=186">其它出库单列表</a>
+					<span>&nbsp;&nbsp;&nbsp;&rsaquo;&nbsp;&nbsp;&nbsp;</span>
+					<span class="spanno">创建其它出库单</span>
+				</div>
+				<h2 class="h2red" c-model="status_name">--</h2>
+				<div class="btnoperate" style="display: none;">
+					<a href="javascript:;" class="ico ico-del2 btndelete">删除</a>
+				</div>
+				<div class="form-search">
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group move_type_info">
+								<span class="input-group-addon">移动类型：</span>
+								<select class="form-control move_type">
+									<option value="">请选择</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group issue_fty">
+								<span class="input-group-addon">发出工厂：</span>
+								<select class="form-control issue_ftyinfo">
+									<option value="" data-index="-1">请选择</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group issue_loc">
+								<span class="input-group-addon">发出库存地点：</span>
+								<select class="form-control issue_locinfo">
+									<option value="">请选择</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+					   <div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group shift">
+								<span class="input-group-addon">班次：</span>
+								<select class="shiftinfo form-control">
+
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group syntype">
+								<span class="input-group-addon">同步类型：</span>
+								<select class="tbtype form-control" disabled="disabled">
+									<option value="0">不同步</option>
+									<option value="2">同步ERP&MES</option>
+									<option value="1">同步ERP</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">创建人：</span>
+								<span class="leading" c-model="create_user">--</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">创建日期：</span>
+								<span class="applicant" c-model="create_time">--</span>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group remarks">
+								<span class="input-group-addon">备注：</span>
+								<div class="remarkinfo">
+									<a href="javascript:void(0)" data-title="备注" data-href="note.html" data-size="500px,400px" class="btn_table_edit btn_remark">查看</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12">
+					<hr/>
+				</div>
+			   <div class="col-xs-12 wlsinfo">
+					<h2 class="h2grey col-lg-11 col-xs-10"> 物料信息 </h2>
+				</div>
+				<div class="col-xs-12 addmarinfo" style="display: none;">
+					<a href="javascript:void(0)" class="btn-lay-blue addmarie btn_table_edit" data-title="添加物料" data-href="addmater.html" data-size="1000px,400px">　添加物料　</a>
+					<br />
+					<br />
+				</div>
+				<br />
+			</div>
+			<div class="col-xs-12 clearfix"></div>
+			<div id="id_div_grid" class="col-xs-12"></div>
+			<div class="submitwriteoff col-xs-12">
+				<a class="delet" style="display:none" href="javascript:void(0)">删除</a>
+			</div>
+			<div class="col-xs-12 submitbutton ">
+				<a href="javascript:void(0)" class="btn-lay-blue btnsubmit">　出库　</a>
+				<a href="javascript:void(0)" class="btn-lay-blue submission">　提交　</a>
+				<a href="./list.html" class="btn-lay-default returns">　返回　</a>
+			</div>
+		</div>
+		</div>
+		</div>
+	</body>
+
+</html>

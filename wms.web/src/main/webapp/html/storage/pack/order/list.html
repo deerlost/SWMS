@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../../css/common.css" rel="stylesheet" />
+		<link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../../part/layer/layer.js"></script>
+		<script src="../../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../../js/common.js"></script>
+		<script src="../../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../../js/page/storage/pack/order/list.js"></script>
+	</head>
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article">
+				<div class="searchstyle3">
+					<a href="detail.html" class="btn-lay-blue">创建包装单</a>
+				</div>
+				<div class="search searchstyle1">
+					<div class="chkbox">
+						<div><label class="on"><input type="checkbox" checked="" value="1">&nbsp;草稿</label></div>
+						<div><label class="on"><input type="checkbox" checked="" value="2">&nbsp;已提交</label></div>
+						<div><label class="on"><input type="checkbox" checked="" value="4">&nbsp;已关联</label></div>
+					</div>
+					<input class="search ico ico-search" type="text" placeholder="请输入包装单号、生产订单号">
+					<a href="javascript:void(0)" class="search"></a>
+				</div>
+				<div id="id_div_grid"></div>
+				<div class="text-center" id="J_ListPagination"></div>
+			</div>
+		</div>
+	</body>
+
+</html>

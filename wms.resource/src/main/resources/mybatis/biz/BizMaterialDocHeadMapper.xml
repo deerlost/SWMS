@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizMaterialDocHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizMaterialDocHead">
+    <id column="mat_doc_id" jdbcType="INTEGER" property="matDocId" />
+    <result column="mat_doc_code" jdbcType="CHAR" property="matDocCode" />
+    <result column="mat_doc_type" jdbcType="TINYINT" property="matDocType" />
+    <result column="doc_time" jdbcType="TIMESTAMP" property="docTime" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+    <result column="group_code" jdbcType="VARCHAR" property="groupCode" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="posting_date" jdbcType="DATE" property="postingDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="contract_code" jdbcType="VARCHAR" property="contractCode" />
+    <result column="use_unit" jdbcType="VARCHAR" property="useUnit" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="order_type_name" jdbcType="VARCHAR" property="orderTypeName" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="write_off" jdbcType="TINYINT" property="writeOff" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    mat_doc_id, mat_doc_code, mat_doc_type, doc_time, org_code, org_name, group_code, 
+    group_name, posting_date, remark, contract_code, use_unit, order_code, order_type, 
+    order_type_name, create_user, write_off, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_material_doc_head
+    where mat_doc_id = #{matDocId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_material_doc_head
+    where mat_doc_id = #{matDocId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizMaterialDocHead">
+    insert into biz_material_doc_head (mat_doc_id, mat_doc_code, mat_doc_type, 
+      doc_time, org_code, org_name, 
+      group_code, group_name, posting_date, 
+      remark, contract_code, use_unit, 
+      order_code, order_type, order_type_name, 
+      create_user, write_off, is_delete, 
+      create_time, modify_time)
+    values (#{matDocId,jdbcType=INTEGER}, #{matDocCode,jdbcType=CHAR}, #{matDocType,jdbcType=TINYINT}, 
+      #{docTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR}, 
+      #{groupCode,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{postingDate,jdbcType=DATE}, 
+      #{remark,jdbcType=VARCHAR}, #{contractCode,jdbcType=VARCHAR}, #{useUnit,jdbcType=VARCHAR}, 
+      #{orderCode,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, #{orderTypeName,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{writeOff,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizMaterialDocHead" useGeneratedKeys="true" keyProperty="matDocId">
+    insert ignore into biz_material_doc_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matDocId != null">
+        mat_doc_id,
+      </if>
+      <if test="matDocCode != null">
+        mat_doc_code,
+      </if>
+      <if test="matDocType != null">
+        mat_doc_type,
+      </if>
+      <if test="docTime != null">
+        doc_time,
+      </if>
+      <if test="orgCode != null">
+        org_code,
+      </if>
+      <if test="orgName != null">
+        org_name,
+      </if>
+      <if test="groupCode != null">
+        group_code,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="postingDate != null">
+        posting_date,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="contractCode != null">
+        contract_code,
+      </if>
+      <if test="useUnit != null">
+        use_unit,
+      </if>
+      <if test="orderCode != null">
+        order_code,
+      </if>
+      <if test="orderType != null">
+        order_type,
+      </if>
+      <if test="orderTypeName != null">
+        order_type_name,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="writeOff != null">
+        write_off,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matDocId != null">
+        #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocCode != null">
+        #{matDocCode,jdbcType=CHAR},
+      </if>
+      <if test="matDocType != null">
+        #{matDocType,jdbcType=TINYINT},
+      </if>
+      <if test="docTime != null">
+        #{docTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCode != null">
+        #{groupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="postingDate != null">
+        #{postingDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="useUnit != null">
+        #{useUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTypeName != null">
+        #{orderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="writeOff != null">
+        #{writeOff,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizMaterialDocHead">
+    update biz_material_doc_head
+    <set>
+      <if test="matDocCode != null">
+        mat_doc_code = #{matDocCode,jdbcType=CHAR},
+      </if>
+      <if test="matDocType != null">
+        mat_doc_type = #{matDocType,jdbcType=TINYINT},
+      </if>
+      <if test="docTime != null">
+        doc_time = #{docTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgCode != null">
+        org_code = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCode != null">
+        group_code = #{groupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="postingDate != null">
+        posting_date = #{postingDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        contract_code = #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="useUnit != null">
+        use_unit = #{useUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null">
+        order_code = #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTypeName != null">
+        order_type_name = #{orderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="writeOff != null">
+        write_off = #{writeOff,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mat_doc_id = #{matDocId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizMaterialDocHead">
+    update biz_material_doc_head
+    set mat_doc_code = #{matDocCode,jdbcType=CHAR},
+      mat_doc_type = #{matDocType,jdbcType=TINYINT},
+      doc_time = #{docTime,jdbcType=TIMESTAMP},
+      org_code = #{orgCode,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      group_code = #{groupCode,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      posting_date = #{postingDate,jdbcType=DATE},
+      remark = #{remark,jdbcType=VARCHAR},
+      contract_code = #{contractCode,jdbcType=VARCHAR},
+      use_unit = #{useUnit,jdbcType=VARCHAR},
+      order_code = #{orderCode,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      order_type_name = #{orderTypeName,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      write_off = #{writeOff,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where mat_doc_id = #{matDocId,jdbcType=INTEGER}
+  </update>
+  
+   <!-- 通过单据id和单据类型查找物料凭证 刘宇 2018.04.18 -->
+  <select id="selectByRefereceiptIdAndMatDocType" parameterType="java.util.Map" resultType="java.util.Map">
+    select 
+		h.mat_doc_code ,i.move_type_code
+	from biz_material_doc_head h 
+	inner join biz_material_doc_item i on h.mat_doc_id = i.mat_doc_id
+	<if test="matDocType != null and matDocType !=''">
+	  and h.mat_doc_type = #{matDocType,jdbcType=TINYINT}
+  	</if>
+	<if test="referReceiptId != null and referReceiptId !=''">
+	  and i.refer_receipt_id  = #{referReceiptId,jdbcType=INTEGER}
+  	</if>
+	group by h.mat_doc_code , i.move_type_code
+  </select>
+</mapper>

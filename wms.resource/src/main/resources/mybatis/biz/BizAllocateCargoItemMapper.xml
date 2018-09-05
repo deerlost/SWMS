@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.inossem.wms.dao.biz.BizAllocateCargoItemMapper">
+
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.biz.BizAllocateCargoItem">
+		<id column="item_id" jdbcType="INTEGER" property="itemId" />
+		<result column="allocate_cargo_id" jdbcType="INTEGER"
+			property="allocateCargoId" />
+		<result column="allocate_cargo_rid" jdbcType="INTEGER"
+			property="allocateCargoRid" />
+		<result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+		<result column="location_id" jdbcType="INTEGER"
+			property="locationId" />
+		<result column="mat_id" jdbcType="INTEGER" property="matId" />
+		<result column="unit_id" jdbcType="INTEGER" property="unitId" />
+		<result column="decimal_place" jdbcType="TINYINT"
+			property="decimalPlace" />
+		<result column="order_qty" jdbcType="DECIMAL"
+			property="orderQty" />
+		<result column="output_qty" jdbcType="DECIMAL"
+			property="outputQty" />
+		<result column="refer_receipt_rid" jdbcType="VARCHAR"
+			property="referReceiptRid" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="is_delete" jdbcType="TINYINT"
+			property="isDelete" />
+		<result column="create_user" jdbcType="VARCHAR"
+			property="createUser" />
+		<result column="modify_user" jdbcType="VARCHAR"
+			property="modifyUser" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="modify_time" jdbcType="TIMESTAMP"
+			property="modifyTime" />
+		<result column="erp_remark" jdbcType="VARCHAR"
+			property="erpRemark" />
+		<result column="erp_batch" jdbcType="VARCHAR"
+			property="erpBatch" />
+	</resultMap>
+
+	<resultMap id="MyResultMap" type="HashMap">
+
+		<result column="receive_code" property="receive_code" />
+		<result column="allocate_cargo_id" property="allocate_cargo_id" />
+		<result column="allocate_cargo_code"
+			property="allocate_cargo_code" />
+		<result column="preorder_id" property="preorder_id" />
+		<result column="receive_name" property="receive_name" />
+		<result column="create_user" property="create_user" />
+		<result column="create_time" property="create_time" />
+		<result column="remark" property="remark" />
+		<result column="status" property="status" />
+		<result column="status_name" property="status_name" />
+		<result column="refer_receipt_code"
+			property="refer_receipt_code" />
+		<result column="sale_order_code" property="sale_order_code" />
+		<result column="delivery_vehicle" property="delivery_vehicle" />
+		<result column="delivery_driver" property="delivery_driver" />
+		<result column="class_type_id" property="class_type_id" />
+		<result column="class_name" property="class_name" />
+
+		<collection javaType="list" ofType="map"
+			property="itemList">
+			<result column="allocate_cargo_rid"
+				property="allocate_cargo_rid" />
+			<result column="mat_id" property="mat_id" />
+			<result column="order_qty" property="order_qty" />
+			<result column="output_qty" property="output_qty" />
+			<result column="item_remark" property="item_remark" />
+			<result column="refer_receipt_rid"
+				property="refer_receipt_rid" />
+			<result column="mat_code" property="mat_code" />
+			<result column="mat_name" property="mat_name" />
+			<result column="unit_id" property="unit_id" />
+			<result column="unit_code" property="unit_code" />
+			<result column="name_zh" property="name_zh" />
+			<result column="erp_remark" property="erp_remark" />
+			<result column="location_id" property="location_id" />
+			<result column="location_code" property="location_code" />
+			<result column="location_name" property="location_name" />
+			<result column="erp_batch" property="erp_batch" />
+			<result column="erp_remark" property="erp_remark" />
+			<result column="item_id" property="item_id" />
+			<collection javaType="list" ofType="map"
+				property="positionList">
+				<result column="allocate_cargo_rid"
+					property="allocate_cargo_rid" />
+				<result column="batch" property="batch" />
+				<result column="allocate_cargo_position_id"
+					property="allocate_cargo_position_id" />
+				<result column="cargo_qty" property="cargo_qty" />
+				<result column="qty" property="qty" />
+				<result column="package_type_id" property="package_type_id" />
+				<result column="package_type_code"
+					property="package_type_code" />
+				<result column="item_position_id" property="item_position_id" />
+				<result column="package_standard_ch"
+					property="package_standard_ch" />
+				<result column="package_type_name"
+					property="package_type_name" />
+				<result column="icreate_time" property="icreate_time" />
+			</collection>
+		</collection>
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		item_id, allocate_cargo_id, allocate_cargo_rid, fty_id,
+		location_id, mat_id,
+		unit_id,
+		decimal_place, order_qty, output_qty,
+		refer_receipt_rid, remark, is_delete,
+		create_user,
+		modify_user,
+		erp_batch,
+		create_time, modify_time, erp_remark
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from biz_allocate_cargo_item
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</select>
+	<select id="selectByCargoId" parameterType="java.lang.Integer"
+		resultType="map">
+		select it.item_id,
+		it.allocate_cargo_rid,
+		ifnull(it.erp_remark,'')
+		erp_remark,
+		it.order_qty,
+		it.output_qty,
+		it.erp_batch,
+		it.fty_id,
+		it.refer_receipt_rid,
+		m.mat_id,
+		m.mat_code,
+		m.mat_name,
+		u.unit_id,
+		u.unit_code,
+		u.name_zh,
+		u.name_en,
+		ds.location_id,
+		ds.location_code,
+		ds.location_name,
+		ifnull(it.remark,'')
+		item_remark
+		from
+		(
+		select
+		i.item_id,
+		i.allocate_cargo_rid,
+		ifnull(i.erp_remark,'') erp_remark,
+		i.order_qty,
+		i.output_qty,
+		i.mat_id,
+		i.fty_id,
+		i.unit_id,
+		i.location_id,
+		i.remark,
+		i.erp_batch,
+		i.refer_receipt_rid
+		from
+		biz_allocate_cargo_item i
+		where i.is_delete=0
+		<if test="_parameter!=null and _parameter!=''">
+			and
+			i.allocate_cargo_id=#{allocateCargoId,jdbcType=INTEGER}
+		</if>
+		) it left join dic_material m on it.mat_id=m.mat_id
+		left join dic_unit
+		u on it.unit_id=u.unit_id
+		left join dic_stock_location ds on
+		ds.location_id=it.location_id
+	</select>
+	<!-- 根据交货单号获得已配货数量 -->
+	<select id="getCountCargoed" parameterType="map"
+		resultType="map">
+		select sum(p.cargo_qty) output_qtyed ,
+		ifnull(ANY_VALUE(i.erp_batch),'') erp_batch from biz_allocate_cargo_head h
+		left
+		join biz_allocate_cargo_item i on
+		h.allocate_cargo_id=i.allocate_cargo_id
+		left join
+		biz_allocate_cargo_position p on
+		h.allocate_cargo_id=p.allocate_cargo_id and
+		i.allocate_cargo_rid=p.allocate_cargo_rid
+		where h.is_delete=0
+ 		and h.status <![CDATA[ <> ]]> 20 
+		<if test="referReceiptCode!=null and referReceiptCode!=''">
+		and  h.refer_receipt_code=#{referReceiptCode,jdbcType=VARCHAR}
+		</if>
+	    <if test="referReceiptRid!=null and referReceiptRid!=''">
+		and i.refer_receipt_rid=#{referReceiptRid,jdbcType=INTEGER}
+		</if>		
+		GROUP BY h.refer_receipt_code ,i.refer_receipt_rid	
+	</select>
+
+	<!-- 配货单详细查询 -->
+	<select id="selectCargoItem1" parameterType="java.lang.Integer"
+		resultMap="MyResultMap">
+		SELECT distinct
+		b.receive_code,
+		b.allocate_cargo_id,
+		b.allocate_cargo_code,
+		ifnull(t.receipt_type_name,'') document_type,
+		b.`status`,
+		CASE WHEN b.`status`='2' THEN '已提交'
+		WHEN b.`status`='3' THEN
+		'已作业'
+		ELSE ''
+		END status_name,
+		b.refer_receipt_code,
+		b.sale_order_code,
+		b.preorder_id,
+		i.item_id,
+		b.receive_name,
+		us.user_name create_user,
+		DATE_FORMAT(sp.create_time,'%Y-%m-%d') create_time,
+		ifnull(b.remark,'') remark,
+		b.delivery_driver,
+		b.delivery_vehicle,
+		ct.class_type_id,
+		CONCAT(class_type_name,'(' ,
+		date_format(start_time,'%H:%i:%s'),'-',
+		date_format(end_time,'%H:%i:%s'), ')') AS class_name ,
+		i.allocate_cargo_rid,
+		i.mat_id,
+		ifnull(i.erp_remark,'') erp_remark,
+		m.mat_code,
+		m.mat_name,
+
+		u.unit_id,
+		u.unit_code,
+		u.name_zh,
+
+		i.order_qty,
+		i.output_qty,
+
+		l.location_id,
+		l.location_code,
+		l.location_name,
+
+		ifnull(i.remark,'') item_remark,
+		i.refer_receipt_rid,
+
+		ifnull(bm.erp_batch,'') erp_batch,
+
+		p.allocate_cargo_rid,
+		ifnull(p.batch,'') batch,
+		p.item_position_id,
+		ifnull(p.cargo_qty,'')
+		cargo_qty,
+		ifnull(sp.qty,'') qty,
+		ifnull(dt.package_type_id,'')
+		package_type_id,
+		ifnull(dt.package_type_code,'') package_type_code,
+		ifnull(dt.package_standard_ch,'') package_standard_ch,
+		ifnull(dt.package_type_name,'') package_type_name,
+		DATE_FORMAT(sp.create_time,'%Y-%m-%d') icreate_time,
+		p.allocate_cargo_position_id
+
+		FROM biz_allocate_cargo_head b LEFT JOIN
+		biz_allocate_cargo_item i ON
+		b.allocate_cargo_id=i.allocate_cargo_id
+		LEFT JOIN dic_material m ON i.mat_id=m.mat_id
+		LEFT JOIN dic_unit u ON
+		m.unit_id=u.unit_id
+		LEFT JOIN dic_stock_location l ON
+		l.location_id=i.location_id
+		LEFT JOIN batch_material bm ON
+		bm.mat_id=i.mat_id
+		LEFT JOIN biz_allocate_cargo_position p ON
+		b.allocate_cargo_id=p.allocate_cargo_id
+		LEFT JOIN stock_position sp ON
+		m.mat_id=sp.mat_id
+		LEFT JOIN dic_package_type dt ON
+		sp.package_type_id=dt.package_type_id
+		LEFT JOIN dic_class_type ct ON
+		b.class_type_id=ct.class_type_id
+		LEFT JOIN wms_user us ON
+		us.user_id=b.create_user
+		left join dic_receipt_type t on
+		t.receipt_type=b.document_type
+		WHERE
+		b.is_delete=0
+		<if test="_parameter!=null and _parameter!=''">
+			and
+			b.allocate_cargo_id=#{allocate_cargo_id,jdbcType=INTEGER}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from biz_allocate_cargo_item
+		where item_id =
+		#{itemId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" keyProperty="itemId"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoItem"
+		useGeneratedKeys="true">
+		insert into biz_allocate_cargo_item (item_id,
+		allocate_cargo_id,
+		allocate_cargo_rid,
+		fty_id, location_id, mat_id,
+		unit_id, decimal_place, order_qty,
+		output_qty, refer_receipt_rid,
+		remark,
+		is_delete, create_user, modify_user,
+		create_time, modify_time,
+		erp_remark
+		)
+		values (#{itemId,jdbcType=INTEGER},
+		#{allocateCargoId,jdbcType=INTEGER},
+		#{allocateCargoRid,jdbcType=INTEGER},
+		#{ftyId,jdbcType=INTEGER},
+		#{locationId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER},
+		#{unitId,jdbcType=INTEGER}, #{decimalPlace,jdbcType=TINYINT},
+		#{orderQty,jdbcType=DECIMAL},
+		#{outputQty,jdbcType=DECIMAL},
+		#{referReceiptRid,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+		#{isDelete,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR},
+		#{modifyUser,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{erpRemark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" keyProperty="itemId"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoItem"
+		useGeneratedKeys="true">
+		insert into biz_allocate_cargo_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="itemId != null">
+				item_id,
+			</if>
+			<if test="allocateCargoId != null">
+				allocate_cargo_id,
+			</if>
+			<if test="allocateCargoRid != null">
+				allocate_cargo_rid,
+			</if>
+			<if test="ftyId != null">
+				fty_id,
+			</if>
+			<if test="locationId != null">
+				location_id,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="decimalPlace != null">
+				decimal_place,
+			</if>
+			<if test="orderQty != null">
+				order_qty,
+			</if>
+			<if test="outputQty != null">
+				output_qty,
+			</if>
+			<if test="referReceiptRid != null">
+				refer_receipt_rid,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="modifyUser != null">
+				modify_user,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="erpRemark != null">
+				erp_remark,
+			</if>
+			<if test="erpBatch != null">
+				erp_batch,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="itemId != null">
+				#{itemId,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoId != null">
+				#{allocateCargoId,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoRid != null">
+				#{allocateCargoRid,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				#{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="decimalPlace != null">
+				#{decimalPlace,jdbcType=TINYINT},
+			</if>
+			<if test="orderQty != null">
+				#{orderQty,jdbcType=DECIMAL},
+			</if>
+			<if test="outputQty != null">
+				#{outputQty,jdbcType=DECIMAL},
+			</if>
+			<if test="referReceiptRid != null">
+				#{referReceiptRid,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyUser != null">
+				#{modifyUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="erpRemark != null">
+				#{erpRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="erpBatch != null">
+				#{erpBatch,jdbcType=VARCHAR},
+			</if>
+
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoItem">
+		update biz_allocate_cargo_item
+		<set>
+			<if test="allocateCargoId != null">
+				allocate_cargo_id = #{allocateCargoId,jdbcType=INTEGER},
+			</if>
+			<if test="allocateCargoRid != null">
+				allocate_cargo_rid =
+				#{allocateCargoRid,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				fty_id = #{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				location_id = #{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				mat_id = #{matId,jdbcType=INTEGER},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="decimalPlace != null">
+				decimal_place = #{decimalPlace,jdbcType=TINYINT},
+			</if>
+			<if test="orderQty != null">
+				order_qty = #{orderQty,jdbcType=DECIMAL},
+			</if>
+			<if test="outputQty != null">
+				output_qty = #{outputQty,jdbcType=DECIMAL},
+			</if>
+			<if test="referReceiptRid != null">
+				refer_receipt_rid = #{referReceiptRid,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyUser != null">
+				modify_user = #{modifyUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="erpRemark != null">
+				erp_remark = #{erpRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="erpBatch != null">
+				erp_batch = #{erpBatch,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where item_id = #{itemId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.inossem.wms.model.biz.BizAllocateCargoItem">
+		update biz_allocate_cargo_item
+		set allocate_cargo_id =
+		#{allocateCargoId,jdbcType=INTEGER},
+		allocate_cargo_rid =
+		#{allocateCargoRid,jdbcType=INTEGER},
+		fty_id =
+		#{ftyId,jdbcType=INTEGER},
+		location_id =
+		#{locationId,jdbcType=INTEGER},
+		mat_id = #{matId,jdbcType=INTEGER},
+		unit_id = #{unitId,jdbcType=INTEGER},
+		decimal_place =
+		#{decimalPlace,jdbcType=TINYINT},
+		order_qty =
+		#{orderQty,jdbcType=DECIMAL},
+		output_qty =
+		#{outputQty,jdbcType=DECIMAL},
+		refer_receipt_rid =
+		#{referReceiptRid,jdbcType=VARCHAR},
+		remark =
+		#{remark,jdbcType=VARCHAR},
+		is_delete = #{isDelete,jdbcType=TINYINT},
+		create_user = #{createUser,jdbcType=VARCHAR},
+		modify_user =
+		#{modifyUser,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP},
+		erp_remark =
+		#{erpRemark,jdbcType=VARCHAR}
+		erp_batch =
+		#{erpBatch,jdbcType=VARCHAR}
+		where item_id =
+		#{itemId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByAllocateCargoId" parameterType="map">
+		update biz_allocate_cargo_item
+		set is_delete=1 ,
+		<if test="moditiUser!=null and moditiUser!=''">
+			modify_user=#{moditiUser,jdbcType=INTEGER},
+		</if>
+		modify_time=SYSDATE()
+		WHERE is_delete=0
+		<if test="allocateCargoId!=null and allocateCargoId!=''">
+			and allocate_cargo_id=#{allocateCargoId,jdbcType=INTEGER}
+		</if>
+
+	</update>
+
+	<resultMap id="BaseResultMapVo" type="com.inossem.wms.model.vo.BizAllocateCargoItemVo">
+		<result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+		<result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+		<result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+		<result column="mat_id" jdbcType="INTEGER" property="matId" />
+		<result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+		<result column="mat_name" jdbcType="VARCHAR" property="matName" />
+		<result column="unit_id" jdbcType="INTEGER" property="unitId" />
+		<result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+		<result column="name_zh" jdbcType="VARCHAR" property="unitName" />
+		<result column="location_id" jdbcType="INTEGER" property="locationId" />
+		<result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+		<result column="location_name" jdbcType="VARCHAR" property="locationName" />
+		<result column="order_qty" jdbcType="DECIMAL" property="orderQty" />
+		<result column="output_qty" jdbcType="DECIMAL" property="outputQty" />
+		<result column="refer_receipt_rid" jdbcType="VARCHAR" property="referReceiptRid" />
+		<result column="erp_remark" jdbcType="VARCHAR" property="erpRemark" />
+		<result column="erp_batch" jdbcType="VARCHAR" property="erpBatch" />
+		<result column="allocate_cargo_id" jdbcType="INTEGER" property="allocateCargoId" />
+		<result column="allocate_cargo_rid" jdbcType="INTEGER" property="allocateCargoRid" />
+	</resultMap>
+
+	<select id="selectByReferReceiptCode" resultMap="BaseResultMapVo" resultType="map">
+		SELECT
+		MAX(biz_allocate_cargo_item.allocate_cargo_id) AS allocate_cargo_id,
+		MAX(biz_allocate_cargo_item.allocate_cargo_rid) AS allocate_cargo_rid,
+		MAX(biz_allocate_cargo_item.fty_id) AS fty_id,
+		MAX(dic_factory.fty_code) AS fty_code,
+		MAX(dic_factory.fty_name) AS fty_name,
+		MAX(biz_allocate_cargo_item.mat_id) AS mat_id,
+		MAX(dic_material.mat_code) AS mat_code,
+		MAX(dic_material.mat_name) AS mat_name,
+		MAX(biz_allocate_cargo_item.unit_id) AS unit_id,
+		MAX(dic_unit.unit_code) AS unit_code,
+		MAX(dic_unit.name_zh) AS name_zh,
+		MAX(biz_allocate_cargo_item.location_id) AS location_id,
+		MAX(dic_stock_location.location_code) AS location_code,
+		MAX(dic_stock_location.location_name) AS location_name,
+		MAX(biz_allocate_cargo_item.order_qty) AS order_qty,
+		SUM(biz_allocate_cargo_item.output_qty) AS output_qty,
+		MAX(biz_allocate_cargo_item.refer_receipt_rid) AS refer_receipt_rid,
+		MAX(biz_allocate_cargo_item.erp_remark) AS erp_remark,
+		MAX(biz_allocate_cargo_item.erp_batch) AS erp_batch
+		FROM biz_allocate_cargo_item
+		INNER JOIN biz_allocate_cargo_head
+		ON
+		biz_allocate_cargo_head.`allocate_cargo_id`=biz_allocate_cargo_item.`allocate_cargo_id`
+		AND biz_allocate_cargo_head.`is_delete`=0
+		AND biz_allocate_cargo_item.`is_delete`=0
+		INNER JOIN dic_factory ON
+		dic_factory.`fty_id`=biz_allocate_cargo_item.`fty_id` AND
+		dic_factory.`is_delete`=0
+		INNER JOIN dic_material ON
+		dic_material.mat_id=biz_allocate_cargo_item.mat_id AND
+		dic_material.`is_delete`=0
+		INNER JOIN dic_unit ON dic_unit.unit_id=biz_allocate_cargo_item.unit_id
+		INNER JOIN biz_stock_task_head_cw ON biz_stock_task_head_cw.refer_receipt_id=biz_allocate_cargo_head.`allocate_cargo_id` 
+		AND biz_stock_task_head_cw.refer_receipt_type=biz_allocate_cargo_head.document_type AND biz_stock_task_head_cw.is_delete=0
+		AND biz_stock_task_head_cw.status=0
+		INNER JOIN dic_stock_location ON dic_stock_location.`location_id` =
+		biz_allocate_cargo_item.`location_id` AND
+		dic_stock_location.`is_delete`=0
+		WHERE biz_allocate_cargo_head.status = 3
+		<if test="referReceiptCode !=null and beforeOrderId !=''">
+			AND
+			biz_allocate_cargo_head.refer_receipt_code=#{referReceiptCode}
+		</if>
+		<if test="referReceiptRid !=null and referReceiptRid !=''">
+			AND
+			biz_allocate_cargo_item.refer_receipt_rid=#{referReceiptRid}
+		</if>
+
+		GROUP BY
+		biz_allocate_cargo_item.refer_receipt_rid,biz_allocate_cargo_item.location_id
+	</select>
+	
+	<update id="deleteAllocateItemByHeadId" parameterType="java.lang.Integer">
+	  update biz_allocate_cargo_item
+		set is_delete=1
+	 where allocate_cargo_id=#{id}
+	</update>
+	
+</mapper>

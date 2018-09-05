@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>仓储管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link href="../../../part/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="../../../css/common.css" rel="stylesheet" />
+<script src="../../../js/jquery-1.11.0.min.js"></script>
+<script src="../../../part/layer/layer.js"></script>
+<script src="../../../js/common.js"></script>
+<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+<script src="../../../js/datetimepicker.js"></script>
+
+<style>
+body {
+	padding: 4px;
+}
+
+div.form {
+	padding: 20px 0px 0px;
+}
+
+div.form div {
+	height: 50px;
+}
+
+div.form div.clearfx {
+	height: 0px;
+}
+
+.col-xs-3 {
+	text-align: right;
+	line-height: 32px;;
+}
+</style>
+<script>
+	var indexdata=null;
+
+	//库存地点
+	function lgort(){
+		$(".lgort option").remove();
+		var werks=$(".werks").val();
+		$.each(indexdata.body,function(i,item){
+			if(werks==item.fty_id && item.fty_id.length!=0){
+				$.each(item.location_ary,function(j,itemer){
+					$(".lgort").append("<option value='"+itemer.loc_id+"'>"+itemer.loc_name+"</option>")
+				});
+				return false
+			}
+		})
+	}
+
+	//提交
+	function submit(){
+		var obj={
+			rangeFlag:$(".rangeFlag").val(),
+			werks:$(".werks").val(),
+			lgort:$(".lgort").val(),
+			freeze_output:$('#freeze_output').prop('checked')?0:1,
+			freeze_input:$('#freeze_input').prop('checked')?0:1,
+			enabled:$('#enabled').prop('checked')?0:1
+		};
+		var url=uriapi+"/biz/kcdd/updateBatchKcddFreezed";
+		showloading();
+		ajax(url,"post",JSON.stringify(obj),function(data){
+			layer.close(indexloading);
+			if(data.body==true){
+				layer.msg("操作成功");
+			}else{
+				layer.msg("操作失败");
+			}
+			setTimeout(function(){$(".btn_iframe_close_window").click()},2000)
+		})
+	}
+
+	$(function(){
+		showloading();
+		var url=uriapi+"/auth/get_fty_location_for_board"
+		ajax(url,"get",null,function(data){
+			layer.close(indexloading);
+			indexdata=data;
+			$.each(indexdata.body,function(i,item){
+				$(".werks").append("<option value='"+item.fty_id+"'>"+item.fty_name+"</option>")
+			});
+			lgort();
+			$(".werks").change(function(){
+				lgort()
+			})
+		})
+
+		$(".btn_submit").click(function(){
+			submit()
+		})
+
+	})
+</script>
+</head>
+<body>
+	<div class="form">
+		<div class="col-xs-3">
+			<label>范围：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control rangeFlag">
+				<option value="1">1-全部库存地点</option>
+				<option value="2">2-工厂下全部库存地点</option>
+				<option value="3">3-单个库存地点</option>
+			</select>
+		</div>
+		<div class="col-xs-3">
+			<label>工厂：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control werks"></select>
+		</div>
+		<div class="col-xs-3">
+			<label>库存地点：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control lgort"></select>
+		</div>
+		<div class="col-xs-3">
+		</div>
+		<div class="col-xs-2">
+			<label><input type="checkbox"  id="freeze_output" name="freeze_output"/> 入库冻结</label>
+		</div>
+		<div class="col-xs-2">
+			<label><input type="checkbox"  id="freeze_input" name="freeze_input"/> 出库冻结</label>
+		</div>
+		<div class="col-xs-2">
+			<label><input type="checkbox"  id="enabled" name="enabled"/> 不可用</label>
+		</div>
+		<div class="clearfx"></div>
+	</div>
+
+	<div class="submitbutton">
+		<a href="javascript:void(0)" class="btn-lay-blue btn_submit"> 确定 </a>
+		<a href="javascript:void(0)"
+			class="btn-lay-default btn_iframe_close_window"> 取消 </a>
+	</div>
+</body>
+</html>

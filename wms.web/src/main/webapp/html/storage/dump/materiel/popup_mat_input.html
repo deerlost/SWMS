@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加物料</title>
+    <meta charset="utf-8" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <style>
+        .search div {
+            min-height:42px;
+            line-height:30px;
+        }
+        .icon-search{
+            background: url(../../../../img/icon-search.png) 4px 4px no-repeat;
+            position: absolute;
+            top: 0px;
+            right: 0;
+            width: 29px;
+            height: 28px;
+            cursor: pointer;
+        }
+        input.ico-search{background-position:right -517px}
+        a.search {position:absolute;top:2px;right:16px;height:30px;width:30px}
+    </style>
+    <script>
+        var indexdata=[],g1=null,fty=null,loction=null,item_list=[],data_list=[];
+
+        //绑定表格
+        function dataBindTable(){
+            data_list=[]
+            var key=$(".ico-search").val()
+            $.each(indexdata,function(i,item){
+                if(item.mat_code.indexOf(key)!=-1 || item.mat_name.indexOf(key)!=-1 ){
+                    data_list.push(item)
+                }
+            })
+            g1=$("#id_div_grid").iGrid({
+                columns: [
+                    { th: '物料编码', col: 'mat_code', sort:false,width:200 },
+                    { th: '物料描述', col: 'mat_name', sort:false,width:450},
+                    { th: '单位', col: 'name_zh', sort:false},
+                ],
+                data:data_list,
+                radio:true,
+                isHideRadio:true,
+                mb_YesNoCancelRadio:true,
+                rownumbers:false,
+                skin:"tablestyle4"
+            })
+        }
+
+        //提交
+        function btn_submit(){
+            var data=""
+            var index=$(".body .rdo input:checked").val();
+            if(index==undefined){
+                data=""
+            }else{
+                data=data_list[index]
+            }
+            parent.setMatInput(data,GetQueryString("index"))
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+            indexdata=parent.getMatInput()
+            $(".ico-search").keyup(function(){
+                dataBindTable()
+            })
+            dataBindTable()
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="col-xs-5 col-xs-offset-7 keyinput">
+        <div class="col-xs-12" style="position: relative"><input type="text" class="ico ico-search form-control" placeholder="请输入物料编码或物料描述"></div>
+    </div>
+</div>
+<div id="id_div_grid"></div>
+<div class="submitbutton fixed">
+    <div class="col-xs-12">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　添加　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</div>
+</body>
+</html>

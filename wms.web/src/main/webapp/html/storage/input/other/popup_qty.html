@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加物料</title>
+    <meta charset="utf-8" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <script>
+        var indexdata=new Array(),sn_list=[],g1=null,table={checkbox:true,input:"text",select:"select",popup:"",qty:'text'},fty_id=null;
+        //查找物料数据
+        function init(){
+            showloading();
+            var url=uriapi+"/biz/input/other/get_package_type_list?mat_id="+indexdata.mat_id+"&fty_id="+fty_id;
+            ajax(url,"get",null,function(data){
+                layer.close(indexloading)
+                if(data.head.status==true){
+                    if(data.body.length==0){
+                        layer.close(indexloading)
+                        parent.layer.msg("请添加物料对应包装类型")
+                        $(".btn_iframe_close_window").click()
+                        return false
+                    }
+                    indexdata.erp_batch_list=[]
+                    indexdata.package_type_list=data.body
+                    $.each(indexdata.package_type_list,function(i,item){
+                        $.each(item.erp_batch_list,function(j,itemer){
+                            indexdata.erp_batch_list.push({
+                                erp_batch_code:itemer.erp_batch_code,
+                                package_type_id:item.package_type_id
+                            })
+                        })
+                    })
+                    dataBindTable()
+                }else{
+                    layer.close(indexloading)
+                }
+            }, function(e) {
+                layer.close(indexloading);
+            })
+        }
+
+        //绑定表格
+        function dataBindTable(){
+            $.each(sn_list,function(i,item){
+                item.package_type_id=item.package_type_id==""?indexdata.package_type_list[0].package_type_id:item.package_type_id
+                $.each(indexdata.package_type_list,function(j,itemer){
+                    if(itemer.package_type_id==item.package_type_id){
+                        item.package_num=Math.ceil(countData.div(item.qty,itemer.package_standard))
+                        item.package_standard=itemer.package_standard
+                        item.package_standard_ch=itemer.package_standard_ch
+                        item.sn_used=itemer.sn_used
+                        return false
+                    }
+                })
+
+                if(item.package_standard_ch==1){
+                    item.package_num=""
+                }
+
+            })
+            dataTable()
+        }
+
+        function dataTable(){
+            g1=$("#id_div_grid").iGrid({
+                columns: [
+                    { th: '包装类型', col: 'package_type_id', sort:false,type:table.select,data:indexdata.package_type_list,text:'package_type_code',value:'package_type_id',width:180},
+                    { th: '包装类型', col: 'package_type_name', sort:false,width:200},
+                    { th: '包装规格', col: 'package_standard_ch', sort:false},
+                    { th: '件数', col: 'package_num', sort:false,width:80,class:'package_num'},
+                    { th: '入库数量', col: 'qty', sort:false,width:"145",type:table.qty,decimal:{regex:3},class:'input_stock_num'},
+                    { th: '生产批次', col: 'production_batch', sort:false,width:145,type:table.input},
+                    { th: 'ERP批次', col: 'erp_batch',sort:false,type:table.select,data:indexdata.erp_batch_list,value:'erp_batch_code',parent:'package_type_id',text:'erp_batch_code',width:200,class:'erp_batch'},
+                    { th: '质检批次', col: 'production_batch', sort:false,class:'production_batch',width:140},
+                    { th: '备注', col: 'remark', sort:false,type:"popup",
+                        popup:{
+                            display:"查看",
+                            href:"popup_note.html"+table.popup,
+                            area:"500px,400px",
+                            title:"备注",
+                            args:["mat_code|id"]
+                        }
+                    }
+                ],
+                data:sn_list,
+                rownumbers:false,
+                skin:"tablestyle4",
+                checkbox:table.checkbox,
+                delete:function(a,b){//删除时调用
+                    sn_list.splice(b,1)
+                    dataBindTable()
+                },
+                cselect:function(a,b,c,d){//数据用到布尔时调用
+                    if(a=="package_type_id"){
+                        d.erp_batch=""
+                    }
+                    dataBindTable()
+                },
+
+                loadcomplete:function(){//页面绘制完成，返回所有数据。
+                    if(GetQueryString("view")!=null){
+                        $("td [colnum='0']").hide()
+                    }else{
+                        $("td [colnum='1']").hide()
+                    }
+                }
+
+            })
+            if(GetQueryString("view")!=null){
+                $("td [colnum='0']").hide()
+            }else{
+                $("td [colnum='1']").hide()
+            }
+            $(".txtproduction_batch").keyup(function(){
+                var index=$(".txtproduction_batch").index(this)
+                $(".production_batch").eq(index).find("div").html($(this).val())
+            })
+            $(".txtqty").keyup(function(){
+                var index=$(".txtqty").index(this)
+                if(sn_list[index].package_standard_ch==1){
+                    $(".package_num").eq(index).find("div").html("")
+                }else{
+                    $(".package_num").eq(index).find("div").html(countData.div($(this).val(),sn_list[index].package_standard))
+                }
+
+            })
+        }
+
+        //获取物料备注信息
+        function GetNote(index) {
+            return sn_list[index].remark;
+        }
+
+        //修改物料备注
+        function SetNote(index, text) {
+            sn_list[index].remark=text
+        }
+
+        //添加包装类型
+        function addData(){
+            sn_list.push({
+                decimal_place:indexdata.decimal_place,
+                erp_batch:"",
+                package_num:"",
+                package_type_code:"",
+                package_type_id:"",
+                package_type_name:"",
+                production_batch:"",
+                qty:"",
+                quality_batch:"",
+                remark:""
+            })
+            dataBindTable()
+        }
+
+        //删除表格数据
+        function delTabel(){
+            layer.confirm("是否删除？", {
+                btn: ['删除', '取消'],
+                icon: 3
+            }, function() {
+                if($(".body .chk input:checked").length==0){
+                    layer.msg("请选择删除包装类型")
+                    return false
+                }
+                for(var i=$(".body .chk input:checked").length-1;i>=0;i--){
+                    var index=$(".body .chk input:checked").eq(i).val()
+                    sn_list.splice(index,1)
+                }
+                dataBindTable()
+                layer.close(parseInt($(".layui-layer-shade").attr("times")));
+            }, function() {
+            });
+        }
+
+        //提交
+        function btn_submit(){
+            var is_checked=true,package_item_list=[]
+            if(g1.checkData()==false){
+                is_checked=false
+            }
+            $.each(sn_list,function(i,item){
+                if(item.qty!="" && item.qty!="0"){
+                    if($(".erp_batch").eq(i).find("select").val()==""){
+                        layersMoretips("必填项",$(".erp_batch").eq(i))
+                        is_checked=false
+                    }
+                    if(item.production_batch==""){
+                        layersMoretips("必填项",$(".txtproduction_batch").eq(i))
+                        is_checked=false
+                    }
+                    if(item.erp_batch==""){
+                        layersMoretips("必填项",$(".txterp_batch").eq(i))
+                        is_checked=false
+                    }
+                    if(item.sn_used==1 && countData.mod(item.qty,item.package_standard)!=0){
+                        layersMoretips("输入整包数量",$(".txtqty").eq(i))
+                        is_checked=false
+                    }
+
+                    if(item.package_standard_ch!=1 && countData.mod(item.qty,item.package_standard)!=0){
+                        layersMoretips("入库数量为包装规格的整数倍",$(".input_stock_num").eq(i))
+                        is_checked=false
+                    }
+
+
+                    package_item_list.push({
+                        decimal_place:item.decimal_place,
+                        erp_batch:item.erp_batch,
+                        package_num:item.package_num,
+                        package_type_code:item.package_type_code,
+                        package_type_id:item.package_type_id,
+                        package_type_name:item.package_type_name,
+                        production_batch:item.production_batch,
+                        qty:item.qty,
+                        quality_batch:item.quality_batch,
+                        remark:item.remark,
+                        package_standard_ch:item.package_standard_ch,
+                        package_standard:item.package_standard
+                    })
+                }
+            })
+            if(package_item_list.length==0){
+                layer.msg("至少添加一条包装类型")
+                is_checked=false
+            }
+            if(is_checked==false) return false
+            parent.setQTY(package_item_list,GetQueryString("index"))
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+            var data=parent.getQTY(GetQueryString("index"))
+            indexdata=data
+            fty_id=parent.getFty()
+            if(data.package_item_list!=undefined){
+                $.each(data.package_item_list,function(i,item){
+                    sn_list[i]={}
+                    sn_list[i].decimal_place=data.decimal_place
+                    sn_list[i].erp_batch=item.erp_batch
+                    sn_list[i].package_num=item.package_num
+                    sn_list[i].package_type_code=item.package_type_code
+                    sn_list[i].package_type_id=item.package_type_id
+                    sn_list[i].package_type_name=item.package_type_name
+                    sn_list[i].production_batch=item.production_batch
+                    sn_list[i].qty=item.qty
+                    sn_list[i].quality_batch=item.quality_batch
+                    sn_list[i].remark=item.remark
+                    sn_list[i].package_standard_ch=item.package_standard_ch
+                    sn_list[i].package_standard=item.package_standard
+                })
+            }
+
+            $.each(sn_list,function(i,item){
+                if(item.package_standard_ch==1){
+                    item.package_num=""
+                }else{
+                    item.package_num=Math.ceil(countData.div(item.qty,item.package_standard))
+                }
+            })
+
+
+            if(GetQueryString("view")!=null){
+                $(".btn-lay-blue,.deltable,.searchstyle3").hide()
+                $(".btn_iframe_close_window").html("　关闭　")
+                table.input=""
+                table.qty="number"
+                table.checkbox=false
+                table.select=""
+                table.popup="?view=1"
+                $.each(sn_list,function(i,item){
+                    if(item.package_standard_ch==1){
+                        item.package_num=""
+                    }else{
+                        item.package_num=Math.ceil(countData.div(item.qty,item.package_standard))
+                    }
+
+                })
+                dataTable()
+            }else{
+                init()
+            }
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="searchstyle3">
+    <a href="javascript:void(0)" class="btn-lay-blue" onclick="addData()">添加包装类型</a>
+</div>
+<div id="id_div_grid"></div>
+<a href="javascript:void(0)"style="display:" class="deltable" onclick="delTabel()">删除</a>
+<div class="submitbutton fixed">
+    <div class="col-xs-12">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　添加　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</div>
+</body>
+</html>

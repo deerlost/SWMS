@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../js/page/search/ticketopen/list.js"></script>
+	</head>
+	<style type="text/css">
+
+	</style>
+
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article">
+				<div class="mapadress">
+					<h2 class="h2black">开票信息查询</h2>
+				</div>
+				<div class="col-xs-12">&nbsp;</div>
+				<div class="form-search">
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">出库单号：</span>
+								<input class="form-control stock_output_code" type="text" />
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">交货单号：</span>
+								<input class="form-control refer_receipt_code" type="text" />
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group" style="display: none;">
+							<div class="input-group">
+								<span class="input-group-addon">合同号：</span>
+								<input type="text" class="form-control preorder_id" />
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">客户名称：</span>
+								<input type="text" class="form-control receive_name" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">创建人：</span>
+								<input class="form-control user_name" type="text" />
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">物料描述：</span>
+								<input type="text" class="form-control mat_name" />
+							</div>
+						</div>
+					</div>
+				</div>	
+					<div class="col-xs-12 row submitbutton">
+						<a href="javascript:void(0)" class="btn-lay-blue btn_search">查询</a>
+						<a href="javascript:void(0)" class="btn-lay-default print">批量导出</a>
+						<a class="ticket btn-lay-default" href="javascript:void(0)">开票</a>&nbsp;&nbsp;
+						<a class="ticketclose btn-lay-default" href="javascript:void(0)">冲销</a>
+					</div>
+					<div class="col-xs-12">
+						<hr/>
+					</div>
+					<div class="col-xs-12 chkbox">
+						<label class="on"><input type="checkbox" checked="checked" value="10">&nbsp;未开票</label>&nbsp;&nbsp;&nbsp;
+						<label><input type="checkbox"  value="8">&nbsp;已开票</label>
+					</div>
+					<div id="id_div_grid" class="col-xs-12" style="clear: both; width: 100%; overflow: auto; transform: translate(0px, 0px);"></div>
+					<!-- 分页 -->
+					<div class="text-center" id="J_ListPagination"></div>
+				</div>
+			</div>
+			<form id="download" method="post" class="hidden">
+				<input type="hidden" name="stock_output_code">
+				<input type="hidden" name="status">
+				<input type="hidden" name="refer_receipt_code">
+				<input type="hidden" name="preorder_id">
+				<input type="hidden" name="receive_name">
+				<input type="hidden" name="user_name">
+				<input type="hidden" name="mat_name">
+			</form>
+	</body>
+
+</html>

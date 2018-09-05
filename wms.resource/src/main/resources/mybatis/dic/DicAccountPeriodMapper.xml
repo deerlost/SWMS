@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicAccountPeriodMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.vo.DicAccountPeriodVo">
+    <id column="period_id" jdbcType="INTEGER" property="periodId" />
+    <result column="corp_id" jdbcType="INTEGER" property="corpId" />
+    <result column="account_year" jdbcType="INTEGER" property="accountYear" />
+    <result column="account_month" jdbcType="TINYINT" property="accountMonth" />
+    <result column="account_begin_date" jdbcType="TIMESTAMP" property="accountBeginDate" />
+    <result column="account_end_date" jdbcType="TIMESTAMP" property="accountEndDate" />
+    <result column="account_fact_date" jdbcType="TIMESTAMP" property="accountFactDate" />
+    <result column="board_id" jdbcType="INTEGER" property="boardId" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  	<result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+  	<result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+  	
+  </resultMap>
+  <sql id="Base_Column_List">
+    period_id, corp_id, account_year, account_month, account_begin_date, account_end_date, 
+    account_fact_date, board_id, is_delete, create_user, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_account_period
+    where period_id = #{periodId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_account_period
+    where period_id = #{periodId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicAccountPeriod">
+    insert into dic_account_period (period_id, corp_id, account_year, 
+      account_month, account_begin_date, account_end_date, 
+      account_fact_date, board_id, is_delete, 
+      create_user, create_time, modify_time
+      )
+    values (#{periodId,jdbcType=INTEGER}, #{corpId,jdbcType=INTEGER}, #{accountYear,jdbcType=INTEGER}, 
+      #{accountMonth,jdbcType=TINYINT}, #{accountBeginDate,jdbcType=TIMESTAMP}, #{accountEndDate,jdbcType=TIMESTAMP}, 
+      #{accountFactDate,jdbcType=TIMESTAMP}, #{boardId,jdbcType=INTEGER}, #{isDelete,jdbcType=TINYINT}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicAccountPeriod">
+    insert into dic_account_period
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="periodId != null">
+        period_id,
+      </if>
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="accountYear != null">
+        account_year,
+      </if>
+      <if test="accountMonth != null">
+        account_month,
+      </if>
+      <if test="accountBeginDate != null">
+        account_begin_date,
+      </if>
+      <if test="accountEndDate != null">
+        account_end_date,
+      </if>
+      <if test="accountFactDate != null">
+        account_fact_date,
+      </if>
+      <if test="boardId != null">
+        board_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="periodId != null">
+        #{periodId,jdbcType=INTEGER},
+      </if>
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="accountYear != null">
+        #{accountYear,jdbcType=INTEGER},
+      </if>
+      <if test="accountMonth != null">
+        #{accountMonth,jdbcType=TINYINT},
+      </if>
+      <if test="accountBeginDate != null">
+        #{accountBeginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountEndDate != null">
+        #{accountEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountFactDate != null">
+        #{accountFactDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boardId != null">
+        #{boardId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicAccountPeriod">
+    update dic_account_period
+    <set>
+      <if test="corpId != null">
+        corp_id = #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="accountYear != null">
+        account_year = #{accountYear,jdbcType=INTEGER},
+      </if>
+      <if test="accountMonth != null">
+        account_month = #{accountMonth,jdbcType=TINYINT},
+      </if>
+      <if test="accountBeginDate != null">
+        account_begin_date = #{accountBeginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountEndDate != null">
+        account_end_date = #{accountEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountFactDate != null">
+        account_fact_date = #{accountFactDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boardId != null">
+        board_id = #{boardId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where period_id = #{periodId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicAccountPeriod">
+    update dic_account_period
+    set corp_id = #{corpId,jdbcType=INTEGER},
+      account_year = #{accountYear,jdbcType=INTEGER},
+      account_month = #{accountMonth,jdbcType=TINYINT},
+      account_begin_date = #{accountBeginDate,jdbcType=TIMESTAMP},
+      account_end_date = #{accountEndDate,jdbcType=TIMESTAMP},
+      account_fact_date = #{accountFactDate,jdbcType=TIMESTAMP},
+      board_id = #{boardId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where period_id = #{periodId,jdbcType=INTEGER}
+  </update>
+  <select id="selectPostDateByFtyId" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select 
+   		ap.account_fact_date
+    from dic_account_period  ap
+    inner join dic_corp t1 on t1.corp_id = ap.corp_id and t1.board_id = ap.board_id
+    INNER JOIN dic_factory w on t1.corp_id = w.corp_id and fty_id =#{ftyId,jdbcType=VARCHAR} 
+    where ap.is_delete = 0 and 
+      <![CDATA[ #{postDate,jdbcType=TIMESTAMP} >= ap.account_begin_date and #{postDate,jdbcType=TIMESTAMP}<=date_add(ap.account_end_date,interval 1 day) ]]> 
+  </select>
+  <select id="selectByConditionOnPaging" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select 
+   		ap.period_id, ap.corp_id, ap.account_year, ap.account_month, ap.account_begin_date, ap.account_end_date, 
+    	ap.account_fact_date, ap.board_id, ap.create_user, ap.create_time, ap.modify_time,
+   		t1.corp_name  , u.user_name create_user_name
+    from dic_account_period ap
+    inner join dic_corp t1 on t1.corp_id = ap.corp_id
+    inner join wms_user u on u.user_id = ap.create_user
+    where ap.is_delete = 0
+    <if test="periodId != null">
+       	and ap.period_id = #{periodId,jdbcType=INTEGER}
+    </if>
+    <if test="corpId != null">
+       	and ap.corp_id = #{corpId,jdbcType=VARCHAR}
+    </if>
+    <if test="boardId != null">
+       	and ap.board_id = #{boardId,jdbcType=VARCHAR}
+    </if>
+    <if test="accountYear != null">
+       	and ap.account_year = #{accountYear,jdbcType=INTEGER}
+    </if>
+    <if test="accountMonth != null">
+       	and ap.account_month = #{accountMonth,jdbcType=TINYINT}
+    </if>
+    <if test="periodIds != null">
+       	and ap.period_id in
+       	<foreach item="item" index="index" collection="periodIds"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </if>
+  </select>
+  <insert id="insertAccountPeriods" parameterType="java.util.List">
+    insert into dic_account_period ( corp_id, account_year, 
+      account_month, account_begin_date, account_end_date, 
+      account_fact_date, board_id, create_user)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.corpId,jdbcType=VARCHAR}, #{item.accountYear,jdbcType=INTEGER}, 
+      #{item.accountMonth,jdbcType=TINYINT}, #{item.accountBeginDate,jdbcType=TIMESTAMP}, #{item.accountEndDate,jdbcType=TIMESTAMP}, 
+      #{item.accountFactDate,jdbcType=TIMESTAMP}, #{item.boardId,jdbcType=INTEGER}, #{item.createUser,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <update id="updateAccountPeriods" parameterType="java.util.List">
+  	<foreach collection="list" item="item" index="index" separator=";">
+    update dic_account_period
+    set 
+      account_begin_date = #{item.accountBeginDate,jdbcType=TIMESTAMP},
+      account_end_date = #{item.accountEndDate,jdbcType=TIMESTAMP},
+      account_fact_date = #{item.accountFactDate,jdbcType=TIMESTAMP}
+    where period_id = #{item.periodId,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  
+  <select id="countAccountPeriods" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select 
+   		count(1)
+    from dic_account_period 
+    where is_delete = 0
+    <if test="periodId != null">
+       	and period_id != #{periodId,jdbcType=INTEGER}
+    </if>
+    <if test="corpId != null">
+       	and corp_id = #{corpId,jdbcType=VARCHAR}
+    </if>
+    <if test="boardId != null">
+       	and board_id = #{boardId,jdbcType=VARCHAR}
+    </if>
+    <if test="accountYear != null">
+       	and account_year = #{accountYear,jdbcType=INTEGER}
+    </if>
+    <if test="accountMonth != null">
+       	and account_month = #{accountMonth,jdbcType=TINYINT}
+    </if>
+    <if test="accountBeginDate != null ">
+       	and  ( <![CDATA[ (#{accountBeginDate,jdbcType=TIMESTAMP} >= account_begin_date and #{accountBeginDate,jdbcType=TIMESTAMP}<=account_end_date )]]> 
+    		or	  <![CDATA[ (#{accountEndDate,jdbcType=TIMESTAMP} >= account_begin_date and #{accountEndDate,jdbcType=TIMESTAMP}<=account_end_date )]]> )
+    	
+    </if>
+    <if test="accountFactDate != null">
+       	and <![CDATA[ (#{accountFactDate,jdbcType=TIMESTAMP} >= account_begin_date and #{accountFactDate,jdbcType=TIMESTAMP}<=account_end_date )]]> 
+    </if>
+    
+  </select>
+  
+  <update id="deleteByIds" parameterType="java.util.List">
+  	update dic_account_period
+    set is_delete = 1
+    where period_id in 
+  	<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+   		#{item}
+    </foreach>
+  </update>
+  
+</mapper>

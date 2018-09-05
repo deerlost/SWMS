@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.auth.ResourcesMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.auth.Resources">
+    <result column="resources_id" jdbcType="INTEGER" property="resourcesId" />
+    <result column="resources_name" jdbcType="VARCHAR" property="resourcesName" />
+    <result column="resources_desc" jdbcType="VARCHAR" property="resourcesDesc" />
+    <result column="resources_path" jdbcType="VARCHAR" property="resourcesPath" />
+    <result column="resources_url" jdbcType="VARCHAR" property="resourcesUrl" />
+    <result column="portable_index" jdbcType="VARCHAR" property="portableIndex" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="display_index" jdbcType="INTEGER" property="displayIndex" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="menu_id" jdbcType="INTEGER" property="menuId" />
+  </resultMap>
+  <resultMap id="BaseResultMapToADK" type="com.inossem.wms.model.auth.MenuADK">
+    <result column="resources_id" jdbcType="INTEGER" property="id" />
+    <result column="resources_name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <insert id="insert" parameterType="com.inossem.wms.model.auth.Resources">
+    insert into wms_resources (resources_id, resources_name, resources_desc, 
+      resources_path, parent_id, display_index, 
+      enabled)
+    values (#{resourcesId,jdbcType=INTEGER}, #{resourcesName,jdbcType=VARCHAR}, #{resourcesDesc,jdbcType=VARCHAR}, 
+      #{resourcesPath,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{displayIndex,jdbcType=INTEGER}, 
+      #{enabled,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.auth.Resources">
+    insert into wms_resources
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="resourcesId != null">
+        resources_id,
+      </if>
+      <if test="resourcesName != null">
+        resources_name,
+      </if>
+      <if test="resourcesDesc != null">
+        resources_desc,
+      </if>
+      <if test="resourcesPath != null">
+        resources_path,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="displayIndex != null">
+        display_index,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="resourcesId != null">
+        #{resourcesId,jdbcType=INTEGER},
+      </if>
+      <if test="resourcesName != null">
+        #{resourcesName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourcesDesc != null">
+        #{resourcesDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="resourcesPath != null">
+        #{resourcesPath,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="displayIndex != null">
+        #{displayIndex,jdbcType=INTEGER},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  
+   <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.auth.Resources">
+    update wms_resources set
+     resources_id = #{resourcesId,jdbcType=VARCHAR},
+      resources_name = #{resourcesName,jdbcType=VARCHAR},
+      resources_desc = #{resourcesDesc,jdbcType=VARCHAR},
+      resources_path = #{resourcesPath,jdbcType=TIMESTAMP},
+      resources_url = #{resourcesUrl,jdbcType=TIMESTAMP},
+      portable_index = #{portableIndex,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      display_index = #{displayIndex,jdbcType=VARCHAR}
+      enabled = #{enabled,jdbcType=VARCHAR},
+      menu_id = #{menuId,jdbcType=VARCHAR}
+    where resources_id = #{resourcesId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 条件查询权限列表 -->
+  <select id="selectResourcesList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  	select distinct resources_id,resources_name 
+		from wms_resources
+      where 1=1
+      <if test="keyword != null">
+      	 and resources_id like CONCAT('%',#{keyword},'%' ) 
+      	 or resources_name like CONCAT('%',#{keyword},'%' )
+      </if> 
+	  <if test="start != null" >
+		      limit #{start}, #{end}
+	  </if>   
+	  </select>
+	  
+	  <!-- 条件查询权限总行数 -->
+  <select id="selectListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+  
+  	select count(1) from  wms_resources
+      where 1=1
+      <if test="keyword != null">
+      	 and resources_id like CONCAT('%',#{keyword},'%' ) 
+      	 or resources_name like CONCAT('%',#{keyword},'%' )
+      </if> 
+  </select>
+  
+  
+   <!-- 查询所有resources(角色管理) -->
+  <select id="selectAllResources" resultMap="BaseResultMap">
+  		SELECT resources_id,resources_name FROM wms_resources
+  </select>
+  
+  
+   <!-- 查询所有resources有resources_url的(角色管理) -->
+  <select id="selectAllResourcesHaveUrl" resultMap="BaseResultMap">
+  		SELECT resources_id,resources_name 
+  		FROM wms_resources 
+  		WHERE resources_url != '';
+  </select>
+  
+  
+  <!-- 根据roleId查询已有resources(角色管理) -->
+  <select id="selectResourcesByRoleId" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+	  	select r.resources_id,s.resources_name 
+		from wms_resources_role r
+	    left outer join wms_resources s on r.resources_id=s.resources_id
+	    where r.role_id=#{roleId,jdbcType=VARCHAR} 
+  </select>
+   
+  
+  <!-- 根据权限查询可用URL -->
+  <select id="selectResources" parameterType="java.util.List" resultMap="BaseResultMap">
+    select distinct r.resources_id,
+	       r.resources_name,
+	       r.resources_desc,
+	       r.resources_path,
+	       r.resources_url,
+	       r.portable_index,
+	       r.parent_id,
+	       r.display_index,
+	       r.enabled,
+	       r.menu_id
+    FROM wms_resources r 
+    INNER JOIN wms_resources_role m ON r.resources_id = m.resources_id
+    WHERE r.enabled = '1'
+	AND  m.role_id in
+	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+    </foreach>
+    ORDER BY  r.resources_path DESC
+  </select>
+  
+  <!-- 根据权限查询可用URL -->
+  <select id="selectAllResourcesToRoleSet" parameterType="java.util.List" resultMap="BaseResultMap">
+    select r.resources_id,
+	       r.resources_name,
+	       r.resources_desc,
+	       r.resources_path,
+	       r.resources_url,
+	       r.portable_index,
+	       r.parent_id,
+	       r.display_index,
+	       r.enabled,
+	       r.menu_id
+    from wms_resources r 
+    where r.enabled = '1'
+    order by  r.resources_path desc
+  </select>
+  
+  <!-- 根据权限查询可用URL(安卓) -->
+  <select id="selectResourcesToPortable" parameterType="java.util.List" resultMap="BaseResultMapToADK">
+    select r.resources_id,
+	       r.resources_name
+    from wms_resources r 
+    inner join wms_resources_role m ON r.resources_id = m.resources_id
+    where portable_index is not null
+      and r.enabled = '1'
+	and  m.role_id in 
+	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+    </foreach>
+    order by  portable_index asc
+  </select>
+</mapper>

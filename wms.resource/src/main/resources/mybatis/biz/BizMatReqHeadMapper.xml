@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizMatReqHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizMatReqHead">
+    <id column="mat_req_id" jdbcType="INTEGER" property="matReqId" />
+    <result column="mat_req_code" jdbcType="CHAR" property="matReqCode" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="apply_fty_id" jdbcType="INTEGER" property="applyFtyId" />
+    <result column="mat_req_fty_id" jdbcType="INTEGER" property="matReqFtyId" />
+    <result column="receive_fty_id" jdbcType="INTEGER" property="receiveFtyId" />
+    <result column="mat_req_mat_type_id" jdbcType="INTEGER" property="matReqMatTypeId" />
+    <result column="mat_req_biz_type_id" jdbcType="INTEGER" property="matReqBizTypeId" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="dept_code" jdbcType="VARCHAR" property="deptCode" />
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="internal_order_code" jdbcType="VARCHAR" property="internalOrderCode" />
+    <result column="internal_order_name" jdbcType="VARCHAR" property="internalOrderName" />
+    <result column="use_dept_code" jdbcType="VARCHAR" property="useDeptCode" />
+    <result column="use_dept_name" jdbcType="VARCHAR" property="useDeptName" />
+    <result column="is_building_project" jdbcType="TINYINT" property="isBuildingProject" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="contractor" jdbcType="VARCHAR" property="contractor" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="piid" jdbcType="VARCHAR" property="piid" />
+    <result column="project" jdbcType="VARCHAR" property="project" />
+    <result column="is_portable" jdbcType="TINYINT" property="isPortable" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    mat_req_id, mat_req_code, receipt_type, apply_fty_id, mat_req_fty_id, receive_fty_id, 
+    mat_req_mat_type_id, mat_req_biz_type_id, create_user, dept_code, dept_name, internal_order_code, 
+    internal_order_name, use_dept_code, use_dept_name, is_building_project, remark, contractor, 
+    status, piid, project, is_portable, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_mat_req_head
+    where mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_mat_req_head
+    where mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizMatReqHead">
+    insert into biz_mat_req_head (mat_req_id, mat_req_code, receipt_type, 
+      apply_fty_id, mat_req_fty_id, receive_fty_id, 
+      mat_req_mat_type_id, mat_req_biz_type_id, create_user, 
+      dept_code, dept_name, internal_order_code, 
+      internal_order_name, use_dept_code, use_dept_name, 
+      is_building_project, remark, contractor, 
+      status, piid, project, 
+      is_portable, is_delete, create_time, 
+      modify_time)
+    values (#{matReqId,jdbcType=INTEGER}, #{matReqCode,jdbcType=CHAR}, #{receiptType,jdbcType=TINYINT}, 
+      #{applyFtyId,jdbcType=INTEGER}, #{matReqFtyId,jdbcType=INTEGER}, #{receiveFtyId,jdbcType=INTEGER}, 
+      #{matReqMatTypeId,jdbcType=INTEGER}, #{matReqBizTypeId,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{deptName,jdbcType=VARCHAR}, #{internalOrderCode,jdbcType=VARCHAR}, 
+      #{internalOrderName,jdbcType=VARCHAR}, #{useDeptCode,jdbcType=VARCHAR}, #{useDeptName,jdbcType=VARCHAR}, 
+      #{isBuildingProject,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{contractor,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{piid,jdbcType=VARCHAR}, #{project,jdbcType=VARCHAR}, 
+      #{isPortable,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizMatReqHead" 
+  	useGeneratedKeys="true" keyProperty="matReqId">
+    insert into biz_mat_req_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matReqId != null">
+        mat_req_id,
+      </if>
+      <if test="matReqCode != null">
+        mat_req_code,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="applyFtyId != null">
+        apply_fty_id,
+      </if>
+      <if test="matReqFtyId != null">
+        mat_req_fty_id,
+      </if>
+      <if test="receiveFtyId != null">
+        receive_fty_id,
+      </if>
+      <if test="matReqMatTypeId != null">
+        mat_req_mat_type_id,
+      </if>
+      <if test="matReqBizTypeId != null">
+        mat_req_biz_type_id,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="deptCode != null">
+        dept_code,
+      </if>
+      <if test="deptName != null">
+        dept_name,
+      </if>
+      <if test="internalOrderCode != null">
+        internal_order_code,
+      </if>
+      <if test="internalOrderName != null">
+        internal_order_name,
+      </if>
+      <if test="useDeptCode != null">
+        use_dept_code,
+      </if>
+      <if test="useDeptName != null">
+        use_dept_name,
+      </if>
+      <if test="isBuildingProject != null">
+        is_building_project,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="contractor != null">
+        contractor,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="piid != null">
+        piid,
+      </if>
+      <if test="project != null">
+        project,
+      </if>
+      <if test="isPortable != null">
+        is_portable,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matReqId != null">
+        #{matReqId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqCode != null">
+        #{matReqCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="applyFtyId != null">
+        #{applyFtyId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqFtyId != null">
+        #{matReqFtyId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveFtyId != null">
+        #{receiveFtyId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqMatTypeId != null">
+        #{matReqMatTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqBizTypeId != null">
+        #{matReqBizTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptName != null">
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="internalOrderCode != null">
+        #{internalOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="internalOrderName != null">
+        #{internalOrderName,jdbcType=VARCHAR},
+      </if>
+      <if test="useDeptCode != null">
+        #{useDeptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="useDeptName != null">
+        #{useDeptName,jdbcType=VARCHAR},
+      </if>
+      <if test="isBuildingProject != null">
+        #{isBuildingProject,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="contractor != null">
+        #{contractor,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="piid != null">
+        #{piid,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null">
+        #{project,jdbcType=VARCHAR},
+      </if>
+      <if test="isPortable != null">
+        #{isPortable,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizMatReqHead">
+    update biz_mat_req_head
+    <set>
+      <if test="matReqCode != null">
+        mat_req_code = #{matReqCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="applyFtyId != null">
+        apply_fty_id = #{applyFtyId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqFtyId != null">
+        mat_req_fty_id = #{matReqFtyId,jdbcType=INTEGER},
+      </if>
+      <if test="receiveFtyId != null">
+        receive_fty_id = #{receiveFtyId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqMatTypeId != null">
+        mat_req_mat_type_id = #{matReqMatTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqBizTypeId != null">
+        mat_req_biz_type_id = #{matReqBizTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        dept_code = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptName != null">
+        dept_name = #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="internalOrderCode != null">
+        internal_order_code = #{internalOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="internalOrderName != null">
+        internal_order_name = #{internalOrderName,jdbcType=VARCHAR},
+      </if>
+      <if test="useDeptCode != null">
+        use_dept_code = #{useDeptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="useDeptName != null">
+        use_dept_name = #{useDeptName,jdbcType=VARCHAR},
+      </if>
+      <if test="isBuildingProject != null">
+        is_building_project = #{isBuildingProject,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="contractor != null">
+        contractor = #{contractor,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="piid != null">
+        piid = #{piid,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null">
+        project = #{project,jdbcType=VARCHAR},
+      </if>
+      <if test="isPortable != null">
+        is_portable = #{isPortable,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizMatReqHead">
+    update biz_mat_req_head
+    set mat_req_code = #{matReqCode,jdbcType=CHAR},
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      apply_fty_id = #{applyFtyId,jdbcType=INTEGER},
+      mat_req_fty_id = #{matReqFtyId,jdbcType=INTEGER},
+      receive_fty_id = #{receiveFtyId,jdbcType=INTEGER},
+      mat_req_mat_type_id = #{matReqMatTypeId,jdbcType=INTEGER},
+      mat_req_biz_type_id = #{matReqBizTypeId,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      dept_code = #{deptCode,jdbcType=VARCHAR},
+      dept_name = #{deptName,jdbcType=VARCHAR},
+      internal_order_code = #{internalOrderCode,jdbcType=VARCHAR},
+      internal_order_name = #{internalOrderName,jdbcType=VARCHAR},
+      use_dept_code = #{useDeptCode,jdbcType=VARCHAR},
+      use_dept_name = #{useDeptName,jdbcType=VARCHAR},
+      is_building_project = #{isBuildingProject,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      contractor = #{contractor,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      piid = #{piid,jdbcType=VARCHAR},
+      project = #{project,jdbcType=VARCHAR},
+      is_portable = #{isPortable,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </update>
+ <select id="selectMatReqListOnPaging" parameterType="java.util.HashMap" resultType="com.inossem.wms.model.vo.BizMatReqHeadVo">
+	SELECT r.mat_req_id matReqId,
+		r.mat_req_code matReqCode,
+		r.receipt_type receiptType,
+		mrf.fty_name matReqFtyName,
+		rf.fty_name receiveFtyName,
+		dt.mat_type_name matTypeName,
+		u.user_name userName,
+		r.create_time createTime,r.status
+	FROM biz_mat_req_head r
+	INNER JOIN wms_user u 
+		ON r.create_user = u.user_id 
+		AND r.receipt_type = #{receipt_type} 
+		AND r.create_user =#{user_id}
+		AND r.is_delete = 0
+		<if test="statusAry!=null and statusAry.length!=0">
+                AND r.status in
+            <foreach collection="statusAry" item="status"
+                    index="index" open="(" close=")" separator=",">
+                    #{status}
+            </foreach>
+        </if>
+    INNER JOIN dic_material_req_mat_type dt 
+    	ON r.mat_req_mat_type_id = dt.mat_req_mat_type_id 
+    	AND dt.receipt_type = #{receipt_type} 
+    	AND dt.board_id = #{boardId}
+	LEFT OUTER JOIN dic_factory mrf ON r.mat_req_fty_id = mrf.fty_id
+	LEFT OUTER JOIN dic_factory rf ON r.receive_fty_id = rf.fty_id	
+	    <if test="query!=null and query !=''">
+			WHERE r.mat_req_code = #{query,jdbcType=VARCHAR}
+			OR mrf.fty_name LIKE CONCAT('%',#{query,jdbcType=VARCHAR},'%') 
+			OR rf.fty_name LIKE CONCAT('%',#{query,jdbcType=VARCHAR},'%') 
+			OR dt.mat_type_name LIKE CONCAT('%',#{query,jdbcType=VARCHAR},'%') 
+			OR u.user_name LIKE CONCAT('%',#{query,jdbcType=VARCHAR},'%') 
+        </if>
+	ORDER BY r.create_time DESC;
+  </select>
+  <select id="selectBizMatReqHeadVo" parameterType="java.util.Map" resultType="com.inossem.wms.model.vo.BizMatReqHeadVo">
+    SELECT 
+	    h.mat_req_id matReqId, h.mat_req_code matReqCode, h.receipt_type receiptType, 
+	    h.apply_fty_id applyFtyId, a.fty_code applyFtyCode , a.fty_name applyFtyName,
+	    h.mat_req_fty_id matReqFtyId, m.fty_code matReqFtyCode , m.fty_name matReqFtyName,
+	    h.receive_fty_id receiveFtyId, r.fty_code receiveFtyCode , r.fty_name receiveFtyName,
+	    h.mat_req_mat_type_id matReqMatTypeId, mt.mat_type_name matTypeName,
+	    h.mat_req_biz_type_id matReqBizTypeId, bt.biz_type_name bizTypeName,
+	    h.create_user createUser,u.user_name userName, h.dept_code deptCode, h.dept_name deptName, 
+	    h.internal_order_code internalOrderCode, h.internal_order_name internalOrderName, 
+	    h.use_dept_code useDeptCode,  h.use_dept_name useDeptName, 
+	    h.is_building_project isBuildingProject, h.remark, h.contractor, 
+	    h.status, h.piid, h.project, h.is_portable isPortable, h.is_delete isDelete, 
+	    h.create_time createTime, h.modify_time modifyTime,
+	    c.board_id boardId
+    FROM biz_mat_req_head h
+    INNER JOIN wms_user u ON h.create_user = u.user_id AND h.receipt_type = #{receiptType,jdbcType=BIGINT}
+    	AND h.mat_req_id = #{matReqId,jdbcType=INTEGER}
+    INNER JOIN dic_corp c ON c.corp_id = u.corp_id
+    LEFT JOIN dic_factory a ON a.fty_id = h.apply_fty_id
+    LEFT JOIN dic_factory r ON r.fty_id = h.receive_fty_id
+    LEFT JOIN dic_factory m ON m.fty_id = h.mat_req_fty_id
+    LEFT JOIN dic_material_req_biz_type bt ON bt.mat_req_biz_type_id = h.mat_req_biz_type_id
+    LEFT JOIN dic_material_req_mat_type mt ON mt.mat_req_mat_type_id = h.mat_req_mat_type_id
+
+  </select>
+  <update id="updateStatus" parameterType="com.inossem.wms.model.biz.BizMatReqHead">
+    update biz_mat_req_head
+    set status = #{status,jdbcType=TINYINT}
+    where mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </update>
+  <update id="updatePiid" parameterType="com.inossem.wms.model.biz.BizMatReqHead">
+    update biz_mat_req_head
+    set piid = #{piid,jdbcType=VARCHAR}
+    where mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </update>
+  
+  <!--领料单分页查询 刘宇 2018.02.02 --> 
+  <select id="selectBizMatReqHeadOnPaging" parameterType="java.util.Map" resultType="java.util.Map">
+   select
+		r.mat_req_id ,r.mat_req_code,r.mat_req_fty_id,r.create_user,r.dept_code,r.mat_req_mat_type_id,r.receive_fty_id,r.mat_req_biz_type_id,r.status,r.use_dept_name,
+		e.create_time,e.mat_req_rid,e.location_id,e.move_type_id,e.mat_id,e.unit_id,
+		IFNULL(e.demand_qty,'') demand_qty ,IFNULL(e.take_delivery_qty,'') take_delivery_qty,
+		demand_qty - e.take_delivery_qty as not_take_delivery_qty,e.cost_obj_name,e.work_receipt_code,e.device_code,e.reserve_code,e.reserve_rid,
+		ifnull(e.purchase_order_code,'') purchase_order_code,ifnull(e.purchase_order_rid,'') purchase_order_rid ,
+		l.biz_type_name,
+		w.mat_type_name,
+		u.user_name,
+		tw.fty_name receive_materiel_fty,
+		ztw.fty_name receive_fty,
+		tl.location_name,
+		m.move_type_name,
+		n.name_zh,
+		t.mat_name,
+		t.mat_code
+		from biz_mat_req_head r 
+		inner join biz_mat_req_item e on r.mat_req_id = e.mat_req_id 
+			<if test="matReqFtyId!=null and matReqFtyId !=''">
+				and r.mat_req_fty_id = #{matReqFtyId,jdbcType=INTEGER}
+  			</if>
+			<if test="matReqMatTypeId != null and matReqMatTypeId !=''">
+				and r.mat_req_mat_type_id = #{matReqMatTypeId,jdbcType=INTEGER}
+  			</if>
+			<if test="receiveFtyId != null and receiveFtyId !=''">
+				and r.receive_fty_id = #{receiveFtyId,jdbcType=INTEGER}
+  			</if>
+			<if test="useDeptName != null and useDeptName !=''">
+				and r.use_dept_name= #{useDeptName,jdbcType=VARCHAR}
+  			</if>
+  			<if test="useDeptCode != null and useDeptCode !=''">
+				and r.use_dept_code= #{useDeptCode,jdbcType=VARCHAR}
+  			</if>
+	  		<if test="matReqBizTypeId != null and matReqBizTypeId !=''">
+				and r.mat_req_biz_type_id= #{matReqBizTypeId,jdbcType=INTEGER}
+  			</if>
+  			<if test="matReqCode != null and matReqCode !='' ">
+				and r.mat_req_code = #{matReqCode,jdbcType=VARCHAR}
+  			</if> 
+			<if test="createUser != null and createUser !=''">
+				and r.create_user = #{createUser,jdbcType=VARCHAR}
+  			</if>
+  			<if test="createTimeBegin != null">
+  				and e.create_time <![CDATA[>=]]> #{createTimeBegin,jdbcType=TIMESTAMP} 
+  			</if>
+  			<if test="createTimeEnd != null">
+				and e.create_time  <![CDATA[<=]]> #{createTimeEnd,jdbcType=TIMESTAMP} 
+  			</if>  					
+			<if test="locationId != null and locationId > 0 ">
+				and e.location_id = #{locationId,jdbcType=INTEGER}
+  			</if>  
+  			
+		inner join dic_material_req_biz_type l on r.mat_req_biz_type_id = l.mat_req_biz_type_id
+			AND l.board_id = #{boardId,jdbcType=INTEGER}
+		inner join dic_material_req_mat_type w on r.mat_req_mat_type_id = w.mat_req_mat_type_id
+			AND w.receipt_type = #{receiptType,jdbcType=INTEGER}						
+		inner join wms_user u on r.create_user = u.user_id
+		inner join dic_material t on e.mat_id = t.mat_id	
+		<if test="matCode != null and matCode !=''">
+					and (			
+				<foreach collection="utilMatCodes" item="item" index="index" separator="or">     	
+	     		  	(t.mat_code between #{item.begin} and #{item.end} and CHAR_LENGTH(t.mat_code) in (CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))  )      	
+	   			</foreach> 		   
+	   			 or	t.mat_code in   				 
+	    		<foreach collection="utilMatCodes.get(0).strings" item="string" index="index" open="(" close=")" separator=",">  		
+	     			#{string}     			 
+	   			</foreach> 
+					)	
+			</if>		
+		LEFT OUTER JOIN dic_factory tw ON r.mat_req_fty_id = tw.fty_id
+		LEFT OUTER JOIN dic_factory ztw ON r.receive_fty_id = ztw.fty_id	
+		LEFT OUTER JOIN dic_move_type m ON e.move_type_id = m.move_type_id	
+		LEFT OUTER JOIN dic_unit n ON e.unit_id = n.unit_id	
+		LEFT OUTER JOIN dic_stock_location tl ON e.location_id = tl.location_id and e.fty_id=tl.fty_id	
+		ORDER BY r.create_time DESC;
+  </select>
+  <update id="deleteLogicalByPrimaryKey" parameterType="java.lang.Integer">
+    UPDATE biz_mat_req_head
+    SET is_delete = 1
+    WHERE mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </update>
+  <!-- 最后一个人审批[财务审批]接口 -->
+  <update id="updateForLastTask" parameterType="com.inossem.wms.model.biz.BizMatReqHead">
+    UPDATE biz_mat_req_head
+    <set>
+      dept_code = #{deptCode,jdbcType=VARCHAR},
+      dept_name = #{deptName,jdbcType=VARCHAR},
+    </set>
+    WHERE mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </update>  
+</mapper>

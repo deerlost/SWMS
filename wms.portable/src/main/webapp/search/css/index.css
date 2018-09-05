@@ -1,0 +1,251 @@
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin:0; padding:0; }
+h1, h2, h3, h4, h5, h6{ font-size:100%; }
+address, cite, dfn, em, var { font-style:normal; }
+code, kbd, pre, samp { font-family:couriernew, courier, monospace; }
+ul, li, ol { list-style:none; }
+a { text-decoration:none; }
+a:hover { text-decoration:underline; }
+sup { vertical-align:text-top; }
+sub{ vertical-align:text-bottom; }
+legend { color:#000; }
+fieldset, img { border:0; }
+button, input, select, textarea { font-size:100%; }
+table { border-collapse:collapse; border-spacing:0; }
+/* css style: */
+html,body{
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;
+}
+
+.a_li{
+	width: 95%;
+	height: 1.4rem;
+	margin:0 auto;
+	font-size: .36rem;
+	border-bottom: .01rem solid #e3e3e3;
+	display: block;
+	color: #666;
+}
+.a_li span{
+	display: block;
+	height: 1.4rem;
+	line-height: 1.4rem;
+	float: left;
+}
+.a_li img{
+	width:1rem;
+	height: 1rem;
+	margin:0.2rem 0.5rem 0rem 0.5rem;
+	float: left;
+}
+.tititi{
+	height: 1rem;
+	border: 0.02rem solid #f3f3f3;
+}
+.tititi p{
+	width: 32%;
+	height: 100%;
+	text-align: center;
+	line-height: 1rem;
+	font-size: 0.30rem;
+	float: left;
+}
+.tititi p a{
+	display: inline-block;
+	height: 1rem;
+	line-height: 1rem;
+	padding: 0rem 0.2rem;
+	color: #333;
+}
+.tititi p a.aaa{
+	border-bottom: 0.03rem solid #59e;
+}
+.tititi p a:hover{
+	border-bottom: 0.03rem solid #59e;
+}
+.title_b{
+	width: 100%;
+	height: 1rem;
+	background: #56a8de;
+	font-size: 0.3rem;
+	text-align: center;
+	color: #fff;
+	line-height: 1rem;
+}
+.
+.title_b{
+	width: 100%;
+	height: 1rem;
+	background: #56a8de;
+	font-size: 0.3rem;
+	text-align: center;
+	color: #fff;
+	line-height: 1rem;
+}
+#u179_div{
+	border-width: 0px;
+	width: 100%;
+	height: .8rem;
+	background: inherit;
+	background-color: rgba(242, 242, 242, 1);
+	box-sizing: border-box;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(227, 227, 227, 1);
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	-moz-box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.0980392156862745);
+	-webkit-box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.0980392156862745);
+	box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.0980392156862745);
+}
+#u179_div span{
+	font-size: .3rem;
+	color: #999;
+	float: right;
+	height: 100%;
+	line-height: .8rem;
+}
+#u179_div img{
+	margin: 0rem 0.2rem;
+	margin-top: .3rem;
+	float: right;
+}
+#u179_div span.on{
+	color: #5599EE;
+}
+.tititia{
+	height: 1rem;
+	border: 0.02rem solid #f3f3f3;
+}
+.tititia p{
+	width:50%;
+	height: 100%;
+	text-align: center;
+	line-height: 1rem;
+	font-size: 0.30rem;
+	float: left;
+}
+.tititia p a{
+	display: inline-block;
+	height: 1rem;
+	line-height: 1rem;
+	padding: 0rem 0.2rem;
+	color: #333;
+}
+.tititia p a.aaa{
+	border-bottom: 0.03rem solid #59e;
+}
+.tititia p a:hover{
+	border-bottom: 0.03rem solid #59e;
+}
+
+
+.tititib{
+	height: 1rem;
+	border: 0.02rem solid #f3f3f3;
+}
+.tititib p{
+	width:50%;
+	height: 100%;
+	text-align: center;
+	line-height: 1rem;
+	font-size: 0.30rem;
+	float: left;
+}
+.tititib p a{
+	display: inline-block;
+	height: 1rem;
+	line-height: 1rem;
+	padding: 0rem 0.2rem;
+	color: #333;
+}
+.tititib p a.aaa{
+	border-bottom: 0.03rem solid #59e;
+	color: #59e;
+}
+.tititib p a:hover{
+	color: #59e;
+	border-bottom: 0.03rem solid #59e;
+	text-decoration: none;
+}
+
+/*Table*/
+tr.datanull {
+	background:#fff;
+}
+tr.datanull td.datanull  {
+	padding:20px;
+	text-align:center;
+	background:#fff;
+}
+table.tablestyle1 {
+	border-top:1px solid #e3e3e3;
+	width:100%;
+	font-size: 0.25rem;
+}
+table.tablestyle1 th, table.tablestyle1 td {
+	padding:5px 10px;
+	line-height: 0.5rem;
+	height: 0.5rem;
+	border-bottom:1px solid #e3e3e3;
+}
+table.tablestyle1 th {
+	color:#666;
+	background: #f2f2f2;
+}
+table.tablestyle1 th.w50, table.tablestyle1 td.w50 {
+	width:50%;
+}
+table.tablestyle1 th.w40, table.tablestyle1 td.w40 {
+	width:40%;
+}
+table.tablestyle1 td {
+	height: 0.65rem;
+	padding: 4px 10px;
+	line-height: 0.65rem;
+}
+table.tablestyle1 td a {
+	color:#0088cc;
+	text-decoration:underline;
+}
+
+table.tablestyle1 #J_ListBody tr:nth-child(odd) {
+	background:#fff;
+}
+table.tablestyle1 #J_ListBody tr:nth-child(even) {
+	background:#f2f2f2;
+}
+table.tablestyle1 #J_ListBody tr:hover {
+	background:#ddd url(../img/tableborder.png) no-repeat 0px 0px;
+}
+table.tablestyle1 tr.hover {
+	background-color: rgba(255, 255, 0,0.3);
+}
+th.wordnumber,td.wordnumber {
+	width:50px;
+}
+th.word4,td.word4 {
+	width:60px;
+}
+th.word5,td.word5 {
+	width:75px;
+}
+th.whitespace,td.whitespace,table.tablestyle1 td.whitespace  {
+	white-space:normal;
+}
+th.textleft,td.textleft,table.tablestyle1 th.textleft,table.tablestyle1 td.textleft ,table.tablestyle3 th.textleft,table.tablestyle3 td.textleft  {
+	text-align:left;
+}
+th.textright,td.textright,table.tablestyle1 th.textright,table.tablestyle1 td.textright ,table.tablestyle3 th.textright,table.tablestyle3 td.textright  {
+	text-align:right;
+}
+table.tablestyle1 td input[type=text] {
+	padding:6px 5px;
+	/*text-align:center; 客户要求左对齐*/
+}
+table.tablestyle1 td select {
+	padding:6px 1px;
+}

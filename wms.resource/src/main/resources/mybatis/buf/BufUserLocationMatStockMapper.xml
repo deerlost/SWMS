@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.buf.BufUserLocationMatStockMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.buf.BufUserLocationMatStock">
+    <id column="buff_id" jdbcType="INTEGER" property="buffId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="erp_batch" jdbcType="VARCHAR" property="erpBatch" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="start_qty" jdbcType="DECIMAL" property="startQty" />
+    <result column="end_date_input_qty" jdbcType="DECIMAL" property="endDateInputQty" />
+    <result column="end_date_output_qty" jdbcType="DECIMAL" property="endDateOutputQty" />
+    <result column="between_date_input_qty" jdbcType="DECIMAL" property="betweenDateInputQty" />
+    <result column="between_date_output_qty" jdbcType="DECIMAL" property="betweenDateOutputQty" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    buff_id, mat_id, location_id, erp_batch, user_id, start_qty, end_date_input_qty, 
+    end_date_output_qty, between_date_input_qty, between_date_output_qty
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from buf_user_location_mat_stock
+    where buff_id = #{buffId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from buf_user_location_mat_stock
+    where buff_id = #{buffId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.buf.BufUserLocationMatStock">
+    insert into buf_user_location_mat_stock (buff_id, mat_id, location_id, 
+      erp_batch, user_id, start_qty, 
+      end_date_input_qty, end_date_output_qty, between_date_input_qty, 
+      between_date_output_qty)
+    values (#{buffId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, 
+      #{erpBatch,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{startQty,jdbcType=DECIMAL}, 
+      #{endDateInputQty,jdbcType=DECIMAL}, #{endDateOutputQty,jdbcType=DECIMAL}, #{betweenDateInputQty,jdbcType=DECIMAL}, 
+      #{betweenDateOutputQty,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.buf.BufUserLocationMatStock">
+    insert into buf_user_location_mat_stock
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="buffId != null">
+        buff_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="erpBatch != null">
+        erp_batch,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="startQty != null">
+        start_qty,
+      </if>
+      <if test="endDateInputQty != null">
+        end_date_input_qty,
+      </if>
+      <if test="endDateOutputQty != null">
+        end_date_output_qty,
+      </if>
+      <if test="betweenDateInputQty != null">
+        between_date_input_qty,
+      </if>
+      <if test="betweenDateOutputQty != null">
+        between_date_output_qty,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="buffId != null">
+        #{buffId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="erpBatch != null">
+        #{erpBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="startQty != null">
+        #{startQty,jdbcType=DECIMAL},
+      </if>
+      <if test="endDateInputQty != null">
+        #{endDateInputQty,jdbcType=DECIMAL},
+      </if>
+      <if test="endDateOutputQty != null">
+        #{endDateOutputQty,jdbcType=DECIMAL},
+      </if>
+      <if test="betweenDateInputQty != null">
+        #{betweenDateInputQty,jdbcType=DECIMAL},
+      </if>
+      <if test="betweenDateOutputQty != null">
+        #{betweenDateOutputQty,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.buf.BufUserLocationMatStock">
+    update buf_user_location_mat_stock
+    <set>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="erpBatch != null">
+        erp_batch = #{erpBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="startQty != null">
+        start_qty = #{startQty,jdbcType=DECIMAL},
+      </if>
+      <if test="endDateInputQty != null">
+        end_date_input_qty = #{endDateInputQty,jdbcType=DECIMAL},
+      </if>
+      <if test="endDateOutputQty != null">
+        end_date_output_qty = #{endDateOutputQty,jdbcType=DECIMAL},
+      </if>
+      <if test="betweenDateInputQty != null">
+        between_date_input_qty = #{betweenDateInputQty,jdbcType=DECIMAL},
+      </if>
+      <if test="betweenDateOutputQty != null">
+        between_date_output_qty = #{betweenDateOutputQty,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where buff_id = #{buffId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.buf.BufUserLocationMatStock">
+    update buf_user_location_mat_stock
+    set mat_id = #{matId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      erp_batch = #{erpBatch,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      start_qty = #{startQty,jdbcType=DECIMAL},
+      end_date_input_qty = #{endDateInputQty,jdbcType=DECIMAL},
+      end_date_output_qty = #{endDateOutputQty,jdbcType=DECIMAL},
+      between_date_input_qty = #{betweenDateInputQty,jdbcType=DECIMAL},
+      between_date_output_qty = #{betweenDateOutputQty,jdbcType=DECIMAL}
+    where buff_id = #{buffId,jdbcType=INTEGER}
+  </update>
+  <insert id="insertStartQty" parameterType="java.util.Map">
+    insert into buf_user_location_mat_stock (mat_id, location_id, erp_batch, user_id, start_qty)
+    select 
+    	sbb.mat_id ,sbb.location_id,sbb.erp_batch , #{userId,jdbcType=VARCHAR} ,
+    	sum(ifnull(sbb.qty* (CASE WHEN u.unit_code = 'KG' THEN	1	ELSE	1000	END	),0)) start_qty 
+			
+	    from stock_batch_begin sbb
+	    inner join dic_stock_location sl on sbb.location_id = sl.location_id
+	    inner join dic_material m on  sbb.mat_id=m.mat_id
+	    inner join dic_unit u on m.unit_id = u.unit_id
+	    where 
+	   		1=1 
+	   	<if test="whId != null">
+        	and sl.wh_id = #{whId,jdbcType=INTEGER}
+      	</if>
+      	<if test="locationId != null">
+        	and sl.location_id = #{locationId,jdbcType=INTEGER}
+      	</if>
+      	<if test="ftyId != null">
+        	and sl.fty_id = #{ftyId,jdbcType=INTEGER}
+      	</if>
+    	<if test="matId != null">
+        	and sbb.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="matCode != null and matCode != '' ">
+        	and m.mat_code = #{matCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="createTime != null">
+        	and DATE_FORMAT(sbb.create_time,'%Y-%m-%d') = #{createTime}
+     	</if>	
+	   	
+		GROUP BY sbb.mat_id ,sbb.location_id,sbb.erp_batch
+  </insert>
+  <insert id="insertInputQty" parameterType="java.util.Map">
+    insert into buf_user_location_mat_stock (mat_id, location_id, erp_batch, user_id, 
+    <if test="end_date_input_qty != null">
+        	end_date_input_qty
+    </if>
+    <if test="between_date_input_qty != null">
+        	between_date_input_qty
+    </if>
+    
+    )
+    SELECT
+	
+		t.mat_id,
+		t.location_id,
+		t.erp_batch,
+		#{userId},
+		sum(t.qty) qty
+	
+	FROM
+	(
+		SELECT
+			i.mat_id,
+			l.location_id,
+			pi.erp_batch,
+			sum(ifnull(pi.qty * (CASE WHEN u.unit_code = 'KG' THEN	1	ELSE	1000	END	),	0	)) qty
+			
+		FROM
+			biz_stock_input_item i
+		INNER JOIN biz_stock_input_head h ON i.stock_input_id = h.stock_input_id
+		inner join biz_stock_input_package_item pi on pi.stock_input_item_id = i.item_id
+		AND h.is_delete = 0
+		AND i.is_delete = 0
+		
+		INNER JOIN dic_material m ON i.mat_id = m.mat_id
+		INNER JOIN dic_unit u ON m.unit_id = u.unit_id
+		INNER JOIN dic_factory f ON f.fty_id = i.fty_id
+		INNER JOIN dic_corp cp ON cp.corp_id = f.corp_id
+		INNER JOIN dic_stock_location l ON l.location_id = i.location_id
+		INNER JOIN dic_warehouse wh ON wh.wh_id = l.wh_id
+		WHERE 1 = 1 AND h. STATUS IN (5, 10)
+		<if test="whId != null">
+        	and l.wh_id = #{whId,jdbcType=INTEGER}
+      	</if>
+      	<if test="locationId != null">
+        	and l.location_id = #{locationId,jdbcType=INTEGER}
+      	</if>
+      	<if test="ftyId != null">
+        	and l.fty_id = #{ftyId,jdbcType=INTEGER}
+      	</if>
+    	<if test="matId != null">
+        	and m.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="matCode != null and matCode != '' ">
+        	and m.mat_code = #{matCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="timeFr!=null and timeFr !=''">
+		 	and h.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  	and h.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		GROUP BY
+			m.mat_id,
+			l.location_id,
+			pi.erp_batch
+		
+		UNION ALL
+		
+		SELECT
+			l.location_id,
+			o.mat_id,
+			o.erp_batch,
+			sum(ifnull(	op.stock_qty * (CASE	WHEN u.unit_code = 'KG' THEN	1	ELSE	1000	END	),	0)) qty
+		FROM
+			biz_stock_output_item o
+		INNER JOIN biz_stock_output_head h ON o.stock_output_id = h.stock_output_id
+		AND h.is_delete = 0
+		AND o.is_delete = 0
+		INNER JOIN biz_stock_output_position op ON op.stock_output_id = o.stock_output_id
+		AND o.stock_output_rid = op.stock_output_rid
+		AND op.is_delete = 0
+		
+		INNER JOIN dic_material m ON o.mat_id = m.mat_id
+		INNER JOIN dic_unit u ON m.unit_id = u.unit_id
+		INNER JOIN dic_factory f ON f.fty_id = o.fty_id
+		INNER JOIN dic_corp cp ON cp.corp_id = f.corp_id
+		INNER JOIN dic_stock_location l ON l.location_id = o.location_id
+		
+		INNER JOIN dic_warehouse wh ON wh.wh_id = l.wh_id
+		WHERE	1 = 1	AND h. STATUS = 10	AND h.receipt_type = 25
+		<if test="whId != null">
+        	and l.wh_id = #{whId,jdbcType=INTEGER}
+      	</if>
+      	<if test="locationId != null">
+        	and l.location_id = #{locationId,jdbcType=INTEGER}
+      	</if>
+      	<if test="ftyId != null">
+        	and l.fty_id = #{ftyId,jdbcType=INTEGER}
+      	</if>
+    	<if test="matId != null">
+        	and m.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="matCode != null and matCode != '' ">
+        	and m.mat_code = #{matCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="timeFr!=null and timeFr !=''">
+		 	and h.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  	and h.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		GROUP BY
+			m.mat_id,
+			l.location_id,
+			o.erp_batch
+		UNION ALL
+		SELECT
+			m.mat_id,
+			l.location_id,
+			bm.erp_batch,
+			sum(ifnull(ti.transport_qty * (CASE WHEN u.unit_code = 'KG' THEN	1 ELSE	1000	END	),0)) qty
+				
+		FROM
+			biz_stock_input_transport_item ti
+		INNER JOIN biz_stock_input_transport_head th ON ti.stock_transport_id = th.stock_transport_id
+		AND th.is_delete = 0
+		AND ti.is_delete = 0
+			
+		INNER JOIN dic_material m ON ti.mat_input = m.mat_id
+		INNER JOIN dic_unit u ON m.unit_id = u.unit_id
+		INNER JOIN dic_factory f ON f.fty_id = ti.fty_input
+		INNER JOIN dic_corp cp ON cp.corp_id = f.corp_id
+		INNER JOIN batch_material bm on bm.fty_id = ti.fty_input and bm.batch = ti.batch and bm.mat_id = ti.mat_input
+		INNER JOIN dic_stock_location l ON l.location_id = ti.location_input
+			
+		INNER JOIN dic_warehouse wh ON l.wh_id = wh.wh_id
+		WHERE	1 = 1	AND th. STATUS = 10
+		<if test="whId != null">
+        	and l.wh_id = #{whId,jdbcType=INTEGER}
+      	</if>
+      	<if test="locationId != null">
+        	and l.location_id = #{locationId,jdbcType=INTEGER}
+      	</if>
+      	<if test="ftyId != null">
+        	and l.fty_id = #{ftyId,jdbcType=INTEGER}
+      	</if>
+    	<if test="matId != null">
+        	and m.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="matCode != null and matCode != '' ">
+        	and m.mat_code = #{matCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="timeFr!=null and timeFr !=''">
+		 	and th.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  	and th.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		GROUP BY
+			m.mat_id,
+			l.location_id,
+			bm.erp_batch
+	) t
+	GROUP BY
+		t.mat_id,
+		t.location_id,
+		t.erp_batch
+    ON DUPLICATE KEY UPDATE 
+    <if test="end_date_input_qty != null">
+        	end_date_input_qty
+    </if>
+    <if test="between_date_input_qty != null">
+        	between_date_input_qty
+    </if>
+    
+     = VALUES(
+    <if test="end_date_input_qty != null">
+        	end_date_input_qty
+    </if>
+    <if test="between_date_input_qty != null">
+        	between_date_input_qty
+    </if>
+    
+    )
+  </insert>
+  
+  <insert id="insertOutputQty" parameterType="java.util.Map">
+    insert into buf_user_location_mat_stock (mat_id, location_id, erp_batch, user_id, 
+    <if test="end_date_output_qty != null">
+        	end_date_output_qty
+    </if>
+    <if test="between_date_output_qty != null">
+        	between_date_output_qty
+    </if>
+    
+    )
+    SELECT
+	
+		t.mat_id,
+		t.location_id,
+		t.erp_batch,
+		#{userId},
+		sum(t.qty) qty
+	
+	FROM
+	(
+		SELECT
+			m.mat_id,
+			l.location_id,
+			o.erp_batch,
+			sum(ifnull(op.stock_qty * (CASE	WHEN u.unit_code = 'KG' THEN 1	ELSE	1000	END),0)) qty
+		FROM
+			biz_stock_output_item o
+		INNER JOIN biz_stock_output_head h ON o.stock_output_id = h.stock_output_id
+		AND h.is_delete = 0
+		AND o.is_delete = 0
+		INNER JOIN biz_stock_output_position op ON op.stock_output_id = o.stock_output_id
+		AND o.stock_output_rid = op.stock_output_rid
+		AND op.is_delete = 0
+		INNER JOIN dic_material m ON o.mat_id = m.mat_id
+		INNER JOIN dic_unit u ON m.unit_id = u.unit_id
+		INNER JOIN dic_factory f ON f.fty_id = o.fty_id
+		INNER JOIN dic_corp cp ON cp.corp_id = f.corp_id
+		INNER JOIN dic_stock_location l ON l.location_id = o.location_id
+		INNER JOIN dic_warehouse wh ON wh.wh_id = l.wh_id
+		WHERE 1 = 1 AND h. STATUS = 10 AND h.receipt_type != 28
+		<if test="whId != null">
+        	and l.wh_id = #{whId,jdbcType=INTEGER}
+      	</if>
+      	<if test="locationId != null">
+        	and l.location_id = #{locationId,jdbcType=INTEGER}
+      	</if>
+      	<if test="ftyId != null">
+        	and l.fty_id = #{ftyId,jdbcType=INTEGER}
+      	</if>
+    	<if test="matId != null">
+        	and m.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="matCode != null and matCode != '' ">
+        	and m.mat_code = #{matCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="timeFr!=null and timeFr !=''">
+		 	and h.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  	and h.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		GROUP BY
+			m.mat_id,
+			l.location_id,
+			o.erp_batch
+		
+		UNION ALL
+		SELECT
+			m.mat_id,
+			l.location_id,
+			o.erp_batch,
+			sum(ifnull(op.stock_qty * (CASE WHEN u.unit_code = 'KG' THEN 1 ELSE 1000 END),0)) qty
+		FROM
+			biz_stock_output_item o
+		INNER JOIN biz_stock_output_head h ON o.stock_output_id = h.stock_output_id
+		AND h.is_delete = 0
+		AND o.is_delete = 0
+		INNER JOIN biz_stock_output_position op ON op.stock_output_id = o.stock_output_id
+		AND o.stock_output_rid = op.stock_output_rid
+		AND op.is_delete = 0
+		INNER JOIN dic_material m ON o.mat_id = m.mat_id
+		INNER JOIN dic_unit u ON m.unit_id = u.unit_id
+		INNER JOIN dic_factory f ON f.fty_id = op.fty_id
+		INNER JOIN dic_corp cp ON cp.corp_id = f.corp_id
+		INNER JOIN dic_stock_location l ON l.location_id = op.location_id
+		INNER JOIN dic_warehouse wh ON wh.wh_id = l.wh_id
+		WHERE 1 = 1	AND h. STATUS = 10	AND h.receipt_type = 25
+		<if test="whId != null">
+        	and l.wh_id = #{whId,jdbcType=INTEGER}
+      	</if>
+      	<if test="locationId != null">
+        	and l.location_id = #{locationId,jdbcType=INTEGER}
+      	</if>
+      	<if test="ftyId != null">
+        	and l.fty_id = #{ftyId,jdbcType=INTEGER}
+      	</if>
+    	<if test="matId != null">
+        	and m.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="matCode != null and matCode != '' ">
+        	and m.mat_code = #{matCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="timeFr!=null and timeFr !=''">
+		 	and h.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  	and h.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		GROUP BY
+			m.mat_id,
+			l.location_id,
+			o.erp_batch
+		UNION ALL
+		SELECT
+			m.mat_id,
+			l.location_id,
+			bm.erp_batch,
+			sum(ifnull(ti.transport_qty * (CASE	WHEN u.unit_code = 'KG' THEN	1	ELSE	1000	END	),0)) qty
+		FROM
+			biz_stock_input_transport_item ti
+		INNER JOIN biz_stock_input_transport_head th ON ti.stock_transport_id = th.stock_transport_id
+		AND th.is_delete = 0
+		AND ti.is_delete = 0
+		INNER JOIN dic_material m ON ti.mat_id = m.mat_id
+		INNER JOIN dic_unit u ON m.unit_id = u.unit_id
+		INNER JOIN dic_factory f ON f.fty_id = ti.fty_output_id
+		INNER JOIN dic_corp cp ON cp.corp_id = f.corp_id
+		INNER JOIN dic_stock_location l ON l.location_id = ti.location_output_id
+		INNER JOIN batch_material bm ON bm.fty_id = ti.fty_output_id
+		AND bm.mat_id = ti.mat_id
+		AND bm.batch = ti.batch
+		INNER JOIN dic_warehouse wh ON l.wh_id = wh.wh_id
+		WHERE 1 = 1 AND th. STATUS = 10
+		<if test="whId != null">
+        	and l.wh_id = #{whId,jdbcType=INTEGER}
+      	</if>
+      	<if test="locationId != null">
+        	and l.location_id = #{locationId,jdbcType=INTEGER}
+      	</if>
+      	<if test="ftyId != null">
+        	and l.fty_id = #{ftyId,jdbcType=INTEGER}
+      	</if>
+    	<if test="matId != null">
+        	and m.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="matCode != null and matCode != '' ">
+        	and m.mat_code = #{matCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="timeFr!=null and timeFr !=''">
+		 	and th.create_time <![CDATA[>=]]>#{timeFr,jdbcType=VARCHAR} 
+		</if>
+		<if test="timeTo!=null and timeTo !=''">
+		  	and th.create_time <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+		</if>	
+		GROUP BY
+			m.mat_id,
+			l.location_id,
+			bm.erp_batch
+	) t
+	GROUP BY
+		t.mat_id,
+		t.location_id,
+		t.erp_batch
+    ON DUPLICATE KEY UPDATE 
+    <if test="end_date_output_qty != null">
+        	end_date_output_qty
+    </if>
+    <if test="between_date_output_qty != null">
+        	between_date_output_qty
+    </if>
+    
+     = VALUES(
+    <if test="end_date_output_qty != null">
+        	end_date_output_qty
+    </if>
+    <if test="between_date_output_qty != null">
+        	between_date_output_qty
+    </if>
+    
+    )
+  </insert>
+  
+  
+  <select id="selectByParamOnPaging" parameterType="java.util.Map" resultType="java.util.Map">
+    select 
+    	sl.location_code locationCode,
+    	sl.location_id locationId,
+    	sl.location_name locationName,
+    	f.fty_code ftyCode,
+    	f.fty_name ftyName,
+    	f.fty_id ftyId,
+    	bu.erp_batch erpBatch,
+    	m.mat_id matId,
+    	m.mat_code matCode,
+    	m.mat_name matName,
+    	'KG' unitCode,
+    	'千克' unitName,
+    	46 unitId,
+    	(bu.start_qty-bu.end_date_output_qty+bu.end_date_input_qty) endQty,
+    	(bu.start_qty-bu.end_date_output_qty+bu.end_date_input_qty+bu.between_date_output_qty-bu.between_date_input_qty) beginQty,
+    	bu.between_date_input_qty inputQty,
+    	bu.between_date_output_qty outputQty,
+    	#{createTimeStart} createTimeStart,
+    	#{createTimeEnd} createTimeEnd
+    from buf_user_location_mat_stock bu
+    inner join dic_stock_location sl on bu.location_id = sl.location_id
+    inner join dic_factory f on f.fty_id=sl.fty_id
+	
+    left join buf_factory_mat_price p on bu.mat_id=p.mat_id and p.fty_id=sl.fty_id
+    inner join dic_material m on  bu.mat_id=m.mat_id
+    inner join dic_unit u on m.unit_id = u.unit_id
+    where user_id = #{userId}
+  </select>
+  
+  <delete id="deleteByUserId" parameterType="java.lang.String">
+    delete from buf_user_location_mat_stock
+    where user_id = #{userId}
+  </delete>
+  
+</mapper>

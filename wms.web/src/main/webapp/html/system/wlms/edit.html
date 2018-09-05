@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+			
+			.col-xs-3 {
+				text-align: right;
+			}
+		</style>
+		<script>
+			pardata = null
+			$(function() {
+				var index = GetQueryString('index')
+				pardata=parent.getwumsinfo(index);
+				$(".shif_life").val(pardata.shelf_life)
+				$(".samp_name").val(pardata.samp_name)
+				$(".specification").val(pardata.specification)
+				$(".standard").val(pardata.standard)
+				$(".btn_submit").click(function() {
+					submit();
+				});
+			});
+			function submit() {
+				if($(".shif_life").val()==""){
+					layer.msg("请填写保质期");
+					return false;
+				}
+				if($(".samp_name").val()==""){
+					layer.msg("请填写样品名称");
+					return false;
+				}
+				if($(".specification").val()==""){
+					layer.msg("请填写样品规格");
+					return false;
+				}
+				if($(".standard").val()==""){
+					layer.msg("请填写执行标准");
+					return false;
+				}
+				showloading();
+				var url = uriapi + '/conf/mat/update_shelf_by_mat_id';
+				var json = {};
+				json.mat_id = pardata.mat_id;
+				json.shelf_life = $(".shif_life").val();
+				json.samp_name = $(".samp_name").val();
+				json.specification = $(".specification").val();
+				json.standard = $(".standard").val();
+				ajax(url, 'POST', JSON.stringify(json), function(data) {
+					setTimeout(function() {
+						layer.close(indexloading);
+					}, 50);
+					if(data.head.status == true) {
+						parent.location.href="wlList.html"
+					}
+				}, function(e) {
+					layer.close(indexloading);
+				});
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="form" c-app="zmkpf">
+
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>质保期(天)：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="number" class="shif_life form-control" maxlength="20" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>样品名称：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="samp_name form-control" maxlength="50" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>样品规格：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="specification form-control" maxlength="50" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>执行标准：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="standard form-control" maxlength="50" />
+				</div>
+			</div>
+			<div class="clearfx col-xs-12"></div>
+		</div>
+		<div class="col-xs-12">
+			<br /><br /><br /><br /><br /><br />
+		</div>
+		<div class="fixed submitbutton">
+			<a href="javascript:void(0)" class="btn-lay-blue btn_submit">　确定　</a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+		</div>
+	</body>
+
+</html>

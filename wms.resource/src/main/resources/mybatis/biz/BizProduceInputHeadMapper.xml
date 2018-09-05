@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizInputProduceHeadMapper">
+  
+  <select id="production_input_listOnPagIng" parameterType="java.util.Map" resultType="map">
+   SELECT
+   DISTINCT 
+	sh.stock_input_id,
+	sh.stock_input_code,
+	sh.purchase_order_code,
+		dt.receipt_type_name purchase_order_type_name,
+		CASE sh. STATUS
+	WHEN '0' THEN
+		'未完成'
+	WHEN '1' THEN
+		'草稿'
+	WHEN '2' THEN
+		'已提交'
+	WHEN '3' THEN
+		'已作业'
+	WHEN '5' THEN
+		'已转储'	
+	WHEN '10' THEN
+		'已完成'
+	WHEN '20' THEN
+		'已冲销'
+	ELSE
+		''
+	END status_name,
+	 u.user_name create_user,
+	 f.fty_name,
+	DATE_FORMAT(sh.create_time,'%Y-%m-%d %H:%i:%S') create_date,
+	biz_stock_input_item.mat_doc_code,
+	biz_stock_input_item.mes_doc_code,
+	biz_stock_input_item.mat_off_code,
+	biz_stock_input_item.mes_fail_code mes_off_code
+	FROM
+		biz_stock_input_head sh
+	left join 	biz_stock_input_item on sh.stock_input_id=biz_stock_input_item.stock_input_id
+	INNER JOIN wms_user u ON u.user_id = sh.create_user
+	LEFT JOIN dic_corp c ON sh.corp_id = c.corp_id
+	LEFT JOIN dic_factory f ON f.fty_id = sh.fty_id
+	LEFT JOIN dic_receipt_type dt ON dt.receipt_type = sh.receipt_type	
+	left join dic_material on biz_stock_input_item.mat_id=dic_material.mat_id
+	left JOIN dic_product_line line ON line.product_line_id= sh.product_line_id
+	WHERE
+	sh.is_delete = 0
+<!-- 	and sh.receipt_type='12' -->
+
+    <if test="stock_transport_code != null and stock_transport_code!=''">
+       AND ( sh.stock_input_code = #{stock_transport_code} OR sh.purchase_order_code = #{stock_transport_code} 
+       or dic_material.mat_code  like CONCAT('%',#{stock_transport_code},'%' ) 
+       or dic_material.mat_name  like CONCAT('%',#{stock_transport_code},'%' ) 
+       or biz_stock_input_item.mat_doc_code  like CONCAT('%',#{stock_transport_code},'%' ) 
+       or biz_stock_input_item.mes_doc_code  like CONCAT('%',#{stock_transport_code},'%' ) 
+       or u.user_name like CONCAT('%',#{stock_transport_code},'%' ))
+    </if>
+   	<if test="statusList != null and statusList.size()>0">
+   		AND sh.status in 
+   		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </if>
+    <if test="receiptType != null">
+       AND dt.receipt_type=#{receiptType}
+    </if>
+	<if test="createUser!=null and createUser!=''">		
+   		and 
+ 			if((select product_line_id from rel_product_user where user_id=#{createUser})!=0
+ 			,(select product_line_id from rel_product_user where user_id=sh.create_user) =(select product_line_id from rel_product_user where user_id=#{createUser})
+ 			,1=1)
+    </if>	
+    ORDER BY sh.stock_input_code DESC;
+  </select>
+  
+  
+   <select id="selectPackageTypeList" parameterType="string" resultType="map">
+    SELECT
+		pt.package_type_id,
+		pt.package_type_code,
+		pt.package_type_name,
+		pt.package_standard_ch,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_group_id,
+		pt.unit_id,
+		pt.size,
+		pt.erp_batch_key,
+		pt.is_delete,
+		pt.sn_used,
+		u.name_zh
+	FROM
+		dic_package_type pt
+	INNER JOIN dic_material_package_type mpt ON pt.package_type_id = mpt.package_type_id
+	inner JOIN dic_material on mpt.mat_id=dic_material.mat_id
+	INNER JOIN dic_unit u ON u.unit_id = pt.unit_id
+	INNER JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+	WHERE
+		pt.is_delete = 0
+		and pt.is_freeze='0'
+	and mpt.mat_id=#{mat_id}
+	
+  </select>
+   <select id="selectPackageTypeListByP" parameterType="map" resultType="map">
+    SELECT
+		pt.package_type_id,
+		pt.package_type_code,
+		pt.package_type_name,
+		pt.package_standard_ch,
+		pt.package_standard / (case when u.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_group_id,
+		pt.unit_id,
+		pt.size,
+		pt.erp_batch_key,
+		pt.is_delete,
+		pt.sn_used,
+		u.name_zh
+	FROM
+		dic_package_type pt
+	INNER JOIN dic_material_package_type mpt ON pt.package_type_id = mpt.package_type_id
+	INNER JOIN dic_unit u ON u.unit_id = pt.unit_id
+	left join dic_material_package_type on dic_material_package_type.package_type_id=pt.package_type_id
+	WHERE
+		pt.is_delete = 0
+		and pt.is_freeze='0'
+	and dic_material_package_type.mat_id=#{mat_id}  and pt.package_type_id=#{package_id}
+	GROUP BY  pt.package_type_id
+  </select>
+  
+  
+   <select id="selectPackageTypeListNoSn" parameterType="string" resultType="map">
+    SELECT
+		pt.package_type_id,
+		pt.package_type_code,
+		pt.package_type_name,
+		pt.package_standard_ch,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_group_id,
+		pt.erp_batch_key,
+		pt.unit_id,
+		pt.size,
+		pt.is_delete,
+		pt.sn_used,
+		u.name_zh
+	FROM
+		dic_package_type pt
+	INNER JOIN dic_material_package_type mpt ON pt.package_type_id = mpt.package_type_id
+	inner JOIN dic_material on mpt.mat_id=dic_material.mat_id
+	INNER JOIN dic_unit u ON u.unit_id = pt.unit_id
+	INNER JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+	WHERE
+		pt.is_delete = 0
+		and sn_used='2'
+		and pt.is_freeze='0'
+		and mpt.is_freeze='0'
+<!-- 		<if test="mat_id != null and mat_id !=''" >	 -->
+		and mpt.mat_id=#{mat_id}
+<!-- 		</if> -->
+	
+  </select>
+  
+  
+     <select id="selectAllPackageTypeList" parameterType="map" resultType="map">
+    SELECT
+		pt.package_type_id,
+		pt.package_type_code,
+		pt.package_type_name,
+		pt.package_standard_ch,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_group_id,
+		pt.unit_id,
+		pt.size,
+		pt.is_delete,
+		pt.sn_used,
+		u.name_zh
+	FROM
+		dic_package_type pt
+	INNER JOIN dic_material_package_type mpt ON pt.package_type_id = mpt.package_type_id
+	inner JOIN dic_material on mpt.mat_id=dic_material.mat_id
+	INNER JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+	INNER JOIN dic_unit u ON u.unit_id = pt.unit_id
+	left join dic_material_package_type on dic_material_package_type.package_type_id=pt.package_type_id
+	WHERE
+		pt.is_delete = 0
+		and sn_used='2'
+	GROUP BY  pt.package_type_id
+  </select>
+  
+  <select id="selectLocationList" parameterType="map" resultType="java.util.Map" >
+		SELECT 
+		dsl.location_id,
+		dsl.location_code,
+		dsl.location_name
+		FROM dic_stock_location dsl 
+		left join rel_user_stock_location on rel_user_stock_location.location_id=dsl.location_id	
+		where dsl.is_delete = 0
+		and dsl.fty_id=#{fty_id}
+		and rel_user_stock_location.user_id=#{userId}
+		ORDER BY dsl.create_time DESC
+  </select>
+  
+   <select id="selectErpList" parameterType="map" resultType="map" flushCache="true">
+		SELECT 
+		erp_batch erp_batch_code
+		FROM rel_mat_erpbatch  
+		where mat_id=#{mat_id} and fty_id=#{fty_id}  
+  </select>
+  
+    <select id="selectAllErpList" parameterType="map" resultType="map" >
+		SELECT 
+		erp_batch erp_batch_code
+		FROM rel_mat_erpbatch  
+		
+  </select>
+  
+  
+   <select id="selectFactoryList" parameterType="map" resultType="map" >
+		SELECT 
+		*
+		FROM dic_factory
+		where fty_type='1' 
+	</select>
+	
+	 <select id="select_mat_info" parameterType="string" resultType="map" >
+		SELECT 
+		dic_material.unit_id,dic_material.mat_name,dic_material.mat_id,dic_unit.name_en unit_name,dic_material.mat_code
+		FROM dic_material
+		left join dic_unit on dic_unit.unit_id=dic_material.unit_id
+		where dic_material.is_delete='0' 
+		and dic_material.mat_code=#{mat_code}
+	</select>
+  
+  
+  
+  
+    <select id="selectPkgList" resultType="map" parameterType="map">
+	    SELECT 
+	  	biz_pkg_operation_head.pkg_operation_id package_id,
+	  	biz_pkg_operation_head.pkg_operation_code  package_code,
+	  	
+	  	dic_package_type.package_type_name package_type, 
+	  	dic_package_type.package_standard_ch package_standard,
+	  	dic_package_type.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) standard_num,
+	  	
+	  	dic_package_type.package_type_id,
+	  	biz_pkg_operation_item.pkg_qty package_num,
+	  	biz_pkg_operation_head.product_batch production_batch,
+	  	date_format(biz_pkg_operation_head.create_time,'%Y-%m-%d') package_time,
+	  	biz_pkg_operation_head.package_team package_group_name
+	  
+	 	from biz_pkg_operation_head
+	   	left join  biz_pkg_operation_item on biz_pkg_operation_item.pkg_operation_id=biz_pkg_operation_head.pkg_operation_id
+		left JOIN dic_material on biz_pkg_operation_item.mat_id=dic_material.mat_id
+		left JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+		left join dic_package_type on dic_package_type.package_type_id=biz_pkg_operation_item.package_type_id 			   	     
+	 	WHERE biz_pkg_operation_head.is_delete=0
+	 	and biz_pkg_operation_head.status='2'
+	 	and biz_pkg_operation_item.is_delete='0'
+	    <!-- 状态 -->
+		
+	  	<!-- 输入值 -->
+	  	<if test="package_code!=null and package_code!=''">
+	  		and (
+	  		biz_pkg_operation_head.pkg_operation_code like CONCAT('%',#{package_code},'%' ) 
+	  		or biz_pkg_operation_head.refer_receipt_code like CONCAT('%',#{package_code},'%' ) 
+	  		)
+	  	</if>
+	  	
+	  	<if test="production_batch != null and production_batch!=''">
+       		and biz_pkg_operation_head.product_batch like CONCAT('%',#{production_batch},'%' )
+    	</if>
+
+    	<if test="package_time != null and package_time !=''" >
+			AND date_format(biz_pkg_operation_head.create_time,'%Y-%m-%d') = #{package_time}
+		</if>
+		<if test="package_type_id != null and package_type_id!=''">
+       		and dic_package_type.package_type_id=#{package_type_id}
+    	</if>
+    	<if test="mat_id != null and mat_id!=''">
+       		and dic_package_type.package_type_id in (select package_type_id from dic_material_package_type where dic_material_package_type.mat_id =#{mat_id})
+    	</if>
+  </select>
+  
+  
+     <select id="selectItemList" parameterType="java.lang.Integer" resultType="map">
+    SELECT
+		pt.package_type_id,
+		pt.package_type_code,
+		pt.package_type_name,
+		pt.package_standard_ch,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_group_id,
+		pt.unit_id,
+		pt.size,
+		pt.is_delete,
+		pt.sn_used,
+		u.name_zh
+	FROM
+		dic_package_type pt
+		
+<!-- 	INNER JOIN  dic_package_type on  pt.package_type_id= -->
+	INNER JOIN dic_material_package_type mpt ON pt.package_type_id = mpt.package_type_id
+	INNER JOIN dic_unit u ON u.unit_id = pt.unit_id
+	inner JOIN dic_material on mpt.mat_id=dic_material.mat_id
+	INNER JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+	WHERE
+		pt.is_delete = 0
+  </select>
+  
+  
+      <select id="production_input_info" parameterType="java.lang.Integer" resultType="map">
+    SELECT
+		pt.package_type_id,
+		pt.package_type_code,
+		pt.package_type_name,
+		pt.package_standard_ch,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_group_id,
+		pt.unit_id,
+		pt.size,
+		pt.is_delete,
+		pt.sn_used,
+		u.name_zh
+	FROM
+		dic_package_type pt
+		
+<!-- 	INNER JOIN  dic_package_type on  pt.package_type_id= -->
+	INNER JOIN dic_material_package_type mpt ON pt.package_type_id = mpt.package_type_id
+	INNER JOIN dic_unit u ON u.unit_id = pt.unit_id
+	inner JOIN dic_material on mpt.mat_id=dic_material.mat_id
+INNER JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+	WHERE
+		pt.is_delete = 0
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+   <select id="getInputHeadMap" parameterType="java.util.Map" resultType="map">
+   SELECT
+		sh.purchase_order_code produce_order_code,
+		sh.stock_input_code,
+		f.fty_id,
+		f.fty_name,
+		dic_product_line.product_line_name,
+		dic_installation.installation_name device_name,
+		CONCAT(dic_class_type.class_type_name,'(' ,
+		DATE_FORMAT(dic_class_type.start_time,'%H:%i'),'-',DATE_FORMAT(dic_class_type.end_time,'%H:%i')
+		, ')') AS class_type_name,	
+		CASE sh.syn_status
+	WHEN '2' THEN
+		'同步ERP&amp;MES'
+	WHEN '1' THEN
+		'同步ERP'
+	WHEN '0' THEN
+		'不同步'
+	ELSE
+		''
+	END syn_type_name,
+	 u.user_name create_user,
+	 date_format(sh.create_time,'%Y-%m-%d %H:%i:%S') create_time,
+	 sh.stock_input_id,
+	 sh.`status`,
+	 CASE sh. STATUS
+	WHEN '0' THEN
+		'未完成'
+	WHEN '1' THEN
+		'草稿'
+	WHEN '2' THEN
+		'已提交'
+	WHEN '3' THEN
+		'已作业'
+	WHEN '5' THEN
+		'已转储'
+	WHEN '10' THEN
+		'已完成'
+	WHEN '20' THEN
+		'已冲销'
+	ELSE
+		''
+	END status_name,
+	sh.remark,
+<!-- 	dic_receipt_type.receipt_type_name business_type_name -->
+	sh.purchase_order_type_name business_type_name,
+	sh.stck_type,
+	 CASE sh.stck_type
+	WHEN '0' THEN
+		'不质检'
+	WHEN '1' THEN
+		'质检'
+	ELSE ''
+	END stck_type_name
+	FROM
+		biz_stock_input_head sh
+	INNER JOIN wms_user u ON u.user_id = sh.create_user
+	LEFT JOIN dic_corp c ON sh.corp_id = c.corp_id
+	LEFT JOIN dic_move_type mt ON mt.move_type_id = sh.move_type_id
+	LEFT JOIN dic_move_reason r ON sh.reason_id = r.reason_id
+	LEFT JOIN dic_factory f ON f.fty_id = sh.fty_id
+	LEFT JOIN dic_stock_location l ON l.location_id = sh.location_id
+	LEFT JOIN dic_product_line ON dic_product_line.product_line_id = sh.product_line_id
+	LEFT JOIN dic_installation ON dic_installation.installation_id = sh.installation_id
+	LEFT JOIN dic_class_type ON dic_class_type.class_type_id = sh.class_type_id
+	LEFT JOIN dic_receipt_type ON dic_receipt_type.receipt_type = sh.receipt_type
+	WHERE
+		sh.is_delete = 0
+    and sh.stock_input_id=#{stockInputId}
+    
+  </select>
+  
+  
+  <select id="getItemMap" parameterType="java.util.Map" resultType="map">
+    select 
+	si.mat_id,dic_material.mat_name,dic_material.mat_code,si.order_qty input_stock_num,u.unit_id,si.mes_doc_code,si.mat_doc_code,si.mes_fail_code,si.mat_off_code,
+	u.name_zh unit_name,si.qty,si.item_id,si.mat_doc_year doc_year,si.batch
+    FROM biz_stock_input_item si
+    left join dic_material on dic_material.mat_id=si.mat_id
+    left JOIN dic_unit u ON u.unit_id = si.unit_id  
+    WHERE 
+    si.stock_input_id=#{stock_input_id} 
+  </select>
+  
+  
+  <select id="getPackageId" parameterType="string" resultType="string">
+  			  
+    select 
+	package_type_id
+	from   
+    biz_stock_input_package_item
+    LEFT JOIN biz_stock_input_item on biz_stock_input_item.item_id=biz_stock_input_package_item.stock_input_item_id
+    left join biz_stock_input_head on biz_stock_input_item.stock_input_id=biz_stock_input_head.stock_input_id
+    where biz_stock_input_head.stock_input_id=#{id}
+   
+  </select>
+  
+  <select id="getPackageStanderd" parameterType="string" resultType="string">
+  			  
+    select 
+	dic_package_type.package_standard
+	from   
+    biz_stock_input_package_item
+    LEFT JOIN biz_stock_input_item on biz_stock_input_item.item_id=biz_stock_input_package_item.stock_input_item_id
+    left join biz_stock_input_head on biz_stock_input_item.stock_input_id=biz_stock_input_head.stock_input_id
+    left join dic_package_type on dic_package_type.package_type_id=biz_stock_input_package_item.package_type_id 
+    where biz_stock_input_head.stock_input_id=#{id}
+   
+  </select>
+  
+  <select id="getPackageList" parameterType="java.util.Map" resultType="map">
+    select 
+	bi.package_type_id,dic_package_type.package_type_code package_type_name,biz_stock_input_item.item_id,biz_stock_input_item.batch,
+	dic_package_type.package_standard_ch package_standard_ch,
+	dic_package_type.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end)  package_standard,
+	biz_stock_input_item.stock_input_id,
+	bi.qty,bi.production_batch,bi.erp_batch,bi.quality_batch,bi.remark,
+	bi.package_type_item_id,bi.qty input_stock_num,l.location_name,l.location_code,l.location_id,bi.package_num
+    FROM biz_stock_input_package_item bi
+    
+    left join dic_package_type on dic_package_type.package_type_id=bi.package_type_id
+    LEFT JOIN biz_stock_input_item on biz_stock_input_item.item_id=bi.stock_input_item_id
+    
+    left JOIN dic_material on biz_stock_input_item.mat_id=dic_material.mat_id
+	left JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+	
+    LEFT JOIN dic_stock_location l ON l.location_id = biz_stock_input_item.location_id
+    WHERE  bi.stock_input_item_id in 
+    <foreach collection="itemlist" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+	</foreach>  
+  </select>
+  
+
+  <select id="getPackageOperationlist" parameterType="map" resultType="map">
+     SELECT 
+	  	biz_pkg_operation_head.pkg_operation_id package_id,
+	  	biz_pkg_operation_head.pkg_operation_code  package_code,
+	  	dic_package_type.package_type_code package_type, 
+	  	dic_package_type.package_standard_ch package_standard_ch,
+	  	dic_package_type.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+	  	biz_pkg_operation_item.pkg_qty package_num,
+	  	biz_pkg_operation_head.product_batch production_batch,
+	  	date_format(biz_pkg_operation_head.create_time,'%Y-%m-%d') package_time,
+	  	biz_pkg_operation_head.package_team package_group_name
+	 	from biz_pkg_operation_head
+	   	left join  biz_pkg_operation_item on biz_pkg_operation_item.pkg_operation_id=biz_pkg_operation_head.pkg_operation_id
+		left JOIN dic_material on biz_pkg_operation_item.mat_id=dic_material.mat_id
+		left JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+		left join dic_package_type on dic_package_type.package_type_id=biz_pkg_operation_item.package_type_id 			   	     
+	 	WHERE biz_pkg_operation_head.is_delete=0
+	 	and biz_pkg_operation_item.is_delete=0
+   		and  biz_pkg_operation_head.before_order_id=#{stock_input_id}   
+   		and   biz_pkg_operation_head.before_order_rid=#{rid}		
+  </select>
+  
+    <select id="getUnitIdByCode" parameterType="string" resultType="map">
+     SELECT 
+	  	unit_id,name_zh unit_name
+	  	from 
+	  	dic_unit	   	     
+	 	WHERE unit_code=#{string}   
+  </select>
+  
+   <select id="getMesMatList" parameterType="string" resultType="map">
+     	SELECT
+			dm.mat_code mes_code,
+			item.package_num,
+			item.qty input_stock_num,
+			dm.mat_name mes_name,
+			item.mes_package_standard,
+			item.mes_rank,
+			item.mes_bch,
+			item.mes_location_id,
+			item.mes_location_name
+		FROM
+			biz_stock_input_mes_item item
+		LEFT JOIN dic_material dm ON dm.mat_code = item.mat_code   	     
+	 	WHERE stock_input_item_id=#{item_id}   
+  </select>
+  
+    <select id="selectTranspotStatus" parameterType="string" resultType="string">
+     	SELECT 
+	  	status
+	  	from 
+	  	biz_stock_input_transport_head		  	     
+	 	WHERE stock_input_id=#{stock_input_id} 
+	 	and is_delete=0   
+  </select>
+  
+  
+    <select id="getMatInfoByCode" parameterType="java.lang.String" resultType="map"> 
+	select 
+		m.mat_id,
+		m.mat_code,
+		m.mat_name,
+		u.unit_id,
+		u.unit_code,
+		u.name_en,
+		u.name_zh
+	from dic_material m inner join dic_unit u on m.unit_id=u.unit_id 
+	where m.is_delete=0 
+	
+	and m.mat_code=#{matCode}	
+
+  </select>
+  
+  
+  <select id="getstockInputHeadAndBatch" parameterType="int" resultType="map">
+     	SELECT 
+	  	batch
+	 	from biz_stock_input_item
+	   	where stock_input_id=#{stockInputId}  		
+  </select>
+  
+  
+	<select id="selectByStockTransportId" parameterType="int" resultType="map">
+    SELECT
+	bi.mat_id,
+	dm.mat_name,
+	dm.mat_code,
+	du.name_zh,
+	du.unit_id,
+	bp.qty as qty,
+	f.fty_id,
+	f.fty_name,
+	l.location_name,
+	l.location_code,
+	l.location_id,
+	bi.batch,
+	bp.production_batch,
+	bp.package_num,
+	bp.package_type_id package_type_id,
+	dic_package_type.package_standard / (case when du.unit_code = 'KG' then 1 else 1000 end) package_standard,
+	dic_package_type.sn_used,
+	bp.erp_batch,
+	bp.quality_batch,
+	bi.refer_receipt_code,
+	bi.refer_receipt_rid as refer_receipt_rid,
+	bi.stock_input_id,
+	bi.unit_id,
+	bi.remark
+	FROM
+	biz_stock_input_package_item bp
+	LEFT JOIN biz_stock_input_item bi on bi.item_id=bp.stock_input_item_id
+	left JOIN dic_material dm ON dm.mat_id = bi.mat_id
+	left JOIN dic_unit du ON dm.unit_id = du.unit_id
+	left JOIN dic_factory f ON bi.fty_id = f.fty_id
+	left JOIN dic_stock_location l ON bi.location_id = l.location_id
+	left join dic_package_type on dic_package_type.package_type_id=bp.package_type_id 		
+	
+	where bi.stock_input_id=#{stockInputId}
+  </select>
+  
+  <select id="getMesCodeByMesLocationId" parameterType="string" resultType="string">
+    SELECT node_code FROM dic_stock_location where node_id=#{mes_location_id}
+  </select>
+  
+  <select id="selectItemByInputId" parameterType="int" resultType="string"> 
+	select 
+		batch
+	from biz_stock_input_item 
+	
+	where  biz_stock_input_item.stock_input_id=#{stockInputId}
+  </select>
+  
+  <select id="selectItemIdByInputId" parameterType="int" resultType="string"> 
+	select 
+		item_id
+	from biz_stock_input_item 
+	where  biz_stock_input_item.stock_input_id=#{stockInputId}
+  </select>
+  
+  <select id="selectPkgOrperationNum" parameterType="string" resultType="int"> 
+	SELECT
+		biz_pkg_operation_item.pkg_qty
+		FROM
+			biz_pkg_operation_item
+		LEFT JOIN biz_pkg_operation_head ON biz_pkg_operation_head.pkg_operation_id = biz_pkg_operation_item.pkg_operation_id
+	WHERE biz_pkg_operation_head.pkg_operation_id=#{string} limit 1
+  </select>
+  
+  <select id="getPkgPosition" parameterType="string" resultType="map"> 
+	SELECT
+	package_id,pallet_id,
+	dic_package_type.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard
+	FROM
+	biz_pkg_operation_position
+	left join biz_pkg_operation_item on biz_pkg_operation_item.pkg_operation_id=biz_pkg_operation_position.pkg_operation_id and biz_pkg_operation_item.pkg_operation_rid=biz_pkg_operation_position.pkg_operation_rid
+	left JOIN dic_material on biz_pkg_operation_item.mat_id=dic_material.mat_id
+	left JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+	left join dic_package_type on dic_package_type.package_type_id=biz_pkg_operation_item.package_type_id 
+	WHERE biz_pkg_operation_position.pkg_operation_id=#{string} and biz_pkg_operation_item.is_delete='0' 
+	and biz_pkg_operation_position.is_delete = '0'
+  </select>
+  
+  <select id="getErpBatchByBatch" parameterType="map" resultType="map"> 
+	SELECT
+	erp_batch
+	FROM
+	batch_material
+	where batch=#{batch}
+	and purchase_order_code=#{code}
+  </select>
+  
+  
+   <select id="selectPackageId" parameterType="string" resultType="string"> 
+	select 
+		package_type_id
+	from dic_package_type 	
+	where  dic_package_type.package_type_code=#{name}
+  </select>
+  
+   <update id="updateStatusById" parameterType="int"> 
+	update biz_pkg_operation_head set status=2,before_order_id=null,before_order_rid=null
+	where pkg_operation_id=#{pkgOperationId}
+  </update>
+  
+  <update id="updateStatusByInputId" parameterType="string"> 
+	update biz_pkg_operation_head set status=2,before_order_id=null,before_order_rid=null
+	where before_order_id=#{stock_input_id}
+  </update>
+  
+  <update id="updateItemStatus" parameterType="string"> 
+	update biz_stock_input_item set is_delete=1
+	where stock_input_id=#{stock_input_id}
+  </update>
+  
+  
+  <select id="selectbatchMaterial" parameterType="map" resultType="string"> 
+	select 
+		qty
+	from stock_batch 
+	where  mat_id=#{mat_id}
+	and location_id=#{location_id}
+	and batch=#{batch}
+	and stock_type_id=#{stock_type_id}
+  </select>
+ 
+  <select id="selectFtyLineLocation" resultType="map">
+	 select * from rel_fty_line_location where fty_code=#{ftyCode} and locate(product_line_name,#{productLineName}) > 0 
+  </select>
+ 
+</mapper>

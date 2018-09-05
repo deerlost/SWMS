@@ -1,0 +1,3012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.stock.StockPositionMapper">
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.stock.StockPosition">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="wh_id" jdbcType="INTEGER" property="whId" />
+		<result column="area_id" jdbcType="INTEGER" property="areaId" />
+		<result column="position_id" jdbcType="INTEGER"
+			property="positionId" />
+		<result column="pallet_id" jdbcType="INTEGER"
+			property="palletId" />
+		<result column="package_id" jdbcType="INTEGER"
+			property="packageId" />
+		<result column="mat_id" jdbcType="INTEGER" property="matId" />
+		<result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+		<result column="location_id" jdbcType="INTEGER"
+			property="locationId" />
+		<result column="batch" jdbcType="BIGINT" property="batch" />
+		<result column="status" jdbcType="TINYINT" property="status" />
+		<result column="qty" jdbcType="DECIMAL" property="qty" />
+		<result column="spec_stock" jdbcType="VARCHAR"
+			property="specStock" />
+		<result column="spec_stock_code" jdbcType="VARCHAR"
+			property="specStockCode" />
+		<result column="spec_stock_name" jdbcType="VARCHAR"
+			property="specStockName" />
+		<result column="input_date" jdbcType="TIMESTAMP"
+			property="inputDate" />
+		<result column="take_delivery_date" jdbcType="TIMESTAMP"
+			property="takeDeliveryDate" />
+		<result column="unit_id" jdbcType="INTEGER" property="unitId" />
+		<result column="unit_weight" jdbcType="INTEGER"
+			property="unitWeight" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="modify_time" jdbcType="TIMESTAMP"
+			property="modifyTime" />
+		<result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+		<result column="mat_name" jdbcType="VARCHAR" property="matName" />
+		<result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+		<result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+		<result column="location_code" jdbcType="VARCHAR"
+			property="locationCode" />
+		<result column="location_name" jdbcType="VARCHAR"
+			property="locationName" />
+		<result column="area_code" jdbcType="VARCHAR"
+			property="areaCode" />
+		<result column="area_name" jdbcType="VARCHAR"
+			property="areaName" />
+		<result column="position_code" jdbcType="VARCHAR"
+			property="positionCode" />
+		<result column="wh_code" jdbcType="VARCHAR" property="whCode" />
+		<result column="max_weight" jdbcType="DECIMAL"
+			property="maxWeight" />
+		<result column="package_code" jdbcType="VARCHAR"
+			property="packageCode" />
+		<result column="pallet_code" jdbcType="VARCHAR"
+			property="palletCode" />
+
+		<result column="package_type_id" jdbcType="INTEGER"
+			property="packageTypeId" />
+		<result column="unit_zh" jdbcType="VARCHAR" property="unitZh" />
+		<result column="package_type_code" jdbcType="VARCHAR"
+			property="packageTypeCode" />
+		<result column="stock_type_id" jdbcType="TINYINT" property="stockTypeId"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, wh_id, area_id,position_id, pallet_id , package_id, mat_id, fty_id,
+		location_id, batch, status, qty, spec_stock,
+		spec_stock_code, spec_stock_name, input_date, take_delivery_date, unit_id,
+		unit_weight,stock_type_id,
+		create_time, modify_time
+	</sql>
+
+	<select id="selectStockPositionListByPositionId"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM stock_position where position_id =
+		#{positionId,jdbcType=INTEGER};
+
+	</select>
+
+	<select id="selectByUniqueKey"
+		parameterType="com.inossem.wms.model.key.StockPositionKey"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<choose>
+			<when test="isUrgent == null ">stock_position</when>
+			<when test="isUrgent != null">stock_position_urgent</when>
+		</choose>
+		WHERE position_id = #{positionId,jdbcType=INTEGER}
+
+		AND package_id = #{packageId,jdbcType=INTEGER}
+		AND mat_id = #{matId,jdbcType=INTEGER}
+		AND location_id = #{locationId,jdbcType=INTEGER}
+		AND batch = #{batch,jdbcType=BIGINT}
+		AND status = #{status,jdbcType=TINYINT}
+		<if test="urgentSynStatus != null">
+			AND urgent_syn_status = #{urgentSynStatus,jdbcType=TINYINT}
+		</if>
+		
+		And stock_type_id = #{stockTypeId}
+	</select>
+
+
+	<delete id="deleteByUniqueKey"
+		parameterType="com.inossem.wms.model.key.StockPositionKey">
+		DELETE from stock_position
+		WHERE position_id = #{positionId,jdbcType=INTEGER}
+		AND pallet_id = #{palletId,jdbcType=INTEGER}
+		AND package_id = #{packageId,jdbcType=INTEGER}
+		AND mat_id = #{matId,jdbcType=INTEGER}
+		AND location_id = #{locationId,jdbcType=INTEGER}
+		AND batch = #{batch,jdbcType=BIGINT}
+		AND status = #{status,jdbcType=TINYINT}
+	</delete>
+
+	<!-- 基于物料调整 添加物料列表 -->
+	<select id="getStockPositionListOnPaging"
+		parameterType="java.util.Map"
+		resultType="com.inossem.wms.model.vo.StockPositionVo">
+		SELECT s.id,n.sn_id snId,s.pallet_id palletId,s.package_id
+		packageId,s.location_id locationId,
+		s.wh_id whId,h.wh_code whCode,s.mat_id matId,m.mat_code matCode,m.mat_name
+		matName,s.spec_stock specStock,s.spec_stock_code
+		specStockCode,s.spec_stock_name specStockName,
+		a.area_id areaId,a.area_code areaCode, p.position_id positionId,p.position_code
+		positionCode,s.batch,s.status,s.qty,t.decimal_place
+		decimalPlace,t.name_en nameEn,t.name_zh nameZh,m.unit_id unitId,
+		s.unit_weight unitWeight
+		FROM stock_position s
+		INNER JOIN dic_material m ON s.mat_id = m.mat_id
+		AND s.wh_id = #{whId,jdbcType=VARCHAR} AND s.qty > 0
+		AND (m.mat_code like CONCAT('%',#{condition},'%' ) OR m.mat_name LIKE
+		CONCAT('%',#{condition},'%' ))
+		INNER JOIN dic_warehouse_position p ON s.position_id = p.position_id
+		INNER JOIN dic_warehouse_area a ON p.area_id= a.area_id
+		AND a.area_code != #{defaultArea,jdbcType=VARCHAR}
+		INNER JOIN dic_warehouse h ON a.wh_id = h.wh_id
+		INNER JOIN stock_sn n ON s.id = n.stock_id
+		LEFT JOIN dic_unit t ON s.unit_id = t.unit_id
+	</select>
+
+	<!-- 基于仓位调整：得到源仓位下得物料信息 -->
+
+	<select id="selectMaterialInPosition"
+		parameterType="com.inossem.wms.model.stock.StockPosition"
+		resultType="com.inossem.wms.model.vo.StockPositionVo">
+		select s.id,s.mat_id matId,m.mat_code matCode,m.mat_name
+		matName,s.spec_stock specStock,s.spec_stock_code
+		specStockCode,s.spec_stock_name specStockName,
+		s.batch,s.status,s.qty,t.decimal_place decimalPlace,t.name_en
+		nameEn,t.name_zh nameZh,m.unit_id unitId,
+		s.unit_weight unitWeight
+		from stock_position s
+		INNER JOIN dic_material m on s.mat_id = m.mat_id and
+		s.wh_id=#{whId,jdbcType=INTEGER}
+		and s.area_id = #{areaId,jdbcType=INTEGER}
+		and s.position_id = #{positionId,jdbcType=INTEGER}
+		<if test="matId >0 ">
+			and s.mat_id = #{matId,jdbcType=INTEGER}
+		</if>
+		LEFT JOIN dic_unit t on s.unit_id = t.unit_id
+
+	</select>
+
+	<select id="selectCntForSLZG" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		${sql}
+	</select>
+
+	<update id="dml" parameterType="java.lang.String">
+		${sql}
+	</update>
+
+	<!-- 基于仓位调整 提交 -->
+	<insert id="insertIgnoreStockPosition"
+		parameterType="java.util.Map">
+		INSERT IGNORE INTO stock_position(wh_id, area_id , position_id,
+		pallet_id,package_id,
+		mat_id,fty_id,location_id,batch,status,qty,
+		spec_stock,spec_stock_code,spec_stock_name,input_date,take_delivery_date,unit_id,unit_weight)
+		SELECT wh_id, #{t_area_id} , #{t_position_id}, pallet_id,package_id,
+		mat_id,fty_id,location_id,batch,status,qty,
+		spec_stock,spec_stock_code,spec_stock_name,input_date,take_delivery_date,unit_id,unit_weight
+		FROM stock_position
+		where wh_id=#{wh_id} and area_id = #{s_area_id} and position_id =
+		#{s_position_id};
+	</insert>
+
+	<update id="updateStockPosition" parameterType="java.util.Map">
+		UPDATE stock_position a
+		INNER JOIN stock_position b
+		ON a.wh_id = b.wh_id AND a.wh_id = #{wh_id}
+		AND a.area_id = #{t_area_id}
+		AND b.area_id = #{s_area_id}
+		AND a.position_id = #{t_position_id} AND
+		b.position_id = #{s_position_id}
+		AND a.mat_id = b.mat_id
+		AND a.fty_id =
+		b.fty_id
+		AND a.location_id = b.location_id
+		AND a.batch = b.batch
+		AND
+		a.status = b.status
+		SET a.qty = a.qty + b.qty;
+	</update>
+
+	<update id="updatePalletIdToZeroByPalletIdAndPositionId"
+		parameterType="java.util.Map">
+		UPDATE stock_position
+
+		SET pallet_id = 0 where pallet_id = #{palletId} and position_id = #{positionId}
+	</update>
+
+
+
+	<delete id="deleteStockPosition" parameterType="java.util.Map">
+		DELETE FROM stock_position WHERE wh_id = #{wh_id} AND area_id = #{s_area_id}
+		AND position_id = #{s_position_id};
+	</delete>
+
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap"
+		flushCache="true">
+		select
+		<include refid="Base_Column_List" />
+		from stock_position
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByPrimaryKeyOnUrgent"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap"
+		flushCache="true">
+		select
+		<include refid="Base_Column_List" />
+		from stock_position_urgent
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByPalletCodeOrPackageCode"
+		parameterType="java.util.Map" resultMap="BaseResultMap"
+		flushCache="true">
+		SELECT
+		sp.id, sp.wh_id, sp.area_id,sp.position_id, sp.pallet_id ,
+		sp.package_id, sp.mat_id, sp.fty_id, sp.location_id, sp.batch,
+		sp.status, sp.qty, sp.spec_stock,
+		sp.spec_stock_code, sp.spec_stock_name, sp.input_date, sp.take_delivery_date, pt.unit_id,
+		sp.unit_weight,
+		sp.create_time, sp.modify_time,wp.pallet_code,spc.package_code,wp.max_weight,
+		u.name_zh unit_zh,
+		pt.package_type_code,
+		sp.package_type_id,
+		wa.area_code,
+		wa.area_name,
+		dwp.position_code
+		FROM
+		<choose>
+			<when test="isUrgent == null ">stock_position</when>
+			<when test="isUrgent != null">stock_position_urgent</when>
+		</choose>
+		sp
+
+		Left JOIN serial_package spc on spc.package_id = sp.package_id
+
+		INNER JOIN dic_package_type pt on sp.package_type_id = pt.package_type_id
+
+		left JOIN dic_warehouse_pallet wp ON sp.pallet_id = wp.pallet_id
+
+		INNER JOIN dic_unit u on pt.unit_id = u.unit_id
+		inner join dic_warehouse_area wa on wa.area_id = sp.area_id
+		inner join dic_warehouse_position dwp on sp.position_id = dwp.position_id
+		<if test="isDefault != null">
+			and dwp.is_default = #{isDefault}
+		</if>
+		<if test="positionId != null">
+			and dwp.position_id = #{positionId}
+		</if>
+		where 1=1
+		<if test="packageCode != null">
+			and spc.package_code = #{packageCode,jdbcType=VARCHAR}
+		</if>
+		<if test="matId != null">
+			and sp.mat_id = #{matId,jdbcType=INTEGER}
+		</if>
+		<if test="batch != null">
+			and sp.batch = #{batch,jdbcType=BIGINT}
+		</if>
+		<if test="palletCode != null">
+			and wp.pallet_code = #{palletCode,jdbcType=VARCHAR}
+		</if>
+		
+	</select>
+
+
+	<select id="getHavenMaterial"
+		parameterType="com.inossem.wms.model.stock.StockPosition"
+		resultType="java.lang.String">
+		SELECT
+		group_concat(concat(m.mat_code,'\\',m.mat_name,'\\',p.qty,'\\',u.name_zh))
+		havenMaterial
+		FROM stock_position p
+		inner join dic_unit u on p.unit_id = u.unit_id
+		INNER JOIN dic_material m
+		ON p.wh_id = #{whId,jdbcType=INTEGER}
+		AND p.area_id = #{areaId,jdbcType=INTEGER}
+		AND p.position_id =
+		#{positionId,jdbcType=INTEGER}
+		AND p.mat_id = m.mat_id;
+	</select>
+
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from stock_position
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByPrimaryKeyUrgent"
+		parameterType="java.lang.Integer">
+		delete from stock_position_urgent
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert"
+		parameterType="com.inossem.wms.model.stock.StockPosition">
+		insert into stock_position (id, wh_id, area_id,
+		position_id, mat_id, fty_id,
+		location_id, batch, status, qty,
+		spec_stock, spec_stock_code, spec_stock_name,
+		input_date, take_delivery_date, unit_id,
+		unit_weight, create_time, modify_time
+		)
+		values (#{id,jdbcType=INTEGER}, #{whId,jdbcType=INTEGER},
+		#{areaId,jdbcType=INTEGER},
+		#{positionId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{ftyId,jdbcType=INTEGER},
+		#{locationId,jdbcType=INTEGER}, #{batch,jdbcType=BIGINT},
+		#{status,jdbcType=TINYINT}, #{qty,jdbcType=DECIMAL},
+		#{specStock,jdbcType=VARCHAR}, #{specStockCode,jdbcType=VARCHAR},
+		#{specStockName,jdbcType=VARCHAR},
+		#{inputDate,jdbcType=TIMESTAMP}, #{takeDeliveryDate,jdbcType=TIMESTAMP}, #{unitId,jdbcType=INTEGER},
+		#{unitWeight,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.inossem.wms.model.stock.StockPosition"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		<choose>
+			<when test="isUrgent == null ">stock_position</when>
+			<when test="isUrgent != null">stock_position_urgent</when>
+		</choose>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="whId != null">
+				wh_id,
+			</if>
+			<if test="areaId != null">
+				area_id,
+			</if>
+			<if test="positionId != null">
+				position_id,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="ftyId != null">
+				fty_id,
+			</if>
+			<if test="locationId != null">
+				location_id,
+			</if>
+			<if test="batch != null">
+				batch,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="qty != null">
+				qty,
+			</if>
+			<if test="specStock != null">
+				spec_stock,
+			</if>
+			<if test="specStockCode != null">
+				spec_stock_code,
+			</if>
+			<if test="specStockName != null">
+				spec_stock_name,
+			</if>
+			<if test="inputDate != null">
+				input_date,
+			</if>
+			<if test="takeDeliveryDate != null">
+				take_delivery_date,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="unitWeight != null">
+				unit_weight,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="palletId != null">
+				pallet_id,
+			</if>
+			<if test="packageId != null">
+				package_id,
+			</if>
+			<if test="packageTypeId != null">
+				package_type_id,
+			</if>
+			<if test="stockTypeId != null">
+				stock_type_id,
+			</if>
+			<if test="urgentSynStatus != null">
+				urgent_syn_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="whId != null">
+				#{whId,jdbcType=INTEGER},
+			</if>
+			<if test="areaId != null">
+				#{areaId,jdbcType=INTEGER},
+			</if>
+			<if test="positionId != null">
+				#{positionId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				#{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				#{batch,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="qty != null">
+				#{qty,jdbcType=DECIMAL},
+			</if>
+			<if test="specStock != null">
+				#{specStock,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockCode != null">
+				#{specStockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockName != null">
+				#{specStockName,jdbcType=VARCHAR},
+			</if>
+			<if test="inputDate != null">
+				#{inputDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="takeDeliveryDate != null">
+				#{takeDeliveryDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="unitWeight != null">
+				#{unitWeight,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="palletId != null">
+				#{palletId,jdbcType=INTEGER},
+			</if>
+			<if test="packageId != null">
+				#{packageId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeId != null">
+				#{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="stockTypeId != null">
+				#{stockTypeId,jdbcType=TINYINT},
+			</if>
+			<if test="urgentSynStatus != null">
+				#{urgentSynStatus,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.inossem.wms.model.stock.StockPosition">
+		update stock_position
+		<set>
+			<if test="whId != null">
+				wh_id = #{whId,jdbcType=INTEGER},
+			</if>
+			<if test="areaId != null">
+				area_id = #{areaId,jdbcType=INTEGER},
+			</if>
+			<if test="positionId != null">
+				position_id = #{positionId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				mat_id = #{matId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				fty_id = #{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				location_id = #{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				batch = #{batch,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="qty != null">
+				qty = #{qty,jdbcType=DECIMAL},
+			</if>
+			<if test="specStock != null">
+				spec_stock = #{specStock,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockCode != null">
+				spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockName != null">
+				spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+			</if>
+			<if test="inputDate != null">
+				input_date = #{inputDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="takeDeliveryDate != null">
+				take_delivery_date = #{takeDeliveryDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="unitWeight != null">
+				unit_weight = #{unitWeight,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.inossem.wms.model.stock.StockPosition">
+		update stock_position
+		set wh_id = #{whId,jdbcType=INTEGER},
+		area_id = #{areaId,jdbcType=INTEGER},
+		position_id = #{positionId,jdbcType=INTEGER},
+		mat_id = #{matId,jdbcType=INTEGER},
+		fty_id = #{ftyId,jdbcType=INTEGER},
+		location_id = #{locationId,jdbcType=INTEGER},
+		batch = #{batch,jdbcType=BIGINT},
+		status = #{status,jdbcType=TINYINT},
+		qty = #{qty,jdbcType=DECIMAL},
+		spec_stock = #{specStock,jdbcType=VARCHAR},
+		spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+		spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+		input_date = #{inputDate,jdbcType=TIMESTAMP},
+		take_delivery_date = #{takeDeliveryDate,jdbcType=TIMESTAMP},
+		unit_id = #{unitId,jdbcType=INTEGER},
+		unit_weight = #{unitWeight,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectStockObjectByParam"
+		parameterType="com.inossem.wms.model.stock.StockPosition"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from stock_position
+		where 1=1
+		<if test="areaId != null">
+			and area_id = #{areaId,jdbcType=INTEGER}
+		</if>
+		<if test="positionId != null">
+			and position_id = #{positionId,jdbcType=INTEGER}
+		</if>
+		<if test="matId != null">
+			and mat_id = #{matId,jdbcType=INTEGER}
+		</if>
+		<if test="ftyId != null">
+			and fty_id = #{ftyId,jdbcType=INTEGER}
+		</if>
+		<if test="locationId != null">
+			and location_id = #{locationId,jdbcType=INTEGER}
+		</if>
+		<if test="batch != null">
+			and batch = #{batch,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=TINYINT}
+		</if>
+		<if test="specStock != null">
+			and spec_stock = #{specStock,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 仓位库存分页查询 刘宇 2018.02.08 -->
+	<select id="selectStockPositionOnPaging"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		select CONCAT(stock.location_id,'-',
+		stock.area_id,'-',
+		stock.position_id,'-',
+		stock.mat_id,'-',
+		stock.pallet_id,'-',
+		stock.package_type_id) unique_id
+		,IFNULL(stock.mat_id,'') mat_id
+		,IFNULL(m.mat_code,'') mat_code
+		,IFNULL(m.mat_name,'') mat_name
+		,IFNULL(m.shelf_life,'') shelf_life
+		,IFNULL(stock.area_id, 0) area_id
+		,IFNULL(wa.area_code,'') area_code
+		,IFNULL(wa.area_name,'') area_name
+		,IFNULL(wp.position_code,'') position_code
+		,IFNULL(wpt.pallet_code,'') pallet_code
+		,IFNULL(sp.package_code,'') package_code
+		,IFNULL(stock.batch,'') batch
+		,IFNULL(bm.erp_batch,'') erp_batch
+		,IFNULL(bm.product_batch,'') product_batch
+		,IFNULL(bm.quality_batch,'') quality_batch
+        ,IFNULL(bm.spec_stock_name,'') spec_stock_name
+		,IFNULL(bm.package_type_id,'') package_type_id
+		,IFNULL(bm.purchase_order_code,'') purchase_order_code
+		,IFNULL(stock.stock_type_id,'') stock_type_id
+		,IFNULL(st.stock_type_name,'') stock_type_name
+		,DATE_FORMAT(bm.create_time,'%Y-%m-%d') input_date
+		,IFNULL(pt.package_type_code,'') package_type_code
+		,IFNULL(pt.package_type_name,'') package_type_name
+		,IFNULL(pt.package_standard_ch,'') package_standard_ch
+		,IFNULL(pt.sn_used,1) sn_used
+		,IFNULL(pt.package_standard,0)/ (case when u.unit_code = 'KG' then 1 else 1000 end) package_standard
+		,IFNULL(stock.qty,0) stock_qty
+		,IFNULL(stock.qty, 0) * (CASE WHEN u.unit_code = 'KG' THEN 1 ELSE 1000 END) qty
+		,IFNULL(m.unit_id,'') unit_id
+		,IFNULL(u.unit_code,'') unit_code
+		,IFNULL(u.name_zh,'') unit_name
+		,IFNULL(stock.fty_id,'') fty_id
+		,IFNULL(fty.fty_code,'') fty_code
+		,IFNULL(fty.fty_name,'') fty_name
+		,IFNULL(stock.location_id,'') location_id
+		,IFNULL(location.wh_id,'') wh_id
+		,IFNULL(location.location_code,'') location_code
+		,IFNULL(location.location_name,'') location_name
+		<choose>  
+             <when test="isUrgent == null ">
+             ,IFNULL(stock.stock_type_id,0) stock_type_id
+			 ,IFNULL(st.stock_type_name,'') stock_type_name
+             </when>  
+             <when test="isUrgent != null">
+             , 5 stock_type_id
+		     , '临时库存' stock_type_name
+		     </when>  
+        </choose>
+		,IFNULL(ct.class_type_name,'') class_type_name
+		,IFNULL(i.installation_name,'') installation_name
+		,IFNULL(pl.product_line_name,'') product_line_name
+		,case stock.status 
+			when 1 then '非限制库存'
+			when 5 then '已售未提库存'
+			end status_name
+		from <choose>  
+             <when test="isUrgent == null ">stock_position</when>  
+             <when test="isUrgent != null">stock_position_urgent</when>  
+             </choose>  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status in (1,5)
+		<if test="matId != null and matId !=''">
+			AND stock.mat_id = #{matId}
+		</if>
+		<if test="palletId != null and palletId != '' ">
+			AND stock.pallet_id = #{palletId,jdbcType=VARCHAR}
+		</if>
+		<if test="ftyId != null and ftyId!=''">
+			and stock.fty_id = #{ftyId}
+		</if>
+		<!-- 库存地点 -->
+		<if test="locationId != null and locationId !=''">
+			and stock.location_id = #{locationId}
+		</if>
+		<if test="inputDateBegin != null ">
+			AND stock.create_time <![CDATA[>=]]>
+			#{inputDateBegin,jdbcType=TIMESTAMP}
+		</if>
+		<if test="inputDateEnd != null ">
+			AND stock.create_time <![CDATA[<=]]>
+			#{inputDateEnd,jdbcType=TIMESTAMP}
+		</if>
+		<if test="areaCode != null and areaCode !='' ">
+			AND wa.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId !='' ">
+			AND stock.area_id = #{areaId}
+		</if>
+		inner join dic_warehouse_position wp on stock.position_id =
+		wp.position_id
+		<if test="positionCode != null and positionCode !='' ">
+			AND wp.position_code = #{positionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="positionId != null and positionId !='' ">
+			AND stock.position_id = #{positionId}
+		</if>
+		<if test="stockTypeId != null and stockTypeId !=''">
+			and stock.stock_type_id = #{stockTypeId}
+		</if>
+		<if test="isDefault != null">
+			and wp.is_default = #{isDefault}
+		</if>
+		
+		<if test="isUrgent != null">
+			and stock.urgent_syn_status = 1
+		</if>
+		
+		left join dic_warehouse_pallet wpt on stock.pallet_id = wpt.pallet_id
+		left join serial_package sp on stock.package_id = sp.package_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id =
+		bm.mat_id and stock.fty_id = bm.fty_id
+		<!--工厂 -->
+		inner join dic_factory fty on fty.fty_id=stock.fty_id
+		<if test="ftyType !=null and ftyType !=''">
+			and fty.fty_type=#{ftyType}
+		</if>
+		inner join dic_material m on m.mat_id = stock.mat_id
+		<if test="matName != null and matName !=''">
+			AND m.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="matCode != null and matCode !=''">
+			AND (
+			<foreach collection="utilMatCodes" item="item" index="index"
+				separator="or">
+				(m.mat_code BETWEEN #{item.begin} AND #{item.end}
+				AND CHAR_LENGTH(m.mat_code)
+				IN
+				(
+				CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))
+				)
+			</foreach>
+			OR m.mat_code IN
+			<foreach collection="utilMatCodes.get(0).strings"
+				item="string" index="index" open="(" close=")" separator=",">
+				#{string}
+			</foreach>
+			)
+		</if>
+		inner join dic_package_type pt on pt.package_type_id =
+		bm.package_type_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on
+		stock.location_id=location.location_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+		left join dic_class_type ct on ct.class_type_id = bm.class_type_id
+		left join dic_installation i on i.installation_id = bm.installation_id
+		left join dic_product_line pl on pl.product_line_id =
+		bm.product_line_id
+		where 1=1
+		<if test="palletCode != null and palletCode != '' ">
+			AND wpt.pallet_code = #{palletCode,jdbcType=VARCHAR}
+		</if>
+		<if test="erpBatch!=null and erpBatch!=''">
+		  and bm.erp_batch=#{erpBatch,jdbcType=VARCHAR}
+		</if>
+		<if test="productBatch!=null and productBatch!=''">
+		  and bm.product_batch=#{productBatch,jdbcType=VARCHAR}
+		</if>
+		<if test="whId!=null and whId!=''">
+		  and stock.wh_id=#{whId}
+		</if>
+		order by location_code,unique_id
+	</select>
+
+	<select id="selectAllQty" resultType="decimal" parameterType="map">
+	   select 
+		SUM(IFNULL(stock.qty, 0) * (CASE WHEN u.unit_code = 'KG' THEN 1 ELSE 1000 END)) qty
+		from 
+		<choose>  
+             <when test="isUrgent == null ">stock_position</when>  
+             <when test="isUrgent != null">stock_position_urgent</when>  
+        </choose>  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		<if test="status !=null and status !=''">
+			and stock.status =#{status}
+		</if>
+		<if test="matId != null and matId !=''">
+			AND stock.mat_id = #{matId}
+		</if>
+		<if test="palletId != null and palletId != '' ">
+			AND stock.pallet_id = #{palletId,jdbcType=VARCHAR}
+		</if>
+		<if test="ftyId != null and ftyId!=''">
+			and stock.fty_id = #{ftyId}
+		</if>
+		<!-- 库存地点 -->
+		<if test="locationId != null and locationId !=''">
+			and stock.location_id = #{locationId}
+		</if>
+		<if test="inputDateBegin != null ">
+			AND stock.create_time <![CDATA[>=]]>
+			#{inputDateBegin,jdbcType=TIMESTAMP}
+		</if>
+		<if test="inputDateEnd != null ">
+			AND stock.create_time <![CDATA[<=]]>
+			#{inputDateEnd,jdbcType=TIMESTAMP}
+		</if>
+		<if test="areaCode != null and areaCode !='' ">
+			AND wa.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId !='' ">
+			AND stock.area_id = #{areaId}
+		</if>
+		inner join dic_warehouse_position wp on stock.position_id =
+		wp.position_id
+		<if test="positionCode != null and positionCode !='' ">
+			AND wp.position_code = #{positionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="positionId != null and positionId !='' ">
+			AND stock.position_id = #{positionId}
+		</if>
+		<if test="stockTypeId != null and stockTypeId !=''">
+			and stock.stock_type_id = #{stockTypeId}
+		</if>
+		<if test="isDefault != null">
+			and wp.is_default = #{isDefault}
+		</if>
+		
+		<if test="isUrgent != null">
+			and stock.urgent_syn_status = 1
+		</if>
+		
+		left join dic_warehouse_pallet wpt on stock.pallet_id = wpt.pallet_id
+		left join serial_package sp on stock.package_id = sp.package_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id =
+		bm.mat_id and stock.fty_id = bm.fty_id
+		<!--工厂 -->
+		inner join dic_factory fty on fty.fty_id=stock.fty_id
+		<if test="ftyType !=null and ftyType !=''">
+			and fty.fty_type=#{ftyType}
+		</if>
+		inner join dic_material m on m.mat_id = stock.mat_id
+		<if test="matName != null and matName !=''">
+			AND m.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="matCode != null and matCode !=''">
+			AND (
+			<foreach collection="utilMatCodes" item="item" index="index"
+				separator="or">
+				(m.mat_code BETWEEN #{item.begin} AND #{item.end}
+				AND CHAR_LENGTH(m.mat_code)
+				IN
+				(
+				CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))
+				)
+			</foreach>
+			OR m.mat_code IN
+			<foreach collection="utilMatCodes.get(0).strings"
+				item="string" index="index" open="(" close=")" separator=",">
+				#{string}
+			</foreach>
+			)
+		</if>
+		inner join dic_package_type pt on pt.package_type_id =
+		bm.package_type_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on
+		stock.location_id=location.location_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+		left join dic_class_type ct on ct.class_type_id = bm.class_type_id
+		left join dic_installation i on i.installation_id = bm.installation_id
+		left join dic_product_line pl on pl.product_line_id =
+		bm.product_line_id
+		where 1=1
+		<if test="palletCode != null and palletCode != '' ">
+			AND wpt.pallet_code = #{palletCode,jdbcType=VARCHAR}
+		</if>
+		<if test="erpBatch!=null and erpBatch!=''">
+		  and bm.erp_batch=#{erpBatch,jdbcType=VARCHAR}
+		</if>
+		<if test="productBatch!=null and productBatch!=''">
+		  and bm.product_batch=#{productBatch,jdbcType=VARCHAR}
+		</if>
+		<if test="whId!=null and whId!=''">
+		  and stock.wh_id=#{whId}
+		</if>
+	</select>
+
+	<select id="selectStockPositionGroupOnPaging"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT IFNULL(stock.mat_id,'') mat_id
+		,IFNULL(ANY_VALUE(m.mat_code),'') mat_code
+		,IFNULL(ANY_VALUE(m.mat_name),'') mat_name
+		,IFNULL(stock.area_id, 0) area_id
+		,IFNULL(ANY_VALUE(wa.area_code),'') area_code
+		,IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		,IFNULL(stock.position_id,'') position_id
+		,IFNULL(ANY_VALUE(wp.position_code),'') position_code
+		,IFNULL(stock.pallet_id,'') pallet_id
+		,IFNULL(ANY_VALUE(wpt.pallet_code),'') pallet_code
+		<choose>  
+             <when test="isUrgent == null ">
+             ,IFNULL(stock.stock_type_id,'') stock_type_id
+			 ,IFNULL(ANY_VALUE(st.stock_type_name),'') stock_type_name
+             </when>  
+             <when test="isUrgent != null">
+             , 5 stock_type_id
+		     , '临时库存' stock_type_name
+		     </when>  
+        </choose>
+		,IFNULL(sum(stock.qty),0) stock_qty
+		,IFNULL(sum(stock.qty), 0) * (CASE WHEN ANY_VALUE(u.unit_code) = 'KG' THEN 1 ELSE 1000 END) qty
+		,IFNULL(m.unit_id,'') unit_id
+		,IFNULL(ANY_VALUE(u.unit_code),'') unit_code
+		,IFNULL(ANY_VALUE(u.name_zh),'') unit_name
+		,IFNULL(ANY_VALUE(stock.fty_id),'') fty_id
+		,IFNULL(ANY_VALUE(fty.fty_code),'') fty_code
+		,IFNULL(ANY_VALUE(fty.fty_name),'') fty_name
+		,IFNULL(stock.location_id,'') location_id
+		,IFNULL(ANY_VALUE(location.wh_id),'') wh_id
+		,IFNULL(ANY_VALUE(location.location_code),'') location_code
+		,IFNULL(ANY_VALUE(location.location_name),'') location_name
+		,case ANY_VALUE(stock.status) 
+			when 1 then '非限制库存'
+			when 5 then '已售未提库存'
+			end status_name
+		from <choose>  
+             <when test="isUrgent == null ">stock_position</when>  
+             <when test="isUrgent != null">stock_position_urgent</when>  
+             </choose> stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		<if test="status !=null and status !=''">
+			and stock.status =#{status}
+		</if>
+		<if test="ftyId != null and ftyId!=''">
+			and stock.fty_id = #{ftyId}
+		</if>
+		<!-- 库存地点 -->
+		<if test="locationId != null and locationId !=''">
+			and stock.location_id = #{locationId}
+		</if>
+		<if test="inputDateBegin != null ">
+			AND stock.create_time <![CDATA[>=]]>
+			#{inputDateBegin,jdbcType=TIMESTAMP}
+		</if>
+		<if test="inputDateEnd != null ">
+			AND stock.create_time <![CDATA[<=]]>
+			#{inputDateEnd,jdbcType=TIMESTAMP}
+		</if>
+		<if test="areaCode != null and areaCode !='' ">
+			AND wa.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId !='' ">
+			AND wa.area_id = #{areaId}
+		</if>
+		inner join dic_warehouse_position wp on stock.position_id =
+		wp.position_id
+		<if test="positionCode != null and positionCode !='' ">
+			AND wp.position_code = #{positionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="stockTypeId != null and stockTypeId !=''">
+			and stock.stock_type_id = #{stockTypeId}
+		</if>
+		<if test="isDefault != null">
+			and wp.is_default = #{isDefault}
+		</if>
+		<if test="isUrgent != null">
+			and stock.urgent_syn_status = 1
+		</if>
+		left join dic_warehouse_pallet wpt on stock.pallet_id = wpt.pallet_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id =
+		bm.mat_id and stock.fty_id = bm.fty_id
+		<!--工厂 -->
+		inner join dic_factory fty on fty.fty_id=stock.fty_id
+		<if test="ftyType !=null and ftyType !=''">
+			and fty.fty_type=#{ftyType}
+		</if>
+		inner join dic_material m on m.mat_id = stock.mat_id
+		<if test="matName != null and matName !=''">
+			AND m.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="matCode != null and matCode !=''">
+			AND (
+			<foreach collection="utilMatCodes" item="item" index="index"
+				separator="or">
+				(m.mat_code BETWEEN #{item.begin} AND #{item.end}
+				AND CHAR_LENGTH(m.mat_code)
+				IN
+				(
+				CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))
+				)
+			</foreach>
+			OR m.mat_code IN
+			<foreach collection="utilMatCodes.get(0).strings"
+				item="string" index="index" open="(" close=")" separator=",">
+				#{string}
+			</foreach>
+			)
+		</if>
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on stock.location_id=location.location_id and stock.wh_id=location.wh_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+		where 1=1
+		<if test="palletCode != null and palletCode != '' ">
+			AND wpt.pallet_code = #{palletCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="erpBatch!=null and erpBatch!=''">
+		  and bm.erp_batch=#{erpBatch,jdbcType=VARCHAR}
+		</if>
+		<if test="productBatch!=null and productBatch!=''">
+		  and bm.product_batch=#{productBatch,jdbcType=VARCHAR}
+		</if>
+		<if test="whId!=null and whId!=''">
+		  and stock.wh_id=#{whId}
+		</if>
+		group by stock.mat_id,stock.area_id,stock.position_id,stock.pallet_id,stock.stock_type_id,m.unit_id,stock.location_id,stock.status
+		order by stock.location_id,stock.mat_id,stock.area_id,stock.position_id,stock.pallet_id ,stock.stock_type_id,m.unit_id
+	</select>
+	
+	<sql id="findCWKCListForKCPD_sql_condition">
+		<if test="ftyId != null and ftyId !=''"><!-- 工厂 -->
+			and b.fty_id = #{ftyId,jdbcType=VARCHAR}
+		</if>
+		<if test="locationId != null and locationId !=''"><!-- 库存地点 -->
+			and b.location_id = #{locationId,jdbcType=VARCHAR}
+		</if>
+		<if test="stockStatus != null and stockStatus =='2'"><!-- 非限制库存 zkczt 此处有疑问??? -->
+			and b.spec_stock not in ('K','Q','E')
+		</if>
+		<if test="specStock != null and specStock !=''"><!-- 特殊库存标识 ??? -->
+			and b.spec_stock = #{specStock,jdbcType=VARCHAR}
+		</if>
+		<if test="specStockCode != null and specStockCode !=''"><!-- 特殊库存代码 -->
+			and b.spec_stock_code = #{specStockCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId !=''"><!-- 仓储区 -->
+			and b.area_id = #{areaId}
+		</if>
+		<if
+			test="positionIndex1Min != null and positionIndex1Min !='' and positionIndex1Max != null and positionIndex1Max !=''"><!-- 库存仓位开始和结束 -->
+			and (position_index1 between #{positionIndex1Min,jdbcType=VARCHAR}
+			and #{positionIndex1Max,jdbcType=VARCHAR})
+		</if>
+		<if
+			test="positionIndex2Min != null and positionIndex2Min !='' and positionIndex2Max != null and positionIndex2Max !=''"><!-- 库存仓位开始和结束 -->
+			and (position_index2 between #{positionIndex2Min,jdbcType=VARCHAR}
+			and #{positionIndex2Max,jdbcType=VARCHAR})
+		</if>
+		<if
+			test="positionIndex3Min != null and positionIndex3Min !='' and positionIndex3Max != null and positionIndex3Max !=''"><!-- 库存仓位开始和结束 -->
+			and (position_index3 between #{positionIndex3Min,jdbcType=VARCHAR}
+			and #{positionIndex3Max,jdbcType=VARCHAR})
+		</if>
+	</sql>
+
+
+	<!-- 库存盘点模块，根据存储区，库存仓位范围， 库存状态，仓位状态，查询仓位库存信息 findCWKCListForKCPD -->
+	<select id="findStockPositionList" parameterType="map"
+		resultType="map">
+		<choose>
+			<when test="positionStatus!=null and positionStatus==1"><!-- 非空 -->
+				select b.location_id,
+				b.id ,
+				b.wh_id,
+				w.wh_code,
+				b.area_id ,
+				wa.area_code,
+				b.position_id,
+				a.position_code,
+				b.mat_id,
+				c.mat_code,
+				c.mat_name,
+				b.unit_id ,
+				d.name_zh as unit_name,
+				b.batch,
+				b.input_date,
+				b.qty,
+				b.spec_stock,
+				b.spec_stock_code,
+				b.spec_stock_name,
+				b.take_delivery_date
+				from stock_position as b
+				inner join dic_warehouse_position as a on a.wh_id = b.wh_id and a.area_id
+				= b.area_id and a.position_id = b.position_id
+				left outer join dic_material as c on b.mat_id = c.mat_id
+				left outer join dic_unit as d on b.unit_id = d.unit_id
+				LEFT OUTER JOIN dic_warehouse_area wa on wa.area_id= b.area_id
+				LEFT OUTER JOIN dic_warehouse w on w.wh_id=b.wh_id
+
+				<if test="stockStatus != null and stockStatus =='3'"><!-- 设置冻结状态值 库存状态 -->
+					JOIN stock_batch as e on b.mat_id = e.mat_id
+					AND b.location_id = e.location_id and b.batch = e.batch and e.STATUS =
+					4
+				</if>
+				WHERE CONCAT(b.wh_id,b.area_id,b.position_id) not in (select
+				CONCAT(wh_id,area_id,position_id) from dic_warehouse_position where
+				freeze_stocktake = 1) <!-- 非盘点冻结的仓位 -->
+				<include refid="findCWKCListForKCPD_sql_condition" />
+			</when>
+			<when test="positionStatus!=null and positionStatus==2"><!-- 空仓位 -->
+				SELECT
+				'' as location_id,
+				'' as id,
+				a.wh_id,
+				w.wh_code,
+				a.area_id,
+				wa.area_code,
+				a.position_id,
+				b.position_code,
+				'' as mat_id,
+				'' as mat_code,
+				'' as mat_name,
+				'' as unit_id,
+				'' as unit_name,
+				'' as batch,
+				'' as input_date,
+				'' as qty,
+				'' as spec_stock,
+				'' as spec_stock_code,
+				'' as spec_stock_name,
+				'' as take_delivery_date
+				FROM dic_warehouse_position as a
+				INNER JOIN dic_warehouse_position as b on a.wh_id = b.wh_id and a.area_id
+				= b.area_id and a.position_id = b.position_id
+				LEFT OUTER JOIN dic_warehouse_area wa on wa.area_id= a.area_id
+				LEFT OUTER JOIN dic_warehouse w on w.wh_id=a.wh_id
+				WHERE CONCAT(a.wh_id,a.area_id,a.position_id) not in (select
+				CONCAT(wh_id,area_id,position_id) from stock_position) and
+				a.freeze_stocktake <![CDATA[<>]]>
+				0
+				<if test="areaId != null and areaId !=''"><!-- 仓储区 -->
+					AND a.area_id = #{areaId}
+				</if>
+				<if
+					test="positionIndex1Min != null and positionIndex1Min !='' and positionIndex1Max != null and positionIndex1Max !=''"><!-- 库存仓位开始和结束 -->
+					AND (a.position_index1 between
+					#{positionIndex1Min,jdbcType=VARCHAR} and
+					#{positionIndex1Max,jdbcType=VARCHAR})
+				</if>
+				<if
+					test="positionIndex2Min != null and positionIndex2Min !='' and positionIndex2Max != null and positionIndex2Max !=''"><!-- 库存仓位开始和结束 -->
+					AND (a.position_index2 between
+					#{positionIndex2Min,jdbcType=VARCHAR} and
+					#{positionIndex2Max,jdbcType=VARCHAR})
+				</if>
+				<if
+					test="positionIndex3Min != null and positionIndex3Min !='' and positionIndex3Max != null and positionIndex3Max !=''"><!-- 库存仓位开始和结束 -->
+					AND (a.position_index3 between
+					#{positionIndex3Min,jdbcType=VARCHAR} and
+					#{positionIndex3Max,jdbcType=VARCHAR})
+				</if>
+			</when>
+			<otherwise><!-- positionStatus=3全部 -->
+				SELECT
+				b.id,
+				a.wh_id,
+				a.area_id,
+				a.position_id,
+				b.location_id,
+				w.wh_code,
+				wa.area_code,
+				a.position_code,
+				b.mat_id,
+				c.mat_code,
+				c.mat_name,
+				b.unit_id ,
+				d.name_zh as unit_name,
+				b.batch,
+				b.input_date,
+				b.qty,
+				b.spec_stock,
+				b.spec_stock_code,
+				b.spec_stock_name,
+				b.take_delivery_date
+				from dic_warehouse_position as a
+				left outer join stock_position as b on a.wh_id = b.wh_id and a.area_id =
+				b.area_id and a.position_id = b.position_id
+				and CONCAT(a.wh_id,a.area_id,a.position_id) not in (select
+				CONCAT(wh_id,area_id,position_id) from dic_warehouse_position where
+				freeze_stocktake = 1)  <!-- 非盘点冻结的仓位 -->
+				<include refid="findCWKCListForKCPD_sql_condition" />
+				LEFT OUTER JOIN dic_material AS c ON b.mat_id = c.mat_id
+				LEFT OUTER JOIN dic_unit AS d ON b.unit_id = d.unit_id
+				LEFT OUTER JOIN dic_warehouse_area wa ON wa.area_id = a.area_id
+				LEFT OUTER JOIN dic_warehouse w ON w.wh_id = a.wh_id
+
+				<if test="stockStatus != null and stockStatus =='3'"><!-- 设置冻结状态值 -->
+					join stock_batch as e on b.mat_id = e.mat_id
+					and b.location_id = e.location_id and b.batch = e.batch and e.STATUS =
+					4
+				</if>
+				where a.freeze_stocktake <![CDATA[<>]]>
+				1
+				<if test="areaId != null and areaId !=''"><!-- 仓储区 -->
+					and a.area_id = #{areaId}
+				</if>
+				<if
+					test="positionIndex1Min != null and positionIndex1Min !='' and positionIndex1Max != null and positionIndex1Max !=''"><!-- 库存仓位开始和结束 -->
+					and (a.position_index1 between
+					#{positionIndex1Min,jdbcType=VARCHAR} and
+					#{positionIndex1Max,jdbcType=VARCHAR})
+				</if>
+				<if
+					test="positionIndex2Min != null and positionIndex2Min !='' and positionIndex2Max != null and positionIndex2Max !=''"><!-- 库存仓位开始和结束 -->
+					and (a.position_index2 between
+					#{positionIndex2Min,jdbcType=VARCHAR} and
+					#{positionIndex2Max,jdbcType=VARCHAR})
+				</if>
+				<if
+					test="positionIndex3Min != null and positionIndex3Min !='' and positionIndex3Max != null and positionIndex3Max !=''"><!-- 库存仓位开始和结束 -->
+					and (a.position_index3 between
+					#{positionIndex3Min,jdbcType=VARCHAR} and
+					#{positionIndex3Max,jdbcType=VARCHAR})
+				</if>
+			</otherwise>
+		</choose>
+		order by position_index1,position_index2,position_index3
+	</select>
+	<delete id="deleteByStockInputItemIDs"
+		parameterType="java.util.List">
+		DELETE sp
+		FROM biz_stock_input_item si
+		INNER JOIN stock_position sp ON si.mat_id = sp.mat_id
+		AND si.location_id = sp.location_id
+		AND si.batch = sp.batch
+		WHERE
+		si.item_id IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="selectByInputItemId"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT
+		sp.batch,
+		sp.spec_stock,
+		sp.spec_stock_code,
+		sp.spec_stock_name,
+		dwa.area_code,
+		dwp.position_code,
+		dm.mat_code,
+		dm.mat_name,
+		sp.mat_id,
+		sp.fty_id,
+		df.fty_code,
+		df.fty_name,
+		dsl.location_code,
+		dsl.location_name,
+		du.name_zh,
+		sp.qty,
+		dw.wh_code
+		FROM
+		stock_position sp
+		INNER JOIN dic_warehouse dw on dw.wh_id = sp.wh_id
+		INNER JOIN biz_stock_input_item sii on sii.mat_id = sp.mat_id and sii.batch
+		= sp.batch and sii.location_id = sp.location_id
+		INNER JOIN dic_material dm ON dm.mat_id = sp.mat_id
+		INNER JOIN dic_stock_location dsl ON dsl.location_id = sp.location_id
+		LEFT JOIN dic_factory df ON df.fty_id = sp.fty_id
+		LEFT JOIN dic_warehouse_area dwa ON dwa.area_id = sp.area_id
+		LEFT JOIN dic_warehouse_position dwp ON dwp.position_id = sp.position_id
+		LEFT JOIN dic_unit du ON du.unit_id = sp.unit_id
+		where sii.item_id = #{itemId,jdbcType=INTEGER}
+	</select>
+
+
+
+	<!-- 批量添加仓位库存数据 -->
+	<insert id="batchAddLQUA">
+		insert into stock_position (
+		wh_id, area_id, position_id, mat_id, fty_id,location_id,
+		batch, spec_stock, spec_stock_code, spec_stock_name,
+		input_date, take_delivery_date, unit_id,
+		qty, unit_weight
+		)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.whId,jdbcType=INTEGER},
+			#{item.areaId,jdbcType=INTEGER},
+			#{item.positionId,jdbcType=INTEGER},
+			#{item.matId,jdbcType=INTEGER}, #{item.ftyId,jdbcType=INTEGER},
+			#{item.locationId,jdbcType=INTEGER},
+			#{item.batch,jdbcType=BIGINT},
+			#{item.specStock,jdbcType=VARCHAR},
+			#{item.specStockCode,jdbcType=VARCHAR},
+			#{item.specStockName,jdbcType=VARCHAR},
+			#{item.inputDate,jdbcType=VARCHAR},
+			#{item.takeDeliveryDate,jdbcType=VARCHAR},
+			#{item.unitId,jdbcType=INTEGER},
+			#{item.qty,jdbcType=DECIMAL},
+			#{item.unitWeight,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<!-- 根据主键批量更新库存数量 -->
+	<update id="batchUpdateGesmeByPrimaryKey">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE stock_position
+			SET qty = #{item.qty,jdbcType=DECIMAL}
+			WHERE fty_id = #{item.ftyId,jdbcType=INTEGER}
+			AND wh_id = #{item.whId,jdbcType=INTEGER}
+			AND location_id =
+			#{item.locationId,jdbcType=INTEGER}
+			AND mat_id = #{item.matId,jdbcType=INTEGER}
+			AND position_id =
+			#{item.positionId,jdbcType=INTEGER}
+			AND batch = #{item.batch,jdbcType=BIGINT}
+			AND status = #{item.status,jdbcType=TINYINT}
+		</foreach>
+	</update>
+
+
+	<select id="selectByTargetUniqueKey"
+		parameterType="com.inossem.wms.model.vo.StockPositionExpandVo"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM stock_position
+		WHERE position_id = #{targetPositionId,jdbcType=INTEGER}
+		AND pallet_id = #{targetPalletId,jdbcType=INTEGER}
+		AND package_id = #{targetPackageId,jdbcType=INTEGER}
+		AND mat_id = #{matId,jdbcType=INTEGER}
+		AND location_id = #{locationId,jdbcType=INTEGER}
+		AND batch = #{batch,jdbcType=BIGINT}
+		AND status = #{status,jdbcType=TINYINT}
+	</select>
+
+
+	<select id="selectBySourceUniqueKey"
+		parameterType="com.inossem.wms.model.vo.StockPositionExpandVo"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM stock_position
+		WHERE position_id = #{positionId,jdbcType=INTEGER}
+		AND pallet_id = #{palletId,jdbcType=INTEGER}
+		AND package_id = #{packageId,jdbcType=INTEGER}
+		AND mat_id = #{matId,jdbcType=INTEGER}
+		AND location_id = #{locationId,jdbcType=INTEGER}
+		AND batch = #{batch,jdbcType=BIGINT}
+		AND status = #{status,jdbcType=TINYINT}
+	</select>
+
+	<select id="selectBySourceStockUniqueKey"
+		parameterType="com.inossem.wms.model.stock.StockPosition"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM stock_position
+		WHERE position_id = #{positionId,jdbcType=INTEGER}
+		AND pallet_id = #{palletId,jdbcType=INTEGER}
+		AND package_id = #{packageId,jdbcType=INTEGER}
+		AND mat_id = #{matId,jdbcType=INTEGER}
+		AND location_id = #{locationId,jdbcType=INTEGER}
+		AND batch = #{batch,jdbcType=BIGINT}
+		AND status = #{status,jdbcType=TINYINT}
+	</select>
+
+
+	<insert id="insertTargetSelective"
+		parameterType="com.inossem.wms.model.vo.StockPositionExpandVo"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into stock_position
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="whId != null">
+				wh_id,
+			</if>
+			<if test="targetAreaId != null">
+				area_id,
+			</if>
+			<if test="targetPositionId != null">
+				position_id,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="ftyId != null">
+				fty_id,
+			</if>
+			<if test="locationId != null">
+				location_id,
+			</if>
+			<if test="batch != null">
+				batch,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="qty != null">
+				qty,
+			</if>
+			<if test="specStock != null">
+				spec_stock,
+			</if>
+			<if test="specStockCode != null">
+				spec_stock_code,
+			</if>
+			<if test="specStockName != null">
+				spec_stock_name,
+			</if>
+			<if test="inputDate != null">
+				input_date,
+			</if>
+			<if test="takeDeliveryDate != null">
+				take_delivery_date,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="unitWeight != null">
+				unit_weight,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="targetPalletId != null">
+				pallet_id,
+			</if>
+			<if test="targetPackageId != null">
+				package_id,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="whId != null">
+				#{whId,jdbcType=INTEGER},
+			</if>
+			<if test="targetAreaId != null">
+				#{targetAreaId,jdbcType=INTEGER},
+			</if>
+			<if test="targetPositionId != null">
+				#{targetPositionId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				#{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				#{batch,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="qty != null">
+				#{qty,jdbcType=DECIMAL},
+			</if>
+			<if test="specStock != null">
+				#{specStock,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockCode != null">
+				#{specStockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockName != null">
+				#{specStockName,jdbcType=VARCHAR},
+			</if>
+			<if test="inputDate != null">
+				#{inputDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="takeDeliveryDate != null">
+				#{takeDeliveryDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="unitWeight != null">
+				#{unitWeight,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="targetPalletId != null">
+				#{targetPalletId,jdbcType=INTEGER},
+			</if>
+			<if test="targetPackageId != null">
+				#{targetPackageId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByStockQty"
+		parameterType="com.inossem.wms.model.stock.StockPosition">
+		update
+		<choose>
+			<when test="isUrgent == null ">stock_position</when>
+			<when test="isUrgent != null">stock_position_urgent</when>
+		</choose>
+		set
+		qty = #{qty,jdbcType=DECIMAL}
+		<if test="urgentSynStatus != null">
+			,urgent_syn_status = #{urgentSynStatus}
+		</if>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteBySourceUniqueKey"
+		parameterType="com.inossem.wms.model.vo.StockPositionExpandVo">
+		DELETE from stock_position
+		WHERE position_id = #{positionId,jdbcType=INTEGER}
+		AND pallet_id = #{palletId,jdbcType=INTEGER}
+		AND package_id = #{packageId,jdbcType=INTEGER}
+		AND mat_id = #{matId,jdbcType=INTEGER}
+		AND location_id = #{locationId,jdbcType=INTEGER}
+		AND batch = #{batch,jdbcType=BIGINT}
+		AND status = #{status,jdbcType=TINYINT}
+	</delete>
+
+
+	<insert id="insertHistorySelective"
+		parameterType="com.inossem.wms.model.vo.StockPositionExpandVo"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into stock_position_history
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="whId != null">
+				wh_id,
+			</if>
+			<if test="areaId != null">
+				area_id,
+			</if>
+			<if test="positionId != null">
+				position_id,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="ftyId != null">
+				fty_id,
+			</if>
+			<if test="locationId != null">
+				location_id,
+			</if>
+			<if test="batch != null">
+				batch,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="qty != null">
+				qty,
+			</if>
+			<if test="specStock != null">
+				spec_stock,
+			</if>
+			<if test="specStockCode != null">
+				spec_stock_code,
+			</if>
+			<if test="specStockName != null">
+				spec_stock_name,
+			</if>
+			<if test="inputDate != null">
+				input_date,
+			</if>
+			<if test="takeDeliveryDate != null">
+				take_delivery_date,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="unitWeight != null">
+				unit_weight,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="palletId != null">
+				pallet_id,
+			</if>
+			<if test="packageId != null">
+				package_id,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="whId != null">
+				#{whId,jdbcType=INTEGER},
+			</if>
+			<if test="areaId != null">
+				#{areaId,jdbcType=INTEGER},
+			</if>
+			<if test="positionId != null">
+				#{positionId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				#{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="batch != null">
+				#{batch,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="qty != null">
+				#{qty,jdbcType=DECIMAL},
+			</if>
+			<if test="specStock != null">
+				#{specStock,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockCode != null">
+				#{specStockCode,jdbcType=VARCHAR},
+			</if>
+			<if test="specStockName != null">
+				#{specStockName,jdbcType=VARCHAR},
+			</if>
+			<if test="inputDate != null">
+				#{inputDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="takeDeliveryDate != null">
+				#{takeDeliveryDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="unitWeight != null">
+				#{unitWeight,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="palletId != null">
+				#{palletId,jdbcType=INTEGER},
+			</if>
+			<if test="packageId != null">
+				#{packageId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+
+	<select id="selectStockPositionForImport" resultType="String">
+		SELECT DISTINCT CONCAT(w.wh_code , '-' , wa.area_code, '-' ,
+		wp.position_code)
+		FROM stock_position sp
+		inner join dic_warehouse w on sp.wh_id = w.wh_id
+		inner join dic_warehouse_area wa on wa.area_id = sp.area_id
+		inner join dic_warehouse_position wp on sp.position_id = wp.position_id
+	</select>
+	<select id="selectStockBatchForImport" resultType="String">
+		SELECT DISTINCT CONCAT(f.fty_code , '-' , m.mat_code, '-' , sb.batch)
+		FROM stock_batch sb
+		INNER JOIN dic_stock_location l ON l.location_id = sb.location_id
+		INNER JOIN dic_factory f ON l.fty_id = f.fty_id
+		INNER JOIN dic_material m ON sb.mat_id = m.mat_id
+	</select>
+	<select id="selectBatchMaterialForImport" resultType="String">
+		SELECT DISTINCT CONCAT(f.fty_code , '-' , m.mat_code, '-' , bm.batch)
+		FROM batch_material bm
+		INNER JOIN dic_factory f ON bm.fty_id = f.fty_id
+		INNER JOIN dic_material m ON bm.mat_id = m.mat_id
+	</select>
+	<select id="selectBatchMaterialSpecForImport"
+		resultType="String">
+		SELECT DISTINCT CONCAT(f.fty_code , '-' , m.mat_code, '-' , bms.batch)
+		FROM batch_material_spec bms
+		INNER JOIN dic_factory f ON bms.fty_id = f.fty_id
+		INNER JOIN dic_material m ON bms.mat_id = m.mat_id
+	</select>
+
+	<select id="selectBatchSpecForImport" resultType="String">
+		SELECT DISTINCT batch_spec_code
+		FROM dic_batch_spec
+	</select>
+	<insert id="insertStockPositionList"
+		parameterType="java.util.List" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into stock_position (wh_id, area_id,
+		position_id, mat_id, fty_id,
+		location_id, batch, qty,
+		spec_stock, spec_stock_code, spec_stock_name,
+		input_date, take_delivery_date, unit_id,
+		unit_weight,pallet_id,package_id
+		)
+		values
+		<foreach collection="list" item="obj" index="index"
+			separator=",">
+			(#{obj.whId,jdbcType=INTEGER}, #{obj.areaId,jdbcType=INTEGER},
+			#{obj.positionId,jdbcType=INTEGER}, #{obj.matId,jdbcType=INTEGER}, #{obj.ftyId,jdbcType=INTEGER},
+			#{obj.locationId,jdbcType=INTEGER}, #{obj.batch,jdbcType=BIGINT},
+			#{obj.qty,jdbcType=DECIMAL},
+			#{obj.specStock,jdbcType=VARCHAR}, #{obj.specStockCode,jdbcType=VARCHAR},
+			#{obj.specStockName,jdbcType=VARCHAR},
+			#{obj.inputDate,jdbcType=TIMESTAMP},
+			#{obj.takeDeliveryDate,jdbcType=TIMESTAMP},
+			#{obj.unitId,jdbcType=INTEGER},
+			#{obj.unitWeight,jdbcType=INTEGER},#{obj.palletId,jdbcType=INTEGER},#{obj.packageId,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="insertStockBatchList" parameterType="java.util.List">
+		insert into stock_batch (mat_id,
+		location_id, batch, create_user,
+		qty, status, spec_stock,
+		spec_stock_code, spec_stock_name,create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index"
+			separator=",">
+			( #{obj.matId,jdbcType=INTEGER},
+			#{obj.locationId,jdbcType=INTEGER}, #{obj.batch,jdbcType=BIGINT}, #{obj.createUser,jdbcType=VARCHAR},
+			#{obj.qty,jdbcType=DECIMAL}, #{obj.status,jdbcType=TINYINT},
+			#{obj.specStock,jdbcType=VARCHAR},
+			#{obj.specStockCode,jdbcType=VARCHAR},
+			#{obj.specStockName,jdbcType=VARCHAR},#{obj.createTime,jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="insertBatchMaterialList"
+		parameterType="java.util.List">
+		insert into batch_material (mat_id, fty_id,
+		batch, supplier_code, supplier_name,
+		spec_stock, spec_stock_code, spec_stock_name,
+		purchase_order_code,
+		demand_dept, create_user,create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index"
+			separator=",">
+			( #{obj.matId,jdbcType=INTEGER}, #{obj.ftyId,jdbcType=INTEGER},
+			#{obj.batch,jdbcType=BIGINT}, #{obj.supplierCode,jdbcType=VARCHAR},
+			#{obj.supplierName,jdbcType=VARCHAR},
+			#{obj.specStock,jdbcType=VARCHAR},
+			#{obj.specStockCode,jdbcType=VARCHAR},
+			#{obj.specStockName,jdbcType=VARCHAR},
+			#{obj.purchaseOrderCode,jdbcType=VARCHAR},
+			#{obj.demandDept,jdbcType=VARCHAR},#{obj.createUser,jdbcType=VARCHAR},
+			#{obj.createTime,jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+	<insert id="insertBatchMaterialSpecList"
+		parameterType="java.util.List">
+		insert into batch_material_spec ( mat_id, fty_id,
+		batch, batch_spec_code, batch_spec_value
+		)
+		values
+		<foreach collection="list" item="obj" index="index"
+			separator=",">
+			( #{obj.matId,jdbcType=INTEGER}, #{obj.ftyId,jdbcType=INTEGER},
+			#{obj.batch,jdbcType=BIGINT}, #{obj.batchSpecCode,jdbcType=VARCHAR},
+			#{obj.batchSpecValue,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	<insert id="insertSNList" parameterType="java.util.List">
+		insert into stock_sn ( sn_id, mat_id,
+		stock_id, qty, freeze
+
+		)
+		values
+		<foreach collection="list" item="obj" index="index"
+			separator=",">
+			(#{obj.snId,jdbcType=INTEGER}, #{obj.matId,jdbcType=INTEGER},
+			#{obj.stockId,jdbcType=INTEGER}, #{obj.qty,jdbcType=DECIMAL}, #{obj.freeze,jdbcType=TINYINT}
+
+			)
+		</foreach>
+	</insert>
+
+	<select id="selectGroupByFourKeys" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		t.mat_id,t.package_type_id,t.product_batch,t.erp_batch,t.unit_id,t.qty,t.num,
+		m.mat_name,m.mat_code,u.name_zh,pt.package_type_code,t.create_time
+		FROM
+		(
+		SELECT
+		sp.mat_id,sp.package_type_id,
+		bm.product_batch,bm.erp_batch,
+		sp.unit_id,bm.create_time,
+		sum(sp.qty) qty,COUNT(1) num
+		FROM
+		stock_position sp
+		INNER JOIN batch_material bm ON sp.mat_id = bm.mat_id
+		and sp.mat_id = #{matId}
+		AND sp.batch = bm.batch
+		AND sp.fty_id = bm.fty_id
+		GROUP BY
+		sp.mat_id,sp.package_type_id,
+		bm.product_batch,bm.erp_batch,
+		sp.unit_id,bm.create_time
+		) t
+		INNER JOIN dic_material m ON t.mat_id = m.mat_id
+		<if test="condition != null and condition != ''">
+			and (m.mat_code like CONCAT('%',#{condition},'%' ) OR m.mat_name LIKE
+			CONCAT('%',#{condition},'%' )
+			or t.product_batch like CONCAT('%',#{condition},'%' )
+
+			)
+		</if>
+		INNER JOIN dic_package_type pt ON t.package_type_id =
+		pt.package_type_id
+		INNER JOIN dic_unit u ON u.unit_id = t.unit_id
+
+	</select>
+	<select id="selectAdviseAreaPositionByParam"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		
+			sp.wh_id,
+			w.wh_code,
+			w.wh_name,
+			sp.area_id,
+			wa.area_code,
+			wa.area_name,
+			sp.position_id,
+			wp.position_code,
+			(wp.max_weight-
+			
+			(
+				select 
+					SUM(	osp.qty * (	CASE WHEN ou.unit_code = 'KG' THEN	1	ELSE	1000	END	)	)
+	 			from stock_position osp 
+				INNER JOIN dic_unit ou ON ou.unit_id = osp.unit_id  
+				where sp.position_id =osp.position_id
+			) ) qty
+		FROM
+			stock_position sp
+		INNER JOIN dic_warehouse w ON sp.wh_id = w.wh_id
+		
+		<if test="locationId != null">
+			and sp.location_id = #{locationId,jdbcType=INTEGER}
+		</if>
+		INNER JOIN batch_material bm on sp.fty_id = bm.fty_id and bm.mat_id =
+		sp.mat_id and sp.batch = bm.batch
+		<if test="productionBatch != null">
+			and bm.product_batch = #{productionBatch}
+		</if>
+		
+		INNER JOIN dic_warehouse_area wa ON sp.area_id = wa.area_id
+		INNER JOIN dic_warehouse_position wp ON sp.position_id = wp.position_id
+		<if test="isDefault !=null">
+			and wp.is_default = #{isDefault,jdbcType=TINYINT}
+		</if>
+		GROUP BY sp.wh_id,sp.area_id,sp.position_id 
+		HAVING qty >0 
+		ORDER BY qty desc
+	</select>
+
+
+
+	<select id="selectAreaPositionByParam"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		
+			sp.wh_id,
+			w.wh_code,
+			w.wh_name,
+			sp.area_id,
+			wa.area_code,
+			wa.area_name,
+			sp.position_id,
+			wp.position_code,
+			SUM(sp.qty) qty
+		FROM
+		<choose>
+			<when test="isUrgent == null ">stock_position</when>
+			<when test="isUrgent != null">stock_position_urgent</when>
+		</choose>
+			 sp
+		INNER JOIN dic_warehouse w ON sp.wh_id = w.wh_id
+		<if test="matId != null">
+			and sp.mat_id = #{matId,jdbcType=INTEGER}
+		</if>
+		<if test="ftyId != null">
+			and sp.fty_id = #{ftyId,jdbcType=INTEGER}
+		</if>
+		<if test="locationId != null">
+			and sp.location_id = #{locationId,jdbcType=INTEGER}
+		</if>
+		<if test="batch != null">
+			and sp.batch = #{batch,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			and sp.status = #{status,jdbcType=TINYINT}
+		</if>
+		<if test="stockTypeId != null">
+			and sp.stock_type_id = #{stockTypeId,jdbcType=INTEGER}
+		</if>
+		INNER JOIN dic_warehouse_area wa ON sp.area_id = wa.area_id
+		inner join dic_unit u on u.unit_id = sp.unit_id
+		INNER JOIN dic_warehouse_position wp ON sp.position_id = wp.position_id
+		<if test="isDefault !=null">
+			and wp.is_default = #{isDefault,jdbcType=TINYINT}
+		</if>
+		GROUP BY sp.wh_id,sp.area_id,sp.position_id 
+		ORDER BY qty
+	</select>
+
+	<select id="selectStockPositionByParam"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		bm.product_batch production_batch,
+		bm.erp_batch,
+		bm.quality_batch,
+		sp.qty,
+		sp.id,
+		DATE_FORMAT(bm.create_time,'%Y-%m-%d')
+		input_time,
+		w.wh_id,
+		w.wh_code,
+		w.wh_name,
+		wa.area_id,
+		wa.area_code,
+		wa.area_name,
+		wp.position_id,
+		wp.position_code
+		FROM
+		<choose>
+			<when test="isUrgent == null ">stock_position</when>
+			<when test="isUrgent != null">stock_position_urgent</when>
+		</choose>
+ 		sp
+		INNER JOIN dic_warehouse w ON sp.wh_id = w.wh_id
+		<if test="matId != null">
+			and sp.mat_id = #{matId,jdbcType=INTEGER}
+		</if>
+		<if test="ftyId != null">
+			and sp.fty_id = #{ftyId,jdbcType=INTEGER}
+		</if>
+		<if test="locationId != null">
+			and sp.location_id = #{locationId,jdbcType=INTEGER}
+		</if>
+		<if test="batch != null">
+			and sp.batch = #{batch,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			and sp.status = #{status,jdbcType=TINYINT}
+		</if>
+		<if test="stockTypeId != null">
+			and sp.stock_type_id = #{stockTypeId,jdbcType=INTEGER}
+		</if>
+		INNER JOIN dic_warehouse_area wa ON sp.area_id = wa.area_id
+		INNER JOIN dic_warehouse_position wp ON sp.position_id = wp.position_id
+		<if test="isDefault !=null">
+			and wp.is_default = #{isDefault,jdbcType=TINYINT}
+		</if>
+		INNER JOIN batch_material bm on sp.fty_id = bm.fty_id and bm.mat_id =
+		sp.mat_id and sp.batch = bm.batch
+	</select>
+
+	<select id="selectUniqueExceptPackageId"
+		parameterType="com.inossem.wms.model.stock.StockPosition"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from stock_position
+		where 1=1
+		<if test="positionId != null">
+			and position_id = #{positionId,jdbcType=INTEGER}
+		</if>
+		<if test="matId != null">
+			and mat_id = #{matId,jdbcType=INTEGER}
+		</if>
+		<if test="palletId != null">
+			and pallet_id = #{palletId,jdbcType=INTEGER}
+		</if>
+		<if test="locationId != null">
+			and location_id = #{locationId,jdbcType=INTEGER}
+		</if>
+		<if test="batch != null">
+			and batch = #{batch,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=TINYINT}
+		</if>
+		<if test="stockTypeId != null">
+			and stock_type_id = #{stockTypeId,jdbcType=TINYINT}
+		</if>
+		<if test="packageId != null">
+			and package_id = #{packageId,jdbcType=TINYINT}
+		</if>
+	</select>
+	
+	
+	
+	<select id="selectWarrantyDateOnpaging" parameterType="map"
+		resultType="map">
+		SELECT IFNULL(stock.mat_id,'') mat_id
+		,TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) warranty_date
+		,IFNULL(ANY_VALUE(m.reminding_day_one),'') reminding_day_one
+		,IFNULL(ANY_VALUE(m.reminding_day_two),'') reminding_day_two
+		,IFNULL(ANY_VALUE(m.mat_code),'') mat_code
+		,IFNULL(ANY_VALUE(m.mat_name),'') mat_name
+		,IFNULL(stock.area_id, 0) area_id
+		,IFNULL(ANY_VALUE(wa.area_code),'') area_code
+		,IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		,IFNULL(wp.position_code,'') position_code
+    	<choose>  
+             <when test="isUrgent == null ">
+             ,IFNULL(stock.stock_type_id,'') stock_type_id
+			 ,IFNULL(ANY_VALUE(st.stock_type_name),'') stock_type_name
+             </when>  
+             <when test="isUrgent != null">
+             , 5 stock_type_id
+		     , '临时库存' stock_type_name
+		     </when>  
+        </choose>
+	  	,IFNULL(stock.package_type_id,'') package_type_id
+		,IFNULL(ANY_VALUE(pt.package_type_code),'') package_type_code
+		,IFNULL(sum(stock.qty),0) stock_qty
+		,IFNULL(sum(stock.qty * (CASE WHEN ANY_VALUE(u.unit_code) = 'KG' THEN 1 ELSE 1000 END) ),0) qty
+		,IFNULL(m.unit_id,'') unit_id
+		,IFNULL(ANY_VALUE(u.unit_code),'') unit_code
+		,IFNULL(ANY_VALUE(u.name_zh),'') unit_name
+		,IFNULL(ANY_VALUE(stock.fty_id),'') fty_id
+		,IFNULL(ANY_VALUE(fty.fty_code),'') fty_code
+		,IFNULL(ANY_VALUE(fty.fty_name),'') fty_name
+		,IFNULL(stock.location_id,'') location_id
+		,IFNULL(ANY_VALUE(location.wh_id),'') wh_id
+		,IFNULL(ANY_VALUE(location.location_code),'') location_code
+		,IFNULL(ANY_VALUE(location.location_name),'') location_name
+		,IFNULL(bm.product_batch,'') product_batch
+		,DATE_FORMAT(bm.create_time,'%Y-%m-%d') create_time
+		from <choose>  
+             <when test="isUrgent == null ">stock_position</when>  
+             <when test="isUrgent != null">stock_position_urgent</when>  
+             </choose> stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status = 1
+		<if test="ftyId != null and ftyId!=''">
+			and stock.fty_id = #{ftyId}
+		</if>
+		<if test="whId != null and whId!=''">
+			and stock.wh_id = #{whId}
+		</if>
+		<!-- 库存地点 -->
+		<if test="locationId != null and locationId !=''">
+			and stock.location_id = #{locationId}
+		</if>
+		<if test="areaCode != null and areaCode !='' ">
+			AND wa.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId !='' ">
+			AND wa.area_id= #{areaId}
+		</if>
+		<if test="stockTypeId != null and stockTypeId !=''">
+			and stock.stock_type_id = #{stockTypeId}
+		</if>
+		<if test="isUrgent != null">
+			and stock.urgent_syn_status = 1
+		</if>
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		<if test="positionCode != null and positionCode !='' ">
+			AND wp.position_code = #{positionCode,jdbcType=VARCHAR}
+		</if>
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		<if test="matName != null and matName !=''">
+			AND m.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="matCode != null and matCode !=''">
+			AND (
+			<foreach collection="utilMatCodes" item="item" index="index"
+				separator="or">
+				(m.mat_code BETWEEN #{item.begin} AND #{item.end}
+				AND CHAR_LENGTH(m.mat_code)
+				IN
+				(
+				CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))
+				)
+			</foreach>
+			OR m.mat_code IN
+			<foreach collection="utilMatCodes.get(0).strings"
+				item="string" index="index" open="(" close=")" separator=",">
+				#{string}
+			</foreach>
+			)
+		</if>
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on stock.location_id=location.location_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+        inner join dic_package_type pt on pt.package_type_id = stock.package_type_id
+        where stock.stock_type_id!=4
+		group by stock.mat_id,stock.location_id,stock.area_id,wp.position_code,stock.stock_type_id,stock.package_type_id,m.unit_id,bm.product_batch,bm.create_time
+		HAVING 1=1 
+		<if test="warrantyDate == 1 "> 
+		and warranty_date <![CDATA[<=]]> reminding_day_one
+		</if>
+		<if test="warrantyDate == 2 ">
+		and warranty_date <![CDATA[<=]]> reminding_day_two
+		and warranty_date <![CDATA[>]]> reminding_day_one
+		</if>
+		<if test="dayStart  != null and dayStart !='' ">
+		and warranty_date <![CDATA[>=]]> #{dayStart}
+		</if>
+		<if test="dayEnd  != null and dayEnd !='' ">
+		and warranty_date <![CDATA[<=]]> #{dayEnd}
+		</if>
+		order by stock.mat_id,stock.location_id,stock.area_id,wp.position_code,stock.stock_type_id,stock.package_type_id,m.unit_id,bm.product_batch,bm.create_time
+
+	</select>
+     
+     <select id="selectWarrantyDateSnMassage" parameterType="map" resultType="map">
+     
+     select CONCAT(stock.location_id,'-',
+		stock.area_id,'-',
+		stock.position_id,'-',
+		stock.mat_id,'-',
+		stock.pallet_id,'-',
+		stock.package_type_id) unique_id
+		,IFNULL(stock.mat_id,'') mat_id
+		,IFNULL(m.mat_code,'') mat_code
+		,IFNULL(m.mat_name,'') mat_name
+		,IFNULL(m.shelf_life,'') shelf_life
+		,IFNULL(stock.area_id, 0) area_id
+		,IFNULL(wa.area_code,'') area_code
+		,IFNULL(wa.area_name,'') area_name
+		,IFNULL(wp.position_code,'') position_code
+		,IFNULL(wpt.pallet_code,'') pallet_code
+		,IFNULL(sp.package_code,'') package_code
+		,IFNULL(stock.batch,'') batch
+		,IFNULL(bm.erp_batch,'') erp_batch
+		,IFNULL(bm.product_batch,'') product_batch
+		,IFNULL(bm.quality_batch,'') quality_batch
+		,IFNULL(bm.package_type_id,'') package_type_id
+		,IFNULL(bm.purchase_order_code,'') purchase_order_code
+		,IFNULL(stock.stock_type_id,'') stock_type_id
+		,IFNULL(st.stock_type_name,'') stock_type_name
+		,DATE_FORMAT(bm.create_time,'%Y-%m-%d') input_date
+		,IFNULL(pt.package_type_code,'') package_type_code
+		,IFNULL(pt.package_type_name,'') package_type_name
+		,IFNULL(pt.package_standard_ch,'') package_standard_ch
+		,IFNULL(pt.sn_used,1) sn_used
+		,IFNULL(pt.package_standard,0) / (case when u.unit_code = 'KG' then 1 else 1000 end)package_standard
+		,IFNULL(stock.qty,0) stock_qty
+		,IFNULL(m.unit_id,'') unit_id
+		,IFNULL(u.unit_code,'') unit_code
+		,IFNULL(u.name_zh,'') unit_name
+		,IFNULL(stock.fty_id,'') fty_id
+		,IFNULL(fty.fty_code,'') fty_code
+		,IFNULL(fty.fty_name,'') fty_name
+		,IFNULL(stock.location_id,'') location_id
+		,IFNULL(location.wh_id,'') wh_id
+		,IFNULL(location.location_code,'') location_code
+		,IFNULL(location.location_name,'') location_name
+	
+        ,IFNULL(stock.stock_type_id,0) stock_type_id
+		,IFNULL(st.stock_type_name,'') stock_type_name
+           
+		,IFNULL(ct.class_type_name,'') class_type_name
+		,IFNULL(i.installation_name,'') installation_name
+		,IFNULL(pl.product_line_name,'') product_line_name
+		from 
+           stock_position  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status = 1
+		<if test="matId != null and matId !=''">
+			AND stock.mat_id = #{matId}
+		</if>
+		<if test="palletId != null and palletId != '' ">
+			AND stock.pallet_id = #{palletId,jdbcType=VARCHAR}
+		</if>
+		<if test="ftyId != null and ftyId!=''">
+			and stock.fty_id = #{ftyId}
+		</if>
+		<!-- 库存地点 -->
+		<if test="locationId != null and locationId !=''">
+			and stock.location_id = #{locationId}
+		</if>
+	
+		<if test="areaCode != null and areaCode !='' ">
+			AND wa.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		<if test="areaId != null and areaId !='' ">
+			AND wa.area_id = #{areaId}
+		</if>
+		inner join dic_warehouse_position wp on stock.position_id =
+		wp.position_id
+		<if test="positionCode != null and positionCode !='' ">
+			AND wp.position_code = #{positionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="stockTypeId != null and stockTypeId !=''">
+			and stock.stock_type_id = #{stockTypeId}
+		</if>
+		left join dic_warehouse_pallet wpt on stock.pallet_id = wpt.pallet_id
+		left join serial_package sp on stock.package_id = sp.package_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id =
+		bm.mat_id and stock.fty_id = bm.fty_id
+		
+		inner join dic_factory fty on fty.fty_id=stock.fty_id
+	
+		inner join dic_material m on m.mat_id = stock.mat_id
+	
+		inner join dic_package_type pt on pt.package_type_id =
+		bm.package_type_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on
+		stock.location_id=location.location_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+		left join dic_class_type ct on ct.class_type_id = bm.class_type_id
+		left join dic_installation i on i.installation_id = bm.installation_id
+		left join dic_product_line pl on pl.product_line_id =
+		bm.product_line_id
+		where 1=1
+	 
+	   union all 
+	
+	  select CONCAT(stock.location_id,'-',
+		stock.area_id,'-',
+		stock.position_id,'-',
+		stock.mat_id,'-',
+		stock.pallet_id,'-',
+		stock.package_type_id) unique_id
+		,IFNULL(stock.mat_id,'') mat_id
+		,IFNULL(m.mat_code,'') mat_code
+		,IFNULL(m.mat_name,'') mat_name
+		,IFNULL(m.shelf_life,'') shelf_life
+		,IFNULL(stock.area_id, 0) area_id
+		,IFNULL(wa.area_code,'') area_code
+		,IFNULL(wa.area_name,'') area_name
+		,IFNULL(wp.position_code,'') position_code
+		,IFNULL(wpt.pallet_code,'') pallet_code
+		,IFNULL(sp.package_code,'') package_code
+		,IFNULL(stock.batch,'') batch
+		,IFNULL(bm.erp_batch,'') erp_batch
+		,IFNULL(bm.product_batch,'') product_batch
+		,IFNULL(bm.quality_batch,'') quality_batch
+		,IFNULL(bm.package_type_id,'') package_type_id
+		,IFNULL(bm.purchase_order_code,'') purchase_order_code
+		,IFNULL(stock.stock_type_id,'') stock_type_id
+		,IFNULL(st.stock_type_name,'') stock_type_name
+		,DATE_FORMAT(bm.create_time,'%Y-%m-%d') input_date
+		,IFNULL(pt.package_type_code,'') package_type_code
+		,IFNULL(pt.package_type_name,'') package_type_name
+		,IFNULL(pt.package_standard_ch,'') package_standard_ch
+		,IFNULL(pt.sn_used,1) sn_used
+		,IFNULL(pt.package_standard,0)/ (case when u.unit_code = 'KG' then 1 else 1000 end) package_standard
+		,IFNULL(stock.qty,0) stock_qty
+		,IFNULL(m.unit_id,'') unit_id
+		,IFNULL(u.unit_code,'') unit_code
+		,IFNULL(u.name_zh,'') unit_name
+		,IFNULL(stock.fty_id,'') fty_id
+		,IFNULL(fty.fty_code,'') fty_code
+		,IFNULL(fty.fty_name,'') fty_name
+		,IFNULL(stock.location_id,'') location_id
+		,IFNULL(location.wh_id,'') wh_id
+		,IFNULL(location.location_code,'') location_code
+		,IFNULL(location.location_name,'') location_name
+	
+        ,IFNULL(stock.stock_type_id,0) stock_type_id
+		,IFNULL(st.stock_type_name,'') stock_type_name
+           
+		,IFNULL(ct.class_type_name,'') class_type_name
+		,IFNULL(i.installation_name,'') installation_name
+		,IFNULL(pl.product_line_name,'') product_line_name
+		from 
+           stock_position_urgent  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status = 1
+		<if test="matId != null and matId !=''">
+			AND stock.mat_id = #{matId}
+		</if>
+		<if test="palletId != null and palletId != '' ">
+			AND stock.pallet_id = #{palletId,jdbcType=VARCHAR}
+		</if>
+		<if test="ftyId != null and ftyId!=''">
+			and stock.fty_id = #{ftyId}
+		</if>
+		<!-- 库存地点 -->
+		<if test="locationId != null and locationId !=''">
+			and stock.location_id = #{locationId}
+		</if>
+	
+		<if test="areaCode != null and areaCode !='' ">
+			AND wa.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		inner join dic_warehouse_position wp on stock.position_id =
+		wp.position_id
+		<if test="positionCode != null and positionCode !='' ">
+			AND wp.position_code = #{positionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="stockTypeId != null and stockTypeId !=''">
+			and stock.stock_type_id = #{stockTypeId}
+		</if>
+		left join dic_warehouse_pallet wpt on stock.pallet_id = wpt.pallet_id
+		left join serial_package sp on stock.package_id = sp.package_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id =
+		bm.mat_id and stock.fty_id = bm.fty_id
+		
+		inner join dic_factory fty on fty.fty_id=stock.fty_id
+	
+		inner join dic_material m on m.mat_id = stock.mat_id
+	
+		inner join dic_package_type pt on pt.package_type_id =
+		bm.package_type_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on
+		stock.location_id=location.location_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+		left join dic_class_type ct on ct.class_type_id = bm.class_type_id
+		left join dic_installation i on i.installation_id = bm.installation_id
+		left join dic_product_line pl on pl.product_line_id =
+		bm.product_line_id
+		where 1=1
+	
+		order by location_code,unique_id	
+     
+     </select>
+
+	 <select id="selectByUniqueList" parameterType="list" resultMap="BaseResultMap">
+		select a.* from
+		(select
+			<include refid="Base_Column_List" />,
+			CONCAT(position_id,'-',
+				mat_id,'-',
+				pallet_id,'-',
+				location_id,'-',
+				batch,'-',
+				status,'-',
+				stock_type_id,'-',
+				package_id) as unique_id
+			from stock_position ) a
+			where a.unique_id in 
+				<foreach collection="uniqueList" item="unique" index="index" open="(" close=")" separator=",">
+					#{unique}
+				</foreach>
+	 </select>
+
+	  <!--手机端临期库存预警 start  -->
+     <select id="selectWarringPdaPictrueDay" resultType="map">
+        select 
+			SUM(t.qty) qty , any_value(t.product_line_name)  product_line_name ,t.product_line_id 
+			from 
+			(select  
+			  SUM(stock.qty) qty , 
+			any_value(pl.product_line_name)  product_line_name ,bm.product_line_id
+			 from stock_position  stock
+			inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+			inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+			inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+			inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+			inner join dic_product_line pl on pl.product_line_id=bm.product_line_id
+			inner join dic_material m on m.mat_id=stock.mat_id
+			 where 1=1 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))- TO_DAYS(NOW())<![CDATA[<=]]> m.reminding_day_one
+			  and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))- TO_DAYS(NOW())<![CDATA[>]]>0
+			group by bm.product_line_id
+			union all
+			 select  
+			 SUM(stock.qty) qty , any_value(pl.product_line_name)  product_line_name ,bm.product_line_id
+			 from stock_position_urgent  stock
+			inner join dic_warehouse_area wa on stock.area_id = wa.area_id and stock.urgent_syn_status =1
+			inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+			inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+			inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+			inner join dic_product_line pl on pl.product_line_id=bm.product_line_id
+			inner join dic_material m on m.mat_id=stock.mat_id
+			 where 1=1 and  (TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[<=]]> m.reminding_day_one
+			  and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[>]]>0)
+			group by bm.product_line_id
+			) t
+			GROUP BY t.product_line_id    
+     
+     </select>
+     
+     <select id="selectWarringPdaPictrueDayAll" resultType="map">
+     select 
+		SUM(t.qty) qty , any_value(t.product_line_name)  product_line_name ,t.product_line_id 
+		from 
+		(select  
+		 SUM(stock.qty) qty , any_value(pl.product_line_name)  product_line_name ,bm.product_line_id
+		 from stock_position  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_product_line pl on pl.product_line_id=bm.product_line_id
+		group by bm.product_line_id
+		union all
+		 select  
+		 SUM(stock.qty) qty , any_value(pl.product_line_name)  product_line_name ,bm.product_line_id
+		 from stock_position_urgent  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id and stock.urgent_syn_status =1
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_product_line pl on pl.product_line_id=bm.product_line_id
+		group by bm.product_line_id
+		) t
+		GROUP BY t.product_line_id     
+     </select>     
+     
+     
+     
+     <select id="selectWarringPdaByProductLineIdLq" parameterType="java.lang.Integer" resultType="map">
+	     select SUM(t.qty)  qty  , 
+			 IFNULL(ANY_VALUE(t.wh_id),'') wh_id,
+			 IFNULL(ANY_VALUE(t.wh_code),'') wh_code,
+			 IFNULL(ANY_VALUE(t.wh_name),'') wh_name,
+			 IFNULL(ANY_VALUE(t.area_id),'') area_id,
+			 IFNULL(ANY_VALUE(t.area_code),'') area_code,
+			 IFNULL(ANY_VALUE(t.area_name),'') area_name
+			  from (
+			 select 
+			 SUM(stock.qty) qty,
+			 wh.wh_id,
+			 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+			 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+			 wa.area_id,
+			 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+			 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+			
+			 from stock_position  stock
+			inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+			inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+			inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+			inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+			inner join dic_material m on m.mat_id = stock.mat_id
+			inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+			where 1=1 and (TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_one 
+			and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[>=]]>0)
+			and bm.product_line_id =#{id}
+			and stock.qty>0
+			group by wh.wh_id,wa.area_id
+			union all
+			 select   
+			 SUM(stock.qty) qty,
+			 wh.wh_id,
+			 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+			 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+			 wa.area_id,
+			 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+			 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+			
+			 from stock_position_urgent  stock 
+			inner join dic_warehouse_area wa on stock.area_id = wa.area_id and stock.urgent_syn_status =1
+			inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+			inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+			inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+			inner join dic_material m on m.mat_id = stock.mat_id
+			inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+			where 1=1 and (TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_one 
+			and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[>=]]>0)
+			and bm.product_line_id=#{id}
+			and stock.qty>0
+			group by wh.wh_id,wa.area_id
+			) t
+			group by t.wh_id,t.area_id   
+     
+     </select>
+
+
+   <select id="selectWarringPdaByProductLineIdYj" parameterType="java.lang.Integer" resultType="map">
+   
+       select SUM(t.qty)  qty  , 
+		 IFNULL(ANY_VALUE(t.wh_id),'') wh_id,
+		 IFNULL(ANY_VALUE(t.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(t.wh_name),'') wh_name,
+		 IFNULL(ANY_VALUE(t.area_id),'') area_id,
+		 IFNULL(ANY_VALUE(t.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(t.area_name),'') area_name
+		  from (
+		 select   
+		 
+		 SUM(stock.qty) qty,
+		 wh.wh_id,
+		 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+		 wa.area_id,
+		 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		
+		 from stock_position  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+		where 1=1 and (TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[>=]]>m.reminding_day_one 
+		 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_two)
+		and bm.product_line_id=#{id}
+		and stock.qty>0
+		group by wh.wh_id,wa.area_id
+		union all
+		 select   
+		 
+		 SUM(stock.qty) qty,
+		 wh.wh_id,
+		 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+		 wa.area_id,
+		 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		
+		 from stock_position_urgent  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id and stock.urgent_syn_status =1
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+		where 1=1 and (TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[>=]]>m.reminding_day_one 
+		 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_two)
+		and bm.product_line_id=#{id}
+		and stock.qty>0
+		group by wh.wh_id,wa.area_id
+		) t
+		group by t.wh_id,t.area_id
+    </select>
+    
+
+   
+  
+   <select id="selectWarringPdaByProductLineIdGq" parameterType="java.lang.Integer" resultType="map">
+     select SUM(t.qty)  qty  , 
+		 IFNULL(ANY_VALUE(t.wh_id),'') wh_id,
+		 IFNULL(ANY_VALUE(t.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(t.wh_name),'') wh_name,
+		 IFNULL(ANY_VALUE(t.area_id),'') area_id,
+		 IFNULL(ANY_VALUE(t.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(t.area_name),'') area_name
+		  from (
+		 select   
+		 
+		 SUM(stock.qty) qty,
+		 wh.wh_id,
+		 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+		 wa.area_id,
+		 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		
+		 from stock_position  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+		where 1=1 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[<]]>0
+		and bm.product_line_id=#{id}
+		and stock.qty>0
+		group by wh.wh_id,wa.area_id
+		union all
+		select   
+		 
+		 SUM(stock.qty) qty,
+		 wh.wh_id,
+		 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+		 wa.area_id,
+		 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		
+		 from stock_position_urgent  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id and stock.urgent_syn_status =1
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+		where 1=1 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY))-TO_DAYS(NOW())<![CDATA[<]]>0
+		and bm.product_line_id=#{id}
+		and stock.qty>0
+		group by wh.wh_id,wa.area_id
+		) t
+		group by t.wh_id,t.area_id
+   
+   
+   </select>
+  <select id="selectWarringPdaByProductLineIdAll" parameterType="java.lang.Integer" resultType="map">
+  
+		 select 
+		 SUM(t.qty)  qty  , 
+		 IFNULL(ANY_VALUE(t.wh_id),'') wh_id,
+		 IFNULL(ANY_VALUE(t.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(t.wh_name),'') wh_name,
+		 IFNULL(ANY_VALUE(t.area_id),'') area_id,
+		 IFNULL(ANY_VALUE(t.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(t.area_name),'') area_name
+		  from (
+		 select  
+		 
+		 SUM(stock.qty) qty,
+		 wh.wh_id,
+		 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+		 wa.area_id,
+		 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		
+		 from stock_position  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+		where 1=1  and bm.product_line_id=#{id}
+		and stock.qty>0
+		group by wh.wh_id,wa.area_id
+		union all
+		select  
+		 
+		 SUM(stock.qty) qty,
+		 wh.wh_id,
+		 IFNULL(ANY_VALUE(wh.wh_code),'') wh_code,
+		 IFNULL(ANY_VALUE(wh.wh_name),'') wh_name,
+		 wa.area_id,
+		 IFNULL(ANY_VALUE(wa.area_code),'') area_code,
+		 IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		
+		 from stock_position_urgent  stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id and stock.urgent_syn_status =1
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_warehouse wh on wh.wh_id=stock.wh_id
+		where 1=1  and bm.product_line_id=#{id}
+		and stock.qty>0
+		group by wh.wh_id,wa.area_id
+		) t  
+		group by t.wh_id,t.area_id
+  </select>
+ <!--手机端临期库存预警 end  -->
+ <!-- 手机端临期库存预警   lgm  start  2.0 -->
+ <select id="selectFirstView" resultType="map">
+	
+   SELECT
+     sum(
+     case       
+       WHEN
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[<]]>	m.reminding_day_two	 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[>=]]>0
+       then 
+         stock.qty         
+        ELSE
+          0
+        end)  lq_qty   
+     , 
+     
+     CAST(sum(
+      case       
+      WHEN
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[<]]>	m.reminding_day_two	 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[>=]]>0
+       then 
+        CAST( ifnull(p.price,0) * stock.qty  AS  DECIMAL(18,2))           
+        ELSE
+          0
+        end) AS  DECIMAL(18,2)) lq_qty_money
+     ,
+     
+     sum(
+      case       
+      WHEN
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[<]]>0
+       then 
+         stock.qty*(case when u.unit_code = 'KG' then 1 else 1000 end)         
+        ELSE
+          0
+        end)  cq_qty
+       ,
+       
+      CAST( sum(
+      case       
+      WHEN
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[<]]>0
+       then 
+        CAST( ifnull(p.price,0) * stock.qty  AS  DECIMAL(18,2))     
+        ELSE
+          0
+        end) AS  DECIMAL(18,2))  cq_qty_money
+	  from 
+       stock_position
+       stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status = 1	
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id	
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on stock.location_id=location.location_id
+		
+        inner join buf_factory_mat_price p on p.mat_id=stock.mat_id and p.fty_id=stock.fty_id
+        where stock.stock_type_id!=4  and stock.status  <![CDATA[<>]]>5
+  
+		
+ 
+ 
+ </select>
+  <select id="selectFirstReport" resultType="map">  
+ 
+	 SELECT
+	     CAST(sum(
+	    case       
+	      WHEN
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[<]]> 	m.reminding_day_one	 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[>=]]>0
+       then 
+          CAST( ifnull(p.price,0) * stock.qty  AS  DECIMAL(18,2))      
+        ELSE
+          0
+        end) AS  DECIMAL(18,2))  yj_qty_money  
+
+
+   ,
+    CAST(sum(
+      case       
+      WHEN
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[>=]]>	m.reminding_day_one	 and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_two
+       then 
+           CAST( ifnull(p.price,0) * stock.qty  AS  DECIMAL(18,2))       
+        ELSE
+          0
+        end) AS  DECIMAL(18,2))  lq_qty_money
+ 
+
+   ,
+    CAST(sum(
+      case       
+      WHEN
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[>]]>m.reminding_day_two
+       then 
+          CAST( ifnull(p.price,0) * stock.qty  AS  DECIMAL(18,2))        
+        ELSE
+          0
+        end) AS  DECIMAL(18,2))  zc_qty_money
+      
+	from 
+	stock_position
+	stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status = 1	
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id	
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on stock.location_id=location.location_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+    inner join buf_factory_mat_price p on p.mat_id=stock.mat_id and p.fty_id=stock.fty_id
+    inner join dic_package_type pt on pt.package_type_id = stock.package_type_id
+        where stock.stock_type_id!=4 and stock.status <![CDATA[<>]]>5
+   
+ </select>
+ 
+ <select id="selectDetail" resultType="map" parameterType="java.lang.Integer">
+
+   SELECT
+     
+     sum(
+     case       
+       WHEN
+          <if test="_parameter!=null and _parameter==1">
+          TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[<]]>	m.reminding_day_one	 
+          and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[>=]]>0
+          </if>
+			<if test="_parameter!=null and _parameter==2">
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[>=]]>	m.reminding_day_one	 
+			and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_two 
+			</if>      
+       then 
+         stock.qty*(case when u.unit_code = 'KG' then 1 else 1000 end)         
+        ELSE
+          0
+        end)   lq_qty   
+     ,
+     CAST( sum(
+      case       
+      WHEN
+			  <if test="_parameter!=null and _parameter==1">
+          TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[<]]>	m.reminding_day_one	 
+          and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[>=]]>0
+          </if>
+			<if test="_parameter!=null and _parameter==2">
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[>=]]>	m.reminding_day_one	 
+			and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_two 
+			</if> 
+       then 
+         CAST( ifnull(p.price,0) * stock.qty  AS  DECIMAL(18,2))       
+        ELSE
+          0
+        end) AS  DECIMAL(18,2)) lq_qty_money,
+     dwh.wh_id,
+     any_value(dwh.wh_code) wh_code,
+    any_value( dwh.wh_name) wh_name
+   
+	  from 
+       stock_position
+       stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status = 1	
+       inner join dic_warehouse dwh on dwh.wh_id=stock.wh_id 
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id	
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on stock.location_id=location.location_id
+		
+        inner join buf_factory_mat_price p on p.mat_id=stock.mat_id and p.fty_id=stock.fty_id
+        where stock.stock_type_id!=4 and stock.status <![CDATA[<>]]>5
+       GROUP BY dwh.wh_id
+       order by lq_qty_money desc
+ 
+ </select>
+ 
+ 
+ <select id="selectDetailMat" parameterType="map" resultType="map">
+ 
+
+   SELECT
+     sum(
+     case       
+       WHEN
+          <if test="searchType!=null and searchType==1">
+          TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[<]]>	m.reminding_day_one	 
+          and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[>=]]>0
+          </if>
+			<if test="searchType!=null and searchType==2">
+			TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW()) <![CDATA[>=]]>	m.reminding_day_one	 
+			and TO_DAYS(DATE_ADD(bm.create_time,INTERVAL ANY_VALUE(m.shelf_life) DAY)) - TO_DAYS(NOW())<![CDATA[<]]>m.reminding_day_two 
+			</if>      
+       then 
+         stock.qty*(case when u.unit_code = 'KG' then 1 else 1000 end)         
+        ELSE
+          0
+        end)  lq_qty  , 
+     
+       m.mat_id,
+       m.mat_code,
+       m.mat_name    
+	  from 
+       stock_position
+       stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		and stock.status = 1	
+       inner join dic_warehouse dwh on dwh.wh_id=stock.wh_id 
+		inner join dic_warehouse_position wp on stock.position_id = wp.position_id	
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id = bm.mat_id and stock.fty_id = bm.fty_id
+		inner join dic_factory fty on fty.fty_id=stock.fty_id and (fty.fty_type =2 and wp.is_default =0 or fty.fty_type !=2)
+		inner join dic_material m on m.mat_id = stock.mat_id
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on stock.location_id=location.location_id
+		
+        inner join buf_factory_mat_price p on p.mat_id=stock.mat_id and p.fty_id=stock.fty_id
+        where stock.stock_type_id!=4 and stock.status <![CDATA[<>]]>5
+        <if test="whId!=null ">
+         and dwh.wh_id=#{whId}
+        </if>
+      GROUP BY m.mat_id
+     order by lq_qty desc
+     limit 0,10
+ 
+ </select>
+ 
+  <!-- 手机端临期库存预警   lgm  end  2.0 -->
+  
+ <select id="selectByMatIdAndSpec"
+		parameterType="java.util.Map" resultMap="BaseResultMap"
+		flushCache="true">
+		select
+		<include refid="Base_Column_List" />
+		from stock_position
+		where mat_id = #{matId}
+		and spec_stock = #{specStock}
+		and qty<![CDATA[<]]>0
+	</select>
+	
+	
+	<select id="selectStockPositionGroupOnPagingCw"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT IFNULL(stock.mat_id,'') mat_id
+		,IFNULL(ANY_VALUE(m.mat_code),'') mat_code
+		,IFNULL(ANY_VALUE(m.mat_name),'') mat_name
+		,IFNULL(stock.area_id, 0) area_id
+		,IFNULL(ANY_VALUE(wa.area_code),'') area_code
+		,IFNULL(ANY_VALUE(wa.area_name),'') area_name
+		,IFNULL(stock.position_id,'') position_id
+		,IFNULL(ANY_VALUE(wp.position_code),'') position_code
+		,IFNULL(stock.pallet_id,'') pallet_id
+		,IFNULL(ANY_VALUE(wpt.pallet_code),'') pallet_code
+		<choose>  
+             <when test="isUrgent == null ">
+             ,IFNULL(stock.stock_type_id,'') stock_type_id
+			 ,IFNULL(ANY_VALUE(st.stock_type_name),'') stock_type_name
+             </when>  
+             <when test="isUrgent != null">
+             , 5 stock_type_id
+		     , '临时库存' stock_type_name
+		     </when>  
+        </choose>
+		,IFNULL(sum(stock.qty),0) stock_qty
+		,IFNULL(m.unit_id,'') unit_id
+		,IFNULL(ANY_VALUE(u.unit_code),'') unit_code
+		,IFNULL(ANY_VALUE(u.name_zh),'') unit_name
+		,IFNULL(ANY_VALUE(stock.fty_id),'') fty_id
+		,IFNULL(ANY_VALUE(fty.fty_code),'') fty_code
+		,IFNULL(ANY_VALUE(fty.fty_name),'') fty_name
+		,IFNULL(stock.location_id,'') location_id
+		,IFNULL(ANY_VALUE(location.wh_id),'') wh_id
+		,IFNULL(ANY_VALUE(location.location_code),'') location_code
+		,IFNULL(ANY_VALUE(location.location_name),'') location_name
+		,case ANY_VALUE(stock.status) 
+			when 1 then '非限制库存'
+			when 2 then '在途库存'
+			when 3 then '质量检验库存'
+			when 4 then '冻结的库'
+			when 5 then '已售未提库存'
+			end status_name
+		,IFNULL(serpac.package_id,'') package_id
+		,IFNULL(ANY_VALUE(serpac.package_code),'') package_code
+		,IFNULL(pt.package_type_code,'') package_type_code
+		,IFNULL(pt.package_standard_ch,'') package_standard_ch
+		,IFNULL(bm.erp_batch,'') erp_batch
+		,IFNULL(bm.product_batch,'') product_batch
+		,IFNULL(stock.batch,'') batch
+	    ,IFNULL(m.shelf_life,'') shelf_life
+	    ,DATE_FORMAT(bm.create_time,'%Y-%m-%d') input_date
+	    ,IFNULL(dicw.wh_code,'') wh_code
+		,IFNULL(dicw.wh_name,'') wh_name
+		from  stock_position stock
+		inner join dic_warehouse_area wa on stock.area_id = wa.area_id
+		<if test="areaCode != null and areaCode !='' ">
+			AND wa.area_code = #{areaCode,jdbcType=VARCHAR}
+		</if>
+		inner join dic_warehouse_position wp on stock.position_id =
+		wp.position_id
+		<if test="positionCode != null and positionCode !='' ">
+			AND wp.position_code = #{positionCode,jdbcType=VARCHAR}
+		</if>
+		left join dic_warehouse_pallet wpt on stock.pallet_id = wpt.pallet_id
+		inner join batch_material bm on stock.batch = bm.batch and stock.mat_id =
+		bm.mat_id and stock.fty_id = bm.fty_id
+		<!--工厂 -->
+		inner join dic_factory fty on fty.fty_id=stock.fty_id
+		inner join dic_material m on m.mat_id = stock.mat_id
+		<if test="matName != null and matName !=''">
+			AND m.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="matCode != null and matCode !=''">
+			AND m.mat_code LIKE CONCAT('%',#{matCode,jdbcType=VARCHAR},'%')
+		</if>
+		inner join dic_unit u on u.unit_id = m.unit_id
+		inner join dic_stock_location location on stock.location_id=location.location_id and stock.wh_id=location.wh_id
+		inner join stock_type st on st.stock_type_id=stock.stock_type_id
+		inner join dic_package_type pt on pt.package_type_id = stock.package_type_id
+		inner join dic_warehouse dicw on dicw.wh_id = stock.wh_id
+		LEFT join serial_package serpac on stock.package_id=serpac.package_id
+		where 1=1
+		<if test="palletCode != null and palletCode != '' ">
+			AND wpt.pallet_code = #{palletCode,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="whCode != null and whCode != '' ">
+			AND dicw.wh_code = #{whCode,jdbcType=VARCHAR}
+		</if>
+ 		<if test="packageCode!=null and packageCode!=''">
+   		  and serpac.package_code=#{packageCode,jdbcType=VARCHAR}
+   		</if>
+  		
+  		<if test="palleCodet!=null and palleCodet!=''">
+  		  and wpt.pallet_code=#{palleCodet,jdbcType=VARCHAR}
+  		</if>
+		group by stock.mat_id,stock.area_id,stock.position_id,stock.pallet_id,stock.stock_type_id,m.unit_id,stock.location_id,stock.status,stock.package_id,stock.batch,stock.package_type_id
+		order by stock.location_id,stock.mat_id,stock.area_id,stock.position_id,stock.pallet_id ,stock.stock_type_id,m.unit_id limit 1
+	</select>
+	
+</mapper>

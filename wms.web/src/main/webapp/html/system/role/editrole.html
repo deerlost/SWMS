@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/page/system/role/editrole.js"></script>
+		<style>
+			body {
+				padding: 4px;
+				padding-top: 20px;
+			}		
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="col-xs-3 text-right">
+			<label>角色ID</label>
+		</div>
+		<div class="col-xs-3">
+			<input type="text" id="roleId" maxlength="10">
+		</div>
+		<div CLASS="col-xs-2 text-right" style="width:14%">
+			<label>角色名称</label>
+		</div>
+		<div class="col-xs-3">
+			<input type="text" id="roleName" maxlength="20">
+			<input type="hidden" id="role_Name">
+		</div>
+
+		<div class="clearfx" style="height:20px"></div>
+		<div class="col-xs-3 text-right">
+			<label><br>角色权限授权</label>
+		</div>
+		<div class="col-xs-9">
+			<table width="460px" height="150px" align="center">
+				<tbody>
+					<tr>
+						<td>未选择</td>
+						<td></td>
+						<td>已选择</td>
+					</tr>
+					<tr align="center">
+						<!-- 左边是所有角色 -->
+						<td width="190px">
+							<DIV style="float: left; padding: 5px; padding-left:0;">
+								<SELECT id="leftSelect" name="exceptResources" size="5" style="width: 160px; height: 200px">
+
+								</SELECT>
+							</DIV>
+						</td>
+						<!-- 右移是添加角色，左移是删除角色 -->
+						<td width="80px">
+							<DIV style="float: left; padding: 0px;">
+								<br /> <br />
+								<!--  <button type="button"  title="全部添加" id="leftAllGotoRight">&gt;&gt;&gt;&gt;</button><br><br> -->
+								<button type="button" title="添加角色" id="leftGotoRight">&gt;&gt;</button>
+								<br> <br>
+								<button type="button" title="刪除角色" id="rightGotoLeft">&lt;&lt;</button>
+								<br> <br>
+								<!-- <button type="button"  title="全部刪除" id="rightAllGotoLeft">&lt;&lt;&lt;&lt;</button><br><br> -->
+							</DIV>
+						</td>
+						<!-- 右边是此用户现在所拥有的角色 -->
+						<td width="190px">
+							<DIV style="float: left; padding: 0px;">
+								<SELECT id="rightSelect" name="ownResources" multiple size="5" style="width: 160px; height: 200px">
+
+								</SELECT>
+							</DIV>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="clearfx"></div>
+
+		<div class="submitbutton">
+			<a href="javascript:void(0)" class="btn-lay-blue btn_submit" id="grantResources"> 确定 </a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window"> 取消 </a>
+		</div>
+	</body>
+
+</html>

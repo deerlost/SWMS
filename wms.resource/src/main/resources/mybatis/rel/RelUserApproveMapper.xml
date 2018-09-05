@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.rel.RelUserApproveMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.rel.RelUserApprove">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="receipt_type" jdbcType="INTEGER" property="receiptType" />
+    <result column="group" jdbcType="VARCHAR" property="group" />
+    <result column="node" jdbcType="VARCHAR" property="node" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, receipt_type, `group`, node
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM rel_user_approve
+    WHERE id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    DELETE FROM rel_user_approve
+    WHERE id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.rel.RelUserApprove">
+    INSERT INTO rel_user_approve (id, user_id, receipt_type, 
+      `group`, node)
+    VALUES (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{receiptType,jdbcType=INTEGER}, 
+      #{group,jdbcType=VARCHAR}, #{node,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.rel.RelUserApprove">
+    insert into rel_user_approve
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="group != null">
+        `group`,
+      </if>
+      <if test="node != null">
+        node,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=INTEGER},
+      </if>
+      <if test="group != null">
+        #{group,jdbcType=VARCHAR},
+      </if>
+      <if test="node != null">
+        #{node,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.rel.RelUserApprove">
+    update rel_user_approve
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=INTEGER},
+      </if>
+      <if test="group != null">
+        `group` = #{group,jdbcType=VARCHAR},
+      </if>
+      <if test="node != null">
+        node = #{node,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.rel.RelUserApprove">
+    update rel_user_approve
+    set user_id = #{userId,jdbcType=VARCHAR},
+      receipt_type = #{receiptType,jdbcType=INTEGER},
+      `group` = #{group,jdbcType=VARCHAR},
+      node = #{node,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByTypeGroupNode" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM rel_user_approve
+    WHERE receipt_type = #{receiptType,jdbcType=INTEGER}
+    AND `group` = #{group,jdbcType=VARCHAR}
+    AND node = #{node,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByTypeNodeForCoal" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT 
+		id, user_id, receipt_type, `group`, node
+    FROM rel_user_approve
+    WHERE receipt_type = #{receiptType,jdbcType=INTEGER}
+    AND `group` IN 
+		(
+		SELECT department_id 
+		FROM wms_department d
+		INNER JOIN dic_factory f ON d.fty_id = f.fty_id AND f.fty_code = #{factory,jdbcType=VARCHAR}
+		)
+    AND node = #{node,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 审批管理分页查询 刘宇 2018.03.12 -->
+    <select id="selectApproveOnPaging" parameterType="java.util.Map" resultType="java.util.Map" >
+		SELECT 
+			rua.id,
+			rua.user_id,
+			wu.user_name,
+			rua.receipt_type,
+			drt.receipt_type_name,
+			rua.`group`,
+			wd.`code`,
+			wd.`name`,
+			df.fty_id,
+			df.fty_code,
+			df.fty_name,
+			rua.node
+		FROM rel_user_approve rua
+		inner join wms_user wu on rua.user_id = wu.user_id
+		inner join dic_receipt_type drt on drt.receipt_type = rua.receipt_type
+		inner join wms_department wd on rua.`group` = wd.department_id
+		inner join dic_factory df on wd.fty_id = df.fty_id
+		<if test="condition != null and condition !=''">
+			and
+			(
+			rua.user_id LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or rua.node LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or drt.receipt_type_name LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or wd.`name` LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or df.fty_name LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or wu.user_name LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			)
+		</if>
+  </select>
+  
+    <!-- 通过用户id和类型id和组id和节点名称查询审批管理的id 刘宇 2018.03.12 -->
+    <select id="selectIdAndUserIdOfApproveByExceptId" parameterType="com.inossem.wms.model.rel.RelUserApprove" resultMap="BaseResultMap" >
+		SELECT 
+			id,
+			user_id
+		FROM rel_user_approve
+		where 1 = 1
+	  <if test="userId != null">
+	  and 
+        user_id = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="receiptType != null">
+      and
+        receipt_type = #{receiptType,jdbcType=INTEGER}
+      </if>
+      <if test="group != null">
+      and
+        `group` = #{group,jdbcType=VARCHAR}
+      </if>
+      and
+      <if test="node != null">
+        node = #{node,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  
+   <!-- 根据用户id查询审批管理 刘宇 2018.03.13 -->
+    <select id="selectApproveByUserId" parameterType="java.lang.Integer" resultType="java.util.Map" >
+		SELECT 
+			rua.id,
+			rua.user_id,
+			wu.user_name,
+			rua.receipt_type,
+			drt.receipt_type_name,
+			rua.`group`,
+			wd.`code`,
+			wd.`name`,
+			rua.node
+		FROM rel_user_approve rua
+		inner join wms_user wu on rua.user_id = wu.user_id
+		and rua.id = #{id,jdbcType=INTEGER}
+		inner join dic_receipt_type drt on drt.receipt_type = rua.receipt_type
+		inner join wms_department wd on rua.`group` = wd.department_id
+  </select>
+  
+</mapper>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html ng-cloak ng-app="app" id="app" ng-controller="pageCtrl">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>库存查询</title>
+		<meta charset="utf-8" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../js/page/search/transceiver/list.js"></script>
+		<style type="text/css">
+			.divsearchtype {
+				display: none;
+			}
+			
+			.divcheckbox {
+				height: 50px;
+			}
+			
+			.tiinfo {
+				float: right;
+				top: -25px;
+				left: 8%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article">
+				<!-- 内容区域 -->
+				<div class="mapadress">
+					<h2 class="h2black">收发存查询</h2>
+				</div>
+				<div class="col-xs-12">&nbsp;</div>
+				<div class="form-search">
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">物料编码：</span>
+								<input class="form-control mat_code" type="text" maxlength="30" />
+							</div>
+						</div>
+						
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">工厂：</span>
+								<select class="form-control selectwerks" />
+									<option value="" data-index="-1">请选择</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">库存地点：</span>
+								<select class="form-control lgort" data-parent="input">
+									<option value="">请选择</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+					  <div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">仓库号：</span>
+								<select class="form-control selectlgort" data-parent="input">
+									<option value="">请选择</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">查询日期：</span>
+								<input type="text" class="form-control txtdatepicker time_begin" readonly data-date-format="yyyy-mm-dd"  />
+								<span class="input-group-addon" style="min-width:auto;">-</span>
+								<input type="text" class="form-control txtdatepicker time_end" readonly data-date-format="yyyy-mm-dd" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row submitbutton">
+						<a href="javascript:void(0)" class="btn-lay-blue btn_search">查询</a>
+						<a href="javascript:void(0)" class="btn-lay-default btn_files">批量导出</a>
+					</div>
+					<div class="col-xs-12">
+						<hr/>
+					</div>
+					<div class="col-xs-12 count"></div>
+					<div id="id_div_grid"></div>
+					<div class="text-center" id="J_ListPagination"></div>
+					<div class="submitbutton col-xs-12">
+						<a href="javascript:void(0)" class="btn-lay-default btnsave" style="display: none;"> 打 印 </a>
+					</div>
+				</div>
+			</div>
+		<form id="download" method="get" class="hidden">
+		    <input type="text"  name="fty_id">
+		    <input type="text"  name="wh_id">
+		    <input type="text"  name="mat_code">
+		    <input type="text"  name="create_time_start">
+		    <input type="text"  name="create_time_end">
+		</form>
+	</body>
+
+</html>

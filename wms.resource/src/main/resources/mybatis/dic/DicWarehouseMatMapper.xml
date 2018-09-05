@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicWarehouseMatMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicWarehouseMat">
+    <id column="wh_mat_id" jdbcType="INTEGER" property="whMatId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="stock_listing_type" jdbcType="TINYINT" property="stockListingType" />
+    <result column="stock_removal_type" jdbcType="TINYINT" property="stockRemovalType" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    wh_mat_id, mat_id, wh_id, stock_listing_type, stock_removal_type, unit_id, is_delete, 
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_warehouse_mat
+    where wh_mat_id = #{whMatId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_warehouse_mat
+    where wh_mat_id = #{whMatId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicWarehouseMat">
+    insert into dic_warehouse_mat (wh_mat_id, mat_id, wh_id, 
+      stock_listing_type, stock_removal_type, unit_id, 
+      is_delete, create_time, modify_time
+      )
+    values (#{whMatId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{whId,jdbcType=INTEGER}, 
+      #{stockListingType,jdbcType=TINYINT}, #{stockRemovalType,jdbcType=TINYINT}, #{unitId,jdbcType=INTEGER}, 
+      #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicWarehouseMat">
+    insert into dic_warehouse_mat
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="whMatId != null">
+        wh_mat_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="stockListingType != null">
+        stock_listing_type,
+      </if>
+      <if test="stockRemovalType != null">
+        stock_removal_type,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="whMatId != null">
+        #{whMatId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="stockListingType != null">
+        #{stockListingType,jdbcType=TINYINT},
+      </if>
+      <if test="stockRemovalType != null">
+        #{stockRemovalType,jdbcType=TINYINT},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicWarehouseMat">
+    update dic_warehouse_mat
+    <set>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="stockListingType != null">
+        stock_listing_type = #{stockListingType,jdbcType=TINYINT},
+      </if>
+      <if test="stockRemovalType != null">
+        stock_removal_type = #{stockRemovalType,jdbcType=TINYINT},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where wh_mat_id = #{whMatId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicWarehouseMat">
+    update dic_warehouse_mat
+    set mat_id = #{matId,jdbcType=INTEGER},
+      wh_id = #{whId,jdbcType=INTEGER},
+      stock_listing_type = #{stockListingType,jdbcType=TINYINT},
+      stock_removal_type = #{stockRemovalType,jdbcType=TINYINT},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where wh_mat_id = #{whMatId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 移动端获取物料信息列表 -->
+  <select id="findMaterielListByFactoryCodeAndInventoryAddressCode"
+		resultType="map" parameterType="map">
+		select a.mat_id,
+	           b.mat_code,
+	           b.mat_name,
+	           a.wh_id,
+			   dw.wh_code,
+			   b.unit_id,
+	           ut.decimal_place
+		from dic_warehouse_mat as a
+		join dic_material as b on a.mat_id = b.mat_id
+		left join dic_unit as ut on b.unit_id=ut.unit_id
+		LEFT JOIN dic_warehouse dw on dw.wh_id=a.wh_id and dw.is_delete=0 
+		join dic_stock_location as c on a.wh_id = c.wh_id 
+			and c.is_delete=0
+			and c.fty_id =#{ftyId}
+			and c.location_id = #{locationId}
+		<where>
+			<if test="condition !=null and condition != ''">
+				and
+				(
+					b.mat_code like concat(concat('%', #{condition}),'%') or
+					b.mat_name like concat(concat('%', #{condition}),'%')
+				)
+			</if>
+		</where>
+	</select>
+  
+  
+  <!-- 根据工厂编号和库存地点代码查询物料信息 -->
+	<resultMap id="find_matnr_list_map" type="com.inossem.wms.model.vo.BizStocktakeQueryMatVo">
+		<id column="mat_id" property="matId" jdbcType="INTEGER" />
+		<id column="wh_id" property="whId" jdbcType="INTEGER" />
+		<id column="wh_code" property="whCode" jdbcType="VARCHAR" />
+		<id column="mat_code" property="matCode" jdbcType="VARCHAR" />
+		<result column="unit_name" property="unitName" jdbcType="VARCHAR" />
+		<result column="mat_name" property="matInfo.matName" jdbcType="VARCHAR" />
+		<result column="unit_id" property="matInfo.unitId" jdbcType="INTEGER" />
+		<result column="unit_code" property="matInfo.unitCode" jdbcType="VARCHAR" />
+		<result column="mat_group_id" property="matInfo.matGroupId" jdbcType="INTEGER" />
+		<result column="mat_group_code" property="matInfo.matGroupCode" jdbcType="VARCHAR" />
+		<result column="mat_group_name" property="matInfo.matGroupName" jdbcType="VARCHAR" />
+		<result column="decimal_place" property="matInfo.decimalPlace" jdbcType="TINYINT" />
+	</resultMap>
+	<select id="findMaterielListByFactoryCodeAndlocation" parameterType="map"
+		resultMap="find_matnr_list_map">
+		select a.wh_id, 
+		       a.mat_id,
+		       b.mat_code,
+			   b.mat_name,
+		       b.unit_id, 
+		       c.unit_code, 
+		       c.name_zh as unit_name, 
+		       b.mat_group_id, 
+		       mg.mat_group_name,
+			   mg.mat_group_code,
+		       c.decimal_place
+		from dic_stock_location as d
+		inner join dic_warehouse_mat as a on d.wh_id = a.wh_id and d.fty_id = #{ftyId} and d.location_id = #{locationId}
+		inner join dic_material as b on a.mat_id = b.mat_id and b.mat_type = 'ZWL'
+		inner join dic_unit as c on b.unit_id = c.unit_id 
+		LEFT JOIN dic_material_group mg on mg.mat_group_id=b.mat_group_id
+		
+		<where>
+	    	<if test="condition !=null and condition != ''">
+				and
+				(
+					b.mat_code like concat(concat('%', #{condition}),'%') or
+					b.mat_name like concat(concat('%', #{condition}),'%') or
+					mg.mat_group_code like concat(concat('%', #{condition}),'%') or
+					mg.mat_group_name like concat(concat('%', #{condition}),'%') or
+					c.name_zh like concat(concat('%', #{condition}),'%')
+				)
+			</if>
+		</where>
+	</select>
+	<insert id="insertDataForSapMatSync" parameterType="java.lang.Integer">
+		insert ignore into dic_warehouse_mat(mat_id,wh_id,stock_listing_type,stock_removal_type) 
+		select #{matId} ,wh_id,9,6 from dic_warehouse
+	</insert>
+	
+	
+	
+</mapper>

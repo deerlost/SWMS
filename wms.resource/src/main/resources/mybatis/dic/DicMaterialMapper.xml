@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicMaterialMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicMaterial">
+    <id column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+    <result column="mat_name" jdbcType="VARCHAR" property="matName" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="mat_group_id" jdbcType="INTEGER" property="matGroupId" />
+    <result column="mat_type" jdbcType="VARCHAR" property="matType" />
+    <result column="length" jdbcType="DECIMAL" property="length" />
+    <result column="width" jdbcType="DECIMAL" property="width" />
+    <result column="height" jdbcType="DECIMAL" property="height" />
+    <result column="unit_height" jdbcType="INTEGER" property="unitHeight" />
+    <result column="gross_weight" jdbcType="DECIMAL" property="grossWeight" />
+    <result column="net_weight" jdbcType="DECIMAL" property="netWeight" />
+    <result column="unit_weight" jdbcType="INTEGER" property="unitWeight" />
+    <result column="volume" jdbcType="DECIMAL" property="volume" />
+    <result column="unit_volume" jdbcType="INTEGER" property="unitVolume" />
+    <result column="shelf_life" jdbcType="INTEGER" property="shelfLife" />
+    <result column="is_danger" jdbcType="TINYINT" property="isDanger" />
+    <result column="batch_spec_classify_id" jdbcType="INTEGER" property="batchSpecClassifyId" />
+    <result column="asset_attr" jdbcType="TINYINT" property="assetAttr" />
+    <result column="cost_check" jdbcType="TINYINT" property="costCheck" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+    <result column="name_zh" jdbcType="VARCHAR" property="nameZh" />
+    <result column="decimal_place" jdbcType="TINYINT" property="decimalPlace" />
+    <result column="mat_group_name" jdbcType="VARCHAR" property="matGroupName" />
+    <result column="mat_group_code" jdbcType="VARCHAR" property="matGroupCode" />
+    <result column="samp_name" jdbcType="VARCHAR" property="sampName"/>
+    <result column="specification" jdbcType="VARCHAR" property="specification"/>
+    <result column="standard" jdbcType="VARCHAR" property="standard"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    mat_id, mat_code, mat_name, unit_id, mat_group_id, mat_type, length, width, height, 
+    unit_height, gross_weight, net_weight, unit_weight, volume, unit_volume, shelf_life, 
+    is_danger, batch_spec_classify_id, asset_attr, cost_check, is_delete,samp_name,specification,standard
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_material
+    where mat_id = #{matId,jdbcType=INTEGER}
+  </select>
+  <select id="getMatUnitByMatCode" resultType="map">
+	select 
+		m.mat_id,
+		m.mat_code,
+		m.mat_name,
+		u.unit_id,
+		u.unit_code,
+		u.name_en,
+		u.name_zh
+	from dic_material m inner join dic_unit u on m.unit_id=u.unit_id 
+	where m.is_delete=0 
+	<if test="matCode!=null and matCode!=''">
+	and m.mat_code=#{matCode,jdbcType=VARCHAR}	
+	</if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_material
+    where mat_id = #{matId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicMaterial">
+    insert into dic_material (mat_id, mat_code, mat_name, 
+      unit_id, mat_group_id, mat_type, 
+      length, width, height, 
+      unit_height, gross_weight, net_weight, 
+      unit_weight, volume, unit_volume, 
+      shelf_life, is_danger, batch_spec_classify_id, 
+      asset_attr, cost_check, is_delete
+      )
+    values (#{matId,jdbcType=INTEGER}, #{matCode,jdbcType=VARCHAR}, #{matName,jdbcType=VARCHAR}, 
+      #{unitId,jdbcType=INTEGER}, #{matGroupId,jdbcType=INTEGER}, #{matType,jdbcType=VARCHAR}, 
+      #{length,jdbcType=DECIMAL}, #{width,jdbcType=DECIMAL}, #{height,jdbcType=DECIMAL}, 
+      #{unitHeight,jdbcType=INTEGER}, #{grossWeight,jdbcType=DECIMAL}, #{netWeight,jdbcType=DECIMAL}, 
+      #{unitWeight,jdbcType=INTEGER}, #{volume,jdbcType=DECIMAL}, #{unitVolume,jdbcType=INTEGER}, 
+      #{shelfLife,jdbcType=INTEGER}, #{isDanger,jdbcType=TINYINT}, #{batchSpecClassifyId,jdbcType=INTEGER}, 
+      #{assetAttr,jdbcType=TINYINT}, #{costCheck,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}
+      )
+  </insert>
+  
+  <insert id="insertList" parameterType="java.util.List">
+    insert ignore into dic_material (mat_code, mat_name, 
+      unit_id, mat_group_id, mat_type, 
+      length, width, height, 
+      unit_height, gross_weight, net_weight, 
+      unit_weight, volume, unit_volume, 
+      shelf_life, is_danger, batch_spec_classify_id, 
+      asset_attr, is_delete
+      )values
+      <foreach collection="list" item="obj" index="index" separator="," >
+     (#{obj.matCode,jdbcType=VARCHAR}, #{obj.matName,jdbcType=VARCHAR}, 
+      #{obj.unitId,jdbcType=INTEGER}, #{obj.matGroupId,jdbcType=INTEGER}, #{obj.matType,jdbcType=VARCHAR}, 
+      #{obj.length,jdbcType=DECIMAL}, #{obj.width,jdbcType=DECIMAL}, #{obj.height,jdbcType=DECIMAL}, 
+      #{obj.unitHeight,jdbcType=INTEGER}, #{obj.grossWeight,jdbcType=DECIMAL}, #{obj.netWeight,jdbcType=DECIMAL}, 
+      #{obj.unitWeight,jdbcType=INTEGER}, #{obj.volume,jdbcType=DECIMAL}, #{obj.unitVolume,jdbcType=INTEGER}, 
+      #{obj.shelfLife,jdbcType=INTEGER}, #{obj.isDanger,jdbcType=TINYINT}, #{obj.batchSpecClassifyId,jdbcType=INTEGER}, 
+      #{obj.assetAttr,jdbcType=TINYINT}, #{obj.isDelete,jdbcType=TINYINT}
+      )
+      </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicMaterial">
+    insert into dic_material
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="matCode != null">
+        mat_code,
+      </if>
+      <if test="matName != null">
+        mat_name,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="matGroupId != null">
+        mat_group_id,
+      </if>
+      <if test="matType != null">
+        mat_type,
+      </if>
+      <if test="length != null">
+        length,
+      </if>
+      <if test="width != null">
+        width,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="unitHeight != null">
+        unit_height,
+      </if>
+      <if test="grossWeight != null">
+        gross_weight,
+      </if>
+      <if test="netWeight != null">
+        net_weight,
+      </if>
+      <if test="unitWeight != null">
+        unit_weight,
+      </if>
+      <if test="volume != null">
+        volume,
+      </if>
+      <if test="unitVolume != null">
+        unit_volume,
+      </if>
+      <if test="shelfLife != null">
+        shelf_life,
+      </if>
+      <if test="isDanger != null">
+        is_danger,
+      </if>
+      <if test="batchSpecClassifyId != null">
+        batch_spec_classify_id,
+      </if>
+      <if test="assetAttr != null">
+        asset_attr,
+      </if>
+      <if test="costCheck != null">
+        cost_check,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="sampName != null">
+        samp_name,
+      </if>
+      <if test="specification != null">
+        specification,
+      </if>
+      <if test="standard != null">
+        standard,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="matCode != null">
+        #{matCode,jdbcType=VARCHAR},
+      </if>
+      <if test="matName != null">
+        #{matName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="matGroupId != null">
+        #{matGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="matType != null">
+        #{matType,jdbcType=VARCHAR},
+      </if>
+      <if test="length != null">
+        #{length,jdbcType=DECIMAL},
+      </if>
+      <if test="width != null">
+        #{width,jdbcType=DECIMAL},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=DECIMAL},
+      </if>
+      <if test="unitHeight != null">
+        #{unitHeight,jdbcType=INTEGER},
+      </if>
+      <if test="grossWeight != null">
+        #{grossWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="netWeight != null">
+        #{netWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="volume != null">
+        #{volume,jdbcType=DECIMAL},
+      </if>
+      <if test="unitVolume != null">
+        #{unitVolume,jdbcType=INTEGER},
+      </if>
+      <if test="shelfLife != null">
+        #{shelfLife,jdbcType=INTEGER},
+      </if>
+      <if test="isDanger != null">
+        #{isDanger,jdbcType=TINYINT},
+      </if>
+      <if test="batchSpecClassifyId != null">
+        #{batchSpecClassifyId,jdbcType=INTEGER},
+      </if>
+      <if test="assetAttr != null">
+        #{assetAttr,jdbcType=TINYINT},
+      </if>
+      <if test="costCheck != null">
+        #{costCheck,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+       <if test="sampName != null">
+        #{sampName,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null">
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null">
+        #{standard,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="syncMatFromSap" parameterType="com.inossem.wms.model.dic.DicMaterial" useGeneratedKeys="true" keyProperty="matId">
+    insert into dic_material
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="matCode != null">
+        mat_code,
+      </if>
+      <if test="matName != null">
+        mat_name,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="matGroupId != null">
+        mat_group_id,
+      </if>
+      <if test="matType != null">
+        mat_type,
+      </if>
+      <if test="length != null">
+        length,
+      </if>
+      <if test="width != null">
+        width,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="unitHeight != null">
+        unit_height,
+      </if>
+      <if test="grossWeight != null">
+        gross_weight,
+      </if>
+      <if test="netWeight != null">
+        net_weight,
+      </if>
+      <if test="unitWeight != null">
+        unit_weight,
+      </if>
+      <if test="volume != null">
+        volume,
+      </if>
+      <if test="unitVolume != null">
+        unit_volume,
+      </if>
+      <if test="shelfLife != null">
+        shelf_life,
+      </if>
+      <if test="isDanger != null">
+        is_danger,
+      </if>
+      <if test="batchSpecClassifyId != null">
+        batch_spec_classify_id,
+      </if>
+      <if test="assetAttr != null">
+        asset_attr,
+      </if>
+      <if test="costCheck != null">
+        cost_check,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="matCode != null">
+        #{matCode,jdbcType=VARCHAR},
+      </if>
+      <if test="matName != null">
+        #{matName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="matGroupId != null">
+        #{matGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="matType != null">
+        #{matType,jdbcType=VARCHAR},
+      </if>
+      <if test="length != null">
+        #{length,jdbcType=DECIMAL},
+      </if>
+      <if test="width != null">
+        #{width,jdbcType=DECIMAL},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=DECIMAL},
+      </if>
+      <if test="unitHeight != null">
+        #{unitHeight,jdbcType=INTEGER},
+      </if>
+      <if test="grossWeight != null">
+        #{grossWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="netWeight != null">
+        #{netWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="volume != null">
+        #{volume,jdbcType=DECIMAL},
+      </if>
+      <if test="unitVolume != null">
+        #{unitVolume,jdbcType=INTEGER},
+      </if>
+      <if test="shelfLife != null">
+        #{shelfLife,jdbcType=INTEGER},
+      </if>
+      <if test="isDanger != null">
+        #{isDanger,jdbcType=TINYINT},
+      </if>
+      <if test="batchSpecClassifyId != null">
+        #{batchSpecClassifyId,jdbcType=INTEGER},
+      </if>
+      <if test="assetAttr != null">
+        #{assetAttr,jdbcType=TINYINT},
+      </if>
+      <if test="costCheck != null">
+        #{costCheck,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+    	<if test="matCode != null">
+        mat_code = #{matCode,jdbcType=VARCHAR},
+      </if>
+      <if test="matName != null">
+        mat_name = #{matName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="matGroupId != null">
+        mat_group_id = #{matGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="matType != null">
+        mat_type = #{matType,jdbcType=VARCHAR},
+      </if>
+      <if test="length != null">
+        length = #{length,jdbcType=DECIMAL},
+      </if>
+      <if test="width != null">
+        width = #{width,jdbcType=DECIMAL},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=DECIMAL},
+      </if>
+      <if test="unitHeight != null">
+        unit_height = #{unitHeight,jdbcType=INTEGER},
+      </if>
+      <if test="grossWeight != null">
+        gross_weight = #{grossWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="netWeight != null">
+        net_weight = #{netWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        unit_weight = #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="volume != null">
+        volume = #{volume,jdbcType=DECIMAL},
+      </if>
+      <if test="unitVolume != null">
+        unit_volume = #{unitVolume,jdbcType=INTEGER},
+      </if>
+      <if test="shelfLife != null">
+        shelf_life = #{shelfLife,jdbcType=INTEGER},
+      </if>
+      <if test="isDanger != null">
+        is_danger = #{isDanger,jdbcType=TINYINT},
+      </if>
+      <if test="batchSpecClassifyId != null">
+        batch_spec_classify_id = #{batchSpecClassifyId,jdbcType=INTEGER},
+      </if>
+      <if test="assetAttr != null">
+        asset_attr = #{assetAttr,jdbcType=TINYINT},
+      </if>
+      <if test="costCheck != null">
+        cost_check = #{costCheck,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicMaterial">
+    update dic_material
+    <set>
+      <if test="matCode != null">
+        mat_code = #{matCode,jdbcType=VARCHAR},
+      </if>
+      <if test="matName != null">
+        mat_name = #{matName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="matGroupId != null">
+        mat_group_id = #{matGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="matType != null">
+        mat_type = #{matType,jdbcType=VARCHAR},
+      </if>
+      <if test="length != null">
+        length = #{length,jdbcType=DECIMAL},
+      </if>
+      <if test="width != null">
+        width = #{width,jdbcType=DECIMAL},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=DECIMAL},
+      </if>
+      <if test="unitHeight != null">
+        unit_height = #{unitHeight,jdbcType=INTEGER},
+      </if>
+      <if test="grossWeight != null">
+        gross_weight = #{grossWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="netWeight != null">
+        net_weight = #{netWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        unit_weight = #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="volume != null">
+        volume = #{volume,jdbcType=DECIMAL},
+      </if>
+      <if test="unitVolume != null">
+        unit_volume = #{unitVolume,jdbcType=INTEGER},
+      </if>
+      <if test="shelfLife != null">
+        shelf_life = #{shelfLife,jdbcType=INTEGER},
+      </if>
+      <if test="isDanger != null">
+        is_danger = #{isDanger,jdbcType=TINYINT},
+      </if>
+      <if test="batchSpecClassifyId != null">
+        batch_spec_classify_id = #{batchSpecClassifyId,jdbcType=INTEGER},
+      </if>
+      <if test="assetAttr != null">
+        asset_attr = #{assetAttr,jdbcType=TINYINT},
+      </if>
+      <if test="costCheck != null">
+        cost_check = #{costCheck,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    where mat_id = #{matId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicMaterial">
+    update dic_material
+    set mat_code = #{matCode,jdbcType=VARCHAR},
+      mat_name = #{matName,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      mat_group_id = #{matGroupId,jdbcType=INTEGER},
+      mat_type = #{matType,jdbcType=VARCHAR},
+      length = #{length,jdbcType=DECIMAL},
+      width = #{width,jdbcType=DECIMAL},
+      height = #{height,jdbcType=DECIMAL},
+      unit_height = #{unitHeight,jdbcType=INTEGER},
+      gross_weight = #{grossWeight,jdbcType=DECIMAL},
+      net_weight = #{netWeight,jdbcType=DECIMAL},
+      unit_weight = #{unitWeight,jdbcType=INTEGER},
+      volume = #{volume,jdbcType=DECIMAL},
+      unit_volume = #{unitVolume,jdbcType=INTEGER},
+      shelf_life = #{shelfLife,jdbcType=INTEGER},
+      is_danger = #{isDanger,jdbcType=TINYINT},
+      batch_spec_classify_id = #{batchSpecClassifyId,jdbcType=INTEGER},
+      asset_attr = #{assetAttr,jdbcType=TINYINT},
+      cost_check = #{costCheck,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      samp_name = #{sampName,jdbcType=VARCHAR},
+      specification = #{specification,jdbcType=VARCHAR},
+      standard = #{standard,jdbcType=VARCHAR}
+    where mat_id = #{matId,jdbcType=INTEGER}
+  </update>
+  <select id="selectIdAndCodeBySql" parameterType="java.lang.String" resultType="com.inossem.wms.model.dic.DicMaterial">
+    ${value}
+  </select>
+  <select id="selectMatCode"  resultType="java.lang.String">
+    select mat_code from dic_material
+  </select>
+  <select id="selectByCondition" parameterType="com.inossem.wms.model.dic.DicMaterial" resultMap="BaseResultMap">
+    SELECT  m.mat_id, m.mat_code, m.mat_name, m.unit_id, m.mat_group_id, m.mat_type, m.length, m.width, m.height, 
+	    m.unit_height, m.gross_weight, m.net_weight, m.unit_weight, m.volume, m.unit_volume, m.shelf_life, 
+	    m.is_danger, m.batch_spec_classify_id, m.asset_attr, m.cost_check, m.is_delete ,u.unit_code ,u.name_zh ,u.decimal_place,
+			g.mat_group_name,g.mat_group_code
+	FROM dic_material m
+	INNER JOIN dic_unit u on m.unit_id = u.unit_id and m.is_delete = 0  
+	
+	left JOIN dic_material_group g on m.mat_group_id = g.mat_group_id 
+	where  1 = 1
+	<if test="condition != null">
+      AND (m.mat_code LIKE CONCAT(CONCAT('%', #{condition}),'%')
+       	OR m.mat_name LIKE CONCAT(CONCAT('%', #{condition}),'%')
+        OR g.mat_group_name LIKE CONCAT(CONCAT('%', #{condition}),'%')
+        OR g.mat_group_code LIKE CONCAT(CONCAT('%', #{condition}),'%')
+      )
+    </if>
+    <if test="matCode != null">
+      and m.mat_code = #{matCode}
+    </if>
+    limit 50;
+  </select>
+  <!-- 物料主数据分页查询 刘宇 2018.02.27 -->
+    <select id="selectMatMajorDataOnPaging" parameterType="java.util.Map" resultType="java.util.Map" >
+		SELECT 
+			dm.mat_id,
+			dm.mat_code,
+			dm.mat_name,
+			du.unit_code,
+			du.name_zh,
+			dm.mat_group_id,
+			dmg.mat_group_code,
+			dmg.mat_group_name,
+			dm.length,
+			dm.width,
+			dm.height,
+			dm.gross_weight,
+			dm.net_weight,
+			dm.volume,
+			dm.is_danger,
+			dm.shelf_life,
+			dm.samp_name,
+			dm.specification,
+			dm.standard
+		FROM dic_material dm
+		inner join dic_material_group dmg on dmg.mat_group_id = dm.mat_group_id
+		<if test="condition != null and condition !=''">
+			and	
+			(dm.mat_code LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or dm.mat_name LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			)
+		</if>
+		inner join dic_unit du on du.unit_id = dm.unit_id
+ 	      
+  </select>
+  
+  
+  
+  <!-- 库存盘点-根据物料编号列表查询物料信息，新增物资使用 -->
+	<select id="findMaterielByMatnrList4KCPD" resultType="map">
+		select  a.mat_id,
+				a.mat_name,
+				a.mat_code,
+				a.unit_id,
+				b.unit_code,
+				b.name_zh
+		from dic_material as a
+		left outer join dic_unit b on a.unit_id = b.unit_id
+		where a.mat_id in
+		<foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<resultMap type="map" id="mymap">
+		<id column="mat_id" property="mat_id" jdbcType="INTEGER"/>
+		<result column="mat_code" property="mat_code" jdbcType="VARCHAR"/>
+		<result column="mat_name" property="mat_name" jdbcType="VARCHAR"/>
+		<result column="unit_id" property="unit_id" jdbcType="INTEGER"/>
+		<result column="unit_code" property="unit_code" jdbcType="VARCHAR"/>
+        <result column="name_zh" property="unit_name" jdbcType="VARCHAR"/>
+		<collection property="packageTypeList" column="mat_id" select="com.inossem.wms.dao.dic.DicMaterialReqMatTypeMapper.selectPackageTypeListByMatId"/>
+	</resultMap>
+	<!-- 根据工厂类型查询物料 -->
+	<select id="selectMaterialList" resultMap="mymap" parameterType="map">
+		select 
+			dic_material.mat_id,
+			dic_material.mat_code,
+			dic_material.mat_name,
+			dic_unit.unit_id,
+			dic_unit.unit_code,
+			dic_unit.name_zh
+		from dic_material 
+		inner join dic_unit on dic_unit.unit_id = dic_material.unit_id
+        <!-- inner join rel_factory_mat on rel_factory_mat.mat_id=dic_material.mat_id
+        inner join dic_factory on rel_factory_mat.fty_id = dic_factory.fty_id
+        <if test="ftyId !=null ">
+          and dic_factory.fty_id=#{ftyId}
+        </if>
+        <if test="ftyType !=null ">
+          and dic_factory.fty_type=#{ftyType}
+        </if> -->
+		<if test="keyword != null and keyword !=''">
+			and	
+			(dic_material.mat_code LIKE CONCAT('%',#{keyword},'%')
+			or dic_material.mat_name LIKE CONCAT('%',#{keyword},'%')
+			)
+		</if>
+		limit 0,50
+	</select>
+	
+	<update id="updateShelfByMatId" parameterType="map">
+	 update dic_material m 
+	 <set>
+		 <if test="shelfLife!=null and shelfLife!=''">
+		  m.shelf_life=#{shelfLife},	 	 
+		 </if>
+		 <if test="sampName!=null and sampName!=''">
+		  m.samp_name=#{sampName},	 	 
+		 </if>
+		 <if test="specification!=null and specification!=''">
+		  m.specification=#{specification},	 	 
+		 </if>
+		 <if test="standard!=null and standard!=''">
+		  m.standard=#{standard},	 	 
+		 </if>
+	 </set>
+	 <where>
+	 <if test="matId!=null and matId!=''">
+	  m.mat_id=	#{matId}	 
+	 </if>	 
+	 </where>
+	 
+	</update>
+</mapper>

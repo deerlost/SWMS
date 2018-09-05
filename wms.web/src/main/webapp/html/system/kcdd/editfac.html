@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>添加审批部门</title>
+		<meta charset="utf-8" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../js/common.js"></script>
+
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+			
+			.col-xs-3 {
+				text-align: right;
+			}
+			
+			.marjiju {
+				margin: 10px 0px;
+			}
+		</style>
+		<script>
+			var somedata = null;
+			var anydata = null;
+			$(function() {
+				init();
+				$(".determine").click(function() {
+					submit();
+				})
+			});
+
+			function init() {
+				var url = uriapi + '/conf/approvedept/get_factory';
+				showloading();
+				ajax(url, 'POST', null, function(data) {
+					somedata = data;
+					dataBind();
+					setTimeout(function() {
+						layer.close(indexloading);
+					}, 50);
+				}, function(e) {
+					layer.close(indexloading);
+					layer.alert("数据请求失败");
+				});
+			}
+			//获取所有工厂
+			function dataBind() {
+				var statext = "";
+				if(somedata == null || somedata.body.length == 0) {
+					statext = ""
+				} else {
+					var opts = "";
+					$.each(somedata.body, function(j, item) {
+						opts += ("<option data-index='" + j + "' value='" + item.fty_id + "'>" + item.fty_name + "</option>");
+					});
+					statext = "<select class='selwerks form-control '>" + opts + "</select>";
+				}
+				$(".factories").append(statext);
+			}
+
+			function submit() {
+				var obj = {};
+				obj.code = "";
+				obj.name = $("#ort01").val();
+				obj.fty_id = $(".selwerks").find("option:selected").val();
+				var url = uriapi + "/conf/approvedept/add_approve_dept";
+				showloading();
+				ajax(url, "POST", JSON.stringify(obj), function(data) {
+					if(data.head.error_code == 0) {
+						layer.close(indexloading);
+						layer.msg("操作完成 ");
+						setTimeout(function() {
+							parent.location.href = "spbmadmin.html";
+						}, 1000);
+					} else {
+						layer.close(indexloading);
+						layer.alert(data.head.msg, {
+							icon: 5,
+							title: "操作失败",
+							end: function(index, layero) {
+								parent.location.href = "spbmadmin.html";
+								layer.close(index);
+							}
+						});
+					}
+
+				}, function(e) {
+					layer.close(indexloading);
+					layer.msg("操作失败");
+				});
+			}
+		</script>
+	</head>
+	<div class="form-group">
+		<div class="col-xs-12 marjiju">
+			<div class="col-xs-3">
+				<label>审批工厂：</label>
+			</div>
+			<div class="col-xs-8 factories">
+
+			</div>
+		</div>
+		<div class="col-xs-12 marjiju">
+			<div class="col-xs-3">
+				<label>审批部门：</label>
+			</div>
+			<div class="col-xs-8">
+				<input type="text" class="form-control" name="ort01" id="ort01" />
+			</div>
+		</div>
+	</div>
+	<div class="submitbutton fixed">
+		<a href="javascript:void(0)" class="btn-lay-blue determine">　确定　</a>
+		<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　关闭　</a>
+	</div>
+	</body>
+
+</html>

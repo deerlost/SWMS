@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicProductLineMapper">
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.dic.DicProductLine">
+		<id column="product_line_id" jdbcType="INTEGER"
+			property="productLineId" />
+		<result column="product_line_name" jdbcType="VARCHAR"
+			property="productLineName" />
+		<result column="is_delete" jdbcType="TINYINT"
+			property="isDelete" />
+		<result column="is_used" jdbcType="TINYINT"
+			property="isUsed" />
+		<collection property="installations"
+			column="product_line_id"
+			select="com.inossem.wms.dao.dic.DicInstallationMapper.selectDicInstallationList" />
+	</resultMap>
+
+	<resultMap id="ManageBaseResultMap"
+		type="com.inossem.wms.model.dic.DicProductLine">
+		<id column="product_line_id" jdbcType="INTEGER"
+			property="productLineId" />
+		<result column="product_line_name" jdbcType="VARCHAR"
+			property="productLineName" />
+		<result column="is_delete" jdbcType="TINYINT"
+			property="isDelete" />
+		<result column="is_used" jdbcType="TINYINT"
+			property="isUsed" />
+		<collection property="installations"
+			column="product_line_id"
+			select="com.inossem.wms.dao.dic.DicInstallationMapper.selectDicInstallationListManage" />
+	</resultMap>
+	
+
+	<resultMap id="MyBaseResultMap"
+		type="com.inossem.wms.model.dic.DicProductLine">
+		<id column="product_line_id" jdbcType="INTEGER"
+			property="productLineId" />
+		<result column="product_line_name" jdbcType="VARCHAR"
+			property="productLineName" />
+		<result column="is_delete" jdbcType="TINYINT"
+			property="isDelete" />
+		<result column="is_used" jdbcType="TINYINT"
+			property="isUsed" />
+	</resultMap>
+	
+
+	<sql id="Base_Column_List">
+		product_line_id, product_line_name, is_delete,is_used
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dic_product_line
+		where product_line_id =
+		#{productLineId,jdbcType=INTEGER}
+	</select>
+
+
+	<select id="selectProductLineOnpaging" parameterType="map"
+		resultMap="MyBaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dic_product_line
+		where is_delete=0
+		<if test="condition!=null and condition!=''">
+			and product_line_name like concat('%',#{condition},'%')
+		</if>
+	</select>
+
+	<select id="selectProductInstallationList" resultMap="ManageBaseResultMap">
+		select
+		*
+		from dic_product_line p
+		where  p.is_delete=0
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from dic_product_line
+		where product_line_id =
+		#{productLineId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.inossem.wms.model.dic.DicProductLine">
+		insert into dic_product_line (product_line_id,
+		product_line_name, is_delete
+		)
+		values
+		(#{productLineId,jdbcType=INTEGER},
+		#{productLineName,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.inossem.wms.model.dic.DicProductLine" useGeneratedKeys="true" keyProperty="productLineId">
+		insert into dic_product_line
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="productLineId != null">
+				product_line_id,
+			</if>
+			<if test="productLineName != null">
+				product_line_name,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="isUsed != null">
+				is_used,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="productLineId != null">
+				#{productLineId,jdbcType=INTEGER},
+			</if>
+			<if test="productLineName != null">
+				#{productLineName,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="isUsed != null">
+				#{isUsed,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.inossem.wms.model.dic.DicProductLine">
+		update dic_product_line
+		<set>
+			<if test="productLineName != null">
+				product_line_name = #{productLineName,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="isUsed != null">
+				is_used = #{isUsed,jdbcType=TINYINT},
+			</if>
+		</set>
+		where product_line_id = #{productLineId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.inossem.wms.model.dic.DicProductLine">
+		update dic_product_line
+		set product_line_name =
+		#{productLineName,jdbcType=VARCHAR},
+		is_delete =
+		#{isDelete,jdbcType=TINYINT}
+		where product_line_id =
+		#{productLineId,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateIsDeleteByKey"
+		parameterType="java.lang.Integer">
+		update dic_product_line t set t.is_delete=1 where
+		t.product_line_id=#{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectDicProductLineList" resultMap="BaseResultMap" parameterType="string">
+		select 
+			<include refid="Base_Column_List" />
+		 from
+		dic_product_line where is_delete =0 and is_used=0
+		<if test="userId !=null and userId !='' ">		
+			 and 
+			 	if((select
+						product_line_id from rel_product_user 
+		 			where user_id=#{userId})!=0,
+		 			product_line_id in
+		 			(select
+						product_line_id from rel_product_user 
+		 				where user_id=#{userId})
+ 				,1=1)		
+		</if>		
+	</select>
+	
+	<select id="selectAllProductLine" resultMap="MyBaseResultMap">	
+	 select * from
+		dic_product_line where is_delete =0	
+	</select>	
+	<update id="updateRelUserProductLine" parameterType="map" >	
+	 update rel_product_user r  
+	    set
+	    <if test="product_line_id!=null">
+	 	  r.product_line_id= #{product_line_id}	,    
+	    </if>
+	    <if test="user_id!=null">
+	 	  r.user_id= #{user_id}    
+	    </if>	   
+	    <if test="id!=null">
+	    where   r.id= #{id}	   
+	    </if>   
+	</update>
+	
+	<insert id="insertRelUserProductLine" parameterType="map">
+		insert into rel_product_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="product_line_id != null">
+				product_line_id,
+			</if>
+			<if test="user_id != null ">
+				user_id,
+			</if>			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="product_line_id != null">
+				#{product_line_id,jdbcType=INTEGER},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>			
+		</trim>	
+	</insert>
+	<select id="getRelUserProductLine" parameterType="java.lang.String" resultType="map">
+	select * from rel_product_user r 	
+	<where>
+	<if test="_parameter!=null and _parameter!=''">	
+	  r.user_id=#{userId}	
+	</if>	
+	</where>	
+	</select>
+	
+</mapper>

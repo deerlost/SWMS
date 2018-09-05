@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <link href="../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/jquery.inossem.grid.js"></script>
+    <script src="../../../js/jquery-bootstrap-pagination.js"></script>
+    <script src="../../../js/page/system/person/list.js"></script>
+</head>
+
+<body>
+<div c-template="menu"></div>
+<div class="articlebox">
+    <div class="article">
+        <div class="searchstyle3">
+            <a href="javascript:void(0)" data-title="新建" data-href="detail.html?type=1" data-size="500px,300px" class="btn_table_edit btn-lay-blue">添加人员或车辆</a>
+        </div>
+        <div class="search searchstyle1">
+            <div class="chkbox">
+                <div><label class="on"><input type="radio" checked="" value="1" name="type">&nbsp;叉车工</label></div>
+                <div><label class=""><input type="radio" value="2" name="type">&nbsp;搬运工</label></div>
+                <div><label class=""><input type="radio" value="3" name="type">&nbsp;理货员</label></div>
+                <div><label class=""><input type="radio" value="4" name="type">&nbsp;司机</label></div>
+                <div><label class=""><input type="radio" value="5" name="type">&nbsp;车辆</label></div>
+            </div>
+            <input class="search ico ico-search" type="text" placeholder="请输入人员或车辆">
+            <a href="javascript:void(0)" class="search"></a>
+        </div>
+
+
+        <div id="id_div_grid"></div>
+
+        <!-- 分页 -->
+        <div class="text-center" id="J_ListPagination"></div>
+
+    </div>
+
+</div>
+</body>
+</html>

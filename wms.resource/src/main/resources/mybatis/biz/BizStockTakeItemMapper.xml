@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockTakeItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockTakeItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="stock_take_id" jdbcType="INTEGER" property="stockTakeId" />
+    <result column="stock_take_rid" jdbcType="INTEGER" property="stockTakeRid" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="input_time" jdbcType="TIMESTAMP" property="inputTime" />
+    <result column="stock_qty" jdbcType="DECIMAL" property="stockQty" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="stock_take_time" jdbcType="TIMESTAMP" property="stockTakeTime" />
+    <result column="stock_take_user" jdbcType="VARCHAR" property="stockTakeUser" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="request_source" jdbcType="TINYINT" property="requestSource" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_id, stock_take_id, stock_take_rid, wh_id, area_id, position_id, mat_id, unit_id, 
+    batch, input_time, stock_qty, qty, stock_take_time, stock_take_user, remark, request_source, 
+    is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_take_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_take_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockTakeItem">
+    insert into biz_stock_take_item (item_id, stock_take_id, stock_take_rid, 
+      wh_id, area_id, position_id, 
+      mat_id, unit_id, batch, 
+      input_time, stock_qty, qty, 
+      stock_take_time, stock_take_user, remark, 
+      request_source, is_delete, create_time, 
+      modify_time)
+    values (#{itemId,jdbcType=INTEGER}, #{stockTakeId,jdbcType=INTEGER}, #{stockTakeRid,jdbcType=INTEGER}, 
+      #{whId,jdbcType=INTEGER}, #{areaId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, 
+      #{matId,jdbcType=INTEGER}, #{unitId,jdbcType=INTEGER}, #{batch,jdbcType=BIGINT}, 
+      #{inputTime,jdbcType=TIMESTAMP}, #{stockQty,jdbcType=DECIMAL}, #{qty,jdbcType=DECIMAL}, 
+      #{stockTakeTime,jdbcType=TIMESTAMP}, #{stockTakeUser,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{requestSource,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockTakeItem"
+  	useGeneratedKeys="true" keyProperty="itemId">
+    insert into biz_stock_take_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="stockTakeId != null">
+        stock_take_id,
+      </if>
+      <if test="stockTakeRid != null">
+        stock_take_rid,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="areaId != null">
+        area_id,
+      </if>
+      <if test="positionId != null">
+        position_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="inputTime != null">
+        input_time,
+      </if>
+      <if test="stockQty != null">
+        stock_qty,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="stockTakeTime != null">
+        stock_take_time,
+      </if>
+      <if test="stockTakeUser != null">
+        stock_take_user,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="requestSource != null">
+        request_source,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTakeId != null">
+        #{stockTakeId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTakeRid != null">
+        #{stockTakeRid,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="inputTime != null">
+        #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockQty != null">
+        #{stockQty,jdbcType=DECIMAL},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="stockTakeTime != null">
+        #{stockTakeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockTakeUser != null">
+        #{stockTakeUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="requestSource != null">
+        #{requestSource,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockTakeItem">
+    update biz_stock_take_item
+    <set>
+      <if test="stockTakeId != null">
+        stock_take_id = #{stockTakeId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTakeRid != null">
+        stock_take_rid = #{stockTakeRid,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="inputTime != null">
+        input_time = #{inputTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockQty != null">
+        stock_qty = #{stockQty,jdbcType=DECIMAL},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="stockTakeTime != null">
+        stock_take_time = #{stockTakeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockTakeUser != null">
+        stock_take_user = #{stockTakeUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="requestSource != null">
+        request_source = #{requestSource,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTakeItem">
+    update biz_stock_take_item
+    set stock_take_id = #{stockTakeId,jdbcType=INTEGER},
+      stock_take_rid = #{stockTakeRid,jdbcType=INTEGER},
+      wh_id = #{whId,jdbcType=INTEGER},
+      area_id = #{areaId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      batch = #{batch,jdbcType=BIGINT},
+      input_time = #{inputTime,jdbcType=TIMESTAMP},
+      stock_qty = #{stockQty,jdbcType=DECIMAL},
+      qty = #{qty,jdbcType=DECIMAL},
+      stock_take_time = #{stockTakeTime,jdbcType=TIMESTAMP},
+      stock_take_user = #{stockTakeUser,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      request_source = #{requestSource,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryItemListOnPaging" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT
+		p.wh_id,
+		wa.area_id,
+		wa.area_code,
+		wp.position_id,
+		wp.position_code,
+		m.mat_id,
+		m.mat_code,
+		m.mat_name,
+		u.decimal_place,
+		u.unit_id,
+		u.name_zh,
+		sum(p.qty) stock_qty,
+		p.location_id
+	FROM
+		dic_material m
+	JOIN dic_unit u ON u.unit_id = m.unit_id
+	<if test="stock_take_mode == 10">
+		<if test="code != null and code !=''">
+			AND m.mat_code = #{code,jdbcType=VARCHAR}
+		</if> 
+	</if> 
+	JOIN stock_position p ON p.mat_id = m.mat_id
+	<if test="fty_id != null and fty_id !=''">
+		AND p.fty_id = #{fty_id,jdbcType=VARCHAR}
+	</if> 
+	<if test="location_id != null and location_id !=''">
+		AND p.location_id = #{location_id,jdbcType=VARCHAR}
+	</if> 
+	<if test="status != null and status !=''">
+		AND p.status = #{status,jdbcType=VARCHAR}
+	</if> 
+	<if test="spec_stock != null">
+		AND p.spec_stock = #{spec_stock,jdbcType=VARCHAR}
+	</if> 
+	JOIN dic_warehouse_position wp ON wp.position_id = p.position_id
+	JOIN dic_warehouse_area wa ON wa.area_id = wp.area_id
+	<if test="stock_take_mode == 0">
+		<if test="code != null and code !=''">
+			AND wa.area_code = #{code,jdbcType=VARCHAR}
+		</if> 
+	</if> 
+	GROUP BY
+		p.wh_id,
+		wa.area_id,
+		wa.area_code,
+		wp.position_id,
+		wp.position_code,
+		m.mat_id,
+		m.mat_code,
+		m.mat_name,
+		u.name_zh,
+		p.location_id
+	ORDER BY
+		wa.area_code,
+		wp.position_code,
+		m.mat_code
+  </select>
+  
+  <select id="getListByStockTakeId" parameterType="java.lang.Integer" resultType="java.util.Map">
+	SELECT
+		i.item_id,
+		i.stock_take_id,
+		i.stock_take_rid,
+		i.wh_id,
+		i.area_id,
+		i.position_id,
+		i.mat_id,
+		m.mat_code,
+		m.mat_name,
+		i.unit_id,
+		i.batch,
+		i.input_time,
+		i.stock_qty,
+		i.qty,
+		i.stock_take_time,
+		i.stock_take_user,
+		i.remark,
+		i.request_source,
+		i.is_delete,
+		u.name_zh,
+		u.decimal_place,
+		wp.position_code,
+		wa.area_code
+	FROM
+		biz_stock_take_item i,
+		dic_unit u,
+		dic_warehouse_position wp,
+		dic_warehouse_area wa,
+		dic_material m
+	WHERE
+		wp.position_id = i.position_id
+	AND wa.area_id = wp.area_id
+	AND i.unit_id = u.unit_id
+	AND i.mat_id = m.mat_id
+    AND i.stock_take_id = #{stockTakeId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByStockTakeId" parameterType="java.lang.Integer">
+    delete from biz_stock_take_item
+    where stock_take_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+
+	<insert id="insertItemList" parameterType="java.util.List">
+		insert into biz_stock_take_item (
+		stock_take_id, stock_take_rid,
+		wh_id, area_id, position_id,
+		mat_id, unit_id, stock_qty,
+		remark, request_source)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.stock_take_id,jdbcType=INTEGER}, #{item.stock_take_rid,jdbcType=INTEGER},
+			#{item.wh_id,jdbcType=INTEGER}, #{item.area_id,jdbcType=INTEGER}, #{item.position_id,jdbcType=INTEGER},
+			#{item.mat_id,jdbcType=INTEGER}, #{item.unit_id,jdbcType=INTEGER}, #{item.stock_qty,jdbcType=DECIMAL},
+			#{item.remark,jdbcType=VARCHAR}, #{item.request_source,jdbcType=TINYINT})
+		</foreach>
+	</insert>
+</mapper>

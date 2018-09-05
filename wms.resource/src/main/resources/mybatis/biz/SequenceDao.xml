@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.SequenceDAO">
+  
+ 
+  <select id="selectNextVal" parameterType="java.lang.String" resultType="long" flushCache="true">
+    SELECT nextval(#{seq_name,jdbcType=CHAR})
+  </select>
+  
+</mapper>

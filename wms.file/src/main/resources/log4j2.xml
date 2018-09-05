@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+  <appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console> 
+  </appenders>
+  <loggers>
+     <root level="error">
+      <appender-ref ref="Console"/>
+    </root>
+	<logger name="com.inossem.wms"  level="INFO" additivity="false">
+         <appender-ref ref="Console"/>
+     </logger>
+    <logger name="org.exam" level="error" />  
+    <logger name="org.springframework.beans.factory" level="error" /> 
+ 
+    <logger name="org.springframework">  
+        <level value="INFO" />  
+    </logger>  
+     
+    <logger name="org.mybatis.spring">  
+        <level value="ERROR" />  
+    </logger>  
+      
+    <logger name="net.sf.ehcache">  
+        <level value="ERROR" />  
+    </logger>  
+      
+    <logger name="com.mchange.v2">  
+        <level value="ERROR" />  
+    </logger>  
+      
+    <logger name="java.sql">  
+        <level value="ERROR" />  
+    </logger>  
+  </loggers>
+</configuration>

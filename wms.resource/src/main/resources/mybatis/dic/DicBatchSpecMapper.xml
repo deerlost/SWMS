@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicBatchSpecMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicBatchSpec">
+    <id column="batch_spec_id" jdbcType="INTEGER" property="batchSpecId" />
+    <result column="batch_spec_code" jdbcType="VARCHAR" property="batchSpecCode" />
+    <result column="batch_spec_name" jdbcType="VARCHAR" property="batchSpecName" />
+    <result column="batch_spec_type" jdbcType="TINYINT" property="batchSpecType" />
+    <result column="batch_spec_value" jdbcType="VARCHAR" property="batchSpecValue" />
+    <result column="required" jdbcType="TINYINT" property="required" />
+    <result column="edit" jdbcType="TINYINT" property="edit" />
+    <result column="info" jdbcType="VARCHAR" property="info" />
+    <result column="display_index" jdbcType="INTEGER" property="displayIndex" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    batch_spec_id, batch_spec_code, batch_spec_name, batch_spec_type, required, info, 
+    display_index, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_batch_spec
+    where batch_spec_id = #{batchSpecId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_batch_spec
+    where batch_spec_id = #{batchSpecId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicBatchSpec">
+    insert into dic_batch_spec (batch_spec_id, batch_spec_code, batch_spec_name, 
+      batch_spec_type, required, info, 
+      display_index, is_delete, create_time, 
+      modify_time)
+    values (#{batchSpecId,jdbcType=INTEGER}, #{batchSpecCode,jdbcType=VARCHAR}, #{batchSpecName,jdbcType=VARCHAR}, 
+      #{batchSpecType,jdbcType=TINYINT}, #{required,jdbcType=TINYINT}, #{info,jdbcType=VARCHAR}, 
+      #{displayIndex,jdbcType=INTEGER}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicBatchSpec">
+    insert into dic_batch_spec
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="batchSpecId != null">
+        batch_spec_id,
+      </if>
+      <if test="batchSpecCode != null">
+        batch_spec_code,
+      </if>
+      <if test="batchSpecName != null">
+        batch_spec_name,
+      </if>
+      <if test="batchSpecType != null">
+        batch_spec_type,
+      </if>
+      <if test="required != null">
+        required,
+      </if>
+      <if test="info != null">
+        info,
+      </if>
+      <if test="displayIndex != null">
+        display_index,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="batchSpecId != null">
+        #{batchSpecId,jdbcType=INTEGER},
+      </if>
+      <if test="batchSpecCode != null">
+        #{batchSpecCode,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecName != null">
+        #{batchSpecName,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecType != null">
+        #{batchSpecType,jdbcType=TINYINT},
+      </if>
+      <if test="required != null">
+        #{required,jdbcType=TINYINT},
+      </if>
+      <if test="info != null">
+        #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="displayIndex != null">
+        #{displayIndex,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicBatchSpec">
+    update dic_batch_spec
+    <set>
+      <if test="batchSpecCode != null">
+        batch_spec_code = #{batchSpecCode,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecName != null">
+        batch_spec_name = #{batchSpecName,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecType != null">
+        batch_spec_type = #{batchSpecType,jdbcType=TINYINT},
+      </if>
+      <if test="required != null">
+        required = #{required,jdbcType=TINYINT},
+      </if>
+      <if test="info != null">
+        info = #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="displayIndex != null">
+        display_index = #{displayIndex,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where batch_spec_id = #{batchSpecId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicBatchSpec">
+    update dic_batch_spec
+    set batch_spec_code = #{batchSpecCode,jdbcType=VARCHAR},
+      batch_spec_name = #{batchSpecName,jdbcType=VARCHAR},
+      batch_spec_type = #{batchSpecType,jdbcType=TINYINT},
+      required = #{required,jdbcType=TINYINT},
+      info = #{info,jdbcType=VARCHAR},
+      display_index = #{displayIndex,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where batch_spec_id = #{batchSpecId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByMatId" parameterType="java.lang.Integer" resultMap="BaseResultMap" flushCache="true">
+    SELECT 
+    	bs.batch_spec_id, 
+    	bs.batch_spec_code, 
+    	bs.batch_spec_name, 
+    	bs.batch_spec_type, 
+    	bs.required, 
+    	bs.info, 
+    	bs.display_index,
+    	1 edit,
+    	'' batch_spec_value
+    from 
+    	dic_batch_spec bs 
+	INNER JOIN dic_batch_spec_classify_item bsc on bs.batch_spec_id = bsc.batch_spec_id and bs.is_delete = 0
+	INNER JOIN dic_material_group mg on bsc.batch_spec_classify_id = mg.batch_specific_classify_id
+	INNER JOIN dic_material m on m.mat_group_id = mg.mat_group_id
+	where m.mat_id = #{matId,jdbcType=INTEGER}
+  </select>
+</mapper>

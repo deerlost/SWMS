@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.batch.BatchMaterialSpecMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.batch.BatchMaterialSpec">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="batch_spec_code" jdbcType="VARCHAR" property="batchSpecCode" />
+    <result column="batch_spec_value" jdbcType="VARCHAR" property="batchSpecValue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, mat_id, fty_id, batch, batch_spec_code, batch_spec_value, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from batch_material_spec
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from batch_material_spec
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.batch.BatchMaterialSpec">
+    insert into batch_material_spec (id, mat_id, fty_id, 
+      batch, batch_spec_code, batch_spec_value, 
+      create_time, modify_time)
+    values (#{id,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{ftyId,jdbcType=INTEGER}, 
+      #{batch,jdbcType=BIGINT}, #{batchSpecCode,jdbcType=VARCHAR}, #{batchSpecValue,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <insert id="insertBatchMaterialSpecForNewBatch">
+  	insert into batch_material_spec (mat_id, fty_id, 
+      batch, batch_spec_code, batch_spec_value)
+    select  mat_id, fty_id, 
+    <if test="newBatch != null">
+       	#{newBatch},
+   	</if>
+    batch_spec_code, batch_spec_value
+    from batch_material_spec 
+    where mat_id = #{matId}
+    and fty_id = #{ftyId}
+    and batch = #{batch}
+    
+  </insert>
+  
+  
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.batch.BatchMaterialSpec">
+    insert into batch_material_spec
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="batchSpecCode != null">
+        batch_spec_code,
+      </if>
+      <if test="batchSpecValue != null">
+        batch_spec_value,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="batchSpecCode != null">
+        #{batchSpecCode,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecValue != null">
+        #{batchSpecValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.batch.BatchMaterialSpec">
+    update batch_material_spec
+    <set>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="batchSpecCode != null">
+        batch_spec_code = #{batchSpecCode,jdbcType=VARCHAR},
+      </if>
+      <if test="batchSpecValue != null">
+        batch_spec_value = #{batchSpecValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByUniqueKeySelective" parameterType="com.inossem.wms.model.batch.BatchMaterialSpec">
+    update batch_material_spec
+    <set>
+      <if test="batchSpecValue != null">
+        batch_spec_value = #{batchSpecValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mat_id = #{matId,jdbcType=INTEGER}
+    AND  fty_id = #{ftyId,jdbcType=INTEGER}
+    AND  batch = #{batch,jdbcType=BIGINT}
+    AND  batch_spec_code = #{batchSpecCode,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.batch.BatchMaterialSpec">
+    update batch_material_spec
+    set mat_id = #{matId,jdbcType=INTEGER},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      batch = #{batch,jdbcType=BIGINT},
+      batch_spec_code = #{batchSpecCode,jdbcType=VARCHAR},
+      batch_spec_value = #{batchSpecValue,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByUniqueKey" parameterType="com.inossem.wms.model.key.BatchMaterialSpecKey" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM batch_material_spec
+    WHERE mat_id = #{matId,jdbcType=INTEGER}
+    AND fty_id = #{ftyId,jdbcType=INTEGER}
+    AND batch = #{batch,jdbcType=BIGINT}
+  </select>
+  <insert id="insertList" parameterType="java.util.List">
+    insert ignore into batch_material_spec (mat_id, fty_id, 
+      batch, batch_spec_code, batch_spec_value)
+      values
+    <foreach collection="list" item="item" index="index" separator=",">
+      
+     (#{item.matId,jdbcType=INTEGER}, #{item.ftyId,jdbcType=INTEGER}, 
+      #{item.batch,jdbcType=BIGINT}, #{item.batchSpecCode,jdbcType=VARCHAR}, #{item.batchSpecValue,jdbcType=VARCHAR})
+  	</foreach>
+  </insert>
+  <delete id="deleteByStockInputId" parameterType="java.lang.Integer">
+   	DELETE m
+	FROM
+		biz_stock_input_item s
+	INNER JOIN batch_material_spec m ON s.mat_id = m.mat_id
+	AND s.fty_id = m.fty_id
+	AND s.batch = m.batch
+	WHERE
+		s.stock_input_id = #{stockInputId,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="selectBatchSpecByUniqueKey" parameterType="com.inossem.wms.model.key.BatchMaterialSpecKey" resultType="com.inossem.wms.model.dic.DicBatchSpec">
+    SELECT
+		bs.batch_spec_id batchSpecId,
+		bs.batch_spec_code batchSpecCode,
+		bs.batch_spec_name batchSpecName,
+		bs.batch_spec_type batchSpecType,
+		bs.required,
+		bs.info,
+		bs.display_index displayIndex,
+		1 edit,
+		bms.batch_spec_value batchSpecValue
+	FROM
+		batch_material_spec bms
+	INNER JOIN dic_batch_spec bs ON bms.batch_spec_code = bs.batch_spec_code
+
+    WHERE bms.mat_id = #{matId,jdbcType=INTEGER}
+    AND bms.fty_id = #{ftyId,jdbcType=INTEGER}
+    AND bms.batch = #{batch,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectRecentBatchList" parameterType="map" resultType="com.inossem.wms.model.batch.BatchMaterialSpec">
+  SELECT mat_id ,fty_id ,batch ,MAX(create_time) create_time
+	FROM batch_material_spec where mat_id = #{matId,jdbcType=INTEGER} and fty_id = #{ftyId,jdbcType=INTEGER}
+	GROUP BY   mat_id ,fty_id ,batch
+	ORDER BY create_time DESC
+	LIMIT 0, 150
+  
+  </select>
+  
+  
+  
+   <delete id="deleteByFtyIdAndMatIdAndBatch" parameterType="map">
+    delete from batch_material_spec
+    where mat_id = #{matId,jdbcType=INTEGER}
+    and fty_id = #{matId,jdbcType=INTEGER}
+    and batch = #{matId,jdbcType=BIGINT}
+  </delete>
+  
+  
+  <insert id="insertMCH1List" parameterType="java.util.List">
+    insert into batch_material_spec (mat_id, fty_id, batch, batch_spec_code, batch_spec_value)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.matId,jdbcType=VARCHAR}, #{item.ftyId,jdbcType=VARCHAR}, #{item.List,jdbcType=VARCHAR}, 
+      #{item.batchSpecCode,jdbcType=VARCHAR}, #{item.batchSpecValue,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  
+  <delete id="deleteByftyIdMatIdBatch" parameterType="com.inossem.wms.model.batch.BatchMaterialSpec">
+    delete from batch_material_spec
+    where mat_id = #{matId,jdbcType=INTEGER}
+      and fty_id = #{ftyId,jdbcType=INTEGER}
+      and batch = #{batch,jdbcType=VARCHAR}
+  </delete>
+</mapper>

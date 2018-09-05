@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>采购订单信息</title>
+		<meta charset="utf-8" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<style>
+			.up20 {
+				margin: 10px 0px;
+			}
+			
+			.maxcapacity {
+				border-radius: 4px;
+			}
+			
+			.palletmin,
+			.palletmax,
+			.maxcapacity,
+			.unit {
+				width: 45%;
+				height: 34px;
+				padding: 6px 12px;
+				font-size: 14px;
+				line-height: 1.42857143;
+				color: #555;
+				background-color: #fff;
+				background-image: none;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+		</style>
+		<script>
+			var pardata = null;
+			var dataselect = null;
+			var isChecked = true;
+			$(function() {
+				$(".btnSave").click(function() {
+					submit();
+				});
+			});
+
+			function submit() {
+				var jsondata = {};
+				var req=/^P\d{11}$/;
+				var isdj = -1;
+				$.each($(".currinput"), function(i, item) {
+					var curr = $(this)
+					var palletnum = curr.val();
+					if(!req.test(palletnum)){
+							layer.tips("格式必须为首字母为大写P加11位数字", $(".curr"), {
+							tips: [2, '#f7b824'],
+							tipsMore: true,
+							time: 5000
+						});
+						isChecked = false;
+					}
+				});
+				if(!CheckisDecimal($(".maxcapacity"), 3)) {
+					isChecked = false;
+				} else {
+					isChecked = true;
+				}
+				if($('.frozen').is(':checked')) {
+					isdj = 1
+				} else {
+					isdj = 0
+				}
+				if($(".unit").val() == "") {
+					layer.tips("单位不能为空", $(".unit"), {
+						tips: [2, '#f7b824'],
+						tipsMore: true,
+						time: 5000
+					});
+					isChecked = false;
+				}
+				if(isChecked == false) {
+					return false
+				}
+				jsondata.pallet_code_begin =$(".palletmin").val();
+				jsondata.pallet_code_end =$(".palletmax").val();
+				jsondata.pallet_name = $(".tplx").find("option:selected").val();
+				jsondata.freeze = isdj;
+				jsondata.freeze_id = 0;
+				jsondata.status=0;
+				jsondata.max_weight = $(".maxcapacity").val();
+				jsondata.unit_weight = $(".unit").val();
+				showloading();
+				var url = (uriapi + '/conf/pallet/add_pallets');
+				ajax(url, 'POST', JSON.stringify(jsondata), function(data) {
+					setTimeout(function() {
+						layer.close(indexloading);
+					}, 50);
+					if(data.head.error_code == 0) {
+						layer.msg("批量添加成功", {
+							time: 2000
+						});
+						parent.search();
+						setTimeout(function() {
+							$(".btn_iframe_close_window").click();
+						}, 2000);
+					} else {
+						layer.msg(data.head.msg, {
+							time: 5000
+						})
+					}
+				}, function(e) {
+					layer.close(indexloading);
+					layer.alert("数据请求失败");
+				});
+			}
+		</script>
+	</head>
+
+	<body>
+		<div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">托盘号：</label>
+				<div class="col-xs-8">
+					<input type="text" class="palletmin currinput" />&nbsp;&nbsp;至 &nbsp;&nbsp;
+					<input type="text" class="palletmax currinput" />
+				</div>
+			</div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">托盘类型：</label>
+				<div class="col-xs-4">
+					<select class="form-control tplx">
+						<option value="GB">GB-钢丝吊篮</option>
+						<option value="IP">IP-工业用托盘</option>
+						<option value="EP">EP-存储篮</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">最大承重：</label>
+				<div class="col-xs-6">
+					<input type="text" class="maxcapacity" />
+				</div>
+			</div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">单位：</label>
+				<div class="col-xs-6">
+					<input type="text" class="unit" />
+				</div>
+			</div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">冻结：</label>
+				<div class="col-xs-4">
+					<input type="checkbox" class="frozen" />
+				</div>
+			</div>
+		</div>
+		<div class="submitbutton fixed">
+			<a href="javascript:void(0)" class="btn-lay-blue btnSave">　保存　</a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+		</div>
+	</body>
+
+</html>

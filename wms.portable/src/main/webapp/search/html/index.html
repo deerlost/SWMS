@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="msapplication-tap-highlight" content="no" />
+	<title>主页</title>
+	<link rel="stylesheet" type="text/css" href="../css/index.css" />
+	<link rel="stylesheet" type="text/css" href="../css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="../css/title.css" />
+	<script src="../js/rem.js" type="text/javascript"></script>
+	<script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="homebox">
+		<div class="title">
+			 <a href="javascript:void(0)" class="back">主页</a> 
+			报表查询
+		</div>
+		<a class="a_li" href="stockAnalysis/stockAnalysis1.html?board_id=1&corp_id=1"><img src="../images/home/u19.png" /><span>库存积压分析</span></a>
+		<a class="a_li" href="zytj/zy1.html"><img src="../images/home/u26.png" /><span>作业量统计</span></a>
+		<a class="a_li" href="turnover/turnoverdetails.html?board_id=1&corp_id=1"><img src="../images/home/u33.png" /><span>存货周转率分析</span></a>
+		<a class="a_li" href="stockEwarn/stockEwarningl.html"><img src="../images/home/u40.png" /><span>库存容量预警</span></a>
+		<a class="a_li" href="crk/crk2.html?board_id=1&corp_id=1"><img src="../images/home/u47.png" /><span>出入库量统计</span></a>
+		<a class="a_li" href="structure/kcjg2.html"><img src="../images/home/u54.png" /><span>库存结构分析</span></a>
+		<a class="a_li" href="kcyj/kcyj1.html"><img src="../images/home/u61.png" /><span>临时库存预警</span></a>
+	</div>
+</body>
+<script>
+	$(function(){
+		$(".back").click(function(){
+			android.finish();
+		})
+	});
+</script>
+</html>

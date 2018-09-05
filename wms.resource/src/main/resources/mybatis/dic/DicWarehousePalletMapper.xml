@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicWarehousePalletMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicWarehousePallet">
+    <id column="pallet_id" jdbcType="INTEGER" property="palletId" />
+    <result column="pallet_code" jdbcType="VARCHAR" property="palletCode" />
+    <result column="pallet_name" jdbcType="VARCHAR" property="palletName" />
+    <result column="wh_id" jdbcType="VARCHAR" property="whId" />
+    <result column="max_weight" jdbcType="DECIMAL" property="maxWeight" />
+    <result column="unit_weight" jdbcType="VARCHAR" property="unitWeight" />
+    <result column="freeze" jdbcType="TINYINT" property="freeze" />
+    <result column="freeze_id" jdbcType="TINYINT" property="freezeId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+     <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pallet_id, pallet_code, pallet_name, wh_id, max_weight, unit_weight, freeze, freeze_id, 
+    status, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_warehouse_pallet
+    where pallet_id = #{palletId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_warehouse_pallet
+    where pallet_id = #{palletId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicWarehousePallet" useGeneratedKeys="true" keyProperty="palletId">
+    insert into dic_warehouse_pallet (pallet_id, pallet_code, pallet_name, 
+      wh_id, max_weight, unit_weight, 
+      freeze, freeze_id, status, 
+      is_delete, create_time, modify_time
+      )
+    values (#{palletId,jdbcType=INTEGER}, #{palletCode,jdbcType=VARCHAR}, #{palletName,jdbcType=VARCHAR}, 
+      #{whId,jdbcType=VARCHAR}, #{maxWeight,jdbcType=DECIMAL}, #{unitWeight,jdbcType=VARCHAR}, 
+      #{freeze,jdbcType=TINYINT}, #{freezeId,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!-- 添加托盘 2018.01.22 刘宇 -->
+  <insert id="insertPalletSelective" parameterType="com.inossem.wms.model.dic.DicWarehousePallet" useGeneratedKeys="true" keyProperty="palletId">
+    insert into dic_warehouse_pallet
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="palletId != null and palletId > 0">
+        pallet_id,
+      </if>
+      <if test="palletCode != null">
+        pallet_code,
+      </if>
+      <if test="palletName != null">
+        pallet_name,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="maxWeight != null">
+        max_weight,
+      </if>
+      <if test="unitWeight != null">
+        unit_weight,
+      </if>
+      <if test="freeze != null ">
+        freeze,
+      </if>
+      <if test="freezeId != null">
+        freeze_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+        <if test="createUser != null">
+        create_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="palletId != null  and palletId > 0">
+        #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="palletCode != null">
+        #{palletCode,jdbcType=VARCHAR},
+      </if>
+      <if test="palletName != null">
+        #{palletName,jdbcType=VARCHAR},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=VARCHAR},
+      </if>
+      <if test="maxWeight != null">
+        #{maxWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        #{unitWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="freeze != null">
+        #{freeze,jdbcType=TINYINT},
+      </if>
+      <if test="freezeId != null">
+        #{freezeId,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+        <if test="createUser != null">
+         #{createUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--修改单个托盘信息 2018.01.22 刘宇 -->
+  <update id="updatePalletByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicWarehousePallet">
+    update dic_warehouse_pallet
+    <set>
+      <if test="palletName != null">
+        pallet_name = #{palletName,jdbcType=VARCHAR},
+      </if>
+      <if test="maxWeight != null">
+        max_weight = #{maxWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        unit_weight = #{unitWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="freeze != null">
+        freeze = #{freeze,jdbcType=TINYINT},
+      </if>
+      <if test="freezeId != null">
+        freeze_id = #{freezeId,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      
+    </set>
+    where pallet_id = #{palletId,jdbcType=INTEGER}
+  </update>
+  <!-- 批量修改托盘信息 2018.01.22 刘宇 -->
+   <update id="updateManyOfPalletByPrimaryKeysSelective" parameterType="java.util.HashMap">
+    update dic_warehouse_pallet
+    <set>
+      <if test="palletName != null">
+        pallet_name = #{palletName,jdbcType=VARCHAR},
+      </if>
+      <if test="freeze != null">
+        freeze = #{freeze,jdbcType=TINYINT},
+      </if>
+      <if test="maxWeight != null">
+        max_weight = #{maxWeight,jdbcType=DECIMAL},
+      </if>
+      
+    </set>
+    where pallet_id in 
+    <foreach collection="mapManyOfValues" item="manyOfValues" index="index" open="(" close=")" separator=",">
+             #{manyOfValues}
+    </foreach> 
+    
+  </update>
+  
+  <!-- 托盘列表/关键字查询 2018.01.22 刘宇 -->
+  <select id="selectPalletOnPaging"  parameterType="com.inossem.wms.model.dic.DicWarehousePallet" resultMap="BaseResultMap">
+	SELECT 
+	sp.pallet_id, sp.pallet_code, sp.pallet_name, sp.max_weight,  sp.freeze, sp.freeze_id, 
+    sp.status,  sp.create_time, sp.modify_time	  ,sp.create_user, u.user_name  create_user_name 
+	
+    from dic_warehouse_pallet as sp 
+    left join wms_user u on u.user_id=sp.create_user
+     where 1 = 1  
+    <if test="condition != null and condition !=''">
+    	and (sp.pallet_code  = #{condition} 
+		     or sp.pallet_name = #{condition}  		     
+		     )   
+    </if>
+    <if test="lgtyp != null  and lgtyp !=''">
+    	and sp.pallet_id in
+    	<foreach collection="lgtyp" item="palletLgtyp" index="index" open="(" close=")" separator=",">
+             #{palletLgtyp}
+   		</foreach>   
+    </if>
+     <if test="palletId != null  and palletId > 0">
+         and sp.pallet_id = #{palletId,jdbcType=INTEGER}
+      </if>
+      <if test="palletCode != null and palletCode !=''">
+       and  sp.pallet_code = #{palletCode,jdbcType=VARCHAR}
+      </if>
+    	
+	</select>
+	
+	<!-- 查找区间仓库号 2018.01.22 刘宇 -->
+	 <select id="selectPalletCodesByTwoPalletCode"  parameterType="com.inossem.wms.model.dic.DicWarehousePallet"  resultMap="BaseResultMap">
+    select 
+    pallet_code
+     
+    from dic_warehouse_pallet where pallet_code between #{palletCode1,jdbcType=VARCHAR} and #{palletCode2,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 批量添加托盘 2018.01.22 -->
+   <insert id="insertPallets" parameterType="java.util.List">
+   
+    insert into dic_warehouse_pallet (pallet_code, pallet_name, 
+      wh_id, freeze, freeze_id, 
+      status,max_weight, unit_weight)
+  	 values 
+		<foreach collection="list" item="item" index="index" separator="," >
+        	(#{item.palletCode},#{item.palletName},#{item.whId},
+        	#{item.freeze},#{item.freezeId},#{item.status},#{item.maxWeight},
+        	#{item.unitWeight})  
+   	 	</foreach>  
+  </insert>
+  
+  <!-- 打印托盘信息 2018.01.22 刘宇 -->
+  <select id="selectPalletsForPrintByPalletId"  parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  SELECT 
+	sp.pallet_id, sp.pallet_code, sp.pallet_name, sp.wh_id, sp.max_weight, sp.unit_weight, sp.freeze, sp.freeze_id, 
+    sp.status, sp.is_delete, sp.create_time, sp.modify_time	  
+	, st.wh_name
+    from dic_warehouse_pallet as sp  INNER JOIN  dic_warehouse as st ON sp.wh_id = st.wh_id 
+     where 1 = 1   
+    	and sp.pallet_id in
+    	<foreach collection="ManyOfPallet_ids" item="ManyOfPallet_id" index="index" open="(" close=")" separator=",">
+             #{ManyOfPallet_id}
+   		</foreach>   
+    
+     
+    	
+	</select>
+  
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicWarehousePallet">
+    update dic_warehouse_pallet
+    set pallet_code = #{palletCode,jdbcType=VARCHAR},
+      pallet_name = #{palletName,jdbcType=VARCHAR},
+      wh_id = #{whId,jdbcType=VARCHAR},
+      max_weight = #{maxWeight,jdbcType=DECIMAL},
+      unit_weight = #{unitWeight,jdbcType=VARCHAR},
+      freeze = #{freeze,jdbcType=TINYINT},
+      freeze_id = #{freezeId,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where pallet_id = #{palletId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 包装页查询托盘集合  -->
+  <select id="selectDicWarehousePalletList" parameterType="map" resultMap="BaseResultMap">
+  		SELECT * FROM dic_warehouse_pallet WHERE is_delete=0 and pallet_code = #{keyword} 
+  </select>
+  
+  <select id="checkPalletIsUsed" resultType="int">
+  		select count(1) from biz_pkg_operation_position where is_delete=0 and pallet_id=#{palletId}
+  </select>
+</mapper>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizPkgOperationPositionMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizPkgOperationPosition">
+    <id column="item_position_id" jdbcType="INTEGER" property="itemPositionId" />
+    <result column="pkg_operation_id" jdbcType="INTEGER" property="pkgOperationId" />
+    <result column="pkg_operation_rid" jdbcType="INTEGER" property="pkgOperationRid" />
+    <result column="pkg_operation_position_id" jdbcType="INTEGER" property="pkgOperationPositionId" />
+    <result column="pallet_id" jdbcType="INTEGER" property="palletId" />
+    <result column="package_id" jdbcType="INTEGER" property="packageId" />
+    <result column="package_code" jdbcType="VARCHAR" property="packageCode" />
+    <result column="package_type_id" jdbcType="INTEGER" property="packageTypeId" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_position_id, pkg_operation_id, pkg_operation_rid, pkg_operation_position_id, 
+    pallet_id, package_id, is_delete, create_time, modify_time,package_code,package_type_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_pkg_operation_position
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_pkg_operation_position
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizPkgOperationPosition" useGeneratedKeys="true" keyProperty="itemPositionId">
+    insert into biz_pkg_operation_position (item_position_id, pkg_operation_id, pkg_operation_rid, 
+      pkg_operation_position_id,  pallet_id, package_id, 
+      is_delete, create_time, modify_time,package_code,package_type_id
+      )
+    values (#{itemPositionId,jdbcType=INTEGER}, #{pkgOperationId,jdbcType=INTEGER}, #{pkgOperationRid,jdbcType=INTEGER}, 
+      #{pkgOperationPositionId,jdbcType=INTEGER}, #{palletId,jdbcType=INTEGER}, #{packageId,jdbcType=INTEGER}, 
+      #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{packageCode,jdbcType=VARCHAR},#{packageTypeId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizPkgOperationPosition" useGeneratedKeys="true" keyProperty="itemPositionId">
+    insert into biz_pkg_operation_position
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemPositionId != null">
+        item_position_id,
+      </if>
+      <if test="pkgOperationId != null">
+        pkg_operation_id,
+      </if>
+      <if test="pkgOperationRid != null">
+        pkg_operation_rid,
+      </if>
+      <if test="pkgOperationPositionId != null">
+        pkg_operation_position_id,
+      </if>
+      <if test="palletId != null">
+        pallet_id,
+      </if>
+      <if test="packageId != null">
+        package_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="packageCode != null">
+      	package_code,
+      </if>
+      <if test="packageTypeId!=null">
+      	package_type_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemPositionId != null">
+        #{itemPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="pkgOperationId != null">
+        #{pkgOperationId,jdbcType=INTEGER},
+      </if>
+      <if test="pkgOperationRid != null">
+        #{pkgOperationRid,jdbcType=INTEGER},
+      </if>
+      <if test="pkgOperationPositionId != null">
+        #{pkgOperationPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="palletId != null">
+        #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="packageId != null">
+        #{packageId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="packageCode != null">
+      	#{packageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="packageTypeId !=null">
+        #{packageTypeId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizPkgOperationPosition">
+    update biz_pkg_operation_position
+    <set>
+      <if test="pkgOperationId != null">
+        pkg_operation_id = #{pkgOperationId,jdbcType=INTEGER},
+      </if>
+      <if test="pkgOperationRid != null">
+        pkg_operation_rid = #{pkgOperationRid,jdbcType=INTEGER},
+      </if>
+      <if test="pkgOperationPositionId != null">
+        pkg_operation_position_id = #{pkgOperationPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="palletId != null">
+        pallet_id = #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="packageId != null">
+        package_id = #{packageId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="packageCode!=null">
+      	package_code =#{packageCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizPkgOperationPosition">
+    update biz_pkg_operation_position
+    set pkg_operation_id = #{pkgOperationId,jdbcType=INTEGER},
+      pkg_operation_rid = #{pkgOperationRid,jdbcType=INTEGER},
+      pkg_operation_position_id = #{pkgOperationPositionId,jdbcType=INTEGER},
+      pallet_id = #{palletId,jdbcType=INTEGER},
+      package_id = #{packageId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      package_code=#{packageCode,jdbcType=VARCHAR}
+    where item_position_id = #{itemPositionId,jdbcType=INTEGER}
+  </update>
+  
+  <resultMap type="com.inossem.wms.model.vo.BizPkgOperationPositionVo" id="BaseResultMapVo">
+  	 <id column="item_position_id" jdbcType="INTEGER" property="itemPositionId" />
+     <result column="pkg_operation_id" jdbcType="INTEGER" property="pkgOperationId" />
+     <result column="pkg_operation_rid" jdbcType="INTEGER" property="pkgOperationRid" />
+     <result column="pkg_operation_position_id" jdbcType="INTEGER" property="pkgOperationPositionId" />
+     <result column="pallet_id" jdbcType="INTEGER" property="palletId" />
+     <result column="package_id" jdbcType="INTEGER" property="packageId" />
+     <result column="package_code" jdbcType="VARCHAR" property="packageCode" />
+  	 <result column="pallet_code" jdbcType="VARCHAR" property="palletCode" />
+	 <result column="pallet_name" jdbcType="VARCHAR" property="palletName" />
+  	 <result column="max_weight" jdbcType="DECIMAL" property="maxWeight" />
+   	 <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+	 <result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+	 <result column="name_zh" jdbcType="VARCHAR" property="unitName" />
+     <result column="package_type_id" jdbcType="INTEGER" property="packageTypeId" />
+   	 <result column="package_type_code" jdbcType="VARCHAR" property="packageTypeCode" />
+   	 <result column="package_type_name" jdbcType="VARCHAR" property="packageTypeName" />
+     <result column="package_standard_ch" jdbcType="VARCHAR" property="packageStandardCh" />
+     <result column="package_standard" jdbcType="DECIMAL" property="packageStandard" />
+     <result column="package_group_id" jdbcType="INTEGER" property="packageGroupId" />
+     <result column="size" jdbcType="VARCHAR" property="size" />
+     <result column="sn_used" jdbcType="TINYINT" property="snUsed" />
+     <result column="name_zh" jdbcType="VARCHAR" property="unitZh" />
+     <result column="name_en" jdbcType="VARCHAR" property="unitEn" />
+  </resultMap>
+  
+  <!-- 查询包装行项目的详情 -->
+  <select id="selectBizPkgOperationPositionList" resultMap="BaseResultMapVo">
+	  SELECT 
+	  		biz_pkg_operation_position.item_position_id,
+	  		biz_pkg_operation_position.pkg_operation_id,
+	  		biz_pkg_operation_position.pkg_operation_rid,
+	  		biz_pkg_operation_position.pkg_operation_position_id,
+	  		biz_pkg_operation_position.pallet_id,
+	  		biz_pkg_operation_position.package_id,
+	  		biz_pkg_operation_position.is_delete,
+	  		biz_pkg_operation_position.create_time,
+	  		biz_pkg_operation_position.modify_time,
+	  		dic_unit.unit_id,
+	  		dic_unit.unit_code,
+	  		dic_unit.name_en,
+	  		dic_unit.name_zh,
+	  		dic_warehouse_pallet.pallet_code,
+	  		dic_warehouse_pallet.max_weight,
+  		    dic_warehouse_pallet.pallet_name,
+	  		biz_pkg_operation_position.`package_code`,
+	  		biz_pkg_operation_position.`package_id`,
+			dic_package_type.sn_used,
+			dic_package_type.size,
+			dic_package_type.package_type_id,
+			dic_package_type.package_type_name,
+			dic_package_type.package_type_code,
+			dic_package_type.is_delete,
+			dic_package_type.package_group_id,
+			dic_package_type.package_standard,
+			dic_package_type.package_standard_ch
+		FROM biz_pkg_operation_position 
+			LEFT JOIN dic_warehouse_pallet ON dic_warehouse_pallet.`pallet_id`=biz_pkg_operation_position.`pallet_id` AND dic_warehouse_pallet.`is_delete`=0
+			LEFT JOIN dic_package_type ON biz_pkg_operation_position.`package_type_id`=dic_package_type.`package_type_id` AND dic_package_type.`is_delete`=0
+			LEFT JOIN dic_unit ON dic_package_type.`unit_id`=dic_unit.`unit_id`
+		WHERE biz_pkg_operation_position.pkg_operation_rid=#{pkgOperationRid} 
+		AND biz_pkg_operation_position.pkg_operation_id=#{pkgOperationId} 
+		AND biz_pkg_operation_position.is_delete=0
+  </select>
+  
+  <update id="deleteBizPkgOperationPosition">
+  	UPDATE biz_pkg_operation_position
+  		SET  is_delete = 1
+  	WHERE pkg_operation_id = #{pkgOperationId}	
+  </update>
+  
+  <select id="selectByPalletCodeOrPackageCode" resultMap="BaseResultMapVo">
+		SELECT 
+	  		biz_pkg_operation_position.item_position_id,
+	  		biz_pkg_operation_position.pkg_operation_id,
+	  		biz_pkg_operation_position.pkg_operation_rid,
+	  		biz_pkg_operation_position.pkg_operation_position_id,
+	  		biz_pkg_operation_position.pallet_id,
+	  		biz_pkg_operation_position.package_id,
+	  		biz_pkg_operation_position.is_delete,
+	  		biz_pkg_operation_position.create_time,
+	  		biz_pkg_operation_position.modify_time,
+	  		dic_unit.unit_id,
+	  		dic_unit.unit_code,
+	  		dic_warehouse_pallet.pallet_code,
+	  		dic_warehouse_pallet.max_weight,
+  		    dic_warehouse_pallet.pallet_name,
+	  		serial_package.`package_code`,
+	  		serial_package.`package_id`,
+			dic_package_type.sn_used,
+			dic_package_type.size,
+			dic_package_type.package_type_id,
+			dic_package_type.package_type_name,
+			dic_package_type.package_type_code,
+			dic_package_type.is_delete,
+			dic_package_type.package_group_id,
+			dic_package_type.package_standard,
+			dic_package_type.package_standard_ch,
+			dic_unit.name_zh
+		FROM biz_pkg_operation_position 
+			inner join biz_pkg_operation_head head on head.pkg_operation_id = biz_pkg_operation_position.pkg_operation_id
+			<if test="productionBatch != null">
+        		and head.product_batch = #{productionBatch,jdbcType=VARCHAR}
+     		</if>
+			LEFT JOIN dic_warehouse_pallet ON dic_warehouse_pallet.`pallet_id`=biz_pkg_operation_position.`pallet_id` AND dic_warehouse_pallet.`is_delete`=0
+			LEFT JOIN serial_package ON biz_pkg_operation_position.`package_id` = serial_package.`package_id` 
+			<if test="packageTypeId != null">
+        		and biz_pkg_operation_position.package_type_id = #{packageTypeId,jdbcType=INTEGER}
+     		</if>
+			LEFT JOIN dic_package_type ON serial_package.`package_type_id`=dic_package_type.`package_type_id` AND dic_package_type.`is_delete`=0
+			LEFT JOIN dic_unit ON dic_package_type.`unit_id`=dic_unit.`unit_id`
+		WHERE 1 =1 and biz_pkg_operation_position.is_delete = 0
+		<if test="packageCode != null">
+        	and serial_package.package_code = #{packageCode,jdbcType=VARCHAR}
+     	</if>
+    	<if test="palletCode != null">
+        	and dic_warehouse_pallet.pallet_code = #{palletCode,jdbcType=VARCHAR}
+     	</if>
+     	<if test="matId != null">
+        	and serial_package.mat_id = #{matId,jdbcType=INTEGER}
+     	</if>
+     	<if test="notStatus != null">
+        	and biz_pkg_operation_position.status not in (#{notStatus} )
+     	</if>
+  </select>
+  
+  <update id="updatePkgSnById">
+  		update serial_package set status=0 where package_id in (select package_id from biz_pkg_operation_position where pkg_operation_id= #{pkgOperationId})
+  </update>
+  
+</mapper>

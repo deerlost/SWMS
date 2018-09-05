@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.stock.StockPositionHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.stock.StockPositionHistory">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="stock_id" jdbcType="INTEGER" property="stockId" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="pallet_id" jdbcType="INTEGER" property="palletId" />
+    <result column="package_id" jdbcType="INTEGER" property="packageId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="spec_stock" jdbcType="VARCHAR" property="specStock" />
+    <result column="spec_stock_code" jdbcType="VARCHAR" property="specStockCode" />
+    <result column="spec_stock_name" jdbcType="VARCHAR" property="specStockName" />
+    <result column="input_date" jdbcType="TIMESTAMP" property="inputDate" />
+    <result column="take_delivery_date" jdbcType="TIMESTAMP" property="takeDeliveryDate" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="unit_weight" jdbcType="INTEGER" property="unitWeight" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, stock_id, wh_id, area_id, position_id, pallet_id, package_id, mat_id, fty_id, 
+    location_id, batch, status, qty, spec_stock, spec_stock_code, spec_stock_name, input_date, 
+    take_delivery_date, unit_id, unit_weight, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stock_position_history
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from stock_position_history
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.stock.StockPositionHistory">
+    insert into stock_position_history (id, stock_id, wh_id, 
+      area_id, position_id, pallet_id, 
+      package_id, mat_id, fty_id, 
+      location_id, batch, status, 
+      qty, spec_stock, spec_stock_code, 
+      spec_stock_name, input_date, take_delivery_date, 
+      unit_id, unit_weight, create_time, 
+      modify_time)
+    values (#{id,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{whId,jdbcType=INTEGER}, 
+      #{areaId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, #{palletId,jdbcType=INTEGER}, 
+      #{packageId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{ftyId,jdbcType=INTEGER}, 
+      #{locationId,jdbcType=INTEGER}, #{batch,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}, 
+      #{qty,jdbcType=DECIMAL}, #{specStock,jdbcType=VARCHAR}, #{specStockCode,jdbcType=VARCHAR}, 
+      #{specStockName,jdbcType=VARCHAR}, #{inputDate,jdbcType=TIMESTAMP}, #{takeDeliveryDate,jdbcType=TIMESTAMP}, 
+      #{unitId,jdbcType=INTEGER}, #{unitWeight,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.stock.StockPositionHistory">
+    insert into 
+    <choose>  
+       <when test="isUrgent == null ">stock_position_history</when>  
+       <when test="isUrgent != null">stock_position_urgent_history</when>  
+    </choose>
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="stockId != null">
+        stock_id,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="areaId != null">
+        area_id,
+      </if>
+      <if test="positionId != null">
+        position_id,
+      </if>
+      <if test="palletId != null">
+        pallet_id,
+      </if>
+      <if test="packageId != null">
+        package_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="specStock != null">
+        spec_stock,
+      </if>
+      <if test="specStockCode != null">
+        spec_stock_code,
+      </if>
+      <if test="specStockName != null">
+        spec_stock_name,
+      </if>
+      <if test="inputDate != null">
+        input_date,
+      </if>
+      <if test="takeDeliveryDate != null">
+        take_delivery_date,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="unitWeight != null">
+        unit_weight,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="packageTypeId != null">
+        package_type_id,
+      </if>
+      <if test="stockTypeId != null">
+        stock_type_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="palletId != null">
+        #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="packageId != null">
+        #{packageId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="specStock != null">
+        #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCode != null">
+        #{specStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockName != null">
+        #{specStockName,jdbcType=VARCHAR},
+      </if>
+      <if test="inputDate != null">
+        #{inputDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeDeliveryDate != null">
+        #{takeDeliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="unitWeight != null">
+        #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="packageTypeId != null">
+        #{packageTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTypeId != null">
+        #{stockTypeId,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.stock.StockPositionHistory">
+    update stock_position_history
+    <set>
+      <if test="stockId != null">
+        stock_id = #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="palletId != null">
+        pallet_id = #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="packageId != null">
+        package_id = #{packageId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="specStock != null">
+        spec_stock = #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCode != null">
+        spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockName != null">
+        spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+      </if>
+      <if test="inputDate != null">
+        input_date = #{inputDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeDeliveryDate != null">
+        take_delivery_date = #{takeDeliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="unitWeight != null">
+        unit_weight = #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.stock.StockPositionHistory">
+    update stock_position_history
+    set stock_id = #{stockId,jdbcType=INTEGER},
+      wh_id = #{whId,jdbcType=INTEGER},
+      area_id = #{areaId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      pallet_id = #{palletId,jdbcType=INTEGER},
+      package_id = #{packageId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      batch = #{batch,jdbcType=BIGINT},
+      status = #{status,jdbcType=TINYINT},
+      qty = #{qty,jdbcType=DECIMAL},
+      spec_stock = #{specStock,jdbcType=VARCHAR},
+      spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+      spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+      input_date = #{inputDate,jdbcType=TIMESTAMP},
+      take_delivery_date = #{takeDeliveryDate,jdbcType=TIMESTAMP},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      unit_weight = #{unitWeight,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

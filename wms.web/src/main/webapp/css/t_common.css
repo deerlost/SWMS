@@ -1,0 +1,34 @@
+ h2.h2grey {
+    height: 54px;
+    padding: 0px 20px;
+    line-height: 75px;
+    color: #999;
+    font-size: 22px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+table{
+	max-width: 1200px;
+     white-space: normal;
+	    table-layout: fixed;
+}
+ 
+
+div.submitbutton {
+    text-align: center;
+    padding: 42px 0px;
+}
+ .table>tbody>tr>td,.table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px;
+     vertical-align: middle;
+    height: 40px;
+ 
+    border-top: 1px solid #ddd;
+   text-align: left;
+     white-space: normal;
+
+}
+ table.tablestyle1 th:first-child, table.tablestyle1 td:first-child, table.tablestyle3 th:first-child, table.tablestyle3 td:first-child{
+        padding: 20px;
+      }
+ 

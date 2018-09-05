@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="msapplication-tap-highlight" content="no" />
+	<title>库存结构分析</title>
+	<link rel="stylesheet" type="text/css" href="../../css/index.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/title.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/stockAnalysis.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/LCalendar/LCalendar/css/LCalendar.min.css" />
+	<script src="../../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="../../js/rem.js" type="text/javascript"></script>
+	<script src="../../js/echarts.common.min.js" type="text/javascript"></script>
+	<script src="../../js/common.js" type="text/javascript"></script>
+	<script src="../../js/layer/layer.js"></script>
+	<script src="../../js/page/structure/detail.js" type="text/javascript"></script>
+	<script src="../../js/LCalendar/LCalendar/js/LCalendar1.js" type="text/javascript"></script>
+	
+</head>
+<style type="text/css">
+	.is_show{
+		display: none;
+	}
+	.fbox .banner ul li{height:0.8rem;line-height:0.8rem}
+	body{
+		height:100%;
+	}
+</style>
+<body>
+	<div class="homebox">
+		<div class="title">
+			<a href="../index.html" class="back">返回</a>
+			库存结构分析
+			<a href="javascript:void(0)" class='btn_table_edit' data-href='bord.html' data-size='70%,50%' data-title='选择板块公司' style="display: inline-block;position: absolute;top:0.05rem;right:0.5rem"><img src="../../images/details/shezhi1.png" style="display: inline-block;height:0.4rem"/></a>
+		</div>
+		<div class="title_b wh"><p>全部库房</p></div>
+		<div id="u179_div">
+			<img src="../../images/details/u724.png" style="margin-left: 0.4rem;float: left;margin-top:.2rem;"/>
+			<input style="border: 0;float: left;height: 99%;width: 15%;font-size: .28rem;background: #f2f2f2;" type="text" name="start_date" id="start_date" placeholder="选择开始日期" readonly="readonly"/>
+			<span style="margin-right: 0.4rem;"></span>
+			<span class="is_click on" data-value="wh_price">金额</span><img src="../../images/details/u190.png" /><span class="is_click" data-value="qty">数量</span>
+		</div>
+	</div>
+	<div class="tititia">
+			<p>
+				<a class="aaa" href="#">概览</a>
+			</p>
+			<p>
+				<a href="javascript:void(0)" class="demo">详情</a>
+			</p>
+		</div>
+	<div class="f4">
+			<div class="f4_li">
+				<div>
+					<p class="nub c1"></p>
+					<p class="level">总库存数</p>
+				</div>
+			</div>
+			<div class="f4_li">
+				<div>
+					<p class="nub c2"></p>
+					<p class="level">总库存金额</p>
+				</div>
+			</div>
+			<div class="f4_li">
+				<div>
+					<p class="nub c3" style="color: #FD482C;"></p>
+					<p class="level">仓库个数</p>
+				</div>
+			</div>
+			<div class="f4_li">
+				<div>
+					<p class="nub c4" style="color: #2EC7C9;"></p>
+					<p class="level">分布区域</p>
+				</div>
+			</div>
+		</div>
+	<div id="main" style="width: 100%;height:300px;margin: .5rem auto 0rem;"></div>
+	<!--弹框-->
+   <div class="fbox">
+      <div class="bg"></div>
+      <div class="banner">
+         <p>选择板块<img src="../../images/details/u102.png" /></p >
+         <ul></ul>
+      </div>
+   </div>
+<!--弹框结束-->
+</body>
+</html>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizAssetCardMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizAssetCard">
+    <id column="asset_card_id" jdbcType="INTEGER" property="assetCardId" />
+    <result column="asset_card_code" jdbcType="CHAR" property="assetCardCode" />
+    <result column="asset_card_name" jdbcType="VARCHAR" property="assetCardName" />
+    <result column="stock_output_id" jdbcType="INTEGER" property="stockOutputId" />
+    <result column="stock_output_rid" jdbcType="INTEGER" property="stockOutputRid" />
+    <result column="stock_output_position_id" jdbcType="INTEGER" property="stockOutputPositionId" />
+    <result column="mat_req_id" jdbcType="INTEGER" property="matReqId" />
+    <result column="mat_req_rid" jdbcType="INTEGER" property="matReqRid" />
+    <result column="mat_doc_id" jdbcType="INTEGER" property="matDocId" />
+    <result column="mat_doc_rid" jdbcType="INTEGER" property="matDocRid" />
+    <result column="mat_doc_year" jdbcType="INTEGER" property="matDocYear" />
+    <result column="is_send" jdbcType="VARCHAR" property="isSend" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    asset_card_id, asset_card_code, asset_card_name, stock_output_id, stock_output_rid, 
+    stock_output_position_id, mat_req_id, mat_req_rid, mat_doc_id, mat_doc_rid, mat_doc_year, 
+    is_send, is_delete, create_time, modify_time
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_asset_card
+    where asset_card_id = #{assetCardId,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizAssetCard">
+    insert into biz_asset_card
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="assetCardId != null">
+        asset_card_id,
+      </if>
+      <if test="assetCardCode != null">
+        asset_card_code,
+      </if>
+      <if test="assetCardName != null">
+        asset_card_name,
+      </if>
+      <if test="stockOutputId != null">
+        stock_output_id,
+      </if>
+      <if test="stockOutputRid != null">
+        stock_output_rid,
+      </if>
+      <if test="stockOutputPositionId != null">
+        stock_output_position_id,
+      </if>
+      <if test="matReqId != null">
+        mat_req_id,
+      </if>
+      <if test="matReqRid != null">
+        mat_req_rid,
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id,
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid,
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year,
+      </if>
+      <if test="isSend != null">
+        is_send,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="assetCardId != null">
+        #{assetCardId,jdbcType=INTEGER},
+      </if>
+      <if test="assetCardCode != null">
+        #{assetCardCode,jdbcType=CHAR},
+      </if>
+      <if test="assetCardName != null">
+        #{assetCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="stockOutputId != null">
+        #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputRid != null">
+        #{stockOutputRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputPositionId != null">
+        #{stockOutputPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqId != null">
+        #{matReqId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqRid != null">
+        #{matReqRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocId != null">
+        #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocYear != null">
+        #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="isSend != null">
+        #{isSend,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizAssetCard">
+    update biz_asset_card
+    <set>
+      <if test="assetCardCode != null">
+        asset_card_code = #{assetCardCode,jdbcType=CHAR},
+      </if>
+      <if test="assetCardName != null">
+        asset_card_name = #{assetCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="stockOutputId != null">
+        stock_output_id = #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputRid != null">
+        stock_output_rid = #{stockOutputRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputPositionId != null">
+        stock_output_position_id = #{stockOutputPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqId != null">
+        mat_req_id = #{matReqId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqRid != null">
+        mat_req_rid = #{matReqRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id = #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year = #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="isSend != null">
+        is_send = #{isSend,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where asset_card_id = #{assetCardId,jdbcType=INTEGER}
+  </update>
+  <select id="selectAssetCardByOrderId" parameterType="INTEGER" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_asset_card
+    where stock_output_id = #{stockOutputd,jdbcType=INTEGER}
+  </select>
+</mapper>

@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizMatReqItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizMatReqItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="mat_req_id" jdbcType="INTEGER" property="matReqId" />
+    <result column="mat_req_rid" jdbcType="INTEGER" property="matReqRid" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="refer_price" jdbcType="DECIMAL" property="referPrice" />
+    <result column="demand_qty" jdbcType="DECIMAL" property="demandQty" />
+    <result column="demand_date" jdbcType="TIMESTAMP" property="demandDate" />
+    <result column="take_delivery_qty" jdbcType="DECIMAL" property="takeDeliveryQty" />
+    <result column="cost_obj_code" jdbcType="VARCHAR" property="costObjCode" />
+    <result column="cost_obj_name" jdbcType="VARCHAR" property="costObjName" />
+    <result column="general_ledger_subject" jdbcType="VARCHAR" property="generalLedgerSubject" />
+    <result column="work_receipt_code" jdbcType="VARCHAR" property="workReceiptCode" />
+    <result column="work_receipt_name" jdbcType="VARCHAR" property="workReceiptName" />
+    <result column="device_name" jdbcType="VARCHAR" property="deviceName" />
+    <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+    <result column="asset_attr" jdbcType="TINYINT" property="assetAttr" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="reserve_code" jdbcType="VARCHAR" property="reserveCode" />
+    <result column="reserve_rid" jdbcType="VARCHAR" property="reserveRid" />
+    <result column="purchase_order_code" jdbcType="VARCHAR" property="purchaseOrderCode" />
+    <result column="purchase_order_rid" jdbcType="VARCHAR" property="purchaseOrderRid" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_id, mat_req_id, mat_req_rid, fty_id, location_id, move_type_id, mat_id, unit_id, 
+    refer_price, demand_qty, demand_date, take_delivery_qty, cost_obj_code, cost_obj_name, 
+    general_ledger_subject, work_receipt_code, work_receipt_name, device_name, device_code, 
+    asset_attr, remark, reserve_code, reserve_rid, purchase_order_code, purchase_order_rid, 
+    is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_mat_req_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_mat_req_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizMatReqItem">
+    insert into biz_mat_req_item (item_id, mat_req_id, mat_req_rid, 
+      fty_id, location_id, move_type_id, 
+      mat_id, unit_id, refer_price, 
+      demand_qty, demand_date, take_delivery_qty, 
+      cost_obj_code, cost_obj_name, general_ledger_subject, 
+      work_receipt_code, work_receipt_name, device_name, 
+      device_code, asset_attr, remark, 
+      reserve_code, reserve_rid, purchase_order_code, 
+      purchase_order_rid, is_delete, create_time, 
+      modify_time)
+    values (#{itemId,jdbcType=INTEGER}, #{matReqId,jdbcType=INTEGER}, #{matReqRid,jdbcType=INTEGER}, 
+      #{ftyId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, #{moveTypeId,jdbcType=INTEGER}, 
+      #{matId,jdbcType=INTEGER}, #{unitId,jdbcType=INTEGER}, #{referPrice,jdbcType=DECIMAL}, 
+      #{demandQty,jdbcType=DECIMAL}, #{demandDate,jdbcType=TIMESTAMP}, #{takeDeliveryQty,jdbcType=DECIMAL}, 
+      #{costObjCode,jdbcType=VARCHAR}, #{costObjName,jdbcType=VARCHAR}, #{generalLedgerSubject,jdbcType=VARCHAR}, 
+      #{workReceiptCode,jdbcType=VARCHAR}, #{workReceiptName,jdbcType=VARCHAR}, #{deviceName,jdbcType=VARCHAR}, 
+      #{deviceCode,jdbcType=VARCHAR}, #{assetAttr,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
+      #{reserveCode,jdbcType=VARCHAR}, #{reserveRid,jdbcType=VARCHAR}, #{purchaseOrderCode,jdbcType=VARCHAR}, 
+      #{purchaseOrderRid,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizMatReqItem">
+    insert into biz_mat_req_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="matReqId != null">
+        mat_req_id,
+      </if>
+      <if test="matReqRid != null">
+        mat_req_rid,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="referPrice != null">
+        refer_price,
+      </if>
+      <if test="demandQty != null">
+        demand_qty,
+      </if>
+      <if test="demandDate != null">
+        demand_date,
+      </if>
+      <if test="takeDeliveryQty != null">
+        take_delivery_qty,
+      </if>
+      <if test="costObjCode != null">
+        cost_obj_code,
+      </if>
+      <if test="costObjName != null">
+        cost_obj_name,
+      </if>
+      <if test="generalLedgerSubject != null">
+        general_ledger_subject,
+      </if>
+      <if test="workReceiptCode != null">
+        work_receipt_code,
+      </if>
+      <if test="workReceiptName != null">
+        work_receipt_name,
+      </if>
+      <if test="deviceName != null">
+        device_name,
+      </if>
+      <if test="deviceCode != null">
+        device_code,
+      </if>
+      <if test="assetAttr != null">
+        asset_attr,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="reserveCode != null">
+        reserve_code,
+      </if>
+      <if test="reserveRid != null">
+        reserve_rid,
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code,
+      </if>
+      <if test="purchaseOrderRid != null">
+        purchase_order_rid,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqId != null">
+        #{matReqId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqRid != null">
+        #{matReqRid,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="moveTypeId != null">
+        #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="referPrice != null">
+        #{referPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="demandQty != null">
+        #{demandQty,jdbcType=DECIMAL},
+      </if>
+      <if test="demandDate != null">
+        #{demandDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeDeliveryQty != null">
+        #{takeDeliveryQty,jdbcType=DECIMAL},
+      </if>
+      <if test="costObjCode != null">
+        #{costObjCode,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjName != null">
+        #{costObjName,jdbcType=VARCHAR},
+      </if>
+      <if test="generalLedgerSubject != null">
+        #{generalLedgerSubject,jdbcType=VARCHAR},
+      </if>
+      <if test="workReceiptCode != null">
+        #{workReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="workReceiptName != null">
+        #{workReceiptName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceName != null">
+        #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceCode != null">
+        #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAttr != null">
+        #{assetAttr,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveCode != null">
+        #{reserveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveRid != null">
+        #{reserveRid,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderRid != null">
+        #{purchaseOrderRid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizMatReqItem">
+    update biz_mat_req_item
+    <set>
+      <if test="matReqId != null">
+        mat_req_id = #{matReqId,jdbcType=INTEGER},
+      </if>
+      <if test="matReqRid != null">
+        mat_req_rid = #{matReqRid,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="referPrice != null">
+        refer_price = #{referPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="demandQty != null">
+        demand_qty = #{demandQty,jdbcType=DECIMAL},
+      </if>
+      <if test="demandDate != null">
+        demand_date = #{demandDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeDeliveryQty != null">
+        take_delivery_qty = #{takeDeliveryQty,jdbcType=DECIMAL},
+      </if>
+      <if test="costObjCode != null">
+        cost_obj_code = #{costObjCode,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjName != null">
+        cost_obj_name = #{costObjName,jdbcType=VARCHAR},
+      </if>
+      <if test="generalLedgerSubject != null">
+        general_ledger_subject = #{generalLedgerSubject,jdbcType=VARCHAR},
+      </if>
+      <if test="workReceiptCode != null">
+        work_receipt_code = #{workReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="workReceiptName != null">
+        work_receipt_name = #{workReceiptName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceName != null">
+        device_name = #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceCode != null">
+        device_code = #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAttr != null">
+        asset_attr = #{assetAttr,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveCode != null">
+        reserve_code = #{reserveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveRid != null">
+        reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderRid != null">
+        purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizMatReqItem">
+    update biz_mat_req_item
+    set mat_req_id = #{matReqId,jdbcType=INTEGER},
+      mat_req_rid = #{matReqRid,jdbcType=INTEGER},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      refer_price = #{referPrice,jdbcType=DECIMAL},
+      demand_qty = #{demandQty,jdbcType=DECIMAL},
+      demand_date = #{demandDate,jdbcType=TIMESTAMP},
+      take_delivery_qty = #{takeDeliveryQty,jdbcType=DECIMAL},
+      cost_obj_code = #{costObjCode,jdbcType=VARCHAR},
+      cost_obj_name = #{costObjName,jdbcType=VARCHAR},
+      general_ledger_subject = #{generalLedgerSubject,jdbcType=VARCHAR},
+      work_receipt_code = #{workReceiptCode,jdbcType=VARCHAR},
+      work_receipt_name = #{workReceiptName,jdbcType=VARCHAR},
+      device_name = #{deviceName,jdbcType=VARCHAR},
+      device_code = #{deviceCode,jdbcType=VARCHAR},
+      asset_attr = #{assetAttr,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      reserve_code = #{reserveCode,jdbcType=VARCHAR},
+      reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+      purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <select id="selectBizMatReqItemVo" parameterType="java.lang.Integer" resultType="com.inossem.wms.model.vo.BizMatReqItemVo">
+    SELECT 
+	    i.item_id itemId, 
+	    i.mat_req_id matReqId, i.mat_req_rid matReqRid, 
+	    i.fty_id ftyId, 
+	    i.location_id locationId, 
+	    l.location_code locationCode, 
+	    l.location_name locationName, 
+	    i.move_type_id moveTypeId, 
+	    i.mat_id matId, m.mat_code matCode,m.mat_name matName,
+	    i.unit_id unitId, 
+	    i.refer_price referPrice, 
+	    i.demand_qty demandQty, i.demand_date demandDate, 
+	    i.take_delivery_qty takeDeliveryQty, 
+	    i.cost_obj_code costObjCode, i.cost_obj_name costObjName, 
+	    i.general_ledger_subject generalLedgerSubject, 
+	    i.work_receipt_code workReceiptCode, i.work_receipt_name workReceiptName, 
+	    i.device_name deviceName, i.device_code deviceCode, 
+	    i.asset_attr assetAttr, 
+	    i.remark, 
+	    i.reserve_code reserveCode, i.reserve_rid reserveRid, 
+	    i.purchase_order_code purchaseOrderCode, i.purchase_order_rid purchaseOrderRid, 
+	    i.is_delete isDelete, 
+	    i.create_time createTime, 
+	    i.modify_time modifyTime,
+	    t.move_type_code moveTypeCode,
+	    t.move_type_name moveTypeName,
+	    u.unit_code unitCode,
+	    u.name_zh unitName,
+	    u.decimal_place decimalPlace,
+	    IFNULL((SELECT SUM(qty) FROM stock_batch WHERE mat_id = i.mat_id AND location_id = i.location_id),0) current_qty
+	    
+    FROM biz_mat_req_item i
+    INNER JOIN dic_material m ON i.mat_id = m.mat_id     
+    	AND i.is_delete = 0
+	    AND i.mat_req_id = #{matReqId,jdbcType=INTEGER}
+    LEFT JOIN dic_move_type t ON i.move_type_id = t.move_type_id
+    LEFT JOIN dic_unit u ON i.unit_id = u.unit_id
+	LEFT JOIN dic_stock_location l ON i.location_id = l.location_id
+  </select>
+  <delete id="deleteByMatReqId" parameterType="java.lang.Integer">
+    delete from biz_mat_req_item
+    where mat_Req_id = #{matReqId,jdbcType=INTEGER}
+  </delete>  
+  <update id="updateTakeDeliveryQty" parameterType="java.util.Map">
+    UPDATE biz_mat_req_item
+    SET take_delivery_qty = IFNULL(take_delivery_qty,0) + #{addQty,jdbcType=DECIMAL}
+    WHERE mat_req_id = #{matReqId,jdbcType=INTEGER}
+      AND mat_req_rid = #{matReqRid,jdbcType=INTEGER}
+      AND is_delete = 0
+  </update>
+  <select id="selectByIdAndRid" parameterType="com.inossem.wms.model.biz.BizMatReqItem" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM biz_mat_req_item
+    WHERE mat_req_id = #{matReqId,jdbcType=INTEGER}
+      AND mat_req_rid = #{matReqRid,jdbcType=INTEGER}
+      AND is_delete = 0
+  </select>
+  <update id="deleteLogicalByMatReqId" parameterType="java.lang.Integer">
+    update biz_mat_req_item
+    set is_delete = 1
+    where mat_req_id = #{matReqId,jdbcType=INTEGER}
+  </update>
+  <update id="updateForLastTask" parameterType="com.inossem.wms.model.vo.BizMatReqItemVo">
+    UPDATE biz_mat_req_item
+    SET 
+      move_type_id = #{moveTypeId,jdbcType=VARCHAR},
+      cost_obj_code = #{costObjCode,jdbcType=VARCHAR},
+      cost_obj_name = #{costObjName,jdbcType=VARCHAR}
+      <if test="reserveCode != null">
+        ,general_ledger_subject = #{generalLedgerSubject,jdbcType=VARCHAR}
+      </if>
+    WHERE item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateReserve" parameterType="com.inossem.wms.model.vo.BizMatReqItemVo">
+    UPDATE biz_mat_req_item
+    SET reserve_code = #{reserveCode,jdbcType=VARCHAR},
+      reserve_rid = #{reserveRid,jdbcType=VARCHAR}
+    WHERE item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updatePurchaseOrder" parameterType="com.inossem.wms.model.vo.BizMatReqItemVo">
+    UPDATE biz_mat_req_item
+    SET purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR}
+    WHERE item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.inossem.wms.dao.dic.DicMaterialPackageTypeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.dic.DicMaterialPackageType">
+		<id column="dic_mat_package_type_id" jdbcType="INTEGER"
+			property="dicMatPackageTypeId" />
+		<result column="mat_id" jdbcType="INTEGER" property="matId" />
+		<result column="package_type_id" jdbcType="INTEGER"
+			property="packageTypeId" />
+		<result column="is_freeze" jdbcType="TINYINT"
+			property="isFreeze" />
+		<result column="convers_relation" jdbcType="DECIMAL"
+			property="conversRelation" />
+	</resultMap>
+
+	<resultMap
+		type="com.inossem.wms.model.vo.DicMaterialPackageTypeVo"
+		id="BaseResultMapVo" extends="BaseResultMap">
+		<result column="unit_code" jdbcType="VARCHAR"
+			property="unitCode" />
+		<result column="name_zh" jdbcType="VARCHAR" property="nameZh" />
+		<result column="classificat_id" jdbcType="INTEGER"
+			property="classificatId" />
+		<result column="package_type_code" jdbcType="VARCHAR"
+			property="packageTypeCode" />
+		<result column="package_type_name" jdbcType="VARCHAR"
+			property="packageTypeName" />
+		<result column="classificat_name" jdbcType="VARCHAR"
+			property="classificatName" />
+		<result column="mat_type" jdbcType="VARCHAR" property="matType" />
+
+        <result column="sn_used" jdbcType="TINYINT"
+			property="snUsed" />
+			
+		<result column="sn_used_name" jdbcType="VARCHAR"
+			property="snUsedName" />
+			
+		<result column="mat_unit_id" jdbcType="INTEGER"
+			property="matUnitId" />
+		<result column="mat_unit_code" jdbcType="VARCHAR"
+			property="matUnitCode" />
+		<result column="mat_name_zh" jdbcType="VARCHAR"
+			property="matNameZh" />
+		<result column="mat_code" jdbcType="VARCHAR"
+			property="matCode" />
+		<result column="mat_name" jdbcType="VARCHAR"
+			property="matName" />
+		
+		<result column="erp_batch_key" jdbcType="VARCHAR"
+			property="erpBatchKey" />
+		<result column="sn_serial_key" jdbcType="VARCHAR"
+			property="snSerialKey" />	
+			
+	</resultMap>
+	<sql id="Base_Column_List">
+		dic_mat_package_type_id, mat_id, package_type_id,
+		is_freeze, convers_relation
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dic_material_package_type
+		where dic_mat_package_type_id =
+		#{dicMatPackageTypeId,jdbcType=INTEGER}
+	</select>
+	<select id="selectPackageTypeOnpaging" parameterType="map"
+		resultMap="BaseResultMapVo">
+		select
+		mt.*,
+		CASE WHEN  t.sn_used='2' THEN '否'
+			WHEN  t.sn_used='1' THEN '是'			
+			ELSE ''
+			END sn_used_name,
+		u.unit_code,
+		u.name_zh,
+		t.sn_used,
+		t.classificat_id,
+		t.package_type_code,
+		t.package_type_name,
+		c.classificat_name,
+		m.mat_type,
+		m.mat_code,
+		m.mat_name,
+		mu.unit_id mat_unit_id,
+		mu.unit_code
+		mat_unit_code,
+		mu.name_zh
+		mat_name_zh,
+		t.erp_batch_key,
+		t.sn_serial_key
+		from
+		dic_package_type t
+		inner join
+		dic_material_package_type
+		mt on
+		t.package_type_id
+		=mt.package_type_id
+		inner join dic_material m on
+		mt.mat_id=m.mat_id
+		inner join dic_unit u on
+		t.unit_id=u.unit_id
+		inner
+		join dic_pack_classification c on
+		t.classificat_id=c.classificat_id
+		inner join dic_unit mu on
+		m.unit_id=mu.unit_id
+
+		where m.is_delete=0
+
+		<if test="condition!=null and condition!=''">
+			and m.mat_code like CONCAT('%',#{condition},'%' ) or
+			m.mat_name like
+			CONCAT('%',#{condition},'%' ) or c.classificat_name
+			like
+			CONCAT('%',#{condition},'%' )
+		</if>
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from dic_material_package_type
+		where
+		dic_mat_package_type_id = #{dicMatPackageTypeId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.inossem.wms.model.dic.DicMaterialPackageType">
+		insert into dic_material_package_type
+		(dic_mat_package_type_id, mat_id,
+		package_type_id,
+		is_freeze,
+		convers_relation)
+		values (#{dicMatPackageTypeId,jdbcType=INTEGER},
+		#{matId,jdbcType=INTEGER},
+		#{packageTypeId,jdbcType=INTEGER},
+		#{isFreeze,jdbcType=TINYINT}, #{conversRelation,jdbcType=DECIMAL})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.inossem.wms.model.dic.DicMaterialPackageType">
+		insert into dic_material_package_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dicMatPackageTypeId != null">
+				dic_mat_package_type_id,
+			</if>
+			<if test="matId != null">
+				mat_id,
+			</if>
+			<if test="packageTypeId != null">
+				package_type_id,
+			</if>
+			<if test="isFreeze != null">
+				is_freeze,
+			</if>
+			<if test="conversRelation != null">
+				convers_relation,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dicMatPackageTypeId != null">
+				#{dicMatPackageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="matId != null">
+				#{matId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeId != null">
+				#{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="isFreeze != null">
+				#{isFreeze,jdbcType=TINYINT},
+			</if>
+			<if test="conversRelation != null">
+				#{conversRelation,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.inossem.wms.model.dic.DicMaterialPackageType">
+		update dic_material_package_type
+		<set>
+			<if test="matId != null">
+				mat_id = #{matId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeId != null">
+				package_type_id = #{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="isFreeze != null">
+				is_freeze = #{isFreeze,jdbcType=TINYINT},
+			</if>
+			<if test="conversRelation != null">
+				convers_relation = #{conversRelation,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where dic_mat_package_type_id =
+		#{dicMatPackageTypeId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.inossem.wms.model.dic.DicMaterialPackageType">
+		update dic_material_package_type
+		set mat_id =
+		#{matId,jdbcType=INTEGER},
+		package_type_id =
+		#{packageTypeId,jdbcType=INTEGER},
+		is_freeze =
+		#{isFreeze,jdbcType=TINYINT},
+		convers_relation =
+		#{conversRelation,jdbcType=DECIMAL}
+		where dic_mat_package_type_id =
+		#{dicMatPackageTypeId,jdbcType=INTEGER}
+	</update>
+	<update id="updateFreezeById" parameterType="Integer[]">
+		update dic_material_package_type t
+		set t.is_freeze =1
+		<where>
+			dic_mat_package_type_id
+			<foreach collection="array" item="id" open="in (" close=")"
+				separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</update>
+	
+	<select id="searchMatCodeOrName" resultType="map" parameterType="java.lang.String">
+	select m.mat_code,m.mat_name,m.unit_id from dic_material m 
+	<where>
+	<if test="_parameter!=null and _parameter!=''">
+	 m.mat_code = #{search}  or  m.mat_name=#{search}
+	</if>	
+	</where>	
+	</select>
+	
+	<select id="getMatPackageFreezeCount" parameterType="map" resultType="java.lang.Integer">
+	select COUNT(*) from 
+	dic_material_package_type t 
+	where t.is_freeze=0 
+	<if test="matId!=null and matId!=''">
+		and t.mat_id=#{matId}
+	</if>
+	<if test="packageTypeId!=null and packageTypeId!=''">
+	  and t.package_type_id=#{packageTypeId}
+	</if>
+	</select>
+	
+
+</mapper>

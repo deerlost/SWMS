@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="msapplication-tap-highlight" content="no" />
+	<title>库存容量预警</title>
+	<link rel="stylesheet" type="text/css" href="../../css/index.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/title.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/stockEwarn.css" />
+
+	<script src="../../js/rem.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="homebox">
+		<div class="title">
+			<a href="../index.html" class="back">返回</a>
+			库存容量预警
+		</div>
+		<ul class="list_ul">
+			<li style="height: 1rem">
+				<span class="ol1" style="line-height: 1rem">1</span>
+				<span class="ol2" style="line-height: 1rem">聚乙烯醇JF-241</span>
+			</li>
+		</ul>
+	</div>
+</body>
+<script src="../../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$('.list_ul li').click(function(){
+	// 我感觉应该是 走个接口拿到id  传个ID 过去..
+	var page = "11";
+	// page 就算是他的ID吧
+	window.location.href = "stockEwarningl.html?id="+page;
+})
+</script>
+</html>

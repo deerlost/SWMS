@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicWarehouseMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicWarehouse">
+    <id column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="wh_code" jdbcType="VARCHAR" property="whCode" />
+    <result column="wh_name" jdbcType="VARCHAR" property="whName" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="corp_id" jdbcType="INTEGER" property="corpId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    wh_id, wh_code, wh_name, address, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_warehouse
+    where wh_id = #{whId,jdbcType=INTEGER}
+  </select>
+  <!--查询查询全部仓库id和仓库描述  2018.1.22  刘宇-->
+  <select id="selectWhIdAndWhNameForPallet"  resultType="map">
+    select wh_id,
+		   wh_name
+	  from dic_warehouse
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_warehouse
+    where wh_id = #{whId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicWarehouse">
+    insert into dic_warehouse (wh_id, wh_code, wh_name, 
+      address, is_delete, create_time, 
+      modify_time)
+    values (#{whId,jdbcType=INTEGER}, #{whCode,jdbcType=VARCHAR}, #{whName,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicWarehouse" useGeneratedKeys="true" keyProperty="whId">
+    insert into dic_warehouse
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="whCode != null">
+        wh_code,
+      </if>
+      <if test="whName != null">
+        wh_name,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="whCode != null">
+        #{whCode,jdbcType=VARCHAR},
+      </if>
+      <if test="whName != null">
+        #{whName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicWarehouse">
+    update dic_warehouse
+    <set>
+      <if test="whCode != null">
+        wh_code = #{whCode,jdbcType=VARCHAR},
+      </if>
+      <if test="whName != null">
+        wh_name = #{whName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where wh_id = #{whId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicWarehouse">
+    update dic_warehouse
+    set wh_code = #{whCode,jdbcType=VARCHAR},
+      wh_name = #{whName,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where wh_id = #{whId,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_warehouse
+    where is_delete = 0
+  </select>
+  
+    <select id="selectAllWhIdAndWhCodeAndWhName" resultMap="BaseResultMap">
+    select 
+    wh_id, wh_code, wh_name
+    from dic_warehouse
+    where is_delete = 0
+  </select>
+  
+  
+   <select id="listWarehouseOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			select 
+				 wh_id whId, 
+				wh_code whCode, 
+				wh_name whName,
+				address address,
+				create_time createTime
+				    from dic_warehouse
+				    where is_delete = 0
+	<if test="condition != null and condition!='' " >
+		  AND ( wh_code LIKE CONCAT('%',#{condition},'%' ) 
+		     OR wh_name LIKE CONCAT('%',#{condition},'%' )
+		     OR address LIKE CONCAT('%',#{condition},'%' )
+		   )
+	</if>	
+	order by createTime DESC
+  </select>
+  
+   <select id="selectByPrimaryCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_warehouse
+    where is_delete = '0' and wh_code = #{whCode,jdbcType=VARCHAR}
+  </select>
+  
+   <update id="updateLocationByArray" parameterType="java.util.HashMap">
+    update dic_stock_location
+    set wh_id = #{whId,jdbcType=INTEGER}
+    where
+    location_id in 
+	<foreach item="item" index="index" collection="locationArray" open="(" separator="," close=")">  
+              					#{item}  
+   	</foreach> 
+   
+  </update>
+  
+   <update id="updateLocationByWhId" parameterType="java.lang.Integer">
+     update dic_stock_location
+    set wh_id = 0
+    where wh_id = #{whId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryLocationByWhId" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+  
+		  select dsl.location_id locationId,
+		dsl.location_code locationCode,
+		dsl.location_name locationName,
+		dsl.address address,
+		df.fty_code ftyCode,
+		df.fty_name
+		from dic_stock_location dsl,dic_factory df
+		where dsl.fty_id = df.fty_id and df.is_delete = '0' and dsl.is_delete='0'
+		and dsl.wh_id = #{whId,jdbcType=INTEGER}
+   </select>
+   
+   <select id="selectWarehouseListByWhId" parameterType="java.lang.Integer" resultType="map">
+   
+   select wa.area_id,wa.area_code,wa.area_name
+    from dic_warehouse_area wa 
+   <where>
+   <if test="_parameter!=null and _parameter!=''">
+    and  wa.wh_id=#{id}
+   </if>    
+   </where>     
+   </select>
+   
+   
+     <select id="listLocationOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	SELECT
+	v.location_id locationId,
+	v.location_code locationCode,
+	v.location_name locationName,
+	v.location_address locationAddress,
+	v.fty_code ftyCode,
+	v.fty_name ftyName,
+	v.fty_address ftyAddress,
+v.corp_code corpCode,
+v.corp_name corpName
+FROM
+	v_stock_location v
+				    where 1=1
+	<if test="condition != null and condition!='' " >
+		  AND ( location_name LIKE CONCAT('%',#{condition},'%' ) 
+		     OR fty_name LIKE CONCAT('%',#{condition},'%' )
+		      OR wh_code LIKE CONCAT('%',#{condition},'%' ) 
+		       OR location_code LIKE CONCAT('%',#{condition},'%' ) 
+		   )
+	</if>	
+	
+  </select>
+  
+  <select id="listWarehouse" resultType="java.util.HashMap">
+    select 
+    wh_id, wh_code, wh_name
+    from dic_warehouse
+    where is_delete = 0
+  </select>
+  
+  <select id="selectStockwarring">  
+  select  SUM(p.qty) qty ,  w.reminding_qty_one  , w.wh_code, w.wh_name, w.`volume_max`, w.`volume_min`,w.reminding_qty_one ,w.reminding_qty_two   from dic_warehouse w 
+  inner join stock_position p on w.wh_id = p.wh_id group by w.wh_id
+    
+  </select> 
+  
+  
+  <select id="selectAllWarehouseListWithCoryId"  resultMap="BaseResultMap">  
+	  SELECT
+		DISTINCT w.wh_code,
+		w.wh_id,
+		w.wh_name,
+		f.corp_id
+	FROM
+		dic_warehouse w
+	INNER JOIN dic_stock_location l ON l.wh_id = w.wh_id and w.is_delete = 0
+	INNER JOIN dic_factory f ON f.fty_id = l.fty_id
+	INNER JOIN dic_corp c on c.corp_id = f.corp_id
+    
+  </select> 
+  
+  
+</mapper>

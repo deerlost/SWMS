@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加物料</title>
+    <meta charset="utf-8" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <link href="../../../../css/datetimepicker.css" rel="stylesheet" />
+    <script src="../../../../js/datetimepicker.js"></script>
+    <style>
+        .search div {
+            min-height:42px;
+            line-height:30px;
+        }
+    </style>
+    <script>
+        var indexdata=[],g1=null,mes_list=[],table={input_stock_num:"number",package_num:"text"},mes_location_id="";
+        //获取数据
+        function init(){
+            var url=uriapi+"/biz/input/production/select_mat_info_mes"
+            var obj={
+                fty_code:indexdata[0],
+                product_line_name:indexdata[1],
+                mat_code:indexdata[4],
+                wms_unit_code:indexdata[5]
+            }
+            showloading()
+            ajax(url,"post",JSON.stringify(obj),function(data){
+                if(data.head.status==true){
+                    layer.close(indexloading)
+                    mes_list=data.body.mes_mat_list
+                    mes_location_id=data.body.mes_location_id
+                    var mes_num=0
+                    $.each(mes_list,function(i,item){
+                        mes_num=countData.add(mes_num,item.qty)
+                        item.package_num=""
+                        if(indexdata[3].package_standard_ch==1){
+                            item.input_stock_num=""
+                        }else{
+                            item.input_stock_num="0"
+                        }
+
+                    })
+                     console.log(mes_num);
+                    $(".search span").html(mes_num)
+                    dataBindTable()
+                }else{
+                    layer.close(indexloading)
+                }
+            }, function(e) {
+                layer.close(indexloading);
+            })
+        }
+
+        //绑定表格数据
+        function dataBindTable(){
+            g1=$("#id_div_grid").iGrid({
+                columns: [
+                    { th: '物料编码', col: 'mes_code', sort:false,width:180},
+                    { th: '物料描述', col: 'mes_name', sort:false,width:210},
+                    { th: '库名', col: 'mes_location_name', sort:false,width:210},
+                    { th: '半成品包装规格', col: 'mes_package_standard', sort:false,width:120},
+                    { th: '库存', col: 'qty', sort:false,type:'number'},
+                    { th: '本次入库数量', col: 'input_stock_num', sort:false,class:'input_stock_num',type:table.input_stock_num,decimal:{regex:3}},
+                    { th: '件数', col: 'package_num', sort:false,type:table.package_num,width:80,decimal:{regex:0}}
+                ],
+                rownumbers:false,
+                skin:"tablestyle4",
+                resizehead:true,
+                data:mes_list,
+                cblur:function(a,b,c,d,e,f){
+                    if(a=="package_num"){
+                        mes_list[c].input_stock_num=countData.mul(d,indexdata[3].package_standard)
+                        dataBindTable()
+                    }
+                },
+                loadcomplete:function(){
+                    if(indexdata[3].package_standard_ch==1 && GetQueryString("view")==null){
+                        $(".body [colnum='6']").html("")
+                    }
+                    if(GetQueryString("view")){
+                         $("[colnum='4']").html("")
+                    }
+                }
+            })
+        }
+
+        //提交
+        function btn_submit(){
+            var is_checked=true,input_stock_num= 0,package_num=0
+            if(!g1.checkData()){
+                is_checked=false
+            }
+            $.each(mes_list,function(i,item){
+                if(parseFloat(item.input_stock_num)>parseFloat(item.qty)){
+                    layersMoretips("本次入库数量不能大于半成品库存",$(".input_stock_num").eq(i))
+                    is_checked=false
+                }
+
+                if(item.input_stock_num!="" && item.package_num!=""){
+                    input_stock_num=countData.add(input_stock_num,item.input_stock_num)
+                    package_num=countData.add(package_num,item.package_num)
+                }
+
+                if(item.input_stock_num!="" && indexdata[3].package_standard_ch==1){
+                    input_stock_num=countData.add(input_stock_num,item.input_stock_num)
+                    package_num=""
+                }
+
+            })
+            if(is_checked==false) return false
+            parent.setMES(mes_list,GetQueryString("index"),input_stock_num,package_num,mes_location_id)
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+            indexdata=parent.getMES(GetQueryString("index"))
+            if(indexdata[3].package_standard_ch==1){
+                table.input_stock_num="text"
+            }
+
+            var index=GetQueryString("index")
+
+            if(GetQueryString("view")){
+                $(".search").hide()
+                mes_list=parent.getViewMES(GetQueryString("index"))
+                table.input_stock_num="number"
+                table.package_num=""
+            }else{
+                if(indexdata[2]==undefined || indexdata[2]==""){
+                    init()
+                    return false
+                }
+
+                var mes_num=0
+                $.each(indexdata[2],function(i,item){
+                    mes_list[i]={}
+                    mes_list[i].mes_code=item.mes_code
+                    mes_list[i].mes_name=item.mes_name
+                    mes_list[i].mes_package_standard=item.mes_package_standard
+                    mes_list[i].qty=item.qty
+                    mes_list[i].mes_location_id=item.mes_location_id
+                    mes_list[i].mes_location_name=item.mes_location_name
+                    mes_list[i].input_stock_num=item.input_stock_num
+                    mes_list[i].package_num=item.package_num
+                    mes_list[i].mes_rank=item.mes_rank
+                    mes_list[i].mes_bch=item.mes_bch
+                    mes_num=countData.add(mes_num,item.qty)
+                })
+                console.log(mes_num);
+                $(".search span").html(mes_num)
+            }
+            dataBindTable()
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="col-xs-12">MES半成品数量：<span>--</span></div>
+</div>
+<div id="id_div_grid"></div>
+<div class="submitbutton fixed">
+    <div class="col-xs-12">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　确认　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</div>
+</body>
+</html>

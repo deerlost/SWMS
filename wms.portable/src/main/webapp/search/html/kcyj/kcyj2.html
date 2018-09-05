@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="msapplication-tap-highlight" content="no" />
+	<title>临时库存预警</title>
+	<link rel="stylesheet" type="text/css" href="../../css/index.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/title.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/stockAnalysis.css" />
+	<script src="../../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="../../js/common.js" type="text/javascript"></script>
+	<script src="../../js/rem.js" type="text/javascript"></script>
+	<script src="../../js/echarts.common.min.js" type="text/javascript"></script>
+	<script src="../../js/page/kcyj/details.js" type="text/javascript"></script>
+	<style type="text/css">
+		.btn_color{
+			background: rgba(255, 255, 0,0.3);
+		}
+	</style>
+</head>
+<body>
+	<div class="homebox">
+		<div class="title">
+			<a href="../index.html" class="back">返回</a>
+			临时库存预警
+		</div>
+		<div class="tititi">
+			<p>
+				<a href="kcyj1.html">概况</a>
+			</p>
+			<p>
+				<a class="aaa" href="#">临期详情</a>
+			</p>
+			<p>
+				<a href="kcyj3.html">预警明细</a>
+			</p>
+		</div>
+		<div style="background: #f2f2f2;">
+			<div class="li_tit" style="width: 95%;margin: 0 auto">
+				<span class="ol1" style="text-align: left">仓库名称</span>
+				<span class="ol2" style="text-align: left">临期数</span>
+				<span class="ol3">临期金额</span>
+			</div>
+		</div>
+		<ul class="list_ul" id="select_detail">
+			<li>
+				<span class="ol1">1</span>
+				<span class="ol2" style="text-align: right">聚乙烯醇JF-241</span>
+				<b class="ol3">200</b>
+			</li>
+		</ul>
+		<div style="background: #f2f2f2;">
+			<div class="li_tit" style="width: 95%;margin: 0 auto">
+				<span class="ol2" style="text-align: left">序号</span>
+				<span class="ol1" style="text-align: left">产品名称</span>
+				<span class="ol3">临期数量</span>
+			</div>
+		</div>
+		<ul class="list_ul" id="select_detail_mat">
+			<!--
+			<li>
+				<span class="ol2" style="text-align: center">1</span>
+				<span class="ol1" style="text-align: left">聚乙烯醇JF-241</span>
+				<b class="ol3" style="color: #ff0030;">200</b>
+			</li>
+			-->
+		</ul>
+	</div>
+</body>
+
+<script type="text/javascript">
+	$('.f4_li').click(function(e){
+		var page = $(this).index();
+		window.location.href = "stockDetails.html?num="+page;
+	})
+</script>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>仓储管理系统</title>
+	<meta charset="utf-8" />
+	<link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="../../../../css/common.css" rel="stylesheet" />
+	<link href="../../../../css/datetimepicker.css" rel="stylesheet" />
+	<link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+	<link href="../../../../css/bootstrapgrid.css" rel="stylesheet" />
+	<script src="../../../../js/jquery-1.11.0.min.js"></script>
+	<script src="../../../../js/datetimepicker.js"></script>
+	<script src="../../../../part/layer/layer.js"></script>
+	<script src="../../../../js/common.js"></script>
+	<script src="../../../../js/jquery.inossem.grid.js"></script>
+	<script src="../../../../js/page/storage/specificrecord/productioninput/detail.js"></script>
+	<style>
+		.input-group-addon{padding:0 12px;}
+		.input-group .btn-lay-default{height:34px;line-height: 34px}
+		input.ico-search{background: url(../../../../img/icon-search-blue.png) no-repeat right 5px center}
+		a.btn-search{position: absolute;width: 30px;height: 30px;right: 3px;top: 2px;}
+		.disabled{background-color:#848484;border:#848484;cursor:not-allowed }
+		.disabled:hover{background-color:#848484;border:#848484}
+	</style>
+</head>
+
+<body>
+<div c-template="menu"></div>
+<div class="articlebox">
+	<div class="article">
+		<!-- 内容区域 -->
+		<div class="mapadress">
+			<a href="list.html">紧急记账生产入库单列表 </a>
+			<span>&nbsp;&nbsp;&nbsp;&rsaquo;&nbsp;&nbsp;&nbsp;</span>
+			<span class="spanno">创建紧急记账生产入库单</span>
+		</div>
+		<h2 class="h2red">创建</h2>
+		<div class="btnoperate" style="display: none"><a href="javascript:;" class="ico ico-del2 btndelete">删除此单据</a></div>
+		<div class="form-search">
+			<div class="divbase" c-app="base">
+				<div class="col-xs-12 row input-addon is_input_search">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<input type="text" class="ico-search form-control search" placeholder="输入生产订单号">
+						<a href="javascript:void(0)" class="btn-search"></a>
+					</div>
+				</div>
+				<div class="col-xs-12 row" style="line-height: 45px">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">生产订单号：</span>
+							<div c-model="produce_order_code">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">物料编码：</span>
+							<div c-model="mat_code">--</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">物料描述：</span>
+							<div c-model="mat_name">--</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="col-xs-12 row">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">生产工厂：</span>
+							<div c-model="fty_name">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">订单数量：</span>
+							<div c-model="input_stock_num">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">单位：</span>
+							<div c-model="unit_name">--</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 row">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">产品线：</span>
+							<div><select class="form-control product_line_id"></select></div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">装置：</span>
+							<div><select class="form-control device_id"></select></div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">班次：</span>
+							<div><select class="form-control class_type_id"></select></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 row">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">质检类型：</span>
+							<div><select class="form-control stck_type">
+								<option value="1">质检</option>
+								<option value="0">不质检</option>
+							</select></div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">单据类型：</span>
+							<div c-model="business_type_name">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">同步类型：</span>
+							<div><select class="form-control syn_type_name" disabled></select></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 row">
+					<div class="col-lg-3 col-xs-4 div-group doc_code" style="display: none;">
+						<div class="input-group">
+							<span class="input-group-addon">入库ERP凭证：</span>
+							<span c-model="mat_doc_code">--</span>
+						</div>
+					</div>
+
+				</div>
+				<div class="col-xs-12 row">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">创建人：</span>
+							<div c-model="create_user">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">创建日期：</span>
+							<div c-model="create_time">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<span class="input-group-addon">备注：</span>
+							<div><a href="javascript:void(0)" data-title="备注" data-href="../../../../html/common/note.html" data-size="500px,400px" class="btn_table_edit btn_remark">查看</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<!--头部完成-->
+		<div class="col-xs-12">
+			<hr/>
+		</div>
+		<h2 class="h2grey matData" style="display: none">包装信息</h2>
+		<a href="javascript:void(0)" class="btn-lay-blue btnAddMaterial disabled" >添加包装</a>
+		<div class="clearfix"></div>
+		<br>
+		<div class="mat_color" style="margin-top:-23px;float:right;display: none">
+			<div style="width:20px;height:15px;background:#ffeee8;display: inline-block"></div>&nbsp;&nbsp;此颜色为已冲销
+		</div>
+		<div id="id_div_grid"></div>
+		<a href="javascript:void(0)"style="display:none" class="deltable" onclick="delTabel()">删除</a>
+		<div class="submitbutton">
+			<a href="javascript:void(0)" class="btn-lay-blue btn_submit">　过帐　</a>
+			<a href="javascript:void(0)" data-title="冲销" data-href="../../../../html/common/writeoff.html" data-size="500px,200px" class="btn_table_edit btn-lay-blue writeOff" style="display: none;">　冲销　</a>
+			<a href="list.html" class="btn-lay-default back">　返回　</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

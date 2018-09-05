@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>采购订单信息</title>
+		<meta charset="utf-8" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<style>
+			.up20 {
+				margin: 10px 0px;
+			}
+			
+			.maxcapacity {
+				border-radius: 4px;
+			}
+			
+			.maxcapacity {
+				width: 45%;
+				height: 34px;
+				padding: 6px 12px;
+				font-size: 14px;
+				line-height: 1.42857143;
+				color: #555;
+				background-color: #fff;
+				background-image: none;
+			}
+		</style>
+		<script>
+			var datachild = null;
+			$(function() {
+				var index = GetQueryString("index");
+				datachild = parent.datainfo(index);
+				$(".palletName").html(datachild.pallet_code);
+				$(".maxcapacity").html(datachild.max_weight);
+				var frozen = "";
+				if(datachild.freeze == 0) {
+					frozen = "非冻结";
+				} else if(datachild.freeze == 1) {
+					frozen = "冻结";
+				}
+				$(".frozen").html(frozen);
+			});
+		</script>
+	</head>
+
+	<body>
+		<div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">托盘号：</label>
+				<div class="col-xs-6 palletName">
+
+				</div>
+			</div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">最大承重：</label>
+				<div class="col-xs-6 maxcapacity">
+
+				</div>
+			</div>
+			<div class="col-xs-12 up20">
+				<label class="col-xs-2">冻结：</label>
+				<div class="col-xs-6 frozen">
+
+				</div>
+			</div>
+		</div>
+		<div class="submitbutton fixed">
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　关闭　</a>
+		</div>
+	</body>
+
+</html>

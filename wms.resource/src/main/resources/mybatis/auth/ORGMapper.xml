@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.auth.ORGMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.auth.ORG">
+    <id column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+    <result column="org_short_name" jdbcType="VARCHAR" property="orgShortName" />
+    <result column="parent_org_id" jdbcType="VARCHAR" property="parentOrgId" />
+    <result column="org_level" jdbcType="DECIMAL" property="orgLevel" />
+    <result column="upper_supervisorid" jdbcType="VARCHAR" property="upperSupervisorid" />
+    <result column="upper_supervisor_name" jdbcType="VARCHAR" property="upperSupervisorName" />
+    <result column="display_order" jdbcType="VARCHAR" property="displayOrder" />
+    <result column="decription" jdbcType="VARCHAR" property="decription" />
+    <result column="data_source" jdbcType="VARCHAR" property="dataSource" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    org_id, org_name, org_short_name, parent_org_id, org_level, upper_supervisorid, upper_supervisor_name, 
+    display_order, decription, data_source, create_time, modify_time
+  </sql>
+  
+  <select id="selectChildrenOrg" parameterType="java.lang.String">
+  	select 
+    org_id, org_name, parent_org_id
+    from wms_org where parent_org_id = #{parentOrgId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectChildrenOrgCount" parameterType="java.lang.String">
+  	select 
+    count(*)
+    from wms_org where parent_org_id = #{parentOrgId,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="selectAllOrg" resultMap="BaseResultMap">
+  	select org_id, org_name, parent_org_id
+    from wms_org
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wms_org
+    where org_id = #{orgId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from wms_org
+    where org_id = #{orgId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.auth.ORG">
+    insert into wms_org (org_id, org_name, org_short_name, 
+      parent_org_id, org_level, upper_supervisorid, 
+      upper_supervisor_name, display_order, decription, 
+      data_source, create_time, modify_time
+      )
+    values (#{orgId,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR}, #{orgShortName,jdbcType=VARCHAR}, 
+      #{parentOrgId,jdbcType=VARCHAR}, #{orgLevel,jdbcType=DECIMAL}, #{upperSupervisorid,jdbcType=VARCHAR}, 
+      #{upperSupervisorName,jdbcType=VARCHAR}, #{displayOrder,jdbcType=VARCHAR}, #{decription,jdbcType=VARCHAR}, 
+      #{dataSource,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.auth.ORG">
+    insert into wms_org
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="orgName != null">
+        org_name,
+      </if>
+      <if test="orgShortName != null">
+        org_short_name,
+      </if>
+      <if test="parentOrgId != null">
+        parent_org_id,
+      </if>
+      <if test="orgLevel != null">
+        org_level,
+      </if>
+      <if test="upperSupervisorid != null">
+        upper_supervisorid,
+      </if>
+      <if test="upperSupervisorName != null">
+        upper_supervisor_name,
+      </if>
+      <if test="displayOrder != null">
+        display_order,
+      </if>
+      <if test="decription != null">
+        decription,
+      </if>
+      <if test="dataSource != null">
+        data_source,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgShortName != null">
+        #{orgShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentOrgId != null">
+        #{parentOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgLevel != null">
+        #{orgLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="upperSupervisorid != null">
+        #{upperSupervisorid,jdbcType=VARCHAR},
+      </if>
+      <if test="upperSupervisorName != null">
+        #{upperSupervisorName,jdbcType=VARCHAR},
+      </if>
+      <if test="displayOrder != null">
+        #{displayOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="decription != null">
+        #{decription,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null">
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.auth.ORG">
+    update wms_org
+    <set>
+      <if test="orgName != null">
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgShortName != null">
+        org_short_name = #{orgShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentOrgId != null">
+        parent_org_id = #{parentOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgLevel != null">
+        org_level = #{orgLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="upperSupervisorid != null">
+        upper_supervisorid = #{upperSupervisorid,jdbcType=VARCHAR},
+      </if>
+      <if test="upperSupervisorName != null">
+        upper_supervisor_name = #{upperSupervisorName,jdbcType=VARCHAR},
+      </if>
+      <if test="displayOrder != null">
+        display_order = #{displayOrder,jdbcType=VARCHAR},
+      </if>
+      <if test="decription != null">
+        decription = #{decription,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null">
+        data_source = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where org_id = #{orgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.auth.ORG">
+    update wms_org
+    set org_name = #{orgName,jdbcType=VARCHAR},
+      org_short_name = #{orgShortName,jdbcType=VARCHAR},
+      parent_org_id = #{parentOrgId,jdbcType=VARCHAR},
+      org_level = #{orgLevel,jdbcType=DECIMAL},
+      upper_supervisorid = #{upperSupervisorid,jdbcType=VARCHAR},
+      upper_supervisor_name = #{upperSupervisorName,jdbcType=VARCHAR},
+      display_order = #{displayOrder,jdbcType=VARCHAR},
+      decription = #{decription,jdbcType=VARCHAR},
+      data_source = #{dataSource,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where org_id = #{orgId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectParentORGByORGID" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT 
+        p.org_id, p.org_name, p.org_short_name, p.parent_org_id, p.org_level, p.upper_supervisorid, p.upper_supervisor_name, 
+    	p.display_order, p.decription, p.data_source, p.create_time, p.modify_time
+	FROM wms_org o
+	INNER JOIN wms_org p ON o.parent_org_id = p.org_id AND o.org_id = #{orgId,jdbcType=VARCHAR};
+  </select>
+</mapper>
