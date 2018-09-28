@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加物料</title>
+    <meta charset="utf-8" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <style>
+        .search div {
+            min-height:42px;
+            line-height:30px;
+        }
+        .icon-search{
+            background: url(../../../../img/icon-search.png) 4px 4px no-repeat;
+            position: absolute;
+            top: 3px;
+            right: 0;
+            width: 29px;
+            height: 28px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        var indexdata=[],g1=null,item_list=[];
+        //查找物料数据
+        function search(){
+            if($(".btn_search").val()==""){
+                layer.msg("请填写物料编码/物料描述")
+                return false
+            }
+            showloading();
+            var url=uriapi+"/biz/pkg/get_pkg_mat_list?keyword="+$(".btn_search").val();
+            ajax(url,"get",null,function(data){
+                if(data.head.status==true){
+                    layer.close(indexloading);
+                    indexdata=[]
+                    $.each(data.body,function(i,item){
+                        var is_add=true
+                        $.each(item_list,function(j,itemer){
+                            if(item.mat_id==itemer.mat_id){
+                                is_add=false
+                                return false
+                            }
+                        })
+                        if(is_add){
+                            indexdata.push(item)
+                        }
+                    })
+                    dataBindTable()
+                }else{
+                    layer.close(indexloading)
+                }
+            }, function(e) {
+                layer.close(indexloading);
+            })
+        }
+
+        //绑定表格
+        function dataBindTable(){
+            if(g1==null){
+                g1=$("#id_div_grid").iGrid({
+                    columns: [
+                        { th: '物料编码', col: 'mat_code', sort:false,width:180 },
+                        { th: '物料描述', col: 'mat_name',min:200, sort:false},
+                        { th: '单位', col: 'unit_code', sort:false,width:80 },
+                    ],
+                    data:null,
+                    radio:true,
+                    isHideRadio:true,
+                    mb_YesNoCancelRadio:true,
+                    rownumbers:false,
+                    skin:"tablestyle4"
+                })
+            }else{
+                g1.showdata(indexdata)
+            }
+        }
+
+        //提交
+        function btn_submit(){
+            var data=[]
+            if($(".body .rdo input:checked").length==0){
+                layer.msg("至少选择一条物料")
+                return false
+            }
+            $(".body .rdo input:checked").each(function(){
+                var index=$(".body .rdo input:checked").val();
+                data.push(indexdata[index])
+            })
+            if(data[0].package_type_list.length==0){
+                layer.msg("请添加物料对应包装类型")
+                return false
+            }
+            parent.addMaterial(data)
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+            item_list=parent.getItemList()
+            dataBindTable()
+            $("input.btn_search").keyup(function (e) {
+                var keycode = e.which;
+                if (keycode == 13) {
+                    search();
+                }
+            });
+            $(".icon-search").click(function () {
+                search();
+            });
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="col-xs-5 col-xs-offset-7 text-right">
+        <div style="position: relative">
+            <i class="icon-search"></i>
+            <input class="form-control btn_search" type="text" placeholder="输入物料编码/物料描述">
+        </div>
+    </div>
+</div>
+<div id="id_div_grid"></div>
+<div class="submitbutton fixed">
+    <div class="col-xs-12">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　添加　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</div>
+</body>
+</html>

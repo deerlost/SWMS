@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>仓储管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link href="../../../part/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="../../../css/common.css" rel="stylesheet" />
+<script src="../../../js/jquery-1.11.0.min.js"></script>
+<script src="../../../part/layer/layer.js"></script>
+<script src="../../../js/common.js"></script>
+<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+<script src="../../../js/datetimepicker.js"></script>
+
+<style>
+body {
+	padding: 4px;
+}
+
+div.form {
+	padding: 20px 0px 0px;
+}
+
+div.form div {
+	height: 45px;
+}
+
+div.form div.clearfx {
+	height: 0px;
+}
+
+.col-xs-3 {
+	text-align: right;
+}
+</style>
+<script>
+	$(function() {
+		var action = GetQueryString('action'),
+			corp_id = GetQueryString('corp_id');
+		// 获取修改信息
+		getmodel();
+		function getModifyInfo() {
+			var url=uriapi+"/conf/corp/get_corp_by_id/"+GetQueryString('corp_id')
+			// 修改
+			ajax(url, 'GET', null , function(data) {
+				if (data.head.error_code === 0) {
+					$("#bukrs").val(data.body.corp_code);
+					$("#butxt").val(data.body.corp_name);
+					$("#zgsbk").val(data.body.board_id);
+				}
+			});
+		}
+		function getmodel(){
+			var url=uriapi+"/conf/corp/list_board"
+			// 修改
+			ajax(url, 'GET', null , function(data) {
+				$.each(data.body,function(i,item){
+					$("#zgsbk").append("<option value='" + item.board_id + "'data-index='" + i + "'>" +item.board_name+"</option>")
+				})
+			});
+		}
+		if (action === 'modify') {
+			getModifyInfo();
+		}
+		
+		// 保存信息
+		function saveInfo() {
+			var param={}
+			if(action=="modify"){
+				param.corp_id=GetQueryString('corp_id');
+			}else{
+				param.corp_id=0;
+			}
+			param.corp_code=$("#bukrs").val();
+			param.corp_name=$("#butxt").val();
+			param.board_id=$("#zgsbk").val().toString();
+			var url=uriapi+"/conf/corp/add_or_update_corp";
+			showloading();
+			ajax(url, 'POST', JSON.stringify(param), function(data) {
+				if (data.head.error_code === 0) {
+					setTimeout(function() {
+					 parent.location.href = "companylist.html";
+				  },200);
+				} else {
+					layer.close(indexloading);
+					layer.msg("保存失败！");
+				}
+			});
+		}
+
+		// 确定
+		$(".btn_submit").click(function() { 
+			if ($("#bukrs").val() == "") {
+				layersMoretips("公司代码", $("#bukrs"));
+				return false;
+			}
+			if ($("#butxt").val() == "") {
+				layersMoretips("公司名称", $("#butxt"));
+				return false;
+			}
+			if ($("#zgsbk").val() == "") {
+				layersMoretips("所属板块代码", $("#zgsbk"));
+				return false;
+			}
+
+
+			// 保存
+			saveInfo();
+		});
+
+		bindDatePicker(); //日期控件的绑定
+	});
+</script>
+</head>
+<body>
+	<div class="form">
+		<div class="col-xs-3">
+			<label>公司代码：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" name="bukrs" id="bukrs"
+				maxlength="20" />
+		</div>
+		<div class="col-xs-3">
+			<label>公司名称：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" name="butxt" id="butxt"
+				maxlength="20" />
+		</div>
+		<div class="col-xs-3">
+			<label>所属板块代码：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control " name="zgsbk" id="zgsbk">
+			</select> 
+			
+		</div>
+		<div class="clearfx"></div>
+	</div>
+
+	<div class="submitbutton">
+		<a href="javascript:void(0)" class="btn-lay-blue btn_submit"> 确定 </a>
+		<a href="javascript:void(0)"
+			class="btn-lay-default btn_iframe_close_window"> 取消 </a>
+	</div>
+</body>
+</html>

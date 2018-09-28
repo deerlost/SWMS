@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>创建人信息</title>
+    <meta charset="utf-8" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <style>
+        body {
+            padding: 4px;
+        }
+        .search {
+            padding:10px 0px;
+            overflow-y:auto;
+            overflow-x:hidden;
+        }
+        .search div {
+            min-height:42px;
+            line-height:30px;
+        }
+        .col-xs-2 {
+            padding-right:0px;
+            text-align:right;
+        }
+        .col-xs-3 {
+            padding-left:10px;
+            padding-right:0px;
+        }
+        .row .btn-lay-blue {
+            margin-top:-3px;
+            float:left;
+        }
+        .search div.clearfx {
+            min-height:1px;
+        }
+        .row {
+            margin-right:0px;
+        }
+        table.tablestyle3 th,table.tablestyle3 td {
+            padding: 7px 4px;
+        }
+    </style>
+    <script>
+        var indexdata = null;
+        $(function () {
+            $(".btnSubmit").click(function () {
+                if ($(":radio:checked").length == 0) {
+                    layer.msg("请选择一个用户。");
+                    return false;
+                }
+                parent.addName(indexdata.body[parseInt($(":radio:checked").attr("data-index"))]);
+                $(".btn_iframe_close_window").click();
+            });
+
+            $(".btnSearch").click(function () {
+                getdata();
+            })
+        });
+        function getdata() {
+            if($(".name").val()==""){
+                layer.msg("请填写用户名")
+                return false
+            }
+            showloading();
+            var url = uriapi + "/conf/jobstatis/user_list?condition="+$(".name").val()
+            ajax(url, "GET", null, function (data) {
+                indexdata = data;
+                layer.close(indexloading);
+                $(".tablestyle3 tr:gt(0)").remove();
+                $.each(indexdata.body, function (i, item) {
+                    var strtext = "";
+                    strtext += ("<tr>");
+                    strtext += ("<td><input type='radio' name='rdoorder' data-index='" + i + "' /></td>");
+                    strtext += ("<td>" + item.user_id + "</td>");
+                    strtext += ("<td>" + item.user_name + "</td>");
+                    strtext += ("<td>" + item.corp_name + "</td>");
+                    strtext += ("<td>" + item.org_name + "</td>");
+                    strtext += ("</tr>");
+                    $(".tablestyle3").append(strtext);
+                });
+                dataIsNull($(".tablestyle3"));
+
+                setTimeout(function () { layer.close(indexloading); }, 50);
+            }, function (e) {
+                layer.msg("请求失败！");
+                setTimeout(function () { layer.close(indexloading); }, 50);
+            });
+        }
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="row">
+        <div class="col-xs-2">用户：</div>
+        <div class="col-xs-3"><input type="text" class="form-control name" /></div>
+        <div class="col-xs-2"><a href="javascript:void(0)" class="btn-lay-blue btnSearch">　搜索　</a></div>
+        <div class="clearfx"></div>
+    </div>
+</div>
+<div class="tablebox">
+    <table class="tablestyle3">
+        <tr><th></th><th>用户</th><th>用户姓名</th><th>公司名称</th><th>部门</th></tr>
+        <tr class="datanull">
+            <td class="datanull" colspan="5">没有可显示的数据</td>
+        </tr>
+    </table>
+</div>
+<div class="submitbutton fixed">
+    <a href="javascript:void(0)" class="btn-lay-blue btnSubmit">　确定　</a>
+    <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+</div>
+</body>
+</html>

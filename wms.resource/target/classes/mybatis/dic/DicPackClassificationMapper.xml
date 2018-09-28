@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicPackClassificationMapper"> 
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicPackClassification">
+    <id column="classificat_id" jdbcType="INTEGER" property="classificatId" />
+    <result column="classificat_name" jdbcType="VARCHAR" property="classificatName" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <collection column="classificat_id" property="packageTypeList" select="com.inossem.wms.dao.dic.DicPackageTypeMapper.selectListByClass"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    classificat_id, classificat_name, is_delete
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_pack_classification
+    where classificat_id = #{classificatId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" />
+    from dic_pack_classification where is_delete=0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_pack_classification
+    where classificat_id = #{classificatId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicPackClassification">
+    insert into dic_pack_classification (classificat_id, classificat_name, is_delete
+      )
+    values (#{classificatId,jdbcType=INTEGER}, #{classificatName,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicPackClassification">
+    insert into dic_pack_classification
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="classificatId != null">
+        classificat_id,
+      </if>
+      <if test="classificatName != null">
+        classificat_name,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="classificatId != null">
+        #{classificatId,jdbcType=INTEGER},
+      </if>
+      <if test="classificatName != null">
+        #{classificatName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicPackClassification">
+    update dic_pack_classification
+    <set>
+      <if test="classificatName != null">
+        classificat_name = #{classificatName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    where classificat_id = #{classificatId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicPackClassification">
+    update dic_pack_classification
+    set classificat_name = #{classificatName,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT}
+    where classificat_id = #{classificatId,jdbcType=INTEGER}
+  </update>
+</mapper>

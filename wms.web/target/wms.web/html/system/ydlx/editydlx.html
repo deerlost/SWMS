@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+  <style>
+    body {padding:4px;}
+    div.form{padding:20px 0px 0px;}
+    div.form div{height:45px;}
+    div.form div.clearfx{height:0px;}
+    .col-xs-3{text-align:right;}
+    input.form-control[disabled], fieldset[disabled] input.form-control {
+        background-color: #eee;
+        opacity: 1;
+    }
+  </style>
+  <script>
+    $(function() {
+        var action = GetQueryString('action')
+        // 修改禁用
+        if(action === 'modify'){
+            $("[c-model='move_type_code']").attr('disabled', 'disabled');
+//          $("[c-model='spec_stock']").attr('disabled', 'disabled');
+            getydlx();
+        }
+        // 修改
+        function getydlx(){
+            showloading()
+            var obj={
+                move_type_code:GetQueryString('move_type_code'),
+            }
+            var url=uriapi+"/conf/movetype/get_move_type"
+            ajax(url, 'post',JSON.stringify(obj), function(data){
+                layer.close(indexloading);
+                if (data.head.error_code === 0) {
+                    CApp.initBase("ydlx",data.body);
+                }
+            });
+        }
+
+
+        // 保存信息
+        function saveInfo(){
+            var param = {
+                "add_or_update": GetQueryString('action')=="modify"?"false":"true",
+                "move_type_code": $("[c-model='move_type_code']").val(),
+                "move_type_name": $("[c-model='move_type_name']").val(),
+                "biz_type": $("[c-model='biz_type']").val()
+            };
+            showloading()
+            ajax(uriapi + '/conf/movetype/add_or_update_move_type', 'POST', JSON.stringify(param), function(data){
+                layer.close(indexloading)
+                if (data.head.status == true) {
+                    layer.msg("保存成功！");
+                    // 更新数据
+                    parent.actionpager();
+                    setTimeout(function(){$(".btn_iframe_close_window").click()},1000)
+                } else {
+                    layer.msg(data.head.msg);
+                }
+            });
+        }
+
+        // 确定
+        $(".btn_submit").click(function() {
+            if ($("[c-model='move_type_code']").val() == "") {
+                layersMoretips("必填项", $("[c-model='move_type_code']"));
+                return false;
+            }
+
+            // 保存
+            saveInfo();
+        });
+    });
+  </script>
+</head>
+<body>
+  <div class="form" c-app="ydlx">
+    <div class="col-xs-3">
+      <label>移动类型：</label>
+    </div>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" maxlength="3" c-model="move_type_code" />
+    </div>
+    <!--<div class="col-xs-3">
+      <label>特殊库存标识：</label>
+    </div>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" maxlength="20" c-model="spec_stock" />
+    </div>-->
+    <div class="col-xs-3">
+      <label>移动类型描述：</label>
+    </div>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" maxlength="20" c-model="move_type_name" />
+    </div>
+    <div class="col-xs-3">
+      <label>归属业务：</label>
+    </div>
+    <div class="col-xs-8">
+      <select class="form-control" c-model="biz_type" >
+          <option value="20">入库</option>
+          <option value="40">出库</option>
+          <option value="50">转储</option>
+          <option value="71">库存盘点</option>
+      </select>
+    </div>
+    <div class="clearfx"></div>
+  </div>
+
+  <div class="submitbutton">
+    <a href="javascript:void(0)" class="btn-lay-blue btn_submit">　确定　</a>
+    <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+  </div>
+</body>
+</html>

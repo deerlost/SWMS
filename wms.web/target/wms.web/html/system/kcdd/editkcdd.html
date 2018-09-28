@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>仓储管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link href="../../../part/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="../../../css/common.css" rel="stylesheet" />
+<script src="../../../js/jquery-1.11.0.min.js"></script>
+<script src="../../../part/layer/layer.js"></script>
+<script src="../../../js/common.js"></script>
+<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+<script src="../../../js/datetimepicker.js"></script>
+
+<style>
+body {
+	padding: 4px;
+}
+
+div.form {
+	padding: 20px 0px 0px;
+}
+
+div.form div {
+	height: 45px;
+}
+
+div.form div.clearfx {
+	height: 0px;
+}
+
+.col-xs-3 {
+	text-align: right;
+	line-height: 32px;
+}
+</style>
+<script>
+	$(function() {
+		var action = GetQueryString('action'),
+			werks = GetQueryString('fty_id'),
+			lgort = GetQueryString('location_id');;
+			function getAllGc(){//获取所有工厂信息
+			var url=uriapi+"/conf/loc/fty_list";	
+		ajax(url, 'GET',null,function(data) {
+                var ret = '';   
+				if (data.head.error_code === 0) {
+				  $.each(data.body, function(i, v){
+                        ret += '<option value="'+v.fty_id+'">'+v.fty_name+'</option>';
+                    });
+                   $("#werks").html(ret);
+			       $("#werks").val(werks);
+					 
+				}
+			});
+		}
+		 getAllGc();
+		// 获取修改的基本信息
+		function getModifyInfo() {
+			// 修改
+			var url=uriapi+"/conf/loc/get_location_by_id/"+GetQueryString('location_id');
+			showloading();
+			ajax(url, 'GET',null, function(data) {
+				layer.close(indexloading);
+				if (data.head.error_code === 0) {
+					console.log(data.body.status);
+					console.log(data.body.fty_id);
+				 $("#lgort").val(data.body.location_code);
+				 $("#lgobe").val(data.body.location_name);
+				 $("#street").val(data.body.address);
+				 $("#cdate").val(data.body.create_time);
+				 $("#werks").prop('disabled',true);
+				 $("#werks").val(data.body.fty_id);
+				 $('#zfalg').val(data.body.status);
+				 if(data.body.freeze_output==1){$('#freeze_output').prop('checked',true)}
+				 if(data.body.freeze_input==1){$('#freeze_input').prop('checked',true)}
+				 if(data.body.enabled==1){$('#enabled').prop('checked',true)}
+
+				}
+			});
+		}
+	
+		if (action === 'modify') {
+			getModifyInfo();
+		}else{
+			getAllGc();
+		}
+		// 保存信息
+		function saveInfo() {
+			var obj={}
+			if(GetQueryString('action')=="modify"){
+				obj.is_add=false;
+				obj.location_id=GetQueryString("location_id");
+			}else{
+				obj.is_add=true;
+				obj.location_id=0;	
+			}
+
+		 if($("#lgort").val().length>4){
+				layer.msg("库存地点编码不能大于四位");
+				return false;
+			}
+			if($("#lgobe").val()==""){
+				layersMoretips("必填项",$("#lgobe"))
+				return false
+			}
+				obj.location_code=$("#lgort").val();
+				obj.location_name=$("#lgobe").val();
+				obj.fty_id=$("#werks").val();
+				obj.city_id="0";
+				obj.create_time=$("#cdate").val();
+				obj.address=$("#street").val();
+				obj.status=$('#zfalg').val();
+				obj.freeze_output=$('#freeze_output').prop('checked')?"1":"0";
+				obj.freeze_input=$('#freeze_input').prop('checked')?"1":"0";
+				obj.enabled=$('#enabled').prop('checked')?"1":"0";
+				showloading();
+				var url=uriapi+"/conf/loc/add_or_update_loc"
+            ajax(url,'POST', JSON.stringify(obj), function(data){
+                if (data.head.error_code == 0) {
+                	layer.close(indexloading);
+                    setTimeout(function() {
+					parent.location.href = "kcddlist.html";
+					}, 500);
+                } else {
+                	layer.close(indexloading);
+                }
+            });
+		}
+
+		// 确定
+		$(".btn_submit").click(function() { 
+			// 保存
+			saveInfo();
+		});
+
+		bindDatePicker(); //日期控件的绑定
+	});
+</script>
+</head>
+<body>
+	<div class="form">
+		<div class="col-xs-3">
+			<label>库存地点：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" name="lgort" id="lgort"/>
+		</div>
+		<div class="col-xs-3">
+			<label>描述：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" name="lgobe" id="lgobe"
+				maxlength="20" />
+		</div>
+		<div class="col-xs-3">
+			<label>详细地址：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" name="street" id="street"
+				class="form-control " >
+		</div>
+		<div class="col-xs-3">
+			<label>上线日期：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" name="street" id="cdate" readonly data-date-format="yyyy-mm-dd"
+				   class="form-control txtdatepicker" >
+		</div>
+		<div class="col-xs-3">
+			<label>归属工厂：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control " name="werks" id="werks">
+			 
+			</select> 
+		</div>
+		<div class="col-xs-3">
+			<label>虚拟标识：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control" id="zfalg">
+				<option value="0">0-未上线正式库</option>
+				<option value="1">1-已上线正式库</option>
+				<option value="2">2-已上线虚拟库</option>
+				<option value="3">3-未上线虚拟库</option>
+			</select>
+		</div>
+		<div class="col-xs-3">
+		</div>
+		<div class="col-xs-2">
+			<label><input type="checkbox"  id="freeze_output" name="freeze_output"/> 入库冻结</label>
+		</div>
+		<div class="col-xs-2">
+			<label><input type="checkbox"  id="freeze_input" name="freeze_input"/> 出库冻结</label>
+		</div>
+		<div class="col-xs-2">
+			<label><input type="checkbox"  id="enabled" name="enabled"/> 不可用</label>
+		</div>
+		<div class="clearfx"></div>
+	</div>
+
+	<div class="submitbutton">
+		<a href="javascript:void(0)" class="btn-lay-blue btn_submit"> 确定 </a>
+		<a href="javascript:void(0)"
+			class="btn-lay-default btn_iframe_close_window"> 取消 </a>
+	</div>
+</body>
+</html>

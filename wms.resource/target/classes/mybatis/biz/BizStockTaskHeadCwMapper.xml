@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockTaskHeadCwMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockTaskHeadCw">
+    <id column="stock_task_id" jdbcType="INTEGER" property="stockTaskId" />
+    <result column="stock_task_code" jdbcType="CHAR" property="stockTaskCode" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="shipping_type" jdbcType="VARCHAR" property="shippingType" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="submit_date" jdbcType="TIMESTAMP" property="submitDate" />
+    <result column="stock_task_req_id" jdbcType="INTEGER" property="stockTaskReqId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="request_source" jdbcType="TINYINT" property="requestSource" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="refer_receipt_id" jdbcType="INTEGER" property="referReceiptId" />
+    <result column="refer_receipt_code" jdbcType="VARCHAR" property="referReceiptCode" />
+    <result column="refer_receipt_type" jdbcType="VARCHAR" property="referReceiptType" />
+  </resultMap>
+   <resultMap id="BaseResultMapVo" type="com.inossem.wms.model.vo.BizStockTaskHeadVo">
+    <id column="stock_task_id" jdbcType="INTEGER" property="stockTaskId" />
+    <result column="stock_task_code" jdbcType="CHAR" property="stockTaskCode" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="shipping_type" jdbcType="VARCHAR" property="shippingType" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="submit_date" jdbcType="TIMESTAMP" property="submitDate" />
+    <result column="stock_task_req_id" jdbcType="INTEGER" property="stockTaskReqId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="request_source" jdbcType="TINYINT" property="requestSource" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="refer_receipt_id" jdbcType="INTEGER" property="referReceiptId" />
+    <result column="refer_receipt_code" jdbcType="VARCHAR" property="referReceiptCode" />
+    <result column="refer_receipt_type" jdbcType="VARCHAR" property="referReceiptType" />
+    <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+    <result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+    <result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="receipt_type_name" jdbcType="VARCHAR" property="receiptTypeName" />
+    <result column="wh_code" jdbcType="VARCHAR" property="whCode" />
+    <result column="wh_name" jdbcType="VARCHAR" property="whName" />
+    <result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+    <result column="remover" jdbcType="VARCHAR" property="remover" />
+    <result column="forklift_worker" jdbcType="VARCHAR" property="forkliftWorker" />
+    <result column="tally_clerk" jdbcType="VARCHAR" property="tallyClerk" />
+    <result column="remover_id" jdbcType="VARCHAR" property="removerId" />
+    <result column="forklift_worker_id" jdbcType="VARCHAR" property="forkliftWorkerId" />
+    <result column="tally_clerk_id" jdbcType="VARCHAR" property="tallyClerkId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    stock_task_id, stock_task_code, receipt_type, wh_id, move_type_id, shipping_type, 
+    status, submit_date, stock_task_req_id, fty_id, location_id, remark, create_user, 
+    request_source, is_delete, create_time, modify_time, refer_receipt_id, refer_receipt_code,refer_receipt_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_task_head_cw
+    where stock_task_id = #{stockTaskId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_task_head_cw
+    where stock_task_id = #{stockTaskId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockTaskHeadCw">
+    insert into biz_stock_task_head_cw (stock_task_id, stock_task_code, receipt_type, 
+      wh_id, move_type_id, shipping_type, 
+      status, submit_date, stock_task_req_id, 
+      fty_id, location_id, remark, 
+      create_user, request_source, is_delete, 
+      create_time, modify_time, refer_receipt_id, 
+      refer_receipt_code)
+    values (#{stockTaskId,jdbcType=INTEGER}, #{stockTaskCode,jdbcType=CHAR}, #{receiptType,jdbcType=TINYINT}, 
+      #{whId,jdbcType=INTEGER}, #{moveTypeId,jdbcType=INTEGER}, #{shippingType,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{submitDate,jdbcType=TIMESTAMP}, #{stockTaskReqId,jdbcType=INTEGER}, 
+      #{ftyId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{requestSource,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{referReceiptId,jdbcType=INTEGER}, 
+      #{referReceiptCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockTaskHeadCw" keyProperty="stockTaskId" useGeneratedKeys="true">
+    insert into biz_stock_task_head_cw
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stockTaskId != null">
+        stock_task_id,
+      </if>
+      <if test="stockTaskCode != null">
+        stock_task_code,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id,
+      </if>
+      <if test="shippingType != null">
+        shipping_type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="submitDate != null">
+        submit_date,
+      </if>
+      <if test="stockTaskReqId != null">
+        stock_task_req_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="requestSource != null">
+        request_source,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="referReceiptId != null">
+        refer_receipt_id,
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code,
+      </if>
+      <if test="referReceiptType != null">
+        refer_receipt_type,
+      </if>
+      <if test="classTypeId != null">
+        class_type_id,
+      </if>
+      <if test="palletId != null">
+        pallet_id,
+      </if>
+      <if test="areaId != null">
+        area_id,
+      </if>
+      <if test="positionId != null">
+        position_id,
+      </if>
+      <if test="remover != null">
+       remover,
+      </if>
+      <if test="forkliftWorker != null">
+       forklift_worker,
+      </if>
+      <if test="tallyClerk != null">
+       tally_clerk,
+      </if>
+      <if test="removerId != null">
+       remover_id,
+      </if>
+      <if test="forkliftWorkerId != null">
+       forklift_worker_id,
+      </if>
+      <if test="tallyClerkId != null">
+       tally_clerk_id,
+      </if>
+      <if test="deliveryVehicle != null">
+		delivery_vehicle,
+	  </if>
+	  <if test="deliveryDriver != null">
+		delivery_driver,
+	  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stockTaskId != null">
+        #{stockTaskId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTaskCode != null">
+        #{stockTaskCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="moveTypeId != null">
+        #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="shippingType != null">
+        #{shippingType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="submitDate != null">
+        #{submitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockTaskReqId != null">
+        #{stockTaskReqId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="requestSource != null">
+        #{requestSource,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="referReceiptId != null">
+        #{referReceiptId,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptType != null">
+        #{referReceiptType,jdbcType=TINYINT},
+      </if>
+      <if test="classTypeId != null">
+        #{classTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="palletId != null">
+        #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="remover != null">
+       	#{remover,jdbcType=VARCHAR},
+      </if>
+      <if test="forkliftWorker != null">
+       	#{forkliftWorker,jdbcType=VARCHAR},
+      </if>
+      <if test="tallyClerk != null">
+       	#{tallyClerk,jdbcType=VARCHAR},
+      </if>
+      <if test="removerId != null">
+        #{removerId,jdbcType=INTEGER},
+      </if>
+      <if test="forkliftWorkerId != null">
+        #{forkliftWorkerId,jdbcType=INTEGER},
+      </if>
+      <if test="tallyClerkId != null">
+        #{tallyClerkId,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryVehicle != null">
+		#{deliveryVehicle,jdbcType=VARCHAR},
+	  </if>
+	  <if test="deliveryDriver != null">
+		#{deliveryDriver,jdbcType=VARCHAR},
+	  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockTaskHeadCw">
+    update biz_stock_task_head_cw
+    <set>
+      <if test="stockTaskCode != null">
+        stock_task_code = #{stockTaskCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="shippingType != null">
+        shipping_type = #{shippingType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="submitDate != null">
+        submit_date = #{submitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockTaskReqId != null">
+        stock_task_req_id = #{stockTaskReqId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="requestSource != null">
+        request_source = #{requestSource,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="referReceiptId != null">
+        refer_receipt_id = #{referReceiptId,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="remover != null">
+       remover = #{remover,jdbcType=VARCHAR},
+      </if>
+      <if test="forkliftWorker != null">
+       forklift_worker = #{forkliftWorker,jdbcType=VARCHAR},
+      </if>
+      <if test="tallyClerk != null">
+       tally_clerk = #{tallyClerk,jdbcType=VARCHAR},
+      </if>
+      <if test="removerId != null">
+       remover_id = #{removerId,jdbcType=INTEGER},
+      </if>
+      <if test="forkliftWorkerId != null">
+       forklift_worker_id = #{forkliftWorkerId,jdbcType=INTEGER},
+      </if>
+      <if test="tallyClerkId != null">
+       tally_clerk_id = #{tallyClerkId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where stock_task_id = #{stockTaskId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTaskHeadCw">
+    update biz_stock_task_head_cw
+    set stock_task_code = #{stockTaskCode,jdbcType=CHAR},
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      wh_id = #{whId,jdbcType=INTEGER},
+      move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      shipping_type = #{shippingType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      submit_date = #{submitDate,jdbcType=TIMESTAMP},
+      stock_task_req_id = #{stockTaskReqId,jdbcType=INTEGER},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      request_source = #{requestSource,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      refer_receipt_id = #{referReceiptId,jdbcType=INTEGER},
+      refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR}
+    where stock_task_id = #{stockTaskId,jdbcType=INTEGER}
+  </update>
+  
+   <select id="getBizStockTaskHeadListInReq"  parameterType="com.inossem.wms.model.vo.BizStockTaskHeadVo" resultType="com.inossem.wms.model.vo.BizStockTaskHeadVo">
+  	SELECT
+		th.status ,th.stock_task_code stockTaskCode, th.stock_task_id  stockTaskId,   
+		dl.location_code locationCode,dl.location_name locationName,
+        th.create_user createUser, u.user_name userName,
+        th.create_time createTime
+	FROM biz_stock_task_head_cw th
+	INNER JOIN dic_stock_location  dl ON th.location_id = dl.location_id and th.stock_task_req_id = #{stockTaskReqId} and th.is_delete = 0  
+    LEFT JOIN wms_user u on u.user_id = th.create_user
+
+  </select>
+  
+  <!-- 川维  -->
+  <select id="getBizStockTaskHeadListForCWOnPaging"  parameterType="java.util.Map" resultType="java.util.Map">		
+	SELECT 	
+		DISTINCT
+		th.stock_task_req_id, 
+		ifnull(b.stock_task_req_code,'') stock_task_req_code,
+		th.stock_task_id,
+		th.stock_task_code,
+	  	th.refer_receipt_id,
+	  	th.refer_receipt_code,
+	  	th.refer_receipt_type,
+	  	th.status,
+	  	th.receipt_type,
+	  	th.fty_id, f.fty_code, f.fty_name,
+		th.location_id,d.location_code ,d.location_name ,
+		b.wh_id ,w.wh_code ,w.wh_name ,
+		th.create_user create_user_id,u.user_name create_user, th.create_time ,th.remark,
+		th.class_type_id,
+		th.pallet_id,
+		th.area_id,
+		th.position_id,
+		ifnull(dp.pallet_code,'') pallet_code,
+		ifnull(wa.area_code,'') area_code,
+		ifnull(wa.area_name,'') area_name,
+		ifnull(wp.position_code,'') position_code,
+		CONCAT(dcp.class_type_name,'(' , DATE_FORMAT(dcp.start_time,'%H:%i:%s'),'-',DATE_FORMAT(dcp.end_time,'%H:%i:%s') , ')') AS class_type_name,
+		ifnull(th.remover,'') remover,
+		ifnull(th.forklift_worker,'') forklift_worker,
+		ifnull(th.tally_clerk,'') tally_clerk,
+		ifnull(b.delivery_vehicle,'') delivery_vehicle,
+		ifnull(b.delivery_driver,'') delivery_driver
+	FROM  biz_stock_task_head_cw th
+	INNER JOIN dic_factory f on th.fty_id = f.fty_id and th.is_delete = 0
+	<if test="status >=0 and status != null">
+		AND th.status = #{status}
+	</if>
+	<if test="stockTaskId > 0 ">
+		AND th.stock_task_id = #{stockTaskId,jdbcType=INTEGER}	
+	</if>		
+	<if test="currentUser != null">
+		INNER JOIN rel_user_stock_location ul ON th.location_id = ul.location_id and  ul.user_id = #{currentUser,jdbcType=VARCHAR}
+	</if>
+	<if test="receiptType !=null">
+		AND th.receipt_type  in ${receiptType}
+	</if>		
+	<if test="shippingType!=null">
+		AND th.shipping_type = #{shippingType,jdbcType=VARCHAR}
+	</if>	
+	INNER JOIN dic_stock_location d ON th.location_id = d.location_id 
+	INNER JOIN biz_stock_task_item_cw item ON item.stock_task_id= th.stock_task_id
+	INNER JOIN dic_material mat ON mat.mat_id=item.mat_id
+	left join biz_stock_task_req_head b on th.stock_task_req_id=b.stock_task_req_id
+	LEFT JOIN dic_warehouse w on b.wh_id = w.wh_id 
+	LEFT JOIN wms_user u on th.create_user = u.user_id 
+	left join dic_class_type dcp on th.class_type_id = dcp.class_type_id
+	left join dic_warehouse_pallet dp on dp.pallet_id = th.pallet_id
+	left join dic_warehouse_area wa on wa.area_id = th.area_id
+	left join dic_warehouse_position wp on wp.position_id = th.position_id
+    WHERE 1=1 
+	<if test="condition != null ">
+		 AND (b.stock_task_req_code like CONCAT('%',#{condition},'%' ) or
+		 	 th.stock_task_code like CONCAT('%',#{condition},'%' ) or
+    		 b.refer_receipt_code like CONCAT('%',#{condition},'%' ) or
+    		 d.location_name like CONCAT('%',#{condition},'%' ) or 
+    		 f.fty_code like CONCAT('%',#{condition},'%' ) or 
+		     w.wh_name like CONCAT('%',#{condition},'%' ) or
+		     u.user_name like CONCAT('%',#{condition},'%' )or
+		     dp.pallet_code like CONCAT('%',#{condition},'%' ) or
+		     mat.mat_code like CONCAT('%',#{condition},'%' ) or
+		     mat.mat_name like CONCAT('%',#{condition},'%' )
+		     )		
+	</if>		
+	ORDER BY th.create_time DESC
+  </select>
+  
+  <select id="getBizStockTaskHeadListOnPaging" parameterType="com.inossem.wms.model.vo.BizStockTaskHeadVo" resultMap="BaseResultMapVo">
+  SELECT
+		th.stock_task_id,th.stock_task_code,th.receipt_type,
+        th.move_type_id,
+        th.shipping_type ,th.submit_date ,th.stock_task_req_id ,
+        th.fty_id , df.fty_code, df.fty_name,
+		th.location_id ,dl.location_code,dl.location_name,
+		th.wh_id ,dw.wh_code , dw.wh_name,
+		th.remark ,th.create_user ,u.user_name,
+		th.is_delete , th.create_time ,th.modify_time ,
+		th.remover,
+		th.forklift_worker,
+		th.tally_clerk,
+		th.remover_id,
+        th.forklift_worker_id,
+        th.tally_clerk_id,
+		th.status,	drt.receipt_type_name
+	FROM biz_stock_task_head_cw th
+	INNER JOIN rel_user_stock_location ul ON th.location_id = ul.location_id and th.create_user = ul.user_id
+	INNER JOIN dic_receipt_type drt on th.receipt_type = drt.receipt_type
+	<if test="receiptType != null">
+        AND th.receipt_type = #{receiptType,jdbcType=TINYINT}
+    </if>
+	<if test="receiptTypeString !=null">
+		AND th.receipt_type  in ${receiptTypeString}
+	</if>
+	<if test="statusString !=null">
+		AND th.status  in ${statusString}
+	</if>	
+	<if test="createUser !=null">
+		AND ul.user_id = #{createUser,jdbcType=VARCHAR}
+	</if>	
+	<if test="shippingType!=null">
+		AND th.shipping_type = #{shippingType,jdbcType=VARCHAR}
+	</if>	
+	LEFT JOIN dic_warehouse dw ON th.wh_id = dw.wh_id 
+	LEFT JOIN dic_factory df ON th.fty_id = df.fty_id		
+	LEFT JOIN dic_stock_location  dl ON th.fty_id = dl.fty_id AND th.location_id = dl.location_id
+    LEFT JOIN wms_user u on u.user_id = th.create_user 
+    WHERE 1=1 
+	<if test="condition != null ">
+		 AND (th.stock_task_code like CONCAT('%',#{condition},'%' ) or 
+		 	dl.location_name like CONCAT('%',#{condition},'%' )  OR 
+		 	u.user_name like CONCAT('%',#{condition},'%' )  or
+		  	th.create_user like CONCAT('%',#{condition},'%' ) OR 
+		  	drt.receipt_type_name like CONCAT('%',#{condition},'%' ) 
+		  )		
+	</if>
+	<if test="stockTaskId > 0 ">
+		AND th.stock_task_id = #{stockTaskId,jdbcType=INTEGER}	
+	</if>
+			
+	ORDER BY th.create_time DESC
+  </select>
+  
+  
+  <!--销售出库单 查询下架作业单集合  -->
+  <select id="selectTaskListBySale" parameterType="map" resultType="map">
+         SELECT
+           ANY_VALUE(biz_stock_task_head_cw.`stock_task_id`) AS stock_task_id,
+           ANY_VALUE(biz_stock_task_head_cw.`stock_task_code`) AS stock_task_code,
+           ANY_VALUE(DATE_FORMAT( biz_stock_task_head_cw.`create_time`,'%Y-%m-%d %H:%i:%s')) AS create_time,
+           ANY_VALUE(wms_user.`user_name`) AS create_user,
+           ANY_VALUE(biz_stock_task_item_cw.`unit_id`) AS unit_id,
+           ANY_VALUE(dic_unit.`unit_code`) AS unit_code,
+           ANY_VALUE(dic_unit.`name_zh`) AS unit_name,
+           ANY_VALUE(biz_allocate_cargo_item.refer_receipt_rid) AS refer_receipt_rid,
+           SUM(biz_stock_task_item_cw.qty) AS qty,
+           ANY_VALUE(biz_stock_task_item_cw.`location_id`) AS location_id
+        FROM biz_stock_task_head_cw
+            INNER JOIN biz_stock_task_item_cw ON biz_stock_task_item_cw.`stock_task_id`=biz_stock_task_head_cw.`stock_task_id` 
+             AND biz_stock_task_head_cw.receipt_type=34 and biz_stock_task_head_cw.refer_receipt_type = 21
+             AND biz_stock_task_head_cw.is_delete=0 AND biz_stock_task_item_cw.is_delete=0 
+            INNER JOIN wms_user ON biz_stock_task_head_cw.`create_user`=wms_user.user_id
+            INNER JOIN dic_unit ON biz_stock_task_item_cw.`unit_id`=dic_unit.`unit_id`
+            INNER JOIN biz_allocate_cargo_item 
+                ON biz_stock_task_item_cw.`refer_receipt_id`=biz_allocate_cargo_item.`allocate_cargo_id`
+                AND biz_stock_task_item_cw.refer_receipt_rid = biz_allocate_cargo_item.allocate_cargo_rid
+            INNER JOIN biz_allocate_cargo_head 
+                ON biz_allocate_cargo_item.allocate_cargo_id =biz_allocate_cargo_head.`allocate_cargo_id` 
+                AND biz_allocate_cargo_item.is_delete=0 AND biz_allocate_cargo_head.is_delete=0 
+                AND biz_allocate_cargo_head.status=#{astatus}
+                <if test="status !=null">
+                	AND biz_stock_task_head_cw.status=#{status}
+                </if>
+        WHERE biz_allocate_cargo_head.refer_receipt_code=#{referReceiptCode} 
+        <if test="beforeOrderId != null">
+        	and biz_allocate_cargo_head.before_order_id=#{beforeOrderId}
+        </if>
+        <if test="beforeOrderType != null">
+        	and biz_allocate_cargo_head.before_order_type=#{beforeOrderType}
+        </if>
+        GROUP BY biz_allocate_cargo_head.`allocate_cargo_id`,biz_stock_task_head_cw.stock_task_id
+          ,biz_stock_task_item_cw.refer_receipt_rid
+          ,biz_stock_task_item_cw.`location_id`
+  </select>
+
+    <!--销售出库单 查询下架作业单集合 不分组  -->
+  <select id="selectTaskListBySaleNoGroup" parameterType="map" resultType="map">
+        SELECT
+            biz_stock_task_item_cw.qty,
+            biz_stock_task_item_cw.location_id,
+            biz_stock_task_item_cw.mat_id,
+            biz_stock_task_item_cw.batch,
+			biz_stock_task_item_cw.refer_receipt_code,
+			biz_stock_task_item_cw.refer_receipt_id,
+			biz_stock_task_item_cw.refer_receipt_type,
+			biz_stock_task_item_cw.refer_receipt_rid,
+			biz_stock_task_item_cw.erp_batch,
+			biz_stock_task_item_cw.package_type_id
+        FROM biz_stock_task_head_cw
+            INNER JOIN biz_stock_task_item_cw ON biz_stock_task_item_cw.`stock_task_id`=biz_stock_task_head_cw.`stock_task_id`
+                AND biz_stock_task_head_cw.receipt_type=34 and biz_stock_task_head_cw.refer_receipt_type = 21
+                AND biz_stock_task_head_cw.is_delete=0 AND biz_stock_task_item_cw.is_delete=0 
+            INNER JOIN biz_allocate_cargo_item
+                ON biz_stock_task_item_cw.`refer_receipt_id`=biz_allocate_cargo_item.`allocate_cargo_id`
+                AND biz_stock_task_item_cw.refer_receipt_rid = biz_allocate_cargo_item.allocate_cargo_rid
+            INNER JOIN biz_allocate_cargo_head
+                ON biz_allocate_cargo_item.allocate_cargo_id =biz_allocate_cargo_head.`allocate_cargo_id`
+             AND biz_allocate_cargo_item.is_delete=0 AND biz_allocate_cargo_head.is_delete=0     
+        WHERE biz_allocate_cargo_head.refer_receipt_code=#{referReceiptCode} 
+        <if test="beforeOrderId != null">
+        	and biz_allocate_cargo_head.before_order_id=#{beforeOrderId}
+        </if>
+        <if test="beforeOrderType != null">
+        	and biz_allocate_cargo_head.before_order_type=#{beforeOrderType}
+        </if>
+  </select>
+
+
+    <!--出库单 查询下架作业单集合  -->
+  <select id="selectTaskListByOutput" parameterType="map" resultType="map">
+  		SELECT
+			head.`stock_task_id` AS stock_task_id,
+			head.`stock_task_code` AS stock_task_code,
+			DATE_FORMAT(
+				max(head.`create_time`),
+				'%Y-%m-%d %H:%i:%s'
+			) AS create_time,
+			max(user.`user_name`)AS create_user,
+			max(item.`unit_id`) AS unit_id,
+			max(unit.`unit_code`) AS unit_code,
+			max(unit.`name_zh`) AS unit_name,
+			sum(item.qty) AS qty,
+			max(item.`refer_receipt_rid`) AS rid
+		FROM
+			biz_stock_task_head_cw head
+		INNER JOIN biz_stock_task_item_cw item ON item.`stock_task_id` = head.`stock_task_id`
+		AND head.receipt_type = 34
+		AND item.is_delete = 0
+		AND head.is_delete = 0
+		INNER JOIN wms_user user ON head.`create_user` = user.user_id
+		INNER JOIN dic_unit unit ON item.`unit_id` = unit.`unit_id`
+		WHERE
+			item.refer_receipt_code = #{referReceiptCode} 
+		AND item.refer_receipt_id = #{referReceiptId}
+		AND item.refer_receipt_type =#{referReceiptType}	
+		AND item.refer_receipt_rid =#{referReceiptRid}	
+		AND head.status=#{status}
+		GROUP BY head.stock_task_id
+  </select>
+  
+  <update id="updateStatusByReferReceiptIdAndType" parameterType="java.util.Map">
+    update biz_stock_task_head_cw
+    set 
+      status = #{status,jdbcType=TINYINT}
+    where refer_receipt_id = #{referReceiptId,jdbcType=INTEGER} And
+      refer_receipt_type = #{referReceiptType,jdbcType=TINYINT}
+  </update>
+  <update id="updateDeleteByReferReceiptIdAndType" parameterType="java.util.Map">
+    update biz_stock_task_head_cw
+    set 
+      is_delete = #{isDelete,jdbcType=TINYINT}
+    where refer_receipt_id = #{referReceiptId,jdbcType=INTEGER} And
+      refer_receipt_type = #{referReceiptType,jdbcType=TINYINT}
+      <if test="receiptType != null">
+        AND receipt_type = #{receiptType,jdbcType=TINYINT}
+    </if>
+  </update>
+<!--   打印 -->
+  <select id="selectByTaskIdForPrint"  parameterType="java.lang.Integer"  resultType="java.util.Map">
+  
+  SELECT
+			th.stock_task_id,
+			th.create_user create_user_id,
+			u.user_name create_user,
+			th.stock_task_code,
+			ifnull(ahead.refer_receipt_code , '') receipt_code,
+			ifnull(ahead.receive_name, '') receive_name,
+			ifnull(th.remover, '') remover,
+			ifnull(th.forklift_worker, '') forklift_worker,
+			ifnull(th.tally_clerk, '') tally_clerk,
+			ifnull(b.delivery_vehicle, '') delivery_vehicle,
+			ifnull(b.delivery_driver, '') delivery_driver,
+			type.receipt_type_name,
+			DATE_FORMAT(th.create_time,'%Y-%m-%d') create_time,
+			th.refer_receipt_code,
+			d.location_code,
+			d.location_name,
+			f.fty_code,
+			f.fty_name,
+			th.remark
+		FROM
+			biz_stock_task_head_cw th
+		INNER JOIN dic_factory f ON th.fty_id = f.fty_id
+		AND th.is_delete = 0
+		INNER JOIN dic_stock_location d ON th.location_id = d.location_id
+		LEFT JOIN biz_stock_task_req_head b ON th.stock_task_req_id = b.stock_task_req_id
+		LEFT JOIN wms_user u ON th.create_user = u.user_id
+		LEFT JOIN biz_allocate_cargo_head ahead ON ahead.allocate_cargo_code = th.refer_receipt_code
+		AND th.refer_receipt_type = '21'
+		INNER JOIN dic_receipt_type type ON type.receipt_type = th.refer_receipt_type
+		WHERE
+			th.stock_task_id =#{stockTaskId}
+  
+  </select>
+  
+  
+</mapper>

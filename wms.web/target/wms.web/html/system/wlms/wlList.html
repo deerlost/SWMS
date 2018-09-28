@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <link href="../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/jquery-bootstrap-pagination.js"></script>
+    <script src="../../../js/jquery.tmpl.min.js"></script>
+    <script src="../../../js/jquery.inossem.grid.js"></script>
+    <script src="../../../js/page/system/wlms/wllist.js"></script>
+</head>
+
+<body>
+    <div c-template="menu"></div>
+    <div class="articlebox">
+        <div class="article">
+            <div class="topstyle1 bottomborder">
+                <div class="col-xs-2">
+                    <input type="text" class="form-control sync">
+                </div>
+                    <a href="javascript:void(0)" class="btn-lay-blue btn_tb">同步物料数据</a>　
+            </div>
+            <div class="search searchstyle1">
+                <input id="J_ListSearchInput" class="search ico ico-search" placeholder="物料编号/描述" type="text" />
+                <a  id="J_ListSearchHandle"href="javascript:void(0)" class="search"></a>
+            </div>
+           	<div id="id_div_grid"></div>
+            <div class="text-center" id="J_ListPagination"></div>
+        </div>
+    </div>
+</body>
+
+</html>

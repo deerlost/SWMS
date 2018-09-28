@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <script src="../../../../js/page/storage/specificword/productionrevolve/popup_position1.js"></script>
+    <style>
+        .search div{min-height: 35px;line-height: 35px}
+        input.ico-search{background-position:right -515px}
+        a.search {position:absolute;top:2px;right:16px;height:30px;width:30px}
+        .btn-lay-default{padding:0;height:35px;line-height: 35px}
+        .border_color{height:495px;border:1px solid #ccc;padding:0;overflow-x:hidden;overflow-y:auto;position: relative}
+        div.submitbutton.fixed{border:none}
+        a.relevance{width: 360px;height: 40px;line-height: 40px;position: absolute;bottom: 12px;left: 20px;}
+    </style>
+</head>
+<body class="dialog">
+    <div class="search">
+        <div class="col-xs-6 keyinput">
+            <div class="col-xs-8" style="position: relative"><input type="text" class="ico ico-search form-control" placeholder="请输入包装物标签" style="ime-mode: disabled" onfocus="this.style.imeMode='disabled'"><a href="javascript:void(0)" class="search"></a></div>
+        </div>
+        <div class="col-xs-6">
+            <div class="col-xs-6">未上架数量：<span class="stock_qty">--</span></div>
+            <div class="col-xs-6">本次上架数量：<span class="stock_task_qty">--</span></div>
+        </div>
+        <div class="clearfix"></div>
+        <br>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="tablebox">
+        <div id="id_div_grid_pack"></div>
+    </div>
+    <div class="submitbutton fixed">
+        <div class="col-xs-12">
+            <a href="javascript:void(0)" class="btn-lay-blue btn_submit">　添加　</a>
+            <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+        </div>
+    </div>
+</body>
+</html>

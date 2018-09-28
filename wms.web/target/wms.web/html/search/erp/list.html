@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scorll">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/bootstrapgrid.css" rel="stylesheet" />
+    <link href="../../../css/datetimepicker.css" rel="stylesheet" />
+    <link href="../../../css/inossem.grid.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/datetimepicker.js"></script>
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/page/search/erp/list.js"></script>
+    <script src="../../../js/jquery.inossem.grid.js"></script>
+
+    <style>
+        .searchstyle2 label {
+            font-weight:normal;
+            text-align:right;
+            color:#666;
+            line-height: 30px;
+            white-space:nowrap;
+        }
+        table.tablestyle4 td.red div {
+			color: #e81011;
+			font-weight: bold;
+		}
+        table.tablestyle4 td.green div {
+			color: #53cc31;
+			font-weight: bold;
+		}
+		div.submitbutton {padding: 20px 0px;}
+    </style>
+</head>
+
+<body>
+    <div c-template="menu"></div>
+    <div class="articlebox">
+        <div class="article">
+            <h2 class="h2grey">ERP库存查询</h2>
+            <div class="searchstyle2">
+                <div class="row" c-app="base">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="form-group col-xs-3">
+                                <label class="col-xs-4">工厂：</label>
+                                <select class="form-control selectwerks col-xs-8"></select>
+                            </div>
+                            <div class="form-group col-xs-3">
+                                <label for="txtzgysdh" class="col-xs-4">库存地点：</label>
+                                <select class="form-control selectlgort col-xs-8"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 row submitbutton">
+						<a href="javascript:void(0)" class="btn-lay-blue reconciliation">查询</a>　
+                        <a href="javascript:void(0)" class="btn-lay-default" onclick="filebox()">批量导出</a>　
+                        <a href="javascript:void(0)" class="btn-lay-default print">打印</a>
+					</div>
+                    <div class="clearfx"></div>                    
+                </div>
+            </div>
+            <div id="id_div_grid"></div>
+        </div>
+
+    </div>
+    <form id="download" method="get" class="hidden">
+        <input type="text"  name="fty_id">
+        <input type="text"  name="location_id">
+    </form>
+</body>
+</html>

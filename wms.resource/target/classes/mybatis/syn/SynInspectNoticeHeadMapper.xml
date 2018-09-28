@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.syn.SynInspectNoticeHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.syn.SynInspectNoticeHead">
+    <id column="inspect_notice_code" jdbcType="VARCHAR" property="inspectNoticeCode" />
+    <result column="corp_code" jdbcType="VARCHAR" property="corpCode" />
+    <result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+    <result column="purchase_order_code" jdbcType="VARCHAR" property="purchaseOrderCode" />
+    <result column="purchase_order_type" jdbcType="VARCHAR" property="purchaseOrderType" />
+    <result column="purchase_order_type_name" jdbcType="VARCHAR" property="purchaseOrderTypeName" />
+    <result column="supplier_code" jdbcType="VARCHAR" property="supplierCode" />
+    <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="dept_code" jdbcType="VARCHAR" property="deptCode" />
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="contract_code" jdbcType="VARCHAR" property="contractCode" />
+    <result column="contract_name" jdbcType="VARCHAR" property="contractName" />
+    <result column="supplier_contact" jdbcType="VARCHAR" property="supplierContact" />
+    <result column="supplier_contact_tel" jdbcType="VARCHAR" property="supplierContactTel" />
+    <result column="is_direct_supply" jdbcType="TINYINT" property="isDirectSupply" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="delivery_notice_id" jdbcType="INTEGER" property="deliveryNoticeId" />
+    <result column="inspect_notice_id" jdbcType="INTEGER" property="inspectNoticeId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    inspect_notice_code, corp_code, corp_name, purchase_order_code, purchase_order_type, 
+    purchase_order_type_name, supplier_code, supplier_name, create_user, dept_code, dept_name, 
+    contract_code, contract_name, supplier_contact, supplier_contact_tel, is_direct_supply, 
+    status, remark, delivery_notice_id, inspect_notice_id, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from syn_inspect_notice_head
+    where inspect_notice_code = #{inspectNoticeCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from syn_inspect_notice_head
+    where inspect_notice_code = #{inspectNoticeCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.syn.SynInspectNoticeHead">
+    insert into syn_inspect_notice_head (inspect_notice_code, corp_code, corp_name, 
+      purchase_order_code, purchase_order_type, purchase_order_type_name, 
+      supplier_code, supplier_name, create_user, 
+      dept_code, dept_name, contract_code, 
+      contract_name, supplier_contact, supplier_contact_tel, 
+      is_direct_supply, status, remark, 
+      delivery_notice_id, inspect_notice_id, create_time, 
+      modify_time)
+    values (#{inspectNoticeCode,jdbcType=VARCHAR}, #{corpCode,jdbcType=VARCHAR}, #{corpName,jdbcType=VARCHAR}, 
+      #{purchaseOrderCode,jdbcType=VARCHAR}, #{purchaseOrderType,jdbcType=VARCHAR}, #{purchaseOrderTypeName,jdbcType=VARCHAR}, 
+      #{supplierCode,jdbcType=VARCHAR}, #{supplierName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{deptName,jdbcType=VARCHAR}, #{contractCode,jdbcType=VARCHAR}, 
+      #{contractName,jdbcType=VARCHAR}, #{supplierContact,jdbcType=VARCHAR}, #{supplierContactTel,jdbcType=VARCHAR}, 
+      #{isDirectSupply,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
+      #{deliveryNoticeId,jdbcType=INTEGER}, #{inspectNoticeId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.syn.SynInspectNoticeHead">
+    insert into syn_inspect_notice_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="inspectNoticeCode != null">
+        inspect_notice_code,
+      </if>
+      <if test="corpCode != null">
+        corp_code,
+      </if>
+      <if test="corpName != null">
+        corp_name,
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code,
+      </if>
+      <if test="purchaseOrderType != null">
+        purchase_order_type,
+      </if>
+      <if test="purchaseOrderTypeName != null">
+        purchase_order_type_name,
+      </if>
+      <if test="supplierCode != null">
+        supplier_code,
+      </if>
+      <if test="supplierName != null">
+        supplier_name,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="deptCode != null">
+        dept_code,
+      </if>
+      <if test="deptName != null">
+        dept_name,
+      </if>
+      <if test="contractCode != null">
+        contract_code,
+      </if>
+      <if test="contractName != null">
+        contract_name,
+      </if>
+      <if test="supplierContact != null">
+        supplier_contact,
+      </if>
+      <if test="supplierContactTel != null">
+        supplier_contact_tel,
+      </if>
+      <if test="isDirectSupply != null">
+        is_direct_supply,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="deliveryNoticeId != null">
+        delivery_notice_id,
+      </if>
+      <if test="inspectNoticeId != null">
+        inspect_notice_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="inspectNoticeCode != null">
+        #{inspectNoticeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpCode != null">
+        #{corpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null">
+        #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderType != null">
+        #{purchaseOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderTypeName != null">
+        #{purchaseOrderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptName != null">
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null">
+        #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierContact != null">
+        #{supplierContact,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierContactTel != null">
+        #{supplierContactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="isDirectSupply != null">
+        #{isDirectSupply,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryNoticeId != null">
+        #{deliveryNoticeId,jdbcType=INTEGER},
+      </if>
+      <if test="inspectNoticeId != null">
+        #{inspectNoticeId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.syn.SynInspectNoticeHead">
+    update syn_inspect_notice_head
+    <set>
+      <if test="corpCode != null">
+        corp_code = #{corpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null">
+        corp_name = #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderType != null">
+        purchase_order_type = #{purchaseOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderTypeName != null">
+        purchase_order_type_name = #{purchaseOrderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        dept_code = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptName != null">
+        dept_name = #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        contract_code = #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null">
+        contract_name = #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierContact != null">
+        supplier_contact = #{supplierContact,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierContactTel != null">
+        supplier_contact_tel = #{supplierContactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="isDirectSupply != null">
+        is_direct_supply = #{isDirectSupply,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryNoticeId != null">
+        delivery_notice_id = #{deliveryNoticeId,jdbcType=INTEGER},
+      </if>
+      <if test="inspectNoticeId != null">
+        inspect_notice_id = #{inspectNoticeId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where inspect_notice_code = #{inspectNoticeCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.syn.SynInspectNoticeHead">
+    update syn_inspect_notice_head
+    set corp_code = #{corpCode,jdbcType=VARCHAR},
+      corp_name = #{corpName,jdbcType=VARCHAR},
+      purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      purchase_order_type = #{purchaseOrderType,jdbcType=VARCHAR},
+      purchase_order_type_name = #{purchaseOrderTypeName,jdbcType=VARCHAR},
+      supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      supplier_name = #{supplierName,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      dept_code = #{deptCode,jdbcType=VARCHAR},
+      dept_name = #{deptName,jdbcType=VARCHAR},
+      contract_code = #{contractCode,jdbcType=VARCHAR},
+      contract_name = #{contractName,jdbcType=VARCHAR},
+      supplier_contact = #{supplierContact,jdbcType=VARCHAR},
+      supplier_contact_tel = #{supplierContactTel,jdbcType=VARCHAR},
+      is_direct_supply = #{isDirectSupply,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      delivery_notice_id = #{deliveryNoticeId,jdbcType=INTEGER},
+      inspect_notice_id = #{inspectNoticeId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where inspect_notice_code = #{inspectNoticeCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+			
+			.col-xs-3 {
+				text-align: right;
+			}
+		</style>
+		<script>
+			var pardata = null;
+			var req=/^[a-zA-Z][-_a-zA-Z0-9]$/;
+			$(function() {
+				getpackage_type();
+				var index = GetQueryString('index')
+				var action = GetQueryString('action');
+				if(action == "create") {
+				} else {
+					$(".sn_used_info").attr("disabled","disabled");
+					pardata = parent.getinfo(index)
+					if(pardata.is_freeze==1){
+						$(".is_freeze_info").prop("checked","checked");
+					}
+					if(pardata.sn_used==1){
+						$(".sn_used_info").prop("checked","checked")
+					}
+					$(".package_code_info").val(pardata.package_type_code);
+					$(".package_name_info").val(pardata.package_type_name);
+					$(".standard_ch_info").val(pardata.package_standard_ch);
+					$(".standard_info").val(pardata.package_standard);
+					$(".unit_info").val(pardata.unit_code);
+					$(".import_erp").val(pardata.erp_batch_key);
+					$(".import_sn").val(pardata.sn_serial_key);
+					$(".unit_wl").val(pardata.mat_unit_code);
+					$(".unit_wl").attr("disabled","disabled");
+					$(".import_sn").attr("disabled","disabled");
+					
+				}
+				$(".btn_submit").click(function() {
+					submit();
+				});
+			});
+
+			function returnOption(value, text) {
+				return "<option value='" + value + "'>" + text + "</option>";
+			}
+
+			function getpackage_type() {
+				var url = uriapi + "/conf/package/get_package_classify";
+				ajax(url, 'GET', null, function(data) {
+					$.each(data.body, function(i, item) {
+						$(".package_type").append(returnOption(item.classificat_id, item.classificat_name));
+					})
+					$(".package_type").val(pardata.classificat_id)
+				}, function(e) {
+				});
+			}
+			function submit(){
+				var isChecked=true;
+				var isnull=true;
+				$(".form-control").each(function(i,item){
+					if($(this).val()==""){
+						layer.msg("每一项都不能为空");
+						isChecked=false;
+						isnull=false;
+					}
+				})
+				if(isnull==true){
+					if($(".import_erp").val().length>2){
+						layersMoretips("ERP批次关键字不可以大于俩位",$(".import_erp"))
+						isChecked=false;
+					}
+					if(!req.test($(".import_sn").val())){
+						layersMoretips("SN序号关键字首字母必须为英文且不能为特殊字符",$(".import_sn"))
+						isChecked=false;
+					}	
+				}
+				var test="";
+				var jsondata = {};
+				var is_freeze = -1;
+				var sn_used=-1;
+				if($('.is_freeze_info').is(':checked')) {
+					is_freeze=1
+				} else {
+					is_freeze = 0
+				}
+				if($('.sn_used_info').is(':checked')) {
+					sn_used=1
+				} else {
+					sn_used = 2
+				}
+				if(GetQueryString('action')=="edit"){
+					test="修改成功";
+					jsondata.package_type_id=pardata.package_type_id;
+					jsondata.package_type_code=pardata.package_type_code;
+				}else{
+					test="创建成功";
+				}
+				jsondata.package_type_name =$(".package_name_info").val();
+				jsondata.classificat_id = $(".package_type").val();
+				jsondata.is_freeze = is_freeze;
+				jsondata.sn_used = sn_used;
+				jsondata.package_standard_ch=$(".standard_ch_info").val();
+				jsondata.package_standard=$(".standard_info").val();
+				jsondata.package_type_code=$(".package_code_info").val();
+				jsondata.unit_code=$(".unit_info").val();
+				jsondata.erp_batch_key=$(".import_erp").val();
+				jsondata.sn_serial_key=$(".import_sn").val();
+				jsondata.mat_unit_code=$(".unit_wl").val();
+				if(!isChecked){
+					return false;
+				}
+				showloading();
+				var url = (uriapi + '/conf/package/update_or_insert');
+				ajax(url, 'POST', JSON.stringify(jsondata), function(data) {
+					setTimeout(function() {
+						layer.close(indexloading);
+					}, 50);
+					if(data.head.status == true) {
+						layer.msg(test, {
+							time: 2000
+						});
+						parent.actionpager();
+						setTimeout(function() {
+							$(".btn_iframe_close_window").click();
+						}, 2000);
+					}
+				},function(e) {
+					layer.close(indexloading);
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="form" c-app="zmkpf">
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>包装物分类：</label>
+				</div>
+				<div class="col-xs-8">
+					<select type="text" class="form-control package_type" />
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-12 package_code">
+				<div class="col-xs-3">
+					<label>包装物类型：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="package_code_info form-control" c-model="package_type_code">
+				</div>
+			</div>
+			<div class="col-xs-12 package_name">
+				<div class="col-xs-3">
+					<label>包装物类型描述：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="form-control package_name_info" c-model="package_type_name" maxlength="20" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>包装规格：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="form-control standard_ch_info" c-model="package_standard_ch" maxlength="20" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>最大重量：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="form-control standard_info" c-model="package_standard" maxlength="20" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>包装物单位：</label>
+				</div>
+				<div class="col-xs-8">
+					<select class="form-control unit_info" c-model="unit_code">
+						<option value="桶">桶</option>
+						<option value="袋">袋</option>
+						<option value="辆">辆</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>ERP批次关键字：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="form-control import_erp" c-model="erp_batch_key" maxlength="2" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>SN序列号关键字：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="form-control import_sn" c-model="sn_serial_key" maxlength="2" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>物料单位：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="form-control unit_wl" c-model="mat_unit_code" maxlength="20" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>是否冻结：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="checkbox" class="is_freeze_info" maxlength="20" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>是否启用序列号：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="checkbox" class="sn_used_info" maxlength="20" />
+				</div>
+			</div>
+			<div class="clearfx col-xs-12"></div>
+		</div>
+		<div class="col-xs-12">
+			<br /><br /><br /><br /><br /><br />
+		</div>
+		<div class="fixed submitbutton">
+			<a href="javascript:void(0)" class="btn-lay-blue btn_submit">　确定　</a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+		</div>
+	</body>
+</html>

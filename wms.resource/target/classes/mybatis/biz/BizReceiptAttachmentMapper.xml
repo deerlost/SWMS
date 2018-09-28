@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizReceiptAttachmentMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizReceiptAttachment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="receipt_id" jdbcType="INTEGER" property="receiptId" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="ext" jdbcType="VARCHAR" property="ext" />
+    <result column="size" jdbcType="INTEGER" property="size" />
+    <result column="file_id" jdbcType="VARCHAR" property="fileId" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, receipt_id, receipt_type, user_id, file_name, ext, size, file_id, is_delete, 
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_receipt_attachment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_receipt_attachment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizReceiptAttachment">
+    insert into biz_receipt_attachment (id, receipt_id, receipt_type, 
+      user_id, file_name, ext, 
+      size, file_id, is_delete, 
+      create_time, modify_time)
+    values (#{id,jdbcType=INTEGER}, #{receiptId,jdbcType=INTEGER}, #{receiptType,jdbcType=TINYINT}, 
+      #{userId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{ext,jdbcType=VARCHAR}, 
+      #{size,jdbcType=INTEGER}, #{fileId,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizReceiptAttachment">
+    insert into biz_receipt_attachment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="receiptId != null">
+        receipt_id,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="fileName != null">
+        file_name,
+      </if>
+      <if test="ext != null">
+        ext,
+      </if>
+      <if test="size != null">
+        size,
+      </if>
+      <if test="fileId != null">
+        file_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="receiptId != null">
+        #{receiptId,jdbcType=INTEGER},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=INTEGER},
+      </if>
+      <if test="fileId != null">
+        #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizReceiptAttachment">
+    UPDATE biz_receipt_attachment
+    <set>
+      <if test="receiptId != null">
+        receipt_id = #{receiptId,jdbcType=INTEGER},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        ext = #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        size = #{size,jdbcType=INTEGER},
+      </if>
+      <if test="fileId != null">
+        file_id = #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    WHERE id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizReceiptAttachment">
+    UPDATE biz_receipt_attachment
+    SET receipt_id = #{receiptId,jdbcType=INTEGER},
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      ext = #{ext,jdbcType=VARCHAR},
+      size = #{size,jdbcType=INTEGER},
+      file_id = #{fileId,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    WHERE id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByReceipt" parameterType="java.util.Map" resultType="com.inossem.wms.model.vo.BizReceiptAttachmentVo">
+    SELECT 
+       a.id, 
+       a.receipt_id receiptId, 
+       a.user_id userId, 
+       u.user_name userName,
+       a.file_name fileName, 
+       a.ext, 
+       a.size fileSize, 
+       a.file_id fileId
+    FROM biz_receipt_attachment a
+    INNER JOIN wms_user u ON u.user_id = a.user_id 
+    AND a.receipt_id = #{receiptId,jdbcType=INTEGER}
+    AND a.receipt_type = #{receiptType,jdbcType=INTEGER}
+    AND a.is_delete = 0;
+  </select>  
+  <delete id="deleteByReceiptId" parameterType="java.lang.Integer">
+    DELETE FROM biz_receipt_attachment
+    WHERE receipt_id = #{receiptId,jdbcType=INTEGER}
+  </delete> 
+  <delete id="deleteLogicalByReceiptId" parameterType="java.lang.Integer">
+    UPDATE biz_receipt_attachment
+    SET is_delete = 1
+    WHERE receipt_id = #{receiptId,jdbcType=INTEGER}
+  </delete> 
+   <delete id="deleteByUUID" parameterType="map">
+    delete from biz_receipt_attachment
+    where receipt_id = #{receiptId,jdbcType=INTEGER}
+    and receipt_type = #{receiptType,jdbcType=INTEGER}
+    and file_id = #{fileId,jdbcType=VARCHAR}
+  </delete> 
+</mapper>

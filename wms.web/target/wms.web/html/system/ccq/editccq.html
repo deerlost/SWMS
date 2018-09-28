@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>仓储管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link href="../../../part/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="../../../css/common.css" rel="stylesheet" />
+<script src="../../../js/jquery-1.11.0.min.js"></script>
+<script src="../../../part/layer/layer.js"></script>
+<script src="../../../js/common.js"></script>
+<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+<script src="../../../js/datetimepicker.js"></script>
+
+<style>
+body {
+	padding: 4px;
+}
+
+div.form {
+	padding: 20px 0px 0px;
+}
+
+div.form div {
+	height: 45px;
+}
+
+div.form div.clearfx {
+	height: 0px;
+}
+
+.col-xs-3 {
+	text-align: right;
+}
+</style>
+<script>
+	$(function() {
+		var action = GetQueryString('action'),
+			area_id = GetQueryString('area_id'),
+			area_code = GetQueryString('area_code');
+		var url=uriapi + '/conf/area/warehouse_list'
+		ajax(url,"get",null,function(data){
+			$.each(data.body,function(i,item){
+				$("#lgnum").append("<option value='" + item.wh_id + "'>" + item.wh_name + "</option>")
+			})
+
+		});
+
+		// 获取修改信息
+		function getModifyInfo() {
+			var url=uriapi + '/conf/area/get_warehouse_area_by_id/'+GetQueryString('area_id')
+			ajax(url, 'GET', null,function(data) {
+				if (data.head.error_code === 0) {
+					$("#lgnum").val(data.body.wh_id);
+					$("#lgtyp").val(data.body.area_code);
+					$("#ltypt").val(data.body.area_name);
+					if(data.body.check_method==1||data.body.check_method==2||data.body.check_method==3){
+						$("#kapap").val(data.body.check_method);
+					}else{
+						$("#kapap").val("");
+					}
+					if(data.body.type_input==2||data.body.type_input==6||data.body.type_input==9||data.body.type_input==12||data.body.type_input==16){
+						$("#stein").val(data.body.type_input);
+					}else{
+						$("#stein").val("")
+					}
+					if(data.body.type_output==1||data.body.type_output==6||data.body.type_output==8||data.body.type_output==12){
+						 $("#staus").val(data.body.type_output);
+					}else{
+						$("#staus").val("");
+					}    
+                if(data.body.mix==1){
+				  $('#misch').prop('checked',true); 
+				 }
+				}
+			});
+		}
+
+		if (action === 'modify') {
+			getModifyInfo();
+		}
+		// 保存信息
+		function saveInfo() {
+			var check_method="";
+			var type_input="";
+			var type_output="";
+			if($("#kapap").val()==""){
+				check_method="0"
+			}else{
+				check_method=$("#kapap").val();
+			}
+			if($("#stein").val()==""){
+				type_input="0"
+			}else{
+				type_input=$("#stein").val();
+			}
+			if($("#staus").val()==""){
+				type_output="0"
+			}else{
+				type_output=$("#staus").val();
+			}
+		var url=uriapi+"/conf/area/add_or_update_warehouse_area"	
+		var a=$("#misch").prop('checked');
+			var param = {
+					"wh_id": $("#lgnum").val(),
+					"area_code" : $("#lgtyp").val(),
+					"area_name":$("#ltypt").val(),
+					"check_method":check_method,
+					"type_input":type_input,
+	                "type_output":type_output,
+	                "mix":$("#misch").prop('checked')?"1":"0" 
+ 
+			};
+		if (action === 'modify') {
+				param.area_id=GetQueryString('area_id')
+			}else{
+				param.area_id=0
+			}
+			console.log(JSON.stringify(param));
+			showloading();
+			ajax(url, 'POST', JSON.stringify(param), function(data) {
+				if (data.head.error_code === 0) {
+					setTimeout(function() {
+					parent.location.href = "ccqlist.html";
+					}, 3000);
+				} else {
+					layer.close(indexloading);
+				}
+			 
+			});
+		}
+
+		// 确定
+		$(".btn_submit").click(function() {
+			if ($("#lgnum").val() == "") {
+				layersMoretips("仓库号不能为空", $("#lgnum"));
+				return false;
+			}
+			if ($("#lgtyp").val() == "") {
+				layersMoretips("仓储区不能为空", $("#lgtyp"));
+				return false;
+			}
+			if($("#lgtyp").val().length>4){
+				layersMoretips("仓储区不能大于4位", $("#lgtyp"));
+				return false;
+			}
+			 
+			// 保存
+			saveInfo();
+		});
+
+		bindDatePicker(); //日期控件的绑定
+	});
+</script>
+</head>
+<body>
+	<div class="form">
+		<div class="col-xs-3">
+			<label>存储区：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" name="lgtyp" id="lgtyp" />
+		</div>
+		<div class="col-xs-3">
+			<label>描述：</label>
+		</div>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" name="ltypt" id="ltypt" />
+		</div>
+		<div class="col-xs-3">
+			<label>归属仓库：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control " name="lgnum" id="lgnum">
+
+			</select>
+		</div>
+		<div class="col-xs-3">
+			<label>存储能力检查：</label>
+		</div>
+		<div class="col-xs-8">
+			<select class="form-control " name="kapap" id="kapap">
+				<option value=''> 请选择</option>
+				<option value="1"> W-基于仓位允许的最大重量</option>
+				<option value='2'> V-基于仓位允许的最大体积</option>
+				<option value='3'> M-基于物料最大数量</option>
+			</select>
+
+		</div>
+		<div class="col-xs-3">
+			<label>入库策略：</label>
+		</div>
+		<div class="col-xs-8">
+		 
+			<select class="form-control " name="stein" id="stein">
+			<option value=''> 请选择</option>
+				<option value='2'>B-大容量仓储</option>
+				<option value='6'> F-固定仓位</option>
+				<option value='9'> I-增加现有库存</option>
+				<option value='12'> L-下一个空仓位</option>
+				<option value='16'> P-仓储单位类型</option>
+			</select>
+		</div>
+		<div class="col-xs-3">
+			<label>出库策略：</label>
+		</div> 
+		<div class="col-xs-8">
+			<select class="form-control " name="staus" id="staus">
+			<option value=''> 请选择</option>
+				<option value='1'>A-最小数量先出</option>
+				<option value='6'> F-先进先出</option>
+				<option value='8'> H-货架寿命的到期日</option>
+				<option value='12'> L-后进先出</option>
+				 
+			</select>
+
+		</div>
+		<div class="col-xs-3">
+			<label>混储标示：</label>
+		</div>
+		<div class="col-xs-8">
+			<input name="misch" id="misch" type="checkbox"  />
+
+		</div>
+		<div class="clearfx"></div>
+
+
+	</div>
+
+	<div class="submitbutton">
+		<a href="javascript:void(0)" class="btn-lay-blue btn_submit"> 确定 </a>
+		<a href="javascript:void(0)"
+			class="btn-lay-default btn_iframe_close_window"> 取消 </a>
+	</div>
+</body>
+</html>

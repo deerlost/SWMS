@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>桌面设置</title>
+    <script src="../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../part/layer/layer.js"></script>
+    <script src="../../js/common.js"></script>
+    <link href="../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/common.css" rel="stylesheet" />
+    <style>
+		.setbox{padding-left:24px;}
+		.setbox label{display:inline-block;width:156px;}
+	</style>
+    <script>
+    var indexdata=null;
+
+    //数据绑定
+    function dataBind(){
+        $.each(indexdata.body,function(i,item){
+            var strtxt=""
+            strtxt+=item.name+"　　";
+            strtxt+=cNumList(item.child_list);
+            strtxt+="<br/><br/>"
+            $(".setbox").append(strtxt)
+        })
+    }
+
+    //绑定右侧栏目
+    function cNumList(data){
+        var ischecked=""
+        var strtxt="";
+        $.each(data,function(i,item){
+            if(item.is_checked=="1"){
+                ischecked="checked"
+            }else{
+                ischecked=""
+            }
+            strtxt+="<label><input type='checkbox' "+ ischecked +" value='"+item.resources_id+"' />&nbsp;"+item.resources_name+"</label>"
+        })
+        return strtxt
+    }
+
+
+
+    //提交
+    function submit(){
+        var checked_list=[]
+        $("[type='checkbox']:checked").each(function(){
+            checked_list.push($(this).val())
+        });
+        var obj={
+            checked_list:checked_list
+        };
+        var url=uriapi+"/biz/auth/save_short_cut_list"
+        showloading();
+        ajax(url,"post",JSON.stringify(obj),function(data){
+            if(data.head.status==true){
+                setTimeout(function(){$(".btn_iframe_close_window").click()},2000)
+                parent.location.reload()
+            }else{
+                layer.close(indexloading)
+            }
+        }, function(e) {
+            layer.close(indexloading);
+        },true)
+    }
+
+    $(function(){
+        var url = uriapi + "/biz/auth/get_short_cut_check_list";
+        showloading();
+        ajax(url, "GET", null, function (data) {
+            if(data.head.status==true){
+                layer.close(indexloading);
+                indexdata=data
+                dataBind()
+
+                //判断checkbox 个数
+                $("[type='checkbox']").click(function(){
+                    if($("[type='checkbox']:checked").length>4){
+                        layer.msg("选择数量不能大于4个")
+                        $(this).removeAttr("checked")
+                    }
+                })
+            }else{
+                layer.close(indexloading)
+            }
+        }, function(e) {
+            layer.close(indexloading);
+        })
+
+        $(".btn_submit").click(function(){
+            submit()
+        })
+    });
+    </script>
+
+
+</head>
+
+<body class="dialog">
+    <div class="setbox">
+
+    </div>
+	<div class="submitbutton fixed">
+        <a href="javascript:void(0)" class="btn-lay-blue btn_submit">　确定　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</body>
+</html>

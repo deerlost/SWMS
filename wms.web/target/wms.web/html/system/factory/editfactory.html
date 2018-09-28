@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+  <style>
+    body {padding:4px;}
+    div.form{padding:20px 0px 0px;}
+    div.form div{height:45px;}
+    div.form div.clearfx{height:0px;}
+    .col-xs-3{text-align:right;}
+  </style>
+  <script>
+    $(function() {
+        var action = GetQueryString('action'),
+            werks = GetQueryString('fty_id'),
+            factory = $('.factory');
+
+        // 修改禁用
+        if(action === 'modify'){
+            factory.attr('readonly', true);
+        } else {
+            factory.removeAttr('readonly');
+        }
+        // 获取归属公司
+        function getCompanyList(){
+            var company = $('.company'),
+                ret = '';
+                var url = uriapi + '/conf/fty/corp_id_and_corp_name_of_crop_list';
+            ajax(url, 'GET', null, function(data){
+                if (data.head.error_code === 0) {
+                    $.each(data.body, function(i, v){
+                        ret += '<option value="'+v.corp_id+'">'+v.corp_name+'</option>';
+                    });
+                    company.html(ret);
+                    if(action === 'modify'){
+                        getModifyInfo();
+                    }
+                }
+            });
+        }
+        getCompanyList();
+        // 获取修改信息
+        function getModifyInfo(){
+            // 修改
+            var url=uriapi+"/conf/fty/get_fty_by_id/"+GetQueryString("fty_id")
+            ajax(url, 'GET',null, function(data){
+                if (data.head.error_code === 0) {
+                    $(".factory").val(data.body.fty_code);
+                    $(".factoryname").val(data.body.fty_name);
+                    $(".address").val(data.body.address);
+                    $(".company").val(data.body.corp_id);
+                }
+            });
+        }
+        // 保存信息
+        function saveInfo(){
+			var obj={};
+			if(GetQueryString('action')=="modify"){
+				obj.is_add=false;
+				obj.fty_id=GetQueryString("fty_id");
+			}else{
+				obj.is_add=true;
+				obj.fty_id=0;	
+			}
+			obj.fty_code=$(".factory").val();
+			obj.fty_name=$(".factoryname").val();
+			obj.address=$(".address").val();
+			obj.corp_id=$(".company").val();
+			showloading();
+            ajax(httpApi + '/conf/fty/add_or_update_factory', 'POST', JSON.stringify(obj), function(data){
+                if (data.head.error_code == 0) {
+                    setTimeout(function() {
+					parent.location.href = "factorylist.html";
+					}, 200);
+                } else {
+                	layer.close(indexloading);
+                    layer.msg(data.head.msg);
+                }
+            });
+        }
+
+        // 确定
+        $(".btn_submit").click(function() {
+            if ($(".factory").val() == "") {
+                layersMoretips("工厂代码", $(".factory"));
+                return false;
+            }
+            if ($(".factoryname").val() == "") {
+                layersMoretips("工厂名称", $(".factoryname"));
+                return false;
+            }
+            if ($(".address").val() == "") {
+                layersMoretips("工厂地址", $(".address"));
+                return false;
+            }
+            
+
+            // 保存
+            saveInfo();
+        });
+    });
+  </script>
+</head>
+<body>
+  <div class="form">
+    <div class="col-xs-3">
+      <label>工厂代码：</label>
+    </div>
+    <div class="col-xs-8">
+      <input type="text" class="form-control factory" maxlength="20" />
+    </div>
+    <div class="col-xs-3">
+      <label>工厂名称：</label>
+    </div>
+    <div class="col-xs-8">
+      <input type="text" class="form-control factoryname" maxlength="20" />
+    </div>
+    <div class="col-xs-3">
+      <label>工厂地址：</label>
+    </div>
+    <div class="col-xs-8">
+      <input type="text" class="form-control address" maxlength="20" />
+    </div>
+    <div class="col-xs-3">
+      <label>归属公司：</label>
+    </div>
+    <div class="col-xs-8">
+      <select class="form-control company"></select>
+    </div>
+    <div class="clearfx"></div>
+  </div>
+
+  <div class="submitbutton">
+    <a href="javascript:void(0)" class="btn-lay-blue btn_submit">　确定　</a>
+    <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+  </div>
+</body>
+</html>

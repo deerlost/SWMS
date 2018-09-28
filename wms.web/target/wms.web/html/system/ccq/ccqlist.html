@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>仓储管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="../../../part/bootstrap/css/bootstrap.min.css"rel="stylesheet" />
+<link href="../../../css/common.css" rel="stylesheet" />
+<link href="../../../css/inossem.grid.css" rel="stylesheet" />
+<link href="../../../css/mod.css" rel="stylesheet" />
+<script src="../../../js/jquery-1.11.0.min.js"></script>
+<script src="../../../part/layer/layer.js"></script>
+<script src="../../../js/common.js"></script>
+<script src="../../../js/jquery-bootstrap-pagination.js"></script>
+<script src="../../../js/jquery.tmpl.min.js"></script>
+<script src="../../../js/jquery.inossem.grid.js"></script>
+<script src="../../../js/page/system/ccq/ccqlist.js"></script>
+</head>
+
+<body>
+    <div c-template="menu"></div>
+	<div class="articlebox">
+		<div class="article">
+
+			<div class="topstyle1 bottomborder">
+				<a href="javascript:void(0)" data-title="新建"
+					data-href="editccq.html?action=create" data-size="700px,550px"
+					class="btn_table_edit btn-lay-blue">创建存储区</a>
+				<a href="javascript:void(0)" style="display: none;" class="btn-lay-default btnprint">批量打印仓位</a>
+			</div>
+			<div class="search searchstyle1">
+				<input id="J_ListSearchInput" class="search ico ico-search"
+					placeholder="仓库号" type="text" /> <a id="J_ListSearchHandle"
+					href="javascript:void(0)" class="search"></a>
+			</div>
+				<div id="id_div_grid"></div>
+				<div class="text-center" id="J_ListPagination"></div>
+		</div>
+	</div>
+    <!-- 批量打印弹窗 -->
+    <div id="J_printDialog" data-dialog-title="批量打印仓位" data-dialog-width="500px" data-dialog-height="350px" class="m-dialog">
+        <div class="m-dialog__bd">
+            <div class="m-form u-p20">
+                <div class="col-xs-12">
+                	<div class="col-xs-3">仓库号：</div>
+                	<div class="col-xs-9"><!--ng-options="item.lnumt for item in data.baseInfo.ck_select.ckhList track by item.lgnum" -->
+                		<select id="selectlgnum" class="form-control">
+                			<option value="">请选择</option>
+						</select>
+                	</div>
+                </div>
+                <div class="col-xs-12">
+                	<div class="col-xs-3">存储区：</div>
+                	<div class="col-xs-9">
+						<select id="selectlgtyp" class="form-control">
+                			<option value="">请选择</option>
+						</select>
+                	</div>
+                </div>
+                <div class="col-xs-12">
+                	<div class="col-xs-3">仓位：</div>
+                	<div class="col-xs-4"><input class="form-control" id="txtformlgpla" type="text" maxlength="10"/></div>
+                	<div class="col-xs-1">到</div>
+                	<div class="col-xs-4"><input class="form-control" id="txttolgpla" type="text" maxlength="10"/></div>
+                </div>
+                <div class="col-xs-12">
+                	<div class="col-xs-3">打印数：</div>
+                	<div class="col-xs-1">从</div>
+                	<div class="col-xs-3"><input class="form-control" id="txtstart" type="text" maxlength="5" value="0"/></div>
+                	<div class="col-xs-1">到</div>
+                	<div class="col-xs-3"><input class="form-control" id="txtend" type="text" maxlength="5" value="100"/></div>
+                	<div class="col-xs-1">条</div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="submitbutton">
+            <a class="btn-lay-blue btnprintall" href="javascript:;">打印</a>&nbsp;&nbsp;&nbsp;
+
+        </div>
+    </div>
+    <!-- 批量打印弹窗 -->
+</body>
+
+</html>

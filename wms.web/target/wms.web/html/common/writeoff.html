@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>备注</title>
+	<meta charset="utf-8" />
+    <script src="../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../js/common.js"></script>
+    <link href="../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/common.css" rel="stylesheet" />
+    <script src="../../part/layer/layer.js"></script>
+    <style>
+        .search{margin-top:10px;}
+        .search .col-xs-4{line-height: 30px;}
+    </style>
+    <script>
+        function btn_submit(){
+            var check=$(".check").val()
+            if(check=="" || check==undefined){
+                layersMoretips("必填项",$(".check"))
+                return false
+            }
+            parent.writeOff(check)
+        }
+    </script>
+</head>
+<body class="dialog">
+    <div class="search">
+        <div class="col-xs-4 text-right">是否已质检：</div>
+        <div class="col-xs-4">
+            <select class="form-control check">
+                <option style="display: none"></option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="submitbutton fixed">
+        <div class="col-xs-12">
+            <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　确认　</a>
+            <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+        </div>
+    </div>
+</body>
+</html>

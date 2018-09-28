@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/bootstrapgrid.css" rel="stylesheet" />
+    <link href="../../../css/datetimepicker.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <link href="../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/datetimepicker.js"></script>
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/jquery.inossem.grid.js"></script>
+    <script src="../../../js/jquery.inossem.select.js"></script>
+    <script src="../../../js/page/storage/check/detail.js"></script>
+
+    <style>
+		.form-search .input-group-text{display: table-cell;}
+		.readonly,.input-group .readonly{display:none;}
+		div.shadedisable{position: absolute;background: rgba(255,255,255,0.6);width: 100%;height: 34px;left: 0px;top: 0px;}
+    </style>
+
+    
+</head>
+
+<body>
+    <div c-template="menu"></div>
+    <div class="articlebox">
+        <div class="article" c-app="head">
+            <div class="mapadress">
+                <a href="list.html">盘点单列表</a>
+                <span>&nbsp;&nbsp;&nbsp;&rsaquo;&nbsp;&nbsp;&nbsp;</span>
+                <span class="spanno">创建盘点单</span>
+            </div>
+            <div class="btnoperate">
+               	<a href="javascript:void(0)" class="ico ico-save btnsave" style="display:none;">保存</a>
+                <a href="javascript:void(0)" class="ico ico-print btnprint" style="display:none;">打印</a>
+                <a href="javascript:void(0)" class="ico ico-save btnsavecheck" style="display:none;">暂存</a>
+                <a href="javascript:void(0)" class="ico ico-del2 btndelete" style="display:none;">删除</a>
+            </div>
+            <h2 class="h2red" c-model="status_name">创建</h2>
+            <div class="form-search">
+				<div class="col-xs-12 row">
+					<div class="col-xs-12 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">盘点凭证号：</span>
+						  <div class="input-group-text" c-model="stock_take_code">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">计划盘点日期：</span>
+						  <div class="input-group-text divreadonly" c-model="stock_take_time">--</div>
+						  <input type="text" class="form-control txtdatepicker readonly" readonly data-date-format="yyyy-mm-dd" placeholder="计划盘点日期" c-model="stock_take_time" maxlength="10" />
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">班次：</span>
+						  <div class="input-group-text divreadonly" c-model="work_shift_name">--</div>
+						  <select class="form-control selectshift readonly" c-model='work_shift'>
+						  	<option></option>
+						  </select>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">库存状态：</span>
+						  <div class="input-group-text divreadonly" c-model="stock_take_status_name">--</div>
+						  <select class="form-control selectstatus readonly" c-model='stock_take_status'>
+						  	<option>请选择</option>
+						  </select>
+						</div>
+					</div>
+
+					
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">工厂：</span>
+						  <div class="input-group-text divreadonly" c-model="fty_name">--</div>
+						  <select class="form-control selectfty readonly readonly" c-model='fty_id'>
+						  	<option>请选择</option>
+						  </select>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">库存地点：</span>
+						  <div class="input-group-text divreadonly" c-model="location_name">--</div>
+						  <select class="form-control selectloc readonly" c-model='location_id'>
+						  	<option>请选择</option>
+						  </select>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">盘点类型：</span>
+						  <div class="input-group-text readonly"><label class="labcheck"><input type="radio" name="rdo_stock_take_type" value="0" />&nbsp;明盘</label>&nbsp;</div>
+						  <div class="input-group-text readonly"><label class="labcheck"><input type="radio" name="rdo_stock_take_type" value="10" />&nbsp;盲盘</label>&nbsp;</div>
+						  <div class="input-group-text divreadonly" c-model="stock_take_type_name">--</div>
+						</div>
+					</div>
+					
+
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">盘点方式：</span>
+						  <div class="input-group-text readonly"><label class="labcheck"><input type="radio" name="rdo_stock_take_mode" value="0" checked />&nbsp;存储区</label>&nbsp;</div>
+						  <!--<div class="input-group-text readonly"><label class="labcheck"><input type="radio" name="rdo_stock_take_mode" value="10" disabled />&nbsp;物料</label>&nbsp;</div>-->
+						  <div class="input-group-text divreadonly" c-model="stock_take_mode_name">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">创建人：</span>
+						  <div class="input-group-text" c-model="create_user_name">--</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">创建日期：</span>
+						  <div class="input-group-text" c-model="create_time">--</div>
+						</div>
+					</div>
+					<div class="col-lg-12 col-xs-12 div-group">
+						<div class="input-group">
+						  <span class="input-group-addon">备注：</span>
+							<div><a href="javascript:void(0)" data-title="备注" data-href="../../../html/common/note.html" data-size="500px,400px" class="btn_table_edit btn_remark">查看</a></div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+          
+           <div class="clearfix"></div>
+           <hr>
+           <div class="form-search add_item_list" style="display:none;">
+				<div class="col-xs-12 row">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<div class="input-group">
+							<input type="text" class="form-control txt_area_code" placeholder="请输入 存储区" />
+							<span class="input-group-btn">
+								<a href="javascript:void(0)" class="btn btn-default btnSearch" type="button">添加</a>
+						  	</span>
+						  	<div class="shadedisable"></div>
+						</div>
+					</div>					
+				</div>
+			</div>
+           <div class="clearfix"></div>
+           <div id="id_div_grid"></div>
+			<a href="javascript:void(0)" class="btn_delete_mat" style="float:left;margin-top:10px;display:none;">删除选中物料</a>
+			<div class="submitbutton">
+				<a href="javascript:void(0)" class="btn-lay-blue btnsubmit" style="display:none;">提交</a>
+				<a href="javascript:void(0)" class="btn-lay-blue btnrecheck" style="display:none;">重盘</a>
+				<a href="javascript:void(0)" class="btn-lay-blue btnsubmitcheck" style="display:none;">开始盘点</a>
+			</div>
+		</div>
+    </div>
+</body>
+</html>

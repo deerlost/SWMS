@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.rel.RelMatErpbatchMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.rel.RelMatErpbatchKey">
+    <id column="mat_id" jdbcType="INTEGER" property="matId" />
+    <id column="erp_batch" jdbcType="VARCHAR" property="erpBatch" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.inossem.wms.model.rel.RelMatErpbatchKey">
+    delete from rel_mat_erpbatch
+    where mat_id = #{matId,jdbcType=INTEGER}
+      and erp_batch = #{erpBatch,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.rel.RelMatErpbatchKey">
+    insert into rel_mat_erpbatch (mat_id, erp_batch)
+    values (#{matId,jdbcType=INTEGER}, #{erpBatch,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertList" parameterType="java.util.List">
+    insert ignore into rel_mat_erpbatch (mat_id, erp_batch,fty_id)
+    values 
+    <foreach collection="list" item="obj" index="index" separator="," >
+    (#{obj.matId,jdbcType=INTEGER}, #{obj.erpBatch,jdbcType=VARCHAR},#{obj.ftyId,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  
+  
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.rel.RelMatErpbatchKey">
+    insert into rel_mat_erpbatch
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="erpBatch != null">
+        erp_batch,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="erpBatch != null">
+        #{erpBatch,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectErpBatchListByMatId" resultType="map">
+  		select erp_batch,erp_batch as erp_batch_name,mat_id from rel_mat_erpbatch where mat_id=#{matId} and fty_id=#{ftyId}
+  </select>
+</mapper>

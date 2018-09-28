@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.unit.UnitConvMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.unit.UnitConv">
+    <id column="unit_conv_id" jdbcType="INTEGER" property="unitConvId" />
+    <result column="mat_group_id" jdbcType="INTEGER" property="matGroupId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="const_name" jdbcType="VARCHAR" property="constName" />
+    <result column="const_value" jdbcType="DECIMAL" property="constValue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="mat_group_code" jdbcType="VARCHAR" property="matGroupCode" />
+    <result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+    <result column="mat_name" jdbcType="VARCHAR" property="matName" />
+    <result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    unit_conv_id, mat_group_id, mat_id, unit_id, const_name, const_value, create_time, 
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from unit_conv
+    where unit_conv_id = #{unitConvId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from unit_conv
+    where unit_conv_id = #{unitConvId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.unit.UnitConv">
+    insert into unit_conv (unit_conv_id, mat_group_id, mat_id, 
+      unit_id, const_name, const_value, 
+      create_time, modify_time)
+    values (#{unitConvId,jdbcType=INTEGER}, #{matGroupId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, 
+      #{unitId,jdbcType=INTEGER}, #{constName,jdbcType=VARCHAR}, #{constValue,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.unit.UnitConv"  useGeneratedKeys="true" keyProperty="unitConvId">
+    insert into unit_conv
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="unitConvId != null">
+        unit_conv_id,
+      </if>
+      <if test="matGroupId != null">
+        mat_group_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="constName != null">
+        const_name,
+      </if>
+      <if test="constValue != null">
+        const_value,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="unitConvId != null">
+        #{unitConvId,jdbcType=INTEGER},
+      </if>
+      <if test="matGroupId != null">
+        #{matGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="constName != null">
+        #{constName,jdbcType=VARCHAR},
+      </if>
+      <if test="constValue != null">
+        #{constValue,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.unit.UnitConv">
+    update unit_conv
+    <set>
+      <if test="matGroupId != null">
+        mat_group_id = #{matGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="constName != null">
+        const_name = #{constName,jdbcType=VARCHAR},
+      </if>
+      <if test="constValue != null">
+        const_value = #{constValue,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where unit_conv_id = #{unitConvId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.unit.UnitConv">
+    update unit_conv
+    set mat_group_id = #{matGroupId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      const_name = #{constName,jdbcType=VARCHAR},
+      const_value = #{constValue,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where unit_conv_id = #{unitConvId,jdbcType=INTEGER}
+  </update>
+  
+     <select id="selectUnitConvOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+		SELECT
+			uc.unit_conv_id unitConvId,
+		IFNULL(uc.mat_group_id,0) matGroupId,
+			 
+		IFNULL(dmg.mat_group_code,'') matGroupCode,
+		IFNULL(uc.mat_id,0) matId,	
+		IFNULL(dm.mat_code,'') matCode,
+		IFNULL(dm.mat_name,'') matName,
+		IFNULL(uc.unit_id,0) unitId,
+		
+		IFNULL(du.unit_code,'') unitCode,
+		IFNULL(du.name_zh,'') unitName,
+		IFNULL(uc.const_name,'') constName,
+		IFNULL(uc.const_value,0) constValue,
+		IFNULL(group_concat(ucv.id order by ucv.id separator ';') ,'') as id,
+		IFNULL(group_concat(ucv.name order by ucv.id separator ';') ,'') as name,
+		IFNULL(group_concat(dur.unit_code order by ucv.id separator ';') ,'') as unit
+		FROM
+			unit_conv uc
+		LEFT JOIN dic_material_group dmg ON uc.mat_group_id = dmg.mat_group_id
+		LEFT JOIN dic_material dm on uc.mat_id = dm.mat_id
+		LEFT JOIN dic_unit du ON uc.unit_id = du.unit_id
+		LEFT JOIN unit_conv_var ucv ON uc.unit_conv_id = ucv.unit_conv_id
+		LEFT JOIN dic_unit dur ON ucv.unit_id = dur.unit_id
+		where 1=1
+		
+		<if test="matGroupCode !=null and matGroupCode != ''">
+				and dmg.mat_group_code = #{matGroupCode,jdbcType=VARCHAR}
+		</if>
+		<if test="matCode !=null and matCode != ''">
+				and dm.mat_code = #{matCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="matName !=null and matName != ''">
+				and dm.mat_name  LIKE CONCAT('%',#{matName},'%' )  
+		</if>
+		
+		GROUP BY unitConvId,matGroupId,matId,unitId,constName
+  </select>
+  
+    <select id="selectObjByGroupAndMat" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from unit_conv
+    where mat_id = #{matId,jdbcType=INTEGER} and  mat_group_id = #{matGroupId,jdbcType=INTEGER}
+  </select>
+  
+  
+  
+  <select id="selectConvByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+			uc.unit_conv_id unit_conv_id,
+		IFNULL(uc.mat_group_id,0) mat_group_id,
+			 
+		IFNULL(dmg.mat_group_code,'') mat_group_code,
+		IFNULL(uc.mat_id,0) mat_id,	
+		IFNULL(dm.mat_code,'') mat_code,
+		IFNULL(dm.mat_name,'') mat_name,
+		IFNULL(uc.unit_id,0) unit_id,
+		
+		IFNULL(du.unit_code,'') unit_code,
+		
+		IFNULL(uc.const_name,'') const_name,
+		IFNULL(uc.const_value,0) const_value
+			FROM
+			unit_conv uc
+		LEFT JOIN dic_material_group dmg ON uc.mat_group_id = dmg.mat_group_id
+		LEFT JOIN dic_material dm on uc.mat_id = dm.mat_id
+		LEFT JOIN dic_unit du ON uc.unit_id = du.unit_id
+    where uc.unit_conv_id = #{unitConvId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteUnitByArray" parameterType="java.lang.Integer">
+    delete from unit_conv
+    where unit_conv_id in
+    <foreach item="item" index="index" collection="unitArray" open="(" separator="," close=")">  
+              					#{item}  
+   	</foreach> 
+  </delete>
+  
+  <delete id="deleteUnitVarByArray" parameterType="java.lang.Integer">
+    delete from unit_conv_var
+    where unit_conv_id in
+    <foreach item="item" index="index" collection="unitArray" open="(" separator="," close=")">  
+              					#{item}  
+   	</foreach> 
+  </delete>
+  
+   <select id="selectMatByCode" parameterType="java.lang.String" resultType="java.util.HashMap" >
+		SELECT
+	dm.mat_id matId,
+	dm.mat_code matCode,
+	dm.mat_name matName,
+	dm.mat_group_id matGroupId,
+	dg.mat_group_code matGroupCode,
+	dm.unit_id unitId,
+	du.unit_code unitCode
+FROM
+	dic_material dm,dic_material_group dg,dic_unit du
+where dm.is_delete = '0' AND dm.mat_group_id = dg.mat_group_id AND dm.unit_id = du.unit_id
+and dm.mat_code = #{matCode,jdbcType=VARCHAR}
+  </select>
+  
+  
+</mapper>

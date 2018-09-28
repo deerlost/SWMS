@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockInputTransportPackageItemMapper">
+  <resultMap id="BaseMap" type="com.inossem.wms.model.biz.BizStockInputTransportPackageItem">
+    <id column="package_type_item_id" jdbcType="INTEGER" property="packageTypeItemId" ></id>
+    <result column="stock_input_item_id" jdbcType="INTEGER" property="stockInputItemId" />
+    <result column="package_type_id" jdbcType="INTEGER" property="packageTypeId" />
+    <result column="package_num" jdbcType="INTEGER" property="packageNum" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="production_batch" jdbcType="VARCHAR" property="productionBatch" />
+    <result column="erp_batch" jdbcType="VARCHAR" property="erpBatch" />
+    <result column="quality_batch" jdbcType="VARCHAR" property="qualityBatch" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+   	<result column="package_type_code" jdbcType="VARCHAR" property="packageTypeCode" />
+   	<result column="package_type_name" jdbcType="VARCHAR" property="packageTypeName" />
+    <result column="package_standard_ch" jdbcType="VARCHAR" property="packageStandardCh" />
+    <result column="package_standard" jdbcType="DECIMAL" property="packageStandard" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    package_type_item_id, stock_input_item_id, package_type_id, package_num, qty, production_batch, 
+    erp_batch, quality_batch, remark,batch
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_input_transport_package_item
+    where package_type_item_id = #{packageTypeItemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_input_transport_package_item
+    where package_type_item_id = #{packageTypeItemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockInputTransportPackageItem">
+    insert into biz_stock_input_transport_package_item (package_type_item_id, stock_input_item_id, 
+      package_type_id, package_num, qty, 
+      production_batch, erp_batch, quality_batch, 
+      remark)
+    values (#{packageTypeItemId,jdbcType=INTEGER}, #{stockInputItemId,jdbcType=INTEGER}, 
+      #{packageTypeId,jdbcType=INTEGER}, #{packageNum,jdbcType=INTEGER}, #{qty,jdbcType=DECIMAL}, 
+      #{productionBatch,jdbcType=VARCHAR}, #{erpBatch,jdbcType=VARCHAR}, #{qualityBatch,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockInputTransportPackageItem" useGeneratedKeys="true" keyProperty="packageTypeItemId" >
+    insert into biz_stock_input_transport_package_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="packageTypeItemId != null">
+        package_type_item_id,
+      </if>
+      <if test="stockInputItemId != null">
+        stock_input_item_id,
+      </if>
+      <if test="packageTypeId != null">
+        package_type_id,
+      </if>
+      <if test="packageNum != null">
+        package_num,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="productionBatch != null">
+        production_batch,
+      </if>
+      <if test="erpBatch != null">
+        erp_batch,
+      </if>
+      <if test="qualityBatch != null">
+        quality_batch,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="packageTypeItemId != null">
+        #{packageTypeItemId,jdbcType=INTEGER},
+      </if>
+      <if test="stockInputItemId != null">
+        #{stockInputItemId,jdbcType=INTEGER},
+      </if>
+      <if test="packageTypeId != null">
+        #{packageTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="packageNum != null">
+        #{packageNum,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="productionBatch != null">
+        #{productionBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="erpBatch != null">
+        #{erpBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="qualityBatch != null">
+        #{qualityBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockInputTransportPackageItem">
+    update biz_stock_input_transport_package_item
+    <set>
+      <if test="stockInputItemId != null">
+        stock_input_item_id = #{stockInputItemId,jdbcType=INTEGER},
+      </if>
+      <if test="packageTypeId != null">
+        package_type_id = #{packageTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="packageNum != null">
+        package_num = #{packageNum,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="productionBatch != null">
+        production_batch = #{productionBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="erpBatch != null">
+        erp_batch = #{erpBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="qualityBatch != null">
+        quality_batch = #{qualityBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where package_type_item_id = #{packageTypeItemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockInputTransportPackageItem">
+    update biz_stock_input_transport_package_item
+    set stock_input_item_id = #{stockInputItemId,jdbcType=INTEGER},
+      package_type_id = #{packageTypeId,jdbcType=INTEGER},
+      package_num = #{packageNum,jdbcType=INTEGER},
+      qty = #{qty,jdbcType=DECIMAL},
+      production_batch = #{productionBatch,jdbcType=VARCHAR},
+      erp_batch = #{erpBatch,jdbcType=VARCHAR},
+      quality_batch = #{qualityBatch,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where package_type_item_id = #{packageTypeItemId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByInputId" parameterType="java.lang.Integer" resultMap="BaseMap">
+    select 
+	    ipi.package_type_item_id, ipi.stock_input_item_id, ipi.package_type_id, ipi.package_num, ipi.qty, ipi.production_batch, 
+	    ipi.erp_batch, ipi.quality_batch, ipi.remark,ipi.batch
+    FROM
+    
+		biz_stock_input_transport_package_item ipi
+	INNER JOIN biz_stock_input_item ii ON ipi.stock_input_item_id = ii.item_id
+	INNER JOIN biz_stock_input_head ih ON ii.stock_input_id = ih.stock_input_id
+    where ih.stock_input_id = #{stockInputId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByItemId" parameterType="java.lang.Integer" resultMap="BaseMap">
+    select 
+	    ipi.package_type_item_id, ipi.stock_input_item_id, ipi.package_type_id, ipi.package_num, ipi.qty, ipi.production_batch, 
+	    ipi.erp_batch, ipi.quality_batch, ipi.remark,ipi.batch,
+	    pt.package_type_code,
+		pt.package_standard,
+		pt.package_standard_ch,
+		pt.package_type_name
+    FROM
+    
+		biz_stock_input_transport_package_item ipi
+	INNER JOIN dic_package_type pt on ipi.package_type_id = pt.package_type_id
+    where ipi.stock_input_item_id = #{stockInputItemId,jdbcType=INTEGER}
+  </select>
+  
+  
+</mapper>

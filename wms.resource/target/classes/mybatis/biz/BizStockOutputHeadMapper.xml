@@ -1,0 +1,1760 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockOutputHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockOutputHead">
+    <id column="stock_output_id" jdbcType="INTEGER" property="stockOutputId" />
+    <result column="stock_output_code" jdbcType="CHAR" property="stockOutputCode" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="corp_id" jdbcType="INTEGER" property="corpId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="refer_receipt_code" jdbcType="VARCHAR" property="referReceiptCode" />
+    <result column="preorder_id" jdbcType="VARCHAR" property="preorderId" />
+    <result column="receive_code" jdbcType="VARCHAR" property="receiveCode" />
+    <result column="receive_name" jdbcType="VARCHAR" property="receiveName" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="order_type_name" jdbcType="VARCHAR" property="orderTypeName" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+    <result column="group_code" jdbcType="VARCHAR" property="groupCode" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="check_account" jdbcType="TINYINT" property="checkAccount" />
+    <result column="request_source" jdbcType="TINYINT" property="requestSource" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="sale_order_code" jdbcType="VARCHAR" property="saleOrderCode" />
+    <result column="class_type_id" jdbcType="INTEGER" property="classTypeId" />
+    <result column="syn_type" jdbcType="TINYINT" property="synType" />
+  	<result column="delivery_vehicle_id" jdbcType="INTEGER" property="deliveryVehicleId"/>
+	<result column="delivery_driver_id" jdbcType="INTEGER" property="deliveryDriverId"/>
+    <result column="delivery_driver" jdbcType="VARCHAR" property="deliveryDriver" />
+    <result column="delivery_vehicle" jdbcType="VARCHAR" property="deliveryVehicle" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId"/>
+  </resultMap>
+  
+  <resultMap id="BaseResultMapVO" type="com.inossem.wms.model.vo.BizStockOutputHeadVo" extends="BaseResultMap" >
+  	<result column="receipt_type_ame" jdbcType="VARCHAR" property="receiptTypeName"/>
+    <result column="corp_code" jdbcType="VARCHAR" property="corpCode" />
+    <result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+    <result column="status_name" jdbcType="VARCHAR" property="statusName" />
+    <result column="class_type_name" jdbcType="INTEGER" property="classTypeName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+    <result column="move_type_code" jdbcType="VARCHAR" property="moveTypeCode"/>
+    <result column="move_type_name" jdbcType="VARCHAR" property="moveTypeName"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    head.stock_output_id, head.stock_output_code, head.receipt_type, 
+    head.corp_id, head.status, head.refer_receipt_code, 
+    head.preorder_id, head.receive_code, head.receive_name, 
+    head.order_type, head.order_type_name, head.org_code, 
+    head.org_name, head.group_code, head.remark, 
+    head.check_account, head.is_delete,head.request_source, 
+    head.create_user, head.modify_user, 
+    head.create_time, head.modify_time,head.sale_order_code,
+    head.class_type_id,head.syn_type,head.delivery_driver,head.delivery_vehicle,
+    head.delivery_vehicle_id,head.delivery_driver_id,head.move_type_id
+  </sql>
+
+  <select id="selectOutputListByOrderCode" parameterType="java.util.Map" resultType="java.util.Map">
+	  SELECT 
+	  	  ck.stock_output_id stockOutputId,
+		  ck.stock_output_code stockOutputCode,
+		  mt.mat_req_code matReqCode,
+		  fy.fty_name ftyName,
+		  mm.mat_type_name matTypeName,
+		  ck.create_time createTime
+	  FROM  biz_stock_output_head ck 
+	  INNER JOIN biz_mat_req_head mt on ck.refer_receipt_code = mt.mat_req_id
+	  LEFT JOIN dic_factory fy on mt.mat_req_fty_id = fy.fty_id
+	  LEFT JOIN dic_material_req_mat_type mm on mt.mat_req_mat_type_id = mm.mat_req_mat_type_id
+	  WHERE ck.receipt_type =41 and ck.is_delete = 0 and ck.status = 10 
+	  <if test="condition != null and condition!= '' ">
+		  AND (ck.stock_output_code like CONCAT('%',#{condition},'%' ) 
+		  OR  mt.mat_req_code like CONCAT('%',#{condition},'%' ) )
+	  </if>
+	  ORDER BY ck.create_time DESC
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+  	 from biz_stock_output_head head
+    where head.is_delete = 0
+    <if test="stockOutputId != null" >
+	 and stock_output_id = #{stockOutputId,jdbcType=INTEGER}
+	</if>
+	<if test="stockOutputCode != null" >
+	 and stock_output_code = #{stockOutputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="referReceiptCode != null" >
+	 and refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR} and status!=20
+	</if>
+  </select>
+  
+  <!-- 查询单据扩展 -->
+  <select id="selectHeadByOrderId" parameterType="map" resultMap="BaseResultMapVO">
+    select <include refid="Base_Column_List" /> 
+    	   ,user.user_name
+    	   ,case when head.receipt_type='22' then '销售出库'
+    	   		 when head.receipt_type='24' then '其他出库'
+    	   		 when head.receipt_type='23' then '报废出库'
+                 when head.receipt_type='25' then '生产直发出库'
+                 when head.receipt_type='27' then '临时作业销售出库'
+                 when head.receipt_type='26' then '临时作业销售出库'
+                 when head.receipt_type='28' then '紧急记账销售出库'
+            end receipt_type_ame
+    	   ,corp.corp_code 
+    	   ,corp.corp_name  
+    	   ,case when head.status='0' then '未完成'
+    	         when head.status='2' then '已提交'
+   	             when head.status='3' then '已作业'
+                 when head.status='5' then '已转储'
+                 when head.status='6' then '已拣货'
+                 when head.status='7' then '待出库'
+                 when head.status='8' then '已开票'
+    	   	     when head.status='10' then '已完成'
+    	   	     when head.status='20' then '已冲销' 
+    	   	     end status_name
+    	   ,CONCAT(class.class_type_name,'(' , DATE_FORMAT(class.start_time,'%H:%i'),'-',DATE_FORMAT(class.end_time,'%H:%i') , ')') AS class_type_name
+    	   ,move.move_type_code
+    	   ,move.move_type_name
+    from biz_stock_output_head head
+    INNER join wms_user user on user.user_id = head.create_user
+    left join dic_corp corp on corp.corp_id = head.corp_id
+    left join dic_class_type class on class.class_type_id = head.class_type_id and class.is_delete=0
+    left join dic_move_type move on move.move_type_id = head.move_type_id 
+    where head.is_delete = 0
+    <if test="stockOutputId != null" >
+	 and head.stock_output_id = #{stockOutputId,jdbcType=INTEGER}
+	</if>
+	<if test="stockOutputCode != null" >
+	 and head.stock_output_code = #{stockOutputCode,jdbcType=VARCHAR}
+	</if>
+    <if test="referReceiptCode != null" >
+      and head.refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR}
+    </if>
+    <if test="receiptType != null" >
+      and head.receipt_type = #{receiptType}
+    </if>
+    <if test="status != null">
+    	 and head.status != #{status}
+    </if>
+    <if test="synType != null">
+    	 and head.syn_type != #{synType}
+    </if>
+  </select>
+  
+  <insert id="insertSelective" useGeneratedKeys="true" parameterType="com.inossem.wms.model.biz.BizStockOutputHead" keyProperty="stockOutputId" >
+    insert into biz_stock_output_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stockOutputId != null">
+        stock_output_id,
+      </if>
+      <if test="stockOutputCode != null">
+        stock_output_code,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code,
+      </if>
+      <if test="preorderId != null">
+        preorder_id,
+      </if>
+      <if test="receiveCode != null">
+        receive_code,
+      </if>
+      <if test="receiveName != null">
+        receive_name,
+      </if>
+      <if test="orderType != null">
+        order_type,
+      </if>
+      <if test="orderTypeName != null">
+        order_type_name,
+      </if>
+      <if test="orgCode != null">
+        org_code,
+      </if>
+      <if test="orgName != null">
+        org_name,
+      </if>
+      <if test="groupCode != null">
+        group_code,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="requestSource != null">
+        request_source,
+      </if>
+      <if test="checkAccount != null">
+        check_account,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="modifyUser != null">
+        modify_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="classTypeId != null">
+        class_type_id,
+      </if>
+       <if test="saleOrderCode != null">
+        sale_order_code,
+      </if>
+      <if test="synType != null">
+        syn_type,
+      </if>
+      <if test="deliveryVehicle != null">
+        delivery_vehicle,
+      </if>
+      <if test="deliveryDriver != null">
+         delivery_driver,
+      </if>
+      <if test="deliveryVehicleId != null">
+        delivery_vehicle_id,
+      </if>
+      <if test="deliveryDriverId != null">
+         delivery_driver_id,
+      </if>
+      <if test="moveTypeId != null">
+         move_type_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stockOutputId != null">
+        #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputCode != null">
+        #{stockOutputCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="referReceiptCode != null">
+        #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="preorderId != null">
+        #{preorderId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveCode != null">
+        #{receiveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveName != null">
+        #{receiveName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTypeName != null">
+        #{orderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCode != null">
+        #{groupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="requestSource != null">
+        #{requestSource,jdbcType=TINYINT},
+      </if>
+      <if test="checkAccount != null">
+        #{checkAccount,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test=" classTypeId != null">
+        #{ classTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="saleOrderCode != null">
+        #{saleOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="synType != null">
+        #{synType,jdbcType=TINYINT},
+      </if>
+      <if test="deliveryVehicle != null">
+        #{deliveryVehicle,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDriver != null">
+        #{deliveryDriver,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryVehicleId != null">
+        #{deliveryVehicleId,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryDriverId != null">
+        #{deliveryDriverId,jdbcType=INTEGER},
+      </if>
+      <if test="moveTypeId != null">
+      	#{moveTypeId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockOutputHead">
+    update biz_stock_output_head
+    <set>
+      modify_time = SYSDATE(),
+      <if test="saleOrderCode != null">
+      	sale_order_code = #{saleOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stockOutputCode != null">
+        stock_output_code = #{stockOutputCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="corpId != null">
+        corp_id = #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="preorderId != null">
+        preorder_id = #{preorderId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveCode != null">
+        receive_code = #{receiveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveName != null">
+        receive_name = #{receiveName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTypeName != null">
+        order_type_name = #{orderTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null">
+        org_code = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCode != null">
+        group_code = #{groupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="requestSource != null">
+        request_source = #{requestSource,jdbcType=TINYINT},
+      </if>
+      <if test="checkAccount != null">
+        check_account = #{checkAccount,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="classTypeId != null">
+     	 class_type_id= #{classTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="synType != null">
+         syn_type=#{synType,jdbcType=TINYINT},
+      </if>
+      <if test="moveTypeId != null">
+      	move_type_id=#{moveTypeId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where stock_output_id = #{stockOutputId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询领料单列表 -->
+  <select id="selectMatReqListOnPaging" parameterType="map" resultType ="map">
+	  select <if test="chooseType !=null and chooseType == '0'.toString()  ">
+				'未完成' status_name,
+			 </if>
+			 <if test="chooseType !=null and chooseType == '1'.toString() ">
+				'已完成' status_name,
+			 </if>
+	  		 mat_req.mat_req_id,
+	         mat_req.mat_req_code refer_receipt_code,
+			 mat_req.mat_req_fty_name,
+			 mat_req.use_dept_name,
+			 mat_req.mat_type_name,	
+			 mat_req.user_name,
+			 mat_req.create_time,	
+			 mat_req.remark
+		from (
+			    select ifnull(mrh.mat_req_id,'') mat_req_id,
+				   	   ifnull(mrh.mat_req_code,'') mat_req_code,	
+					   ifnull(f.fty_name,'') mat_req_fty_name,	
+					   ifnull(mrh.use_dept_name,'') use_dept_name, 
+					   ifnull(mrt.mat_type_name,'') mat_type_name,	  
+					   ifnull(u.user_name,'') user_name,	 
+					   ifnull(date_format(mrh.create_time,'%Y-%m-%d'),'') create_time,
+					   ifnull(mrh.remark,'') remark,
+					   sum(mri.demand_qty) as mat_req_qty	
+		 		  from biz_mat_req_head mrh 
+		    inner join biz_mat_req_item mri on mrh.mat_req_id = mri.mat_req_id
+			inner join dic_factory f on f.fty_id = mrh.mat_req_fty_id
+            inner join dic_material_req_mat_type mrt on mrt.mat_req_mat_type_id = mrh.mat_req_mat_type_id
+		    inner join wms_user u on u.user_id = mrh.create_user
+		         where mrh.status= 40
+				   and mrh.is_delete = 0
+				   and mri.is_delete = 0
+				<if test="locationId !=null and locationId.size > 0  ">
+	               and CONCAT(mri.fty_id , '-' , mri.location_id) in 
+					<foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+	             		#{item}  
+					</foreach> 
+				</if>
+				group by mrh.mat_req_id,mrh.mat_req_code,f.fty_name,mrh.use_dept_name,mrt.mat_type_name,u.user_name,mrh.create_time,mrh.remark 
+			  ) mat_req
+   left join (
+				 select ifnull(oh.refer_receipt_code,'') as refer_receipt_code,
+					    sum(ifnull(oi.output_qty,0)) as output_qty
+				   from biz_stock_output_head oh
+		     inner join biz_stock_output_item oi on oh.stock_output_id = oi.stock_output_id
+				  where oh.is_delete = 0 
+                    and oh.receipt_type = 41
+					and oi.is_delete = 0
+                    and oi.write_off = 0
+                   <if test="locationId !=null and locationId.size > 0  ">
+					and CONCAT(oi.fty_id, '-' ,oi.location_id ) in 
+					  <foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+	                		#{item}  
+	        		  </foreach> 
+        		  </if>
+			      group by oh.refer_receipt_code
+			  ) output on mat_req.mat_req_id = output.refer_receipt_code
+        where 1=1
+		<if test="chooseType !=null and chooseType == '0'.toString()  ">
+				and ifnull(mat_req.mat_req_qty,0) > ifnull(output.output_qty,0)
+		</if>
+		<if test="chooseType !=null and chooseType == '1'.toString() ">
+				and ifnull(output.output_qty,0) >= ifnull(mat_req.mat_req_qty,0)
+		</if>
+		<if test="matReqCode != null" >
+			and mat_req.mat_req_code =#{matReqCode}
+		</if>
+		<if test="keyword != null" >
+			and (
+					   mat_req.mat_req_code like CONCAT('%',#{keyword},'%' ) 
+					or mat_req.mat_req_fty_name like CONCAT('%',#{keyword},'%' ) 
+				    or mat_req.use_dept_name like CONCAT('%',#{keyword},'%' ) 
+				    or mat_req.mat_type_name like CONCAT('%',#{keyword},'%' )
+				    or mat_req.user_name like CONCAT('%',#{keyword},'%' )
+				    or exists 
+				    (
+				    	select item.mat_req_id 
+						  from biz_mat_req_item item
+				    inner join dic_material m on item.mat_id = m.mat_id 
+						 where mat_req.mat_req_id = item.mat_req_id 
+						   and item.is_delete = 0
+						   and (   item.reserve_code like CONCAT('%',#{keyword},'%' ) 
+								or item.reserve_rid like CONCAT('%',#{keyword},'%' ) 
+								or item.purchase_order_code like CONCAT('%',#{keyword},'%' ) 
+								or item.purchase_order_rid like CONCAT('%',#{keyword},'%' )
+								or m.mat_code like CONCAT('%',#{keyword},'%' )
+							    or m.mat_name like CONCAT('%',#{keyword},'%' )
+							   )
+				     )
+			    )
+		</if>
+		order by mat_req.mat_req_code desc
+  </select>
+  
+  <!-- 领料出库单列表查询 -->
+  <select id="selectMatReqOutPutListOnPaging" parameterType="map" resultType ="map">
+	  	select distinct
+	  	       <if test="chooseType !=null and chooseType == '2'.toString()  ">
+				     '未出库' status_name,
+			   </if>
+			   <if test="chooseType !=null and chooseType == '3'.toString() ">
+				     '已出库' status_name,
+			   </if>
+			   ifnull(oh.stock_output_id,'') stock_output_id,	
+			   ifnull(oh.stock_output_code,'') stock_output_code,	
+	     	   ifnull(mrh.mat_req_code,'') refer_receipt_code,	
+			   ifnull(f.fty_name,'') mat_req_fty_name,	
+			   ifnull(mrh.use_dept_name,'') use_dept_name, 
+			   ifnull(mrt.mat_type_name,'') mat_type_name,	  
+			   ifnull(u.user_name,'') user_name,	 
+			   ifnull(date_format(mrh.create_time,'%Y-%m-%d'),'') create_time,
+			   ifnull(mrh.remark,'') remark
+		  from biz_stock_output_head oh 
+	inner join biz_stock_output_item oi on oh.stock_output_id = oi.stock_output_id
+    inner join biz_mat_req_head mrh on oh.refer_receipt_code = mrh.mat_req_id
+    inner join dic_factory f on f.fty_id = mrh.mat_req_fty_id
+    inner join dic_material_req_mat_type mrt on mrt.mat_req_mat_type_id = mrh.mat_req_mat_type_id
+	inner join wms_user u on u.user_id = mrh.create_user
+		 where oh.is_delete = 0
+		   and oi.is_delete = 0
+		   and mrh.is_delete = 0
+		   and oh.receipt_type = 41
+		 <if test="locationId !=null and locationId.size > 0 ">
+		   and CONCAT(oi.fty_id , '-' , oi.location_id) in 
+	     <foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+              	#{item}  
+         </foreach> 
+         </if>
+		<if test='chooseType !=null and chooseType.equals("2")   '>
+		   and oh.status = 0
+		</if>
+		<if test='chooseType !=null and chooseType.equals("3")  '>
+		   and oh.status = 10
+		</if>
+		<if test="keyword != null" >
+			and (
+					   mrh.mat_req_code like CONCAT('%',#{keyword},'%' ) 
+					or oh.stock_output_code like CONCAT('%',#{keyword},'%' )  
+					or f.fty_name like CONCAT('%',#{keyword},'%' ) 
+				    or mrh.use_dept_name like CONCAT('%',#{keyword},'%' ) 
+				    or mrt.mat_type_name like CONCAT('%',#{keyword},'%' )
+				    or u.user_name like CONCAT('%',#{keyword},'%' )
+				    or exists 
+				    (
+				    	select item.mat_req_id 
+						  from biz_mat_req_item item
+				    inner join dic_material m on item.mat_id = m.mat_id 
+						 where mrh.mat_req_id = item.mat_req_id 
+						   and item.is_delete = 0
+						   and (   item.reserve_code like CONCAT('%',#{keyword},'%' ) 
+								or item.reserve_rid like CONCAT('%',#{keyword},'%' ) 
+								or item.purchase_order_code like CONCAT('%',#{keyword},'%' ) 
+								or item.purchase_order_rid like CONCAT('%',#{keyword},'%' )
+								or m.mat_code like CONCAT('%',#{keyword},'%' )
+							    or m.mat_name like CONCAT('%',#{keyword},'%' )
+							   )
+				     )
+			    )
+		</if>
+	order by stock_output_code desc
+  </select>
+    
+    <!-- 根据领料单号或出库单号获取领料单头信息 -->
+  <select id="selectMatReqHeadById" parameterType="map" resultType ="map">
+    select <if test="stockOutputId != null" >
+			 ifnull(oh.stock_output_id,'') stock_output_id,	
+		     ifnull(oh.stock_output_code,'') stock_output_code,	
+		   </if>
+		   ifnull(oh.receipt_type,'') receipt_type,		   
+		   ifnull(mrh.mat_req_id,'') refer_receipt_code,
+	       ifnull(mrh.mat_req_code,'') mat_req_code,	
+		   ifnull(u.user_name,'') user_name,	
+		   ifnull(date_format(mrh.create_time,'%Y-%m-%d'),'') create_time,
+		   
+		   ifnull(fs.fty_id,'') apply_fty_id,
+		   ifnull(fs.fty_code,'') apply_fty_code,
+		   ifnull(fs.fty_name,'') apply_fty_name,
+		   
+		   ifnull(fl.fty_id,'') mat_req_fty_id,	
+		   ifnull(fl.fty_code,'') mat_req_fty_code,
+		   ifnull(fl.fty_name,'') mat_req_fty_name,	
+		   
+		   ifnull(fj.fty_id,'') receive_id,
+		   ifnull(fj.fty_code,'') receive_code,
+		   ifnull(fj.fty_name,'') receive_name,	 
+		   
+		   ifnull(mrt.mat_req_mat_type_id,'') mat_type_id,
+		   ifnull(mrt.mat_type_name,'') mat_type_name,	
+		   ifnull(mbt.biz_type_name,'') biz_type_name,		   
+		   ifnull(mrh.internal_order_code,'') internal_order_code,   
+		   ifnull(mrh.dept_name,'') dept_name,
+		   ifnull(mrh.use_dept_name,'') use_dept_name, 
+		   ifnull(mrh.remark,'') remark,
+		   case ifnull(mrh.is_building_project,'') when '1' then '否' when '2' then '是' else '' end  is_building_project
+	  from biz_mat_req_head mrh
+    left join biz_stock_output_head oh on mrh.mat_req_id = oh.refer_receipt_code and oh.is_delete = 0
+	left join dic_factory fs on fs.fty_id = mrh.apply_fty_id
+	left join dic_factory fl on fl.fty_id = mrh.mat_req_fty_id
+	left join dic_factory fj on fj.fty_id = mrh.receive_fty_id
+    left join dic_material_req_mat_type mrt on mrt.mat_req_mat_type_id = mrh.mat_req_mat_type_id
+	left join dic_material_req_biz_type mbt on mbt.mat_req_biz_type_id = mrh.mat_req_biz_type_id
+	left join wms_user u on u.user_id = mrh.create_user
+	 where mrh.is_delete =0
+	<if test="stockOutputId != null" >
+	 and oh.stock_output_id = #{stockOutputId,jdbcType=INTEGER}
+	</if>
+	<if test="stockOutputCode != null" >
+	 and oh.stock_output_code = #{stockOutputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="matReqId != null" >
+	 and mrh.mat_req_id = #{matReqId,jdbcType=INTEGER}
+	</if>
+	<if test="matReqCode != null" >
+	 and mrh.mat_req_code = #{matReqCode,jdbcType=VARCHAR}
+	</if>
+	LIMIT 1
+  </select>
+  <!-- 根据领料单号获取领料单详细数据 -->
+  <select id="selectMatReqItemById" parameterType="map" resultType ="map">
+     select convert(@rownum:=@rownum+1,CHAR) stock_output_rid,
+     		t.mat_req_rid refer_receipt_rid,
+			t.fty_id,
+			t.fty_code,
+			t.fty_name,
+			t.location_id,
+			t.location_code,
+			t.location_name,
+			t.move_type_id,
+			t.move_type_code,
+			t.move_type_name,
+			t.mat_id,
+			t.mat_code,
+			t.mat_name,
+			t.unit_id,
+			t.unit_name,
+			t.decimal_place,
+			t.refer_price,
+			t.stock_qty,
+			t.stock_qty - t.send_qty as last_qty,
+			t.send_qty,
+			t.cost_obj_code,
+			t.cost_obj_name,
+			t.reserve_id,
+			t.reserve_rid,
+			t.purchase_order_code,
+			t.purchase_order_rid,
+		    t.is_focus_batch,
+		    t.is_end
+     from(
+     select ifnull(mri.mat_req_rid,'') mat_req_rid,
+			ifnull(mri.fty_id,'') fty_id,
+			ifnull(f.fty_code,'') fty_code,
+			ifnull(f.fty_name,'') fty_name,
+			ifnull(mri.location_id,'') location_id,
+			ifnull(l.location_code,'') location_code,
+			ifnull(l.location_name,'') location_name,
+			ifnull(mri.move_type_id,'') move_type_id,
+			ifnull(m.move_type_code,'') move_type_code,
+			ifnull(m.move_type_name,'') move_type_name,
+			ifnull(mri.mat_id,'') mat_id,
+			ifnull(mat.mat_code,'') mat_code,
+			ifnull(mat.mat_name,'') mat_name,
+			ifnull(mri.unit_id,'') unit_id,
+			ifnull(u.name_en,'') unit_name,
+			ifnull(u.decimal_place,'') decimal_place,
+			ifnull(mri.refer_price,0) refer_price,
+			ifnull(mri.demand_qty,0) stock_qty,
+			ifnull(mri.take_delivery_qty,0) send_qty,
+			ifnull(mri.cost_obj_code,'') cost_obj_code,
+			ifnull(mri.cost_obj_name,'') cost_obj_name,
+			ifnull(mri.reserve_code,'') reserve_id,
+			ifnull(mri.reserve_rid,'') reserve_rid,
+			ifnull(mri.purchase_order_code,'') purchase_order_code,
+			ifnull(mri.purchase_order_rid,'') purchase_order_rid,
+		    ifnull(w.plan_output,'0') is_focus_batch,
+		    if(ifnull(mri.take_delivery_qty,0) &lt; ifnull(mri.demand_qty,0),'0','1') is_end
+	   from biz_mat_req_item mri		 
+	 inner join dic_factory f on f.fty_id = mri.fty_id
+	 inner join dic_stock_location l on l.location_id = mri.location_id
+	 inner join dic_move_type m on m.move_type_id = mri.move_type_id
+	 inner join dic_material mat on mat.mat_id = mri.mat_id
+	 inner join dic_unit u on u.unit_id = mri.unit_id 
+	 inner join dic_warehouse w on w.wh_id = l.wh_id
+	  where mri.is_delete = 0
+	    <if test="matReqId != null" >
+		 and mri.mat_req_id = #{matReqId,jdbcType=INTEGER}
+		</if>
+		<if test="matReqCode != null" >
+		 and mri.mat_req_code = #{matReqCode,jdbcType=VARCHAR}
+		</if>
+		<if test="locationId != null and locationId.size > 0" >
+			and CONCAT(mri.fty_id , '-' , mri.location_id) in
+		  <foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+	                #{item}  
+	      </foreach>
+	    </if>
+    order by mri.mat_req_rid) t ,(SELECT @rownum:=0) r
+  </select>
+  
+  
+  <!-- 根据领料单号获取领料单相关联出库单据 -->
+  <select id="selectMatReqRelevancyByid" parameterType="map" resultType ="map">
+    select ifnull(oh.status,'') status_code,
+		   CASE oh.status WHEN '0' THEN '未出库'
+										  WHEN '10' THEN '已出库'
+										  ELSE '' END status_name,
+		   ifnull(oh.stock_output_id,'') stock_output_id,
+		   ifnull(oh.stock_output_code,'') stock_output_code,
+		   ifnull(date_format(oh.create_time,'%Y-%m-%d'),'') create_time,
+		   ifnull(mrt.mat_type_name,'') mat_type_name,
+		   ifnull(u.user_name,'') user_name
+		 from biz_mat_req_head mrh
+   inner join biz_stock_output_head oh on oh.refer_receipt_code = mrh.mat_req_id
+   inner join dic_material_req_mat_type mrt on mrt.mat_req_mat_type_id = mrh.mat_req_mat_type_id
+   inner join wms_user u on u.user_id = oh.create_user
+		where oh.is_delete = 0
+		  and mrh.is_delete = 0
+		<if test="matReqId != null" >
+		 and mrh.mat_req_id = #{matReqId,jdbcType=INTEGER}
+		</if>
+		<if test="matReqCode != null" >
+		 and mrh.mat_req_code = #{matReqCode,jdbcType=VARCHAR}
+		</if>
+		order by oh.create_time desc
+  </select>
+  
+  <!-- 根据领料单号出库单号获取详细 -->
+  <select id="selectOutPutOrderItemForMatReq" parameterType="map" resultType ="map">
+      select ifnull(oi.stock_output_rid,'') stock_output_rid,
+      		 ifnull(mri.mat_req_rid,'') refer_receipt_rid,
+      		 ifnull(oi.item_id,'') item_id,
+			 ifnull(oi.fty_id,'') fty_id,
+			 ifnull(f.fty_code,'') fty_code,
+			 ifnull(f.fty_name,'') fty_name,
+			 ifnull(oi.location_id,'') location_id,
+			 ifnull(l.location_code,'') location_code,
+			 ifnull(l.location_name,'') location_name,
+			 ifnull(oi.move_type_id,'') move_type_id,
+			 ifnull(m.move_type_code,'') move_type_code,
+			 ifnull(m.move_type_name,'') move_type_name,
+			 ifnull(oi.mat_id,'') mat_id,
+			 ifnull(mat.mat_code,'') mat_code,
+			 ifnull(mat.mat_name,'') mat_name,
+			 ifnull(oi.unit_id,'') unit_id,
+			 ifnull(u.name_en,'') unit_name,
+			 ifnull(u.decimal_place,'') decimal_place,
+			 ifnull(oi.refer_price,0) refer_price,
+             ifnull(mri.demand_qty,0) stock_qty,
+			 ifnull(mri.take_delivery_qty,0) send_qty,
+			 ifnull(mri.cost_obj_code,'') cost_obj_code,
+			 ifnull(mri.cost_obj_name,'') cost_obj_name,
+			 ifnull(mri.reserve_code,'') reserve_id,
+			 ifnull(mri.reserve_rid,'') reserve_rid,
+			 ifnull(mri.purchase_order_code,'') purchase_order_code,
+			 ifnull(mri.purchase_order_rid,'') purchase_order_rid,
+		     ifnull(w.plan_output,0) is_focus_batch,
+			 ifnull(oi.output_qty,0) output_qty,
+			 			 
+			 ifnull(oi.return_qty,0) return_qty, -- 退库数量
+			 ifnulL((
+	       		SELECT GROUP_CONCAT(DISTINCT batch) 
+				FROM biz_stock_output_position 
+				WHERE stock_output_id = oi.stock_output_id and stock_output_rid = oi.stock_output_rid
+			 ),'') batch, -- 出库批次号
+			 			 
+			 ifnull(oi.write_off,0) write_off,
+		     ifnull(oi.remark,'') remark
+		from biz_stock_output_item oi
+  inner join biz_mat_req_item mri on mri.mat_req_id = oi.refer_receipt_code and mri.mat_req_rid = oi.refer_receipt_rid and mri.is_delete=0
+  inner join dic_factory f on f.fty_id = mri.fty_id
+  inner join dic_stock_location l on l.location_id = mri.location_id
+  inner join dic_move_type m on m.move_type_id = mri.move_type_id
+  inner join dic_material mat on mat.mat_id = mri.mat_id
+  inner join dic_unit u on u.unit_id = mri.unit_id 
+  inner join dic_warehouse w on w.wh_id = l.wh_id
+	   where oi.is_delete = 0
+    <if test="stockOutputId != null" >
+	     and oi.stock_output_id = #{stockOutputId,jdbcType=INTEGER}
+	</if>
+	<if test="stockOutputCode != null" >
+	     and oi.stock_output_code = #{stockOutputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="locationId != null and locationId.size > 0" >
+		 and CONCAT(oi.fty_id , '-' ,oi.location_id) in
+	  <foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+                #{item}  
+      </foreach>
+    </if>
+     order by oi.stock_output_rid
+  </select>
+  
+  <!-- 根据领料单号出库单号获取领料出库单概览（领料退库） -->
+  <select id="selectOutPutInfoByOutPutId" parameterType="map" resultType ="map">
+      select ifnull(oi.stock_output_rid,'') stock_output_rid,
+      		 ifnull(mri.mat_req_rid,'') refer_receipt_rid,
+      		 ifnull(oi.item_id,'') item_id,
+			 ifnull(oi.fty_id,'') fty_id,
+			 ifnull(f.fty_code,'') fty_code,
+			 ifnull(f.fty_name,'') fty_name,
+			 ifnull(oi.location_id,'') location_id,
+			 ifnull(l.location_code,'') location_code,
+			 ifnull(l.location_name,'') location_name,
+			 ifnull(oi.move_type_id,'') move_type_id,
+			 ifnull(m.move_type_code,'') move_type_code,
+			 ifnull(m.move_type_name,'') move_type_name,
+			 ifnull(oi.mat_id,'') mat_id,
+			 ifnull(mat.mat_code,'') mat_code,
+			 ifnull(mat.mat_name,'') mat_name,
+			 ifnull(oi.unit_id,'') unit_id,
+			 ifnull(u.name_en,'') unit_name,
+			 ifnull(u.decimal_place,'') decimal_place,
+			 ifnull(oi.refer_price,0) refer_price,
+			 
+			 ifnull(oi.stock_qty,0) sale_qty, 
+			 
+             ifnull(mri.demand_qty,0) demand_qty,
+			 ifnull(mri.take_delivery_qty,0) send_qty,
+			 ifnull(mri.cost_obj_code,'') cost_obj_code,
+			 ifnull(mri.cost_obj_name,'') cost_obj_name,
+			 ifnull(mri.reserve_code,'') reserve_id,
+			 ifnull(mri.reserve_rid,'') reserve_rid,
+			 ifnull(mri.purchase_order_code,'') purchase_order_code,
+			 ifnull(mri.purchase_order_rid,'') purchase_order_rid,
+		     ifnull(w.plan_output,0) is_focus_batch,
+			 ifnull(oi.output_qty,0) output_qty,
+			 			 
+			 ifnull(oi.return_qty,0) have_return_qty, -- 已退库数量
+			 ifnull(oi.output_qty-oi.return_qty,0) can_return_qty, -- 可退库数量
+			 ifnulL((
+	       		SELECT GROUP_CONCAT(DISTINCT batch) 
+				FROM biz_stock_output_position 
+				WHERE stock_output_id = oi.stock_output_id and stock_output_rid = oi.stock_output_rid
+			 ),'') batch, -- 出库批次号
+			 			 
+			 ifnull(oi.write_off,0) write_off,
+		     ifnull(oi.remark,'') remark
+		from biz_stock_output_item oi
+  inner join biz_mat_req_item mri on mri.mat_req_id = oi.refer_receipt_code 
+  		and mri.mat_req_rid = oi.refer_receipt_rid and mri.is_delete=0 and oi.is_delete = 0 
+  	<if test="stockOutputId != null" >
+	     and oi.stock_output_id = #{stockOutputId,jdbcType=INTEGER}
+	</if>
+	<if test="stockOutputCode != null" >
+	     and oi.stock_output_code = #{stockOutputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="matReqId != null" >
+	     and mri.mat_req_id = #{matReqId,jdbcType=INTEGER}
+	</if>
+  inner join dic_factory f on f.fty_id = mri.fty_id
+  inner join dic_stock_location l on l.location_id = mri.location_id
+  inner join dic_move_type m on m.move_type_id = mri.move_type_id
+  inner join dic_material mat on mat.mat_id = mri.mat_id
+  inner join dic_unit u on u.unit_id = mri.unit_id 
+  inner join dic_warehouse w on w.wh_id = l.wh_id
+  <if test="locationId != null and locationId.size > 0" >
+		 and CONCAT(oi.fty_id , '-' ,oi.location_id) in
+	  <foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+                #{item}  
+      </foreach>
+  </if>
+     order by oi.stock_output_rid
+  </select>
+  
+  
+  <!-- 根据类型查询所有出库单列表 -->
+  <select id="selectOrderListOnPaging" parameterType="map" resultType="map" flushCache="true">
+   			SELECT DISTINCT 
+   				  oh.stock_output_id, 
+				  oh.stock_output_code, 
+		   		  oh.refer_receipt_code, 
+		   		  oh.preorder_id, 
+		   		  oh.receive_name,
+		   		  oh.order_type_name,
+    	   		  u.user_name as create_user,	
+		   		  date_format(oh.create_time,'%Y-%m-%d %H:%i:%s') create_time,
+		   		  oh.status, -- 状态
+			      case oh.status
+                    when 0 then '未完成'
+                    when 2 then '已提交'
+                    when 3 then '已作业'
+                    when 5 then '已转储'
+                    when 6 then '已拣货'
+                    when 7 then '待出库'
+                    when 8 then '已开票'
+                    when 10 then '已完成'
+                    when 20 then '已冲销'
+				  	else oh.status 
+				  end status_name,
+				  <if test="receiptType=='23' or receiptType=='24'">
+				  	l.location_code,
+		    	  	l.location_name,
+				  </if>
+		    	  f.fty_name,
+		   		  case
+    	   		 	  when oh.receipt_type='24' then '其它出库'
+    	   		      when oh.receipt_type='23' then '报废出库'
+   	   		      	else oh.receipt_type 
+    	   		  end receipt_type_name,
+    	   		  oi.mat_doc_code,
+    	   		  oi.mes_doc_code,
+    	   		  IFNULL(oi.mat_write_off_code,"") mat_write_off_code,
+    	   		  IFNULL(oi.mes_write_off_code,"") mes_write_off_code,
+    	   		  oh.syn_type,
+    	   		  case
+    	   		 	  when oh.syn_type='0' then "不同步"
+    	   		      when oh.syn_type='1' then "同步ERP"
+   	   		          when oh.syn_type='2' then "同步ERP&amp;MES"
+  	   		          when oh.syn_type='3' then "同步MES"
+   	   		      	else oh.syn_type 
+    	   		  end syn_type_name,
+    	   		  move.move_type_code,
+    	   		  move.move_type_name
+	 	FROM biz_stock_output_head oh
+	 		INNER JOIN biz_stock_output_item oi on oh.stock_output_id = oi.stock_output_id
+	 		INNER JOIN dic_factory f on oi.fty_id = f.fty_id
+	 		INNER JOIN dic_stock_location l on oi.location_id = l.location_id
+	 		INNER JOIN wms_user u on oh.create_user = u.user_id
+	 		INNER JOIN dic_material mat on mat.mat_id = oi.mat_id
+	 		LEFT JOIN dic_move_type move on move.move_type_id = oh.move_type_id
+	    WHERE oh.is_delete = 0
+		  	AND oi.is_delete = 0
+		  <if test="userId!=null and userId!=''">		
+	   		and 
+	   			if((select product_line_id from rel_product_user where user_id=#{userId})!=0
+	   			,(select product_line_id from rel_product_user where user_id=oh.create_user) =(select product_line_id from rel_product_user where user_id=#{userId})
+	   			,1=1)
+	   		 
+	      </if>	
+		  <if test="statusList != null and statusList.size()>0">
+		   		AND oh.status in
+		   		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+		  </if>	
+		  <if test="locationId != null and locationId.size > 0" >
+          	AND CONCAT(oi.fty_id, '-' ,oi.location_id ) in 
+			<foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+                #{item}  
+            </foreach>
+          </if>
+	      <if test="receiptType != null and receiptType !=''" >
+	      	AND oh.receipt_type = #{receiptType,jdbcType=VARCHAR}
+	      </if>
+          <if test="receiptTypeList !=null and receiptTypeList.size()>0">
+              AND oh.receipt_type in
+              <foreach collection="receiptTypeList" index="index" item="item" open="(" separator="," close=")">
+                  #{item}
+              </foreach>
+          </if>
+	      <if test="keyword != null and keyword !=''" >
+	      	AND (
+	      		oh.stock_output_code LIKE CONCAT('%',#{keyword},'%') OR 
+	      	   	oh.refer_receipt_code LIKE CONCAT('%',#{keyword},'%') OR 
+	      	   	oh.preorder_id LIKE CONCAT('%',#{keyword},'%') OR 
+	      	   	oh.receive_name LIKE CONCAT('%',#{keyword},'%') OR 
+	      	   	u.user_name LIKE CONCAT('%',#{keyword},'%' ) OR
+	      	   	mat.mat_code LIKE CONCAT('%',#{keyword},'%' ) OR
+	      	   	mat.mat_name LIKE CONCAT('%',#{keyword},'%' ) OR
+	      	   	oi.mat_doc_code LIKE CONCAT('%',#{keyword},'%' ) OR
+      	   		oi.mes_doc_code LIKE CONCAT('%',#{keyword},'%' ) OR
+      	   		oi.mat_write_off_code LIKE CONCAT('%',#{keyword},'%' ) OR
+      	   		oi.mes_write_off_code LIKE CONCAT('%',#{keyword},'%' ) 
+	      	   )
+	      </if>
+	      <if test="createTime !=null and createTime !=''">
+	  		and DATE(oh.create_time) = #{createTime}
+	  	  </if>
+    	  ORDER BY oh.stock_output_code DESC 
+  </select>
+  
+  <!-- 根据类型查询所有出库单列表 -->
+  <select id="selectOrderListAllOnPaging" parameterType="map" resultType="map" flushCache="true">
+   		SELECT 
+		  oh.stock_output_id, 
+		  oh.stock_output_code, 
+   		  oh.refer_receipt_code, 
+   		  oh.preorder_id, 
+   		  oh.receive_name,
+   		  oh.order_type_name,
+ 	      u.user_name as create_user,	
+   		  date_format(oh.create_time,'%Y-%m-%d %H:%i:%s') create_time,
+   		  oh.status, -- 状态
+	      case oh.status
+                  when 8 then '已开票'
+                  when 10 then '未开票'
+		  	else oh.status 
+		  end status_name,
+		  l.location_code,
+    	  l.location_name,
+    	  f.fty_name,
+   		  case when oh.receipt_type='22' then '销售出库'
+             when oh.receipt_type='25' then '生产直发出库'
+             when oh.receipt_type='27' then '临时作业销售出库'
+             when oh.receipt_type='26' then '临时作业销售出库'
+             when oh.receipt_type='28' then '紧急记账销售出库'
+  		      	else oh.receipt_type 
+   		  end receipt_type_name,
+   		  oi.output_qty,
+   		  oi.refer_receipt_rid,
+   		  mat.mat_id,
+   		  mat.mat_code,
+   		  mat.mat_name,
+   		  unit.unit_id,
+   		  unit.unit_code,
+   		  unit.name_en,
+   		  unit.name_zh,
+   		  pack.package_type_id,
+   		  pack.package_type_code,
+   		  pack.package_type_name,
+   		  pack.package_standard_ch,
+   		  pack.package_standard / (case when unit.unit_code = 'KG' then 1 else 1000 end) package_standard,
+   		  oh.receipt_type
+	 	FROM biz_stock_output_head oh
+	 		INNER JOIN biz_stock_output_item oi on oh.stock_output_id = oi.stock_output_id
+	 		INNER JOIN dic_factory f on oi.fty_id = f.fty_id
+	 		INNER JOIN dic_stock_location l on oi.location_id = l.location_id
+	 		INNER JOIN wms_user u on oh.create_user = u.user_id
+	 		left JOIN dic_material mat ON mat.mat_id= oi.mat_id
+	 		left JOIN dic_unit unit ON unit.unit_id=mat.unit_id
+	 		left JOIN dic_package_type pack ON pack.package_type_id= oi.package_type_id
+	    WHERE oh.is_delete = 0
+		  	AND oi.is_delete = 0
+		  <if test="statusList != null and statusList.size()>0">
+		   		AND oh.status in
+		   		<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+		  </if>	
+		  <if test="locationId != null and locationId.size > 0" >
+          	AND CONCAT(oi.fty_id, '-' ,oi.location_id ) in 
+			<foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+                #{item}  
+            </foreach>
+          </if>
+	      <if test="receiptType != null and receiptType !=''" >
+	      	AND oh.receipt_type = #{receiptType,jdbcType=VARCHAR}
+	      </if>
+          <if test="receiptTypeList !=null and receiptTypeList.size()>0">
+              AND oh.receipt_type in
+              <foreach collection="receiptTypeList" index="index" item="item" open="(" separator="," close=")">
+                  #{item}
+              </foreach>
+          </if>
+	      <if test="stockOutputCode != null" >
+	      	AND oh.stock_output_code LIKE CONCAT('%',#{stockOutputCode},'%')
+	      </if>
+	      <if test="referReceiptCode != null" >
+	      	AND  oh.refer_receipt_code LIKE CONCAT('%',#{referReceiptCode},'%') 
+	      </if>
+	      <if test="preorderId != null" >
+	      	AND oh.preorder_id LIKE CONCAT('%',#{preorderId},'%') 
+	      </if>
+	      <if test="receiveName != null" >
+	      	AND	oh.receive_name LIKE CONCAT('%',#{receiveName},'%')
+	      </if>
+	      <if test="userName != null" >
+	      	AND u.user_name LIKE CONCAT('%',#{userName},'%' ) 
+	      </if>
+	      <if test="matName != null" >
+      	   	AND (mat.mat_name LIKE CONCAT('%',#{matName},'%' )  OR 
+	      	   	mat.mat_code LIKE CONCAT('%',#{matName},'%' ))
+	      </if>
+    	  ORDER BY oh.stock_output_code DESC,oi.refer_receipt_rid
+  </select>
+  
+  <!-- 出库通用接口  根据批号、物料信息、工厂、仓位号查询仓位库存信息 -->
+  <select id="selectStockData" parameterType="map" resultType="map">
+	   	select   stock.id stock_id
+	   			,IFNULL(stock.spec_stock_name,'') spec_stock_name
+				,IFNULL(stock.spec_stock,'') spec_stock
+				,IFNULL(stock.spec_stock_code,'') spec_stock_code
+				,IFNULL(p.area_id,'') area_id
+			  	,IFNULL(a.area_code,'') area_code
+				,IFNULL(a.area_name,'') area_name
+				,IFNULL(stock.position_id,'') position_id
+				,IFNULL(p.position_code,'') position_code
+				,IFNULL(p.wh_id,'') wh_id
+				,IFNULL(stock.batch,'') batch
+				,IFNULL(stock.qty,0) stock_qty
+				,IFNULL(stock.input_date,'') input_date
+				,IFNULL(stock.unit_id,'') unit_id
+				,IFNULL(u.unit_code,'') unit_code
+				,IFNULL(u.name_zh,'') unit_name
+			from stock_position stock
+			inner join dic_unit u on u.unit_id = stock.unit_id
+			inner join dic_warehouse_position p on p.position_id = stock.position_id
+			inner join dic_warehouse_area a on a.area_id = stock.area_id
+	       where ifnull(stock.qty,0) > 0
+		<if test="locationId != null and locationId !=''">
+			and stock.location_id = #{locationId}
+		</if>
+		<if test="matId != null and matId !=''">
+			and stock.mat_id = #{matId}
+		</if>
+		<if test="batch != null and batch !=''">
+			and stock.batch = #{batch}
+		</if>
+		<if test="receiptType != null">
+			<if test="receiptType =='42'">
+			and ifnull(stock.spec_stock,'') !='K'
+			</if>
+			<if test="receiptType =='44'">
+				<if test="specStock != null">
+					and ifnull(stock.spec_stock,'') = #{specStock}
+				</if>
+			</if>
+		</if>
+		order by stock.input_date
+  </select>
+  
+  <!-- 领料单查询下的出库数量查询出库单信息 刘宇 2018.02.03 -->
+  <select id="selectOutputForMatReq" parameterType="java.util.Map" resultType ="java.util.Map"> 
+  
+		select h.create_user,h.create_time,i.stock_output_id,i.stock_output_rid,i.output_qty,u.user_name
+		
+			from biz_stock_output_head h
+			
+			inner join biz_stock_output_item i on h.stock_output_id = i.stock_output_id
+			
+				and h.status = 10
+			
+			inner join wms_user u on h.create_user = u.user_id 
+			
+				where i.refer_receipt_code = #{matReqId,jdbcType=VARCHAR}  and i.refer_receipt_rid = #{matReqRid,jdbcType=VARCHAR}
+			
+					and i.is_delete = 0 and (i.write_off != 1 or i.write_off is null)
+  </select>
+  <!-- 查询所有调拨出库单列表 -->
+  <select id="selectAllocateOrderListOnPaging" parameterType="map" resultType="map">
+   		select DISTINCT oh.stock_output_id, -- 出库单号
+				  oh.stock_output_code, -- 出库单号
+		   		  ah.allocate_code refer_receipt_code, -- 前置单据号
+		   		  ifnull(adh.allocate_delivery_code,'') preorder_id, -- 前置单据关联号
+		   		  f.fty_name,
+		    	  l.location_name,
+		   		  u.user_name,	-- 创建人
+		   		  date_format(oh.create_time,'%Y-%m-%d') create_time, -- 创建时间
+		   		  oh.status, -- 状态
+		   		  case oh.status 
+				  when 0 then '未出库'
+				  when 10 then '已出库'
+				  else oh.status end status_name -- 状态名
+	       FROM biz_stock_output_head oh
+	 INNER JOIN biz_stock_output_item oi on oh.stock_output_id = oi.stock_output_id
+	 INNER JOIN biz_allocate_head ah on oh.refer_receipt_code = ah.allocate_id and ah.is_delete = 0
+	  LEFT JOIN biz_allocate_delivery_head adh on oh.preorder_id = adh.allocate_delivery_id and adh.is_delete = 0
+	 INNER JOIN dic_factory f on oi.fty_id = f.fty_id
+	 INNER JOIN dic_stock_location l on oi.location_id = l.location_id
+	 INNER JOIN wms_user u on oh.create_user = u.user_id
+	    WHERE oh.is_delete = 0
+		  AND oi.is_delete = 0
+		  <if test="locationId != null and locationId.size > 0" >
+          AND CONCAT(oi.fty_id, '-' ,oi.location_id ) in 
+			<foreach item="item" index="index" collection="locationId" open="(" separator="," close=")">  
+                #{item}  
+            </foreach>
+          </if>
+	      and oh.receipt_type = 45
+	    <if test="keyword != null" >
+	      and (
+	      		oh.stock_output_code like CONCAT('%',#{keyword},'%' ) or 
+	      	   	ah.allocate_code like CONCAT('%',#{keyword},'%' ) or 
+	      	   	adh.allocate_delivery_code like CONCAT('%',#{keyword},'%' ) or 
+	      	   	oh.receive_name like CONCAT('%',#{keyword},'%' ) or 
+	      	   	u.user_name like CONCAT('%',#{keyword},'%' )
+	      	   )
+	    </if>
+    	  ORDER BY stock_output_code DESC
+  </select>
+  
+  <!-- 查询调拨出库前置单据 -->
+  <select id="selectInnerOrderForDBCK" parameterType="java.util.Map" resultType ="java.util.Map"> 
+      select DISTINCT ah.allocate_id,
+       		 ah.allocate_code,
+			 ifnull(adh.allocate_delivery_id,'') allocate_delivery_id,
+             ifnull(adh.allocate_delivery_code,'') allocate_delivery_code,
+			 fo.fty_name fty_name_output,
+             lo.location_name location_name_output,
+			 fi.fty_name fty_name_input,
+			 li.location_name location_name_input,
+             u.user_name,
+		     date_format(ah.demand_date,'%Y-%m-%d') demand_date
+		from biz_allocate_head ah
+  inner join biz_allocate_item ai on ah.allocate_id = ai.allocate_id and ah.is_delete = 0 and ai.is_delete = 0
+   left join biz_allocate_delivery_item adi on ai.delivery_item_id =adi.item_id and adi.is_delete = 0
+   left join biz_allocate_delivery_head adh on adi.allocate_delivery_id = adh.allocate_delivery_id and adh.is_delete = 0
+   left join wms_user u on u.user_id = ah.create_user
+   left join dic_factory fo on ai.fty_output = fo.fty_id
+   left join dic_factory fi on ah.fty_input = fi.fty_id
+   left join dic_stock_location lo on ai.location_output = lo.location_id
+   left join dic_stock_location li on ah.location_input = li.location_id
+       where ((ai.status = 10 and ah.distributed = 0 ) or (ai.status = 15 and ah.distributed = 10 ))
+       <if test="keyword != null" >
+		and ( ah.allocate_code like CONCAT('%',#{keyword},'%' ) 
+		   or adh.allocate_delivery_code like CONCAT('%',#{keyword},'%' ) )
+	   </if>
+   </select>
+   <!-- 查询调拨出库前置单据head信息 -->
+   <select id="selectInnerOrderMstById" parameterType="java.util.Map" resultType ="java.util.Map"> 
+   		 select ah.allocate_id refer_receipt_code,
+       		    ah.allocate_code allocate_code,
+			 	ifnull(adh.allocate_delivery_id,'') preorder_id,
+       			ifnull(adh.allocate_delivery_code,'') allocate_delivery_code,
+       			f.fty_code,
+				f.fty_name,
+				l.location_code,
+			    l.location_name,
+			    ifnull(adh.delivery_driver,'') delivery_driver,
+			 	ifnull(adh.delivery_vehicle,'') delivery_vehicle,
+			 	ifnull(date_format(adh.delivery_date,'%Y-%m-%d'),'') delivery_date,
+			 	ifnull(adh.delivery_phone,'') delivery_phone,
+		   		ah.remark
+		   from biz_allocate_head ah
+	   inner join biz_allocate_item ai on ah.allocate_id = ai.allocate_id and ah.is_delete = 0 and ai.is_delete = 0
+		left join biz_allocate_delivery_item adi on ai.delivery_item_id =adi.item_id and adi.is_delete = 0
+		left join biz_allocate_delivery_head adh on adi.allocate_delivery_id = adh.allocate_delivery_id and adh.is_delete = 0
+	    left join dic_factory f on f.fty_id = ai.fty_output
+	    left join dic_stock_location l on l.location_id = ai.location_output
+			where 1=1
+	       <if test="allocateId != null and allocateId !=''" >
+				and ah.allocate_id =#{allocateId}
+		   </if>
+		   <if test="allocateDeliveryId != null and allocateDeliveryId !=''" >
+				and adh.allocate_delivery_id = #{allocateDeliveryId}
+		   </if>
+		   limit 1
+   </select>
+  <!-- 查询调拨出库前置单据item信息 -->
+   <select id="selectInnerOrderDtlByAllot" parameterType="java.util.Map" resultType ="java.util.Map"> 
+	 select convert(@rownum:=@rownum+1,CHAR) stock_output_rid,
+	        t.refer_receipt_rid,
+	        t.allocate_code,
+	        t.mat_id,
+	        t.mat_code,
+	        t.mat_name,
+	       	t.unit_id,
+	        t.unit_code,
+	        t.unit_name,
+	        t.decimal_place,
+			t.fty_id,
+	        t.fty_code,
+	        t.fty_name,
+	        t.location_id,
+	        t.location_code,
+	        t.location_name,
+	        t.fty_id_input,
+	        t.fty_code_input,
+	        t.fty_name_input,
+	        t.location_id_input,
+	        t.location_code_input,
+	        t.location_name_input,
+			t.stock_qty,
+			t.last_qty,
+			t.send_qty,
+	        t.org_id,
+		    t.user_name,
+		    t.demand_date,
+		    t.is_focus_batch,
+		    '0' write_off
+	  from (
+	    select  ai.allocate_rid refer_receipt_rid,
+	            ah.allocate_code,
+		        ai.mat_id,
+		        m.mat_code,
+		        m.mat_name,
+		       	ai.unit_id,
+		        u.unit_code,
+		        u.name_zh unit_name,
+		        u.decimal_place,
+				ai.fty_output fty_id,
+		        fo.fty_code fty_code,
+		        fo.fty_name fty_name,
+		        ai.location_output location_id,
+		        lo.location_code location_code,
+		        lo.location_name location_name,
+		        ah.fty_input fty_id_input,
+		        fi.fty_code fty_code_input,
+		        fi.fty_name fty_name_input,
+		        ah.location_input location_id_input,
+		        li.location_code location_code_input,
+		        li.location_name location_name_input,
+				ai.allocate_qty stock_qty,
+				ai.allocate_qty last_qty,
+				0 send_qty,
+		        ah.org_id,
+			    user.user_name,
+			    date_format(ah.demand_date,'%Y-%m-%d') demand_date,
+			    ifnull(w.plan_output,'0') is_focus_batch
+		  from biz_allocate_head ah
+		inner join biz_allocate_item ai on ah.allocate_id = ai.allocate_id and ah.is_delete = 0 and ai.is_delete = 0
+		inner join dic_material m on ai.mat_id = m.mat_id 
+		inner join dic_unit u on u.unit_id = ai.unit_id
+		inner join wms_user user on user.user_id = ah.create_user
+		inner join dic_factory fo on ai.fty_output = fo.fty_id
+		inner join dic_stock_location lo on ai.location_output = lo.location_id
+		inner join dic_factory fi on ah.fty_input = fi.fty_id
+		inner join dic_stock_location li on ah.location_input = li.location_id
+		inner join dic_warehouse w on w.wh_id = lo.wh_id
+		 where ah.allocate_id = #{allocateId}
+		   and ai.status = 10 
+		   and ah.distributed = 0) t ,(SELECT @rownum:=0) r
+	</select>
+	<!-- 根据配送号获取明细 -->
+	<select id="selectInnerOrderDtlByDelivery" parameterType="java.util.Map" resultType ="java.util.Map"> 
+	 select convert(@rownum:=@rownum+1,CHAR) stock_output_rid,
+	        t.refer_receipt_rid,
+	        t.allocate_code,
+	        t.mat_id,
+	        t.mat_code,
+	        t.mat_name,
+	       	t.unit_id,
+	        t.unit_code,
+	        t.unit_name,
+	        t.decimal_place,
+			t.fty_id,
+	        t.fty_code,
+	        t.fty_name,
+	        t.location_id,
+	        t.location_code,
+	        t.location_name,
+	        t.fty_id_input,
+	        t.fty_code_input,
+	        t.fty_name_input,
+	        t.location_id_input,
+	        t.location_code_input,
+	        t.location_name_input,
+			t.stock_qty,
+			t.last_qty,
+			t.send_qty,
+	        t.org_id,
+		    t.user_name,
+		    t.demand_date,
+		    t.is_focus_batch,
+		    '0' write_off
+	  from (
+	     select ai.allocate_rid refer_receipt_rid,
+	            ah.allocate_code,
+		        ai.mat_id,
+		        m.mat_code,
+		        m.mat_name,
+		       	ai.unit_id,
+		        un.unit_code,
+		        un.name_zh unit_name,
+		        un.decimal_place,
+				ai.fty_output fty_id,
+		        fo.fty_code fty_code,
+		        fo.fty_name fty_name,
+		        ai.location_output location_id,
+		        lo.location_code location_code,
+		        lo.location_name location_name,
+		        adi.fty_input fty_id_input,
+		        fi.fty_code fty_code_input,
+		        fi.fty_name fty_name_input,
+		        adi.location_input location_id_input,
+		        li.location_code location_code_input,
+		        li.location_name location_name_input,
+				adi.allocate_qty stock_qty,
+				adi.allocate_qty last_qty,
+				0 send_qty,
+		        ah.org_id,
+			    u.user_name,
+			    date_format(ah.demand_date,'%Y-%m-%d') demand_date,
+			    ifnull(w.plan_output,'0') is_focus_batch
+		  from biz_allocate_head ah
+		inner join biz_allocate_item ai on ah.allocate_id = ai.allocate_id and ah.is_delete = 0 and ai.is_delete = 0
+		inner join biz_allocate_delivery_item adi on ai.delivery_item_id = adi.item_id and adi.is_delete = 0
+		inner join dic_material m on adi.mat_id = m.mat_id
+		inner join dic_unit un on adi.unit_id = un.unit_id
+		inner join dic_factory fo on ai.fty_output = fo.fty_id
+		inner join dic_stock_location lo on ai.location_output = lo.location_id
+		inner join dic_factory fi on adi.fty_input = fi.fty_id
+		inner join dic_stock_location li on adi.location_input = li.location_id
+		inner join dic_warehouse w on w.wh_id = lo.wh_id
+		left join wms_user u on u.user_id = ah.create_user
+		 where adi.allocate_delivery_id = #{allocateDeliveryId}
+		   and ai.status = 15 
+		   and ah.distributed = 10 ) t ,(SELECT @rownum:=0) r
+	</select>
+	<!-- 根据出库单号获取出库抬头 -->
+	<select id="selectDbckMstByStockOutputId" parameterType="String" resultType ="java.util.Map">
+		 select DISTINCT oh.stock_output_id ,
+        		oh.stock_output_code,
+				ifnull(oh.status,'') status,
+				CASE ifnull(oh.status,'')
+										WHEN '0' THEN '未出库'
+										WHEN '10' THEN '已出库'  END status_name,
+		        oh.refer_receipt_code,
+		       	ifnull(ah.allocate_code,'') allocate_code ,
+		        oh.preorder_id,
+		       	ifnull(adh.allocate_delivery_code,'') allocate_delivery_code ,
+		        f.fty_code,
+			 	f.fty_name,
+       			l.location_code,
+			 	l.location_name,
+			 	ifnull(adh.delivery_driver,'') delivery_driver,
+			 	ifnull(adh.delivery_vehicle,'') delivery_vehicle,
+			 	ifnull(date_format(adh.delivery_date,'%Y-%m-%d'),'') delivery_date,
+			 	oh.remark
+		  from biz_stock_output_head oh
+		inner join biz_stock_output_item oi on oh.stock_output_id = oi.stock_output_id and oh.is_delete =0 and oi.is_delete =0
+		left join biz_allocate_head ah on oh.refer_receipt_code = ah.allocate_id and ah.is_delete = 0
+	    left join biz_allocate_delivery_head adh on oh.preorder_id = adh.allocate_delivery_id and adh.is_delete =0
+	    inner join dic_factory f on f.fty_id = oi.fty_id
+	    inner join dic_stock_location l on l.location_id = oi.location_id
+			where oh.stock_output_id= #{stockOutputId,jdbcType=VARCHAR} 
+	</select>
+	<!-- 根据出库单号获取明细 -->
+	<select id="selectDbckDtlByStockOutputId" parameterType="String" resultType ="java.util.Map">
+		select  ah.allocate_code,
+		        oi.stock_output_rid,
+		        oi.refer_receipt_rid,
+		        oi.mat_id,
+		        m.mat_code,
+		        m.mat_name,
+		       	oi.unit_id,
+		        u.unit_code,
+		        u.name_zh unit_name,
+		        u.decimal_place,
+				oi.fty_id,
+		        fo.fty_code fty_code,
+		        fo.fty_name fty_name,
+		        oi.location_id,
+		        lo.location_code location_code,
+		        lo.location_name location_name,
+		        ah.fty_input fty_id_input,
+		        fi.fty_code fty_code_input,
+		        fi.fty_name fty_name_input,
+		        ah.location_input location_id_input,
+		        li.location_code location_code_input,
+		        li.location_name location_name_input,
+				oi.stock_qty,
+			    oi.output_qty,
+		        ah.org_id,
+			    user.user_name,
+			    date_format(ah.demand_date,'%Y-%m-%d') demand_date,
+			    ifnull(w.plan_output,'0') is_focus_batch
+			from biz_stock_output_item oi
+		left join biz_allocate_head ah on oi.refer_receipt_code = ah.allocate_id and oi.is_delete = 0 and ah.is_delete = 0
+		inner join dic_material m on oi.mat_id = m.mat_id 
+		inner join dic_unit u on u.unit_id = oi.unit_id
+		inner join wms_user user on user.user_id = ah.create_user
+		inner join dic_factory fo on oi.fty_id = fo.fty_id
+		inner join dic_stock_location lo on oi.location_id = lo.location_id
+		inner join dic_factory fi on ah.fty_input = fi.fty_id
+		inner join dic_stock_location li on ah.location_input = li.location_id
+		inner join dic_warehouse w on w.wh_id = lo.wh_id
+		   where oi.stock_output_id = #{stockOutputId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectAllotCount" parameterType="java.util.Map" resultType ="Integer">
+		select count(*)
+		  from biz_allocate_item
+		 where allocate_id = #{allocateId,jdbcType=VARCHAR}
+		   and is_delete = 0
+		 <if test="status == 10 or status == 15">
+		  and status &gt; #{status,jdbcType=TINYINT}
+		 </if>
+		 <if test="status == 17 or status == 20">
+		  and status &lt; #{status,jdbcType=TINYINT}
+		 </if>
+		 
+	</select>
+	<select id="selectDeliveryItemId" parameterType="java.util.Map" resultType ="Integer">
+		select delivery_item_id
+		  from biz_allocate_item
+		 where allocate_id = #{allocateId,jdbcType=VARCHAR}
+	       and is_delete = 0
+	       and allocate_rid = #{allocateRid,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectDeliveryCount" parameterType="java.util.Map" resultType ="Integer">
+		select count(*)
+		  from biz_allocate_delivery_item
+		 where allocate_delivery_id = #{allocateDeliveryId,jdbcType=VARCHAR}
+		   and is_delete = 0
+		 <if test="status == 10 or status == 15">
+		  and status &gt; #{status,jdbcType=TINYINT}
+		 </if>
+		 <if test="status == 17 or status == 20">
+		  and status &lt; #{status,jdbcType=TINYINT}
+		 </if>
+		 
+	</select>
+	
+	<update id="updateAllotMstById" parameterType="map">
+	update biz_allocate_head
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where allocate_id = #{allocateId,jdbcType=VARCHAR}
+	</update>
+	<!-- 更新调拨单明细 -->
+	<update id="updateAllotDtlById" parameterType="map">
+	update biz_allocate_item
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+        stock_output_id = #{stockOutputId,jdbcType=VARCHAR},
+        stock_output_rid = #{stockOutputRid,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where allocate_id = #{allocateId,jdbcType=VARCHAR}
+      and is_delete = 0
+    <if test="allocateRid != null">
+      and allocate_rid = #{allocateRid,jdbcType=VARCHAR}
+    </if>
+	</update>
+	<!-- 更新配送单抬头 -->
+	<update id="updateDeliveryMstById" parameterType="map">
+	update biz_allocate_delivery_head
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where allocate_delivery_id = #{allocateDeliveryId,jdbcType=VARCHAR}
+	</update>
+	<!-- 更新配送单明细 -->
+	<update id="updateDeliveryDtlById" parameterType="map">
+	update biz_allocate_delivery_item
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where item_id = #{deliveryItemId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectPostDateById" parameterType="Integer" resultType ="string">
+	SELECT DISTINCT posting_date 
+			 FROM biz_material_doc_head
+			WHERE mat_doc_id = #{matDocId}
+	</select>
+	<select id="selectCountForPostDate" parameterType="map" resultType ="Integer">
+		  SELECT count(*)
+			FROM dic_account_period
+			where account_begin_date &gt;= #{postDate}
+			 and account_begin_date &lt;= #{nowDate}
+	</select>
+
+    <select id="selectCountByLocation" resultType="int">
+       SELECT COUNT(1) FROM ( SELECT DISTINCT location_id FROM biz_stock_output_item WHERE stock_output_id=#{stockOutputId}) a
+    </select>
+    
+    <update id="insertPostingDateAndDocTime" parameterType="map">
+    	update biz_stock_output_head
+    		set posting_date=#{posting_date},
+    			doc_time=#{doc_time}
+    		where stock_output_id=#{stock_output_id}
+    </update>
+    
+    <select id="selectChartData" parameterType="map" resultType="map">
+   	  select 
+		DATE_FORMAT(head.create_time,'%Y-%m') as create_time,
+		SUM(position.stock_qty * (CASE WHEN u.unit_code = 'KG' THEN 1 ELSE 1000 END)) as qty,
+		line.product_line_id as product_line_id,
+		line.product_line_name as product_line_name
+	  from biz_stock_output_head head 
+		inner join biz_stock_output_position position on head.stock_output_id=position.stock_output_id and position.is_delete=0
+		inner join batch_material mat on mat.mat_id = position.mat_id and position.batch=mat.batch and position.fty_id =mat.fty_id and mat.is_delete=0
+		inner join dic_product_line line on line.product_line_id=mat.product_line_id and line.is_delete=0
+		inner join dic_unit u on u.unit_id=position.unit_id
+		where 
+		head.status in (8,10)
+	 	and head.receipt_type in (22,26,27,28)
+		 <if test="dateList != null and dateList.size > 0">
+		 	and DATE_FORMAT(head.create_time,'%Y-%m') in
+			<foreach item="item" index="index" collection="dateList" open="(" separator="," close=")">  
+	           		#{item}  
+			</foreach> 
+		 </if>	
+		group by create_time,product_line_id
+		order by line.product_line_id
+    </select>
+    
+    <select id="selectChartDataline" parameterType="map" resultType="map">
+		SELECT
+		 	 DISTINCT 
+		 	 line.product_line_id as product_line_id,
+		 	 line.product_line_name as product_line_name
+		FROM
+			biz_stock_output_head head
+		INNER JOIN biz_stock_output_position position ON head.stock_output_id = position.stock_output_id
+		AND position.is_delete = 0
+		INNER JOIN batch_material mat ON mat.mat_id = position.mat_id
+		AND position.batch = mat.batch
+		AND position.fty_id = mat.fty_id
+		AND mat.is_delete = 0
+		INNER JOIN dic_product_line line ON line.product_line_id = mat.product_line_id
+		AND line.is_delete = 0
+		WHERE
+			head.status in (8,10)
+		AND head.receipt_type IN (22, 26, 27, 28)
+		<if test="dateList != null and dateList.size > 0">
+		 	and DATE_FORMAT(head.create_time,'%Y-%m') in
+			<foreach item="item" index="index" collection="dateList" open="(" separator="," close=")">  
+	           		#{item}  
+			</foreach> 
+		 </if>
+		order by line.product_line_id
+    </select>
+    
+    <select id="selectChartYmax" parameterType="map" resultType="decimal">
+		select
+			max(a.qty)
+		 from(
+		 select 
+		DATE_FORMAT(head.create_time,'%Y-%m') as create_time,
+		SUM(position.stock_qty * (CASE WHEN u.unit_code = 'KG' THEN 1 ELSE 1000 END)) as qty,
+		line.product_line_id as product_line_id,
+		line.product_line_name as product_line_name
+	  from biz_stock_output_head head 
+		inner join biz_stock_output_position position on head.stock_output_id=position.stock_output_id and position.is_delete=0
+		inner join batch_material mat on mat.mat_id = position.mat_id and position.batch=mat.batch and position.fty_id =mat.fty_id and mat.is_delete=0
+		inner join dic_product_line line on line.product_line_id=mat.product_line_id and line.is_delete=0
+		inner join dic_unit u on u.unit_id=position.unit_id
+		where 
+		head.status in (8,10)
+	 	and head.receipt_type in (22,26,27,28)
+	 	<if test="dateList != null and dateList.size > 0">
+		 	and DATE_FORMAT(head.create_time,'%Y-%m') in
+			<foreach item="item" index="index" collection="dateList" open="(" separator="," close=")">  
+	           		#{item}  
+			</foreach> 
+		 </if>
+		group by create_time,product_line_id
+		order by line.product_line_id) a
+    </select>
+    
+    <select id="selectSaleDataListForExcel" parameterType="map" resultType="map">
+    	select 
+			head.stock_output_code,
+			head.refer_receipt_code,
+			head.sale_order_code,
+			head.preorder_id,
+			head.receive_name,
+			head.remark as remark1,
+			u.user_name,
+			DATE_FORMAT(head.create_time,'%Y-%m-%d %h:%i:%s') as create_time,
+			class.class_type_name,
+			item.remark as remark2,
+		    line.product_line_name,
+			mt.mat_code,
+			mt.mat_name,
+			unit.unit_code as unit_code,
+			unit.name_zh as unit_name,
+			position.stock_qty,
+		    location.location_code,
+		    location.location_name
+		from biz_stock_output_head head
+		inner join biz_stock_output_item item on head.stock_output_id=item.stock_output_id and item.is_delete=0
+		inner join biz_stock_output_position position on head.stock_output_id=position.stock_output_id and position.is_delete=0
+		 and position.stock_output_rid=item.stock_output_rid
+		inner join batch_material mat on mat.mat_id = position.mat_id and position.batch=mat.batch 
+		 and position.fty_id =mat.fty_id and mat.is_delete=0
+		inner join dic_product_line line on line.product_line_id=mat.product_line_id and line.is_delete=0 
+		inner join dic_material mt on mt.mat_id = position.mat_id
+		inner join wms_user u on u.user_id = head.create_user
+		inner join dic_class_type class on class.class_type_id = head.class_type_id
+		inner join dic_unit unit on mt.unit_id=unit.unit_id
+		inner join dic_stock_location location on location.location_id =position.location_id and location.is_delete=0
+		where head.status in (8,10) and head.receipt_type in (22, 26, 27, 28) and DATE_FORMAT(head.create_time,'%Y-%m')=#{date}
+		and line.product_line_id=#{productLineId}
+    </select>
+    
+    <select id="getCountBySaleOrder" resultType="java.lang.Integer">    
+    	select count(*) from biz_stock_output_head h     
+		    where h.is_delete = 0 and h.status != 20 
+		    and h.refer_receipt_code= #{referReceiptCode}       
+    </select>
+    
+    
+    <select id="selectCargoInfoOnPaging" parameterType="map" resultType="map">
+    	select 
+			DISTINCT
+			head.allocate_cargo_id,
+			head.allocate_cargo_code,
+			head.refer_receipt_code,
+			head.order_type,
+			head.order_type_name,
+			item.mat_id,
+			mat.mat_code,
+			mat.mat_name,
+			item.refer_receipt_rid,
+			item.order_qty,
+			item.output_qty cargo_qty,
+			task.task_qty,
+		    ifnull(output.output_qty,0) output_qty,
+			item.order_qty - ifnull(output.output_qty,0) do_qty,
+			pack.package_standard,
+			pack.package_standard_ch,
+			head.receive_code,
+			head.receive_name,
+			unit.unit_id,
+			unit.unit_code,
+			unit.name_zh unit_name,
+			item.erp_batch,
+			DATE_FORMAT(head.create_time,'%Y-%m-%d %h:%i:%s') as create_time,
+			user.user_name create_user
+		from biz_allocate_cargo_head head 
+		INNER JOIN biz_allocate_cargo_item item on head.allocate_cargo_id = item.allocate_cargo_id and head.is_delete=0 
+		<if test="createTimeS != null">
+            AND head.create_time <![CDATA[>=]]> #{createTimeS,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createTimeE != null">
+            AND head.create_time <![CDATA[<=]]> #{createTimeE,jdbcType=TIMESTAMP}
+        </if>
+        <if test="referReceiptCode != null">
+            AND head.refer_receipt_code = #{referReceiptCode}
+        </if>
+		INNER JOIN biz_allocate_cargo_position position on position.allocate_cargo_id=head.allocate_cargo_id and item.allocate_cargo_rid=position.allocate_cargo_rid 
+		INNER JOIN dic_package_type pack on pack.package_type_id=position.package_type_id
+		INNER JOIN dic_material mat on mat.mat_id = item.mat_id
+		INNER JOIN dic_unit unit on unit.unit_id = mat.unit_id
+		INNER JOIN wms_user user on user.user_id= head.create_user
+		INNER JOIN 
+		(select sum(titem.qty) as task_qty,titem.refer_receipt_id,any_value(titem.refer_receipt_code),titem.refer_receipt_rid rid FROM
+			biz_stock_task_item_cw titem 
+			INNER JOIN biz_stock_task_head_cw thead on thead.stock_task_id = titem.stock_task_id
+		 where titem.is_delete=0 and titem.refer_receipt_type=21 and thead.receipt_type=34 GROUP BY titem.refer_receipt_id,titem.refer_receipt_rid ) as task 
+		on task.refer_receipt_id =head.allocate_cargo_id and task.rid=item.allocate_cargo_rid 
+		left JOIN 
+		(select sum(titem.qty) as output_qty,titem.refer_receipt_id,any_value(titem.refer_receipt_code),titem.refer_receipt_rid rid FROM
+			biz_stock_task_item_cw titem 
+			INNER JOIN biz_stock_task_head_cw thead on thead.stock_task_id = titem.stock_task_id
+		 where titem.is_delete=0 and titem.refer_receipt_type=21 and thead.receipt_type=34 and thead.status=10 GROUP BY titem.refer_receipt_id,titem.refer_receipt_rid) as output 
+		on output.refer_receipt_id =head.allocate_cargo_id and output.rid= item.allocate_cargo_rid 
+		ORDER BY create_time desc
+    </select>
+</mapper>

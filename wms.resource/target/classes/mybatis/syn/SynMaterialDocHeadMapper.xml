@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.syn.SynMaterialDocHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.syn.SynMaterialDocHead">
+    <id column="mat_doc_id" jdbcType="INTEGER" property="matDocId" />
+    <result column="mat_doc_code" jdbcType="CHAR" property="matDocCode" />
+    <result column="mat_doc_year" jdbcType="INTEGER" property="matDocYear" />
+    <result column="mat_doc_time" jdbcType="TIMESTAMP" property="matDocTime" />
+    <result column="posting_time" jdbcType="TIMESTAMP" property="postingTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    mat_doc_id, mat_doc_code, mat_doc_year, mat_doc_time, posting_time, create_time, 
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from syn_material_doc_head
+    where mat_doc_id = #{matDocId,jdbcType=INTEGER}
+  </select>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.syn.SynMaterialDocHead" useGeneratedKeys="true" keyProperty="matDocId">
+    insert ignore into syn_material_doc_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matDocId != null">
+        mat_doc_id,
+      </if>
+      <if test="matDocCode != null">
+        mat_doc_code,
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year,
+      </if>
+      <if test="matDocTime != null">
+        mat_doc_time,
+      </if>
+      <if test="postingTime != null">
+        posting_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matDocId != null">
+        #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocCode != null">
+        #{matDocCode,jdbcType=CHAR},
+      </if>
+      <if test="matDocYear != null">
+        #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="matDocTime != null">
+        #{matDocTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="postingTime != null">
+        #{postingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.syn.SynMaterialDocHead">
+    update syn_material_doc_head
+    <set>
+      <if test="matDocCode != null">
+        mat_doc_code = #{matDocCode,jdbcType=CHAR},
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year = #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="matDocTime != null">
+        mat_doc_time = #{matDocTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="postingTime != null">
+        posting_time = #{postingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mat_doc_id = #{matDocId,jdbcType=INTEGER}
+  </update>
+</mapper>

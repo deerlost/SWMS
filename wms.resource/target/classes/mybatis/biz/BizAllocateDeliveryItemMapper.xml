@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizAllocateDeliveryItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizAllocateDeliveryItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="allocate_delivery_id" jdbcType="INTEGER" property="allocateDeliveryId" />
+    <result column="allocate_delivery_rid" jdbcType="INTEGER" property="allocateDeliveryRid" />
+    <result column="allocate_item_id" jdbcType="INTEGER" property="allocateItemId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="fty_input" jdbcType="INTEGER" property="ftyInput" />
+    <result column="location_input" jdbcType="INTEGER" property="locationInput" />
+    <result column="allocate_qty" jdbcType="DECIMAL" property="allocateQty" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_id, allocate_delivery_id, allocate_delivery_rid, allocate_item_id, mat_id, unit_id, 
+    fty_input, location_input, allocate_qty, status, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_allocate_delivery_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_allocate_delivery_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryItem">
+    insert into biz_allocate_delivery_item (item_id, allocate_delivery_id, allocate_delivery_rid, 
+      allocate_item_id, mat_id, unit_id, 
+      fty_input, location_input, allocate_qty, 
+      status, is_delete, create_time, 
+      modify_time)
+    values (#{itemId,jdbcType=INTEGER}, #{allocateDeliveryId,jdbcType=INTEGER}, #{allocateDeliveryRid,jdbcType=INTEGER}, 
+      #{allocateItemId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{unitId,jdbcType=INTEGER}, 
+      #{ftyInput,jdbcType=INTEGER}, #{locationInput,jdbcType=INTEGER}, #{allocateQty,jdbcType=DECIMAL}, 
+      #{status,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryItem" useGeneratedKeys="true" keyProperty="itemId">
+    insert into biz_allocate_delivery_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="allocateDeliveryId != null">
+        allocate_delivery_id,
+      </if>
+      <if test="allocateDeliveryRid != null">
+        allocate_delivery_rid,
+      </if>
+      <if test="allocateItemId != null">
+        allocate_item_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="ftyInput != null">
+        fty_input,
+      </if>
+      <if test="locationInput != null">
+        location_input,
+      </if>
+      <if test="allocateQty != null">
+        allocate_qty,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateDeliveryId != null">
+        #{allocateDeliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateDeliveryRid != null">
+        #{allocateDeliveryRid,jdbcType=INTEGER},
+      </if>
+      <if test="allocateItemId != null">
+        #{allocateItemId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyInput != null">
+        #{ftyInput,jdbcType=INTEGER},
+      </if>
+      <if test="locationInput != null">
+        #{locationInput,jdbcType=INTEGER},
+      </if>
+      <if test="allocateQty != null">
+        #{allocateQty,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryItem">
+    update biz_allocate_delivery_item
+    <set>
+      <if test="allocateDeliveryId != null">
+        allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateDeliveryRid != null">
+        allocate_delivery_rid = #{allocateDeliveryRid,jdbcType=INTEGER},
+      </if>
+      <if test="allocateItemId != null">
+        allocate_item_id = #{allocateItemId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyInput != null">
+        fty_input = #{ftyInput,jdbcType=INTEGER},
+      </if>
+      <if test="locationInput != null">
+        location_input = #{locationInput,jdbcType=INTEGER},
+      </if>
+      <if test="allocateQty != null">
+        allocate_qty = #{allocateQty,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByAllotItemIdSelective" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryItem">
+    update biz_allocate_delivery_item
+    <set>
+      <if test="allocateDeliveryId != null">
+        allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateDeliveryRid != null">
+        allocate_delivery_rid = #{allocateDeliveryRid,jdbcType=INTEGER},
+      </if>
+      <if test="allocateItemId != null">
+        allocate_item_id = #{allocateItemId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyInput != null">
+        fty_input = #{ftyInput,jdbcType=INTEGER},
+      </if>
+      <if test="locationInput != null">
+        location_input = #{locationInput,jdbcType=INTEGER},
+      </if>
+      <if test="allocateQty != null">
+        allocate_qty = #{allocateQty,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where allocate_item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryItem">
+    update biz_allocate_delivery_item
+    set allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER},
+      allocate_delivery_rid = #{allocateDeliveryRid,jdbcType=INTEGER},
+      allocate_item_id = #{allocateItemId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      fty_input = #{ftyInput,jdbcType=INTEGER},
+      location_input = #{locationInput,jdbcType=INTEGER},
+      allocate_qty = #{allocateQty,jdbcType=DECIMAL},
+      status = #{status,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <!-- 未加code -->
+  <select id="selectByCondition" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+		di.item_id,
+		di.allocate_delivery_id,
+		di.allocate_delivery_rid,
+		di.allocate_item_id,
+		di.mat_id,
+		di.unit_id,
+		di.fty_input,
+		di.location_input,
+		di.allocate_qty,
+		di.status,
+		di.create_time,
+		di.modify_time,
+		a.allocate_id,
+		a.allocate_code,
+		m.mat_name,
+		m.mat_code,
+		t.name_zh,
+		t.name_en,
+		ai.allocate_rid,
+		ai.delivery_item_id,
+		d.fty_output,
+		d.location_output,
+		w.fty_name fty_input_name,
+		w.fty_code fty_input_code,
+		l.location_name location_input_name,
+		l.location_code location_input_code,
+		wout.fty_name fty_output_name,
+		lout.location_name location_output_name,
+		wout.fty_code fty_output_code,
+		lout.location_code location_output_code
+	FROM
+		biz_allocate_delivery_item di
+	INNER JOIN biz_allocate_delivery_head d ON d.allocate_delivery_id = di.allocate_delivery_id
+		AND di.is_delete=0
+	    <if test="allocateDeliveryId != null">
+	       AND di.allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER} 
+	    </if>
+	    <if test="allocateDeliveryRid != null">
+	       AND di.allocate_delivery_rid = #{allocateDeliveryRid,jdbcType=INTEGER}
+	    </if>
+	    <if test="allocateItemId != null">
+	      AND di.allocate_item_id = #{allocateItemId,jdbcType=INTEGER}
+	    </if>
+	INNER JOIN biz_allocate_item ai ON ai.item_id = di.allocate_item_id
+	INNER JOIN biz_allocate_head a ON a.allocate_id = ai.allocate_id
+	INNER JOIN dic_material m ON m.mat_id = di.mat_id
+	INNER JOIN dic_unit t ON t.unit_id = di.unit_id
+	LEFT JOIN dic_factory w ON w.fty_id = di.fty_input
+	LEFT JOIN dic_stock_location l ON l.fty_id = di.fty_input AND l.location_id = di.location_input
+	LEFT JOIN dic_factory wout ON wout.fty_id = d.fty_output
+	LEFT JOIN dic_stock_location lout ON lout.fty_id = d.fty_output AND lout.location_id = d.location_output
+    ORDER BY di.create_time DESC
+  </select>
+  
+  <select id="selectMinStatusByDeliveryId" parameterType="java.lang.Integer" resultType="java.lang.Byte">
+    select 
+    	min(status)
+    from biz_allocate_delivery_item
+    where allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER}
+  </select>
+  
+</mapper>

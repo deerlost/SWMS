@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.wf.WfApproveGroupHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.wf.WfApproveGroupHead">
+    <id column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="group_index" jdbcType="INTEGER" property="groupIndex" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    group_id, group_index, group_name, type, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wf_approve_group_head
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wf_approve_group_head
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.wf.WfApproveGroupHead">
+    insert into wf_approve_group_head (group_id, group_index, group_name, 
+      type, user_id)
+    values (#{groupId,jdbcType=INTEGER}, #{groupIndex,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, 
+      #{type,jdbcType=TINYINT}, #{userId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyProperty="groupId" useGeneratedKeys="true" parameterType="com.inossem.wms.model.wf.WfApproveGroupHead">
+    insert into wf_approve_group_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="groupIndex != null">
+        group_index,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="groupIndex != null">
+        #{groupIndex,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.wf.WfApproveGroupHead">
+    update wf_approve_group_head
+    <set>
+      <if test="groupIndex != null">
+        group_index = #{groupIndex,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.wf.WfApproveGroupHead">
+    update wf_approve_group_head
+    set group_index = #{groupIndex,jdbcType=INTEGER},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByCondition" parameterType="com.inossem.wms.model.wf.WfApproveGroupHead" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wf_approve_group_head
+    
+    where 1 = 1
+    <if test="userId != null">
+      and  user_id = #{userId,jdbcType=VARCHAR} 
+    </if>
+    <if test="groupId != null">
+      and  group_id = #{groupId,jdbcType=INTEGER} 
+    </if>
+    <if test="type != null">
+      and  type = #{type,jdbcType=TINYINT} 
+    </if>
+  </select>
+</mapper>

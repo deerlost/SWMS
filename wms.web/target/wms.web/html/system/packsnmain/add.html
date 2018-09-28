@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/common.js"></script>
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+			
+			.col-xs-3 {
+				text-align: right;
+			}
+		</style>
+		<script>
+			var pardata = null,supper_id="";
+			$(function() {
+				getselectdata();
+				$(".classificat_code").change(function(){
+					getpackageType();
+				})
+				$(".package_type").change(function(){
+					getsupplier()
+				})
+				$(".btn_submit").click(function(){
+					submit()
+				})
+			});
+		function getselectdata() {
+			showloading();
+			var url = uriapi + "/conf/serial_package/get_dic_data_list";
+			ajax(url, 'GET', null, function(data) {
+				pardata=data
+				$.each(data.body, function(i, item) {
+					$(".classificat_code").append(returnOption1(item.classificat_id,i,item.classificat_name))	
+				});
+				layer.close(indexloading);
+			}, function(e) {
+				layer.close(indexloading);
+			});
+		}
+		function getpackageType(){
+			$(".package_type option:gt(0)").remove();
+			$(".supplier").val("");
+			supper_id="";
+			var index=parseInt($(".classificat_code option:selected").attr("data-index"));
+			if(index!=-1){
+				$.each(pardata.body[index].package_type_list,function(i,item){
+					$(".package_type").append(returnOption1(item.package_type_id,i,item.package_type_code))
+				})
+			}
+		}
+		function getsupplier(){
+			$(".supplier").val("");
+			supper_id="";
+			var index=parseInt($(".classificat_code option:selected").attr("data-index"));
+			var index1=parseInt($(".package_type option:selected").attr("data-index"));
+			if(index!=-1&&index1!=-1){
+				$.each(pardata.body[index].package_type_list[index1].supplier_list,function(i,item){
+					$(".supplier").append(returnOption1(item.supplier_id,i,item.supplier_name))
+				})
+			}
+		}
+			function returnOption1(value, value1, text) {
+			return "<option value='" + value + "' data-index='" + value1 + "'>" + text + "</option>";
+			}
+		function submit(){
+			var obj={}
+			var isChecked=true
+			var req=/^[0-9]*[1-9][0-9]*$/;
+			if(!req.test($(".package_num").val())){
+				layersMoretips("本次数量只能为正整数",$(".package_num"))
+				isChecked=false
+			}else{
+				if(parseInt($(".package_num").val())>5000){
+					layersMoretips("本次数量不能大于5000",$(".package_num"));
+					isChecked=false
+				}
+			}
+			if($(".classificat_code").val()==""){
+				layersMoretips("包装物分类不能为空",$(".classificat_code"));
+				isChecked=false
+			}
+			if($(".package_type").val()==""){
+				layersMoretips("包装物类型不能为空",$(".package_type"));
+				isChecked=false
+			}
+			if($(".supplier").val()==""){
+				layersMoretips("供应商不能为空",$(".supplier"));
+				isChecked=false
+			}
+			if(!isChecked){
+				return false
+			}
+			obj.package_num=$(".package_num").val();
+			obj.classificat_id=$(".classificat_code").val();
+			obj.supplier_id=$(".supplier").val();
+			obj.package_type_id=$(".package_type").val();
+			var url=uriapi+"/conf/serial_package/save_serial_package";
+			showloading();
+			ajax(url, 'POST', JSON.stringify(obj), function(data) {
+				if(data.head.status==true){
+					$(".btn_iframe_close_window").click();
+					parent.location.href="list.html"	
+				}else{
+					layer.close(indexloading);
+				}
+			}, function(e) {
+				layer.close(indexloading);
+			},true);
+		}
+		</script>
+	</head>
+	<body>
+		<div class="form">
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>本次数量：</label>
+				</div>
+				<div class="col-xs-8">
+					<input type="text" class="package_num form-control">
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>包装物分类：</label>
+				</div>
+				<div class="col-xs-8">
+					<select type="text" class="form-control classificat_code" />
+						<option value="" data-index="-1">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>包装物类型：</label>
+				</div>
+				<div class="col-xs-8">
+					<select type="text" class="form-control package_type" />
+						<option value="" data-index="-1">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="col-xs-3">
+					<label>供应商：</label>
+				</div>
+				<div class="col-xs-8">
+					<select class="supplier form-control">
+						<option value="" data-index="-1">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="clearfx col-xs-12"></div>
+		</div>
+		<div class="col-xs-12">
+			<br /><br /><br /><br /><br /><br />
+		</div>
+		<div class="fixed submitbutton">
+			<a href="javascript:void(0)" class="btn-lay-blue btn_submit">　确定　</a>
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+		</div>
+	</body>
+</html>

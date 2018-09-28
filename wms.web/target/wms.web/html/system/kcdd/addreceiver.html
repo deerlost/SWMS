@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>添加接收方</title>
+		<meta charset="utf-8" />
+		<link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../css/common.css" rel="stylesheet" />
+		<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+		<script src="../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../part/layer/layer.js"></script>
+		<script src="../../../js/datetimepicker.js"></script>
+		<script src="../../../js/common.js"></script>
+
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			div.form {
+				padding: 20px 0px 0px;
+			}
+			
+			div.form div {
+				height: 45px;
+			}
+			
+			div.form div.clearfx {
+				height: 0px;
+			}
+			
+			.col-xs-3 {
+				text-align: right;
+			}
+			
+			.marjiju {
+				margin: 10px 0px;
+			}
+		</style>
+		<script>
+			var somedata = null;
+			$(function() {
+				var ids = GetQueryString("id");
+				var index = GetQueryString("index");
+				if(ids) {
+					somedata = parent.indexshju(index);
+					database();
+					submit(true)
+				} else {
+					$(".ids").hide();
+					submit(false)
+				}
+			});
+
+			function database() {
+				$("#lgort").html(somedata.id);
+				$("#lgobe").val(somedata.receive_code);
+				$("#ort01").val(somedata.receive_name);
+			}
+
+			function submit(istrue) {
+				$(".determine").click(function() {
+					var isChecked = true;
+					$.each($(".form-control"), function(i, item) {
+						var currinput = $(this);
+						if(currinput.val() == "") {
+							layer.msg("每一项都不能为空");
+							isChecked = false;
+						}
+					});
+					if(!isChecked) {
+						return false;
+					}
+					if(istrue == true) {
+						var url = uriapi + "/conf/receiver/update_receiver";
+						var jsondata = {
+							id: $("#lgort").html(),
+							receive_code: $("#lgobe").val(),
+							receive_name: $("#ort01").val()
+						}
+						showloading();
+						ajax(url, "POST", JSON.stringify(jsondata), function(data) {
+							layer.close(indexloading);
+							if(data.head.error_code == 0) {
+							setTimeout(function() {
+								parent.location.href = "receivergl.html";
+							}, 1000)
+							} else {
+								layer.msg(data.head.msg)
+							}
+						}, function(e) {
+							layer.alert("操作失败");
+							setTimeout(function() {
+								layer.close(indexloading);
+							}, 50);
+						});
+					} else {
+						var url = uriapi + "/conf/receiver/add_receiver";
+						var jsondata = {
+							receive_code: $("#lgobe").val(),
+							receive_name: $("#ort01").val()
+						}
+						showloading();
+						ajax(url, "POST", JSON.stringify(jsondata), function(data) {
+							layer.close(indexloading);
+							if(data.head.error_code == 0) {
+								setTimeout(function() {
+									parent.location.href = "receivergl.html";
+								}, 1000)
+							} else {
+								layer.msg(data.head.msg)
+							}
+						}, function(e) {
+							layer.alert("操作失败");
+							setTimeout(function() {
+								layer.close(indexloading);
+							}, 50);
+						});
+					}
+				})
+
+			}
+		</script>
+	</head>
+	<div class="form-group">
+		<div class="col-xs-12 marjiju ids">
+			<div class="col-xs-3">
+				<label>ID：</label>
+			</div>
+			<div class="col-xs-8" id="lgort">
+			</div>
+		</div>
+		<div class="col-xs-12 marjiju">
+			<div class="col-xs-3">
+				<label>接收方编码：</label>
+			</div>
+			<div class="col-xs-8">
+				<input type="text" class="form-control" name="lgobe" id="lgobe" />
+			</div>
+		</div>
+		<div class="col-xs-12 marjiju">
+			<div class="col-xs-3">
+				<label>接收方描述：</label>
+			</div>
+			<div class="col-xs-8">
+				<input type="text" class="form-control" name="ort01" id="ort01" />
+			</div>
+		</div>
+	</div>
+	<div class="submitbutton fixed">
+		<a href="javascript:void(0)" class="btn-lay-blue determine">　确定　</a>
+		<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　关闭　</a>
+	</div>
+	</body>
+
+</html>

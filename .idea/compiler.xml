@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="wms.common" />
+        <module name="wms.dao" />
+        <module name="wms.model" />
+        <module name="wms.portable" />
+        <module name="wms.print" />
+        <module name="wms.resource" />
+        <module name="wms.service" />
+        <module name="wms.web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="wms.common" target="1.8" />
+      <module name="wms.dao" target="1.8" />
+      <module name="wms.model" target="1.8" />
+      <module name="wms.portable" target="1.8" />
+      <module name="wms.print" target="1.5" />
+      <module name="wms.resource" target="1.8" />
+      <module name="wms.root" target="1.8" />
+      <module name="wms.service" target="1.8" />
+      <module name="wms.web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-encoding utf-8" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="wms.common" options="" />
+      <module name="wms.dao" options="" />
+      <module name="wms.model" options="" />
+      <module name="wms.portable" options="" />
+      <module name="wms.resource" options="" />
+      <module name="wms.root" options="" />
+      <module name="wms.service" options="" />
+      <module name="wms.web" options="" />
+    </option>
+  </component>
+</project>

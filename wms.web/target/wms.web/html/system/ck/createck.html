@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scorll">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>仓储管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link href="../../../part/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="../../../css/bootstrapgrid.css" rel="stylesheet" />
+<link href="../../../css/datetimepicker.css" rel="stylesheet" />
+<link href="../../../css/common.css" rel="stylesheet" />
+<script src="../../../js/jquery-1.11.0.min.js"></script>
+<script src="../../../part/layer/layer.js"></script>
+<script src="../../../js/datetimepicker.js"></script>
+<script src="../../../js/common.js"></script>
+<script src="../../../js/page/storage/accept/createdelivery.js"></script>
+
+<style>
+.searchstyle2 label {
+	font-weight: normal;
+	text-align: right;
+	color: #666;
+	line-height: 30px;
+	white-space: nowrap;
+}
+
+.searchstyle2 label.col-xs-2 {
+	margin-left: -4px;
+}
+
+.searchstyle2 span.col-xs-8 {
+	padding: 0px;
+	line-height: 30px;
+}
+
+.searchstyle2 .form-control {
+	
+}
+
+div.selecttext {
+	line-height: 30px;
+	padding-right: 0px;
+	padding-left: 0px;
+}
+
+div.selecttext a {
+	text-decoration: underline;
+}
+
+textarea.form-control {
+	height: 85px;
+}
+
+div.uploadbtn {
+	width: 170px;
+	text-align: right;
+	float: left;
+	margin-right: 20px;
+	position: relative;
+	z-index: 1;
+}
+
+div.filebox {
+	
+}
+
+div.file {
+	min-width: 350px;
+	height: 60px;
+	float: left;
+	background-color: #f2f2f2;
+	border: 1px solid #ccc;
+	margin: 0px 10px 10px 0px;
+	padding: 8px 10px 0px 45px;
+}
+
+div.filename {
+	height: 17px;
+	width: 69%;
+	float: left;
+	color: #666;
+}
+
+div.fileer {
+	height: 18px;
+	width: 30%;
+	float: right;
+	color: #666;
+	text-align: right;
+}
+
+div.filename span {
+	color: #333;
+}
+
+div.hr {
+	clear: both;
+	height: 32px;
+	border-bottom: 1px solid #e3e3e3;
+}
+
+.filebox .col-lg-4 {
+	width: 32%;
+}
+
+input.form-control.inputdate {
+	width: 90px;
+}
+
+input.form-control.inputnum {
+	width: 70px;
+}
+
+#fileaffix {
+	position: absolute;
+	left: -200px;
+	top: -100px;
+	width: 1px;
+	height: 1px;
+}
+
+.filewapper, .submitbutton {
+	display: none;
+}
+</style>
+
+
+</head>
+
+<body>
+    <div c-template="menu"></div>
+	<div class="articlebox">
+		<div class="article">
+			<div class="mapadress">
+				<a href="../../../html/system/ck/cklist.html">仓库列表</a> <span>&nbsp;&nbsp;&nbsp;&rsaquo;&nbsp;&nbsp;&nbsp;</span>
+				<span>创建编辑仓库信息</span>
+			</div>
+ 
+			<div class="searchstyle2">
+				<div class="row">
+					<div class="col-lg-4 col-sm-6 ">
+						<div class="row">
+
+							<div class="form-group col-xs-12">
+								<label for="txtzgyslxr" class="col-xs-4">仓库号：</label> <input
+									type="text" class="form-control col-xs-8" maxlength="12"
+									id="lgnum" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-3 col-sm-6">
+						<div class="row">
+							<div class="form-group col-xs-12">
+								<label for="txtzshrq" class="col-xs-4">描述：</label> <input
+									id="lnumt" type="text"
+									class="form-control col-xs-8 txtdatepicker" 
+									data-date-format="yyyy-mm-dd" />
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-3 col-sm-6">
+						<div class="row">
+							<div class="form-group col-xs-12">
+								<label for="txtzshrq" class="col-xs-4">详细地址：</label> <input
+									id="street" type="text"
+									class="form-control col-xs-8  "  
+									  />
+							</div>
+
+						</div>
+					</div>
+  
+				</div>
+ 
+			</div>
+			<h2 class="h2grey">分配至如下库存地点 
+			
+			
+			
+			<a href="javascript:void(0)" data-title="选择库存地点" onclick="javascript:#;"  data-href="selkcddlist.html?action=create" data-size="900px,650px"  class="btn_table_edit btn-lay-blue">选择库存地点</a>
+         <a href="javascript:void(0)"  onclick="javascript:save();"  >保存</a>
+         
+         </h2>
+            
+			<table class="tablestyle1" id="ckid">
+				<tr>
+					 
+				
+					<th class="whitespace textleft">库存地点</th>
+					<th class="whitespace textleft">库存地点描述</th>
+						<th class="wordnumber">工厂</th>
+						<th class="wordnumber">工厂名称</th>
+					<th class="whitespace textleft">库存地址</th>
+					<th class="whitespace textleft">操作</th>
+				</tr>
+				
+			</table>
+			 
+		</div>
+
+	</div>
+</body>
+</html>
+<<script type="text/javascript" src="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">
+ 
+</script>
+<script >
+var rowi=0;
+var ccdddata=[];//库存地点数据
+function androw( LGORT,LGOBE , WERKS ,NAME1, ORT01 , STREET ){
+var data={};
+data.lgort=LGORT;//库存地点
+data.werks=WERKS;//工厂
+ ccdddata.push(data);
+  var row="<tr id='tr"+rowi+"'><td>"+LGORT+"</td><td>"+LGOBE+"</td><td>"+WERKS+"</td><td>"+NAME1+"</td><td>"+ORT01+STREET+"</td><td><a href='#' onclick='javascript:delrow("+rowi+");'>删除</a></td></tr>";
+ $("#ckid").append(row);
+ console.info(ccdddata);
+ rowi++;
+}
+function delrow(rowi){
+ 
+ $("#tr"+rowi).remove();
+ ccdddata.splice(rowi,1); 
+ console.info(ccdddata);
+}
+function save(){
+ var lgnum=$("#lgnum").val();
+ var lnumt=$("#lnumt").val();
+ var street=$("#street").val();
+ var t300t={};
+ var ck={};
+ ck.lgnum=lgnum;
+ ck.lnumt=lnumt;
+ ck.street=street;
+ t300t.ck=ck;
+ t300t.kcddArr=ccdddata;
+
+var as=JSON.stringify(t300t);
+
+      $.ajax({
+		type: 'post',
+		url: httpApi + '/biz/ck/saveCk',
+		xhrFields: {
+			withCredentials: true
+		},
+		crossDomain: true,
+		data:as,
+	     contentType: "application/json", 
+		dataType: "json",
+		success: function(data) {
+			successcallback(data);
+		},
+		error: function(e) {
+			errorcallback(e);
+		}
+	});
+}
+</script>

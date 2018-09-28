@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.log.LogReceiptSnMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.log.LogReceiptSn">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pallet_id" jdbcType="INTEGER" property="palletId" />
+    <result column="sn_id" jdbcType="INTEGER" property="snId" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="batch" jdbcType="INTEGER" property="batch" />
+    <result column="receipt_id" jdbcType="INTEGER" property="receiptId" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="debit_credit" jdbcType="CHAR" property="debitCredit" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pallet_id, sn_id, position_id, mat_id, batch, receipt_id, receipt_type, debit_credit, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from log_receipt_sn
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from log_receipt_sn
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.log.LogReceiptSn">
+    insert into log_receipt_sn (id, pallet_id, sn_id, 
+      position_id, mat_id, batch, 
+      receipt_id, receipt_type, debit_credit, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{palletId,jdbcType=INTEGER}, #{snId,jdbcType=INTEGER}, 
+      #{positionId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{batch,jdbcType=INTEGER}, 
+      #{receiptId,jdbcType=INTEGER}, #{receiptType,jdbcType=TINYINT}, #{debitCredit,jdbcType=CHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.log.LogReceiptSn">
+    insert into log_receipt_sn
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="palletId != null">
+        pallet_id,
+      </if>
+      <if test="snId != null">
+        sn_id,
+      </if>
+      <if test="positionId != null">
+        position_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="receiptId != null">
+        receipt_id,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="debitCredit != null">
+        debit_credit,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="palletId != null">
+        #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="snId != null">
+        #{snId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=INTEGER},
+      </if>
+      <if test="receiptId != null">
+        #{receiptId,jdbcType=INTEGER},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="debitCredit != null">
+        #{debitCredit,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.log.LogReceiptSn">
+    update log_receipt_sn
+    <set>
+      <if test="palletId != null">
+        pallet_id = #{palletId,jdbcType=INTEGER},
+      </if>
+      <if test="snId != null">
+        sn_id = #{snId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=INTEGER},
+      </if>
+      <if test="receiptId != null">
+        receipt_id = #{receiptId,jdbcType=INTEGER},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="debitCredit != null">
+        debit_credit = #{debitCredit,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.log.LogReceiptSn">
+    update log_receipt_sn
+    set pallet_id = #{palletId,jdbcType=INTEGER},
+      sn_id = #{snId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      batch = #{batch,jdbcType=INTEGER},
+      receipt_id = #{receiptId,jdbcType=INTEGER},
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      debit_credit = #{debitCredit,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

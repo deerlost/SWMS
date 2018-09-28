@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.stock.StockSnHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.stock.StockSnHistory">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sn_id" jdbcType="INTEGER" property="snId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="stock_id" jdbcType="INTEGER" property="stockId" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, sn_id, mat_id, stock_id, qty, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stock_sn_history
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from stock_sn_history
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.stock.StockSnHistory">
+    insert into stock_sn_history (id, sn_id, mat_id, 
+      stock_id, qty, create_time, 
+      modify_time)
+    values (#{id,jdbcType=INTEGER}, #{snId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, 
+      #{stockId,jdbcType=INTEGER}, #{qty,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.stock.StockSnHistory">
+    insert into stock_sn_history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="snId != null">
+        sn_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="stockId != null">
+        stock_id,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="snId != null">
+        #{snId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.stock.StockSnHistory">
+    update stock_sn_history
+    <set>
+      <if test="snId != null">
+        sn_id = #{snId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        stock_id = #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.stock.StockSnHistory">
+    update stock_sn_history
+    set sn_id = #{snId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      stock_id = #{stockId,jdbcType=INTEGER},
+      qty = #{qty,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

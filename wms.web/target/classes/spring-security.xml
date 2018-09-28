@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd 
+       http://www.springframework.org/schema/security 
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+	<!-- General Configuration -->
+
+	<security:http pattern="/login.action" security="none"/>
+	<security:http pattern="/login.ldpaction" security="none"/>
+	<security:http pattern="/token.action" security="none"/>
+	<security:http pattern="/biz/print/print_lims_web" security="none"/>
+	<security:http pattern="/login.html" security="none"/>
+	<security:http pattern="/**/*.jpg" security="none"/>
+	<security:http pattern="/**/*.png" security="none"/>
+	<security:http pattern="/**/*.gif" security="none"/>
+	<security:http pattern="/**/*.css" security="none"/>
+	<security:http pattern="/**/*.js" security="none"/>
+	<security:http pattern="/**/*.html" security="none"/>
+	<security:http pattern="/**/*.json" security="none"/>
+	<security:http pattern="/**/*.woff" security="none"/>
+	<security:http pattern="/**/*.woff2" security="none"/>
+	<security:http pattern="/**/*.map" security="none"/>
+	<security:http pattern="/**/*.wsdl" security="none"/>
+	<security:http auto-config="false" entry-point-ref="unauthorizedEntryPoint"
+		authentication-manager-ref="authenticationManager">
+		<security:cors />
+		<security:custom-filter ref="authenticationTokenProcessingFilter"  position="FORM_LOGIN_FILTER" />
+		<security:intercept-url pattern="/**"  access="permitAll" /> 
+		<security:csrf disabled="true" />
+		<security:custom-filter ref="myFilter"  before="FILTER_SECURITY_INTERCEPTOR" />
+		
+	</security:http>
+
+	<bean id="unauthorizedEntryPoint" class="com.inossem.wms.auth.UnauthorizedEntryPoint" />
+
+	<bean class="com.inossem.wms.auth.AuthenticationTokenProcessingFilter"
+		id="authenticationTokenProcessingFilter">
+		<constructor-arg ref="wmsUserDetailsService" />
+	</bean>
+	<!-- 一个自定义的filter，必须包含authenticationManager, accessDecisionManager,securityMetadataSource三个属性。 -->
+	<bean id="myFilter" class="com.inossem.wms.auth.MyFilterSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager" ref="myAccessDecisionManager" />
+		<property name="securityMetadataSource" ref="mySecurityMetadataSource" />
+	</bean>
+	<security:authentication-manager id="authenticationManager">
+		<security:authentication-provider
+			user-service-ref="wmsUserDetailsService">
+		</security:authentication-provider>
+	</security:authentication-manager>
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:jdbc-user-service
+				data-source-ref="dataSource" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+	<bean id="wmsUserDetailsService" class="com.inossem.wms.auth.WmsUserDetailsService"></bean>
+	
+	<bean id="roleService" class="com.inossem.wms.auth.RoleService"></bean>
+	<bean id="mySecurityMetadataSource" class="com.inossem.wms.auth.MyInvocationSecurityMetadataSourceService">
+		<constructor-arg ref="roleService" />
+	</bean>
+	<bean id="myAccessDecisionManager" class="com.inossem.wms.auth.MyAccessDecisionManager"></bean>
+</beans>

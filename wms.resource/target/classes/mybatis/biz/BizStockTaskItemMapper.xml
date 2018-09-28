@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockTaskItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockTaskItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="stock_task_id" jdbcType="INTEGER" property="stockTaskId" />
+    <result column="stock_task_rid" jdbcType="INTEGER" property="stockTaskRid" />
+    <result column="wh_id" jdbcType="INTEGER" property="whId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="spec_stock" jdbcType="VARCHAR" property="specStock" />
+    <result column="spec_stock_code" jdbcType="VARCHAR" property="specStockCode" />
+    <result column="spec_stock_name" jdbcType="VARCHAR" property="specStockName" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="weight" jdbcType="DECIMAL" property="weight" />
+    <result column="unit_weight" jdbcType="INTEGER" property="unitWeight" />
+    <result column="source_stock_type" jdbcType="INTEGER" property="sourceStockType" />
+    <result column="source_area_id" jdbcType="INTEGER" property="sourceAreaId" />
+    <result column="source_position_id" jdbcType="INTEGER" property="sourcePositionId" />
+    <result column="target_stock_type" jdbcType="INTEGER" property="targetStockType" />
+    <result column="target_area_id" jdbcType="INTEGER" property="targetAreaId" />
+    <result column="target_position_id" jdbcType="INTEGER" property="targetPositionId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="refer_delivered_code" jdbcType="VARCHAR" property="referDeliveredCode" />
+    <result column="refer_delivered_rid" jdbcType="VARCHAR" property="referDeliveredRid" />
+    <result column="stock_task_req_id" jdbcType="INTEGER" property="stockTaskReqId" />
+    <result column="stock_listing_req_rid" jdbcType="INTEGER" property="stockListingReqRid" />
+    <result column="mat_doc_id" jdbcType="INTEGER" property="matDocId" />
+    <result column="mat_doc_year" jdbcType="INTEGER" property="matDocYear" />
+    <result column="mat_doc_rid" jdbcType="INTEGER" property="matDocRid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_id, stock_task_id, stock_task_rid, wh_id, mat_id, fty_id, batch, qty, spec_stock, 
+    spec_stock_code, spec_stock_name, unit_id, weight, unit_weight, source_stock_type, 
+    source_area_id, source_position_id, target_stock_type, target_area_id, target_position_id, 
+    location_id, refer_delivered_code, refer_delivered_rid, stock_task_req_id, stock_listing_req_rid, 
+    mat_doc_id, mat_doc_year, mat_doc_rid, create_time, modify_time, is_delete
+  </sql>
+  <insert id="insertItemForPosition" parameterType="java.util.Map" >
+  INSERT INTO biz_stock_task_item
+	  (stock_task_id,stock_task_rid,wh_id,mat_id,fty_id,location_id,
+	  batch,qty,spec_stock,spec_stock_code,spec_stock_name,
+	  unit_id,weight,unit_weight,source_stock_type,source_area_id,source_position_id,target_stock_type,target_area_id,target_position_id,
+	  refer_delivered_code,refer_delivered_rid,stock_task_req_id,stock_listing_req_rid,mat_doc_id,mat_doc_year,mat_doc_rid)
+  SELECT #{stockTaskId},@rowno := IFNULL(@rowno,0) + 1 as rowno, p.wh_id,p.mat_id,p.fty_id,p.location_id,
+  	  p.batch,p.qty,p.spec_stock,p.spec_stock_code,p.spec_stock_name,
+	  p.unit_id,ifnull(p.qty*p.unit_weight,0) weight, ifnull(p.unit_weight,0) unit_weight ,0 source_stock_type, #{s_area_id},#{s_position_id},0 target_stock_type, #{t_area_id},#{t_position_id},
+	  '' refer_delivered_code,'' refer_delivered_rid,0 stock_task_req_id,0 stock_listing_req_rid,0 mat_doc_id,0 mat_doc_year,0 mat_doc_rid
+ from stock_position p  
+ inner join dic_material m  
+ on p.wh_id = #{wh_id} AND p.area_id = #{s_area_id} AND p.position_id = #{s_position_id} and m.mat_id=p.mat_id
+  ,(select   @rowno:=0)   as   it;
+  </insert>
+  
+   <insert id="insertItemForPositionNew" parameterType="com.inossem.wms.model.biz.BizStockTaskItem" >
+  INSERT INTO biz_stock_task_item
+	  (stock_task_id,stock_task_rid,wh_id,mat_id,fty_id,location_id,
+	  batch,qty,spec_stock,spec_stock_code,spec_stock_name,
+	  unit_id,weight,unit_weight,source_stock_type,source_area_id,source_position_id,target_stock_type,target_area_id,target_position_id,
+	  refer_delivered_code,refer_delivered_rid,stock_task_req_id,stock_listing_req_rid,mat_doc_id,mat_doc_year,mat_doc_rid)
+  SELECT #{stockTaskId},@rowno := IFNULL(@rowno,0) + 1 as rowno, p.wh_id,p.mat_id,p.fty_id,p.location_id,
+  	  p.batch,p.qty,p.spec_stock,p.spec_stock_code,p.spec_stock_name,
+	  p.unit_id,ifnull(p.qty*p.unit_weight,0) weight, ifnull(p.unit_weight,0) unit_weight ,0 source_stock_type, #{sourceAreaId},#{sourcePositionId},0 target_stock_type, #{targetAreaId},#{targetPositionId},
+	  '' refer_delivered_code,'' refer_delivered_rid,0 stock_task_req_id,0 stock_listing_req_rid,0 mat_doc_id,0 mat_doc_year,0 mat_doc_rid
+ from stock_position p  
+ inner join dic_material m  
+ on p.wh_id = #{whId} AND p.area_id = #{sourceAreaId} AND p.position_id = #{sourcePositionId} and m.mat_id=p.mat_id
+  ,(select   @rowno:=0)   as   it;
+  </insert>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_task_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_task_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockTaskItem">
+    insert into biz_stock_task_item (item_id, stock_task_id, stock_task_rid, 
+      wh_id, mat_id, fty_id, 
+      batch, qty, spec_stock, 
+      spec_stock_code, spec_stock_name, unit_id, 
+      weight, unit_weight, source_stock_type, 
+      source_area_id, source_position_id, target_stock_type, 
+      target_area_id, target_position_id, location_id, 
+      refer_delivered_code, refer_delivered_rid, 
+      stock_task_req_id, stock_listing_req_rid, mat_doc_id, 
+      mat_doc_year, mat_doc_rid, create_time, 
+      modify_time, is_delete)
+    values (#{itemId,jdbcType=INTEGER}, #{stockTaskId,jdbcType=INTEGER}, #{stockTaskRid,jdbcType=INTEGER}, 
+      #{whId,jdbcType=INTEGER}, #{matId,jdbcType=INTEGER}, #{ftyId,jdbcType=INTEGER}, 
+      #{batch,jdbcType=BIGINT}, #{qty,jdbcType=DECIMAL}, #{specStock,jdbcType=VARCHAR}, 
+      #{specStockCode,jdbcType=VARCHAR}, #{specStockName,jdbcType=VARCHAR}, #{unitId,jdbcType=INTEGER}, 
+      #{weight,jdbcType=DECIMAL}, #{unitWeight,jdbcType=INTEGER}, #{sourceStockType,jdbcType=INTEGER}, 
+      #{sourceAreaId,jdbcType=INTEGER}, #{sourcePositionId,jdbcType=INTEGER}, #{targetStockType,jdbcType=INTEGER}, 
+      #{targetAreaId,jdbcType=INTEGER}, #{targetPositionId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, 
+      #{referDeliveredCode,jdbcType=VARCHAR}, #{referDeliveredRid,jdbcType=VARCHAR}, 
+      #{stockTaskReqId,jdbcType=INTEGER}, #{stockListingReqRid,jdbcType=INTEGER}, #{matDocId,jdbcType=INTEGER}, 
+      #{matDocYear,jdbcType=INTEGER}, #{matDocRid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockTaskItem">
+    insert into biz_stock_task_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="stockTaskId != null">
+        stock_task_id,
+      </if>
+      <if test="stockTaskRid != null">
+        stock_task_rid,
+      </if>
+      <if test="whId != null">
+        wh_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="specStock != null">
+        spec_stock,
+      </if>
+      <if test="specStockCode != null">
+        spec_stock_code,
+      </if>
+      <if test="specStockName != null">
+        spec_stock_name,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="weight != null">
+        weight,
+      </if>
+      <if test="unitWeight != null">
+        unit_weight,
+      </if>
+      <if test="sourceStockType != null">
+        source_stock_type,
+      </if>
+      <if test="sourceAreaId != null">
+        source_area_id,
+      </if>
+      <if test="sourcePositionId != null">
+        source_position_id,
+      </if>
+      <if test="targetStockType != null">
+        target_stock_type,
+      </if>
+      <if test="targetAreaId != null">
+        target_area_id,
+      </if>
+      <if test="targetPositionId != null">
+        target_position_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="referDeliveredCode != null">
+        refer_delivered_code,
+      </if>
+      <if test="referDeliveredRid != null">
+        refer_delivered_rid,
+      </if>
+      <if test="stockTaskReqId != null">
+        stock_task_req_id,
+      </if>
+      <if test="stockListingReqRid != null">
+        stock_listing_req_rid,
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id,
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year,
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTaskId != null">
+        #{stockTaskId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTaskRid != null">
+        #{stockTaskRid,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="specStock != null">
+        #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCode != null">
+        #{specStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockName != null">
+        #{specStockName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="sourceStockType != null">
+        #{sourceStockType,jdbcType=INTEGER},
+      </if>
+      <if test="sourceAreaId != null">
+        #{sourceAreaId,jdbcType=INTEGER},
+      </if>
+      <if test="sourcePositionId != null">
+        #{sourcePositionId,jdbcType=INTEGER},
+      </if>
+      <if test="targetStockType != null">
+        #{targetStockType,jdbcType=INTEGER},
+      </if>
+      <if test="targetAreaId != null">
+        #{targetAreaId,jdbcType=INTEGER},
+      </if>
+      <if test="targetPositionId != null">
+        #{targetPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="referDeliveredCode != null">
+        #{referDeliveredCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referDeliveredRid != null">
+        #{referDeliveredRid,jdbcType=VARCHAR},
+      </if>
+      <if test="stockTaskReqId != null">
+        #{stockTaskReqId,jdbcType=INTEGER},
+      </if>
+      <if test="stockListingReqRid != null">
+        #{stockListingReqRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocId != null">
+        #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocYear != null">
+        #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockTaskItem">
+    update biz_stock_task_item
+    <set>
+      <if test="stockTaskId != null">
+        stock_task_id = #{stockTaskId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTaskRid != null">
+        stock_task_rid = #{stockTaskRid,jdbcType=INTEGER},
+      </if>
+      <if test="whId != null">
+        wh_id = #{whId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="specStock != null">
+        spec_stock = #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCode != null">
+        spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockName != null">
+        spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWeight != null">
+        unit_weight = #{unitWeight,jdbcType=INTEGER},
+      </if>
+      <if test="sourceStockType != null">
+        source_stock_type = #{sourceStockType,jdbcType=INTEGER},
+      </if>
+      <if test="sourceAreaId != null">
+        source_area_id = #{sourceAreaId,jdbcType=INTEGER},
+      </if>
+      <if test="sourcePositionId != null">
+        source_position_id = #{sourcePositionId,jdbcType=INTEGER},
+      </if>
+      <if test="targetStockType != null">
+        target_stock_type = #{targetStockType,jdbcType=INTEGER},
+      </if>
+      <if test="targetAreaId != null">
+        target_area_id = #{targetAreaId,jdbcType=INTEGER},
+      </if>
+      <if test="targetPositionId != null">
+        target_position_id = #{targetPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="referDeliveredCode != null">
+        refer_delivered_code = #{referDeliveredCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referDeliveredRid != null">
+        refer_delivered_rid = #{referDeliveredRid,jdbcType=VARCHAR},
+      </if>
+      <if test="stockTaskReqId != null">
+        stock_task_req_id = #{stockTaskReqId,jdbcType=INTEGER},
+      </if>
+      <if test="stockListingReqRid != null">
+        stock_listing_req_rid = #{stockListingReqRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id = #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year = #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTaskItem">
+    update biz_stock_task_item
+    set stock_task_id = #{stockTaskId,jdbcType=INTEGER},
+      stock_task_rid = #{stockTaskRid,jdbcType=INTEGER},
+      wh_id = #{whId,jdbcType=INTEGER},
+      mat_id = #{matId,jdbcType=INTEGER},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      batch = #{batch,jdbcType=BIGINT},
+      qty = #{qty,jdbcType=DECIMAL},
+      spec_stock = #{specStock,jdbcType=VARCHAR},
+      spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+      spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      weight = #{weight,jdbcType=DECIMAL},
+      unit_weight = #{unitWeight,jdbcType=INTEGER},
+      source_stock_type = #{sourceStockType,jdbcType=INTEGER},
+      source_area_id = #{sourceAreaId,jdbcType=INTEGER},
+      source_position_id = #{sourcePositionId,jdbcType=INTEGER},
+      target_stock_type = #{targetStockType,jdbcType=INTEGER},
+      target_area_id = #{targetAreaId,jdbcType=INTEGER},
+      target_position_id = #{targetPositionId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      refer_delivered_code = #{referDeliveredCode,jdbcType=VARCHAR},
+      refer_delivered_rid = #{referDeliveredRid,jdbcType=VARCHAR},
+      stock_task_req_id = #{stockTaskReqId,jdbcType=INTEGER},
+      stock_listing_req_rid = #{stockListingReqRid,jdbcType=INTEGER},
+      mat_doc_id = #{matDocId,jdbcType=INTEGER},
+      mat_doc_year = #{matDocYear,jdbcType=INTEGER},
+      mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=TINYINT}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="getItemsByStockTaskId" parameterType="java.lang.Integer" resultType="com.inossem.wms.model.vo.BizStockTaskItemVo">
+
+	select t.stock_task_id stockTaskId,t.stock_task_rid stockTaskRid,t.mat_id,m.mat_name matName,m.mat_code matCode, 
+	t.source_area_id sourceAreaId,t.source_position_id sourcePositionId, u.name_zh nameZh,
+	t.batch,b.qty batchqty, n.location_code locationCode,n.location_name locationName,
+	t.target_area_id targetAreaId,t.target_position_id targetPositionId,t.qty ,t.spec_stock specStock,
+	t.spec_stock_code specStockCode,t.spec_stock_name specStockName
+	FROM biz_stock_task_item t 	
+	INNER JOIN dic_stock_location n on t.location_id = n.location_id and t.stock_task_id = #{stockTaskId,jdbcType=INTEGER}
+	LEFT JOIN dic_material m on t.mat_id = m.mat_id 
+	LEFT JOIN stock_batch b on t.location_id = b.location_id and t.batch = b.batch and t.mat_id = b.mat_id 
+	left join dic_unit u on u.unit_id=t.unit_id 
+	
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>文件处理</title>
+    <meta charset="utf-8" />
+    <script src="../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../part/layer/layer.js"></script>
+    <script src="../../js/common.js"></script>
+    <link href="../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/common.css" rel="stylesheet" />
+    <script>
+        $(function () {
+			//(location.href.split('=')[1]);{}
+			//obj是{fileid:"",filename:"",filesize:""}.
+			var obj={}
+			obj.file_id=GetQueryString("file_id");
+			obj.file_name=unescape(GetQueryString("file_name"));//Name需要URL解码
+			obj.file_size=GetQueryString("file_size");
+			//window.parent.opener.uploadresult(obj);
+			parent.uploadresult(obj);
+			//window.close();
+			$(".btn_iframe_close_window").click();
+        });
+		function GetQueryString(name) {
+    		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    		var r = window.location.search.substr(1).match(reg);
+    		if (r != null) return unescape(r[2]); return null;
+		}
+    </script>
+    <!--1 成功 2 失败 3 文件太大 4 文件类型出错 5 服务器错误 6 文件错误 7 网络错误 8 异常-->
+    <script>//parent.uploadresult(1);</script>
+</head>
+<body>
+   	<div class="submitbutton" style="display:none;">
+        
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</body>
+</html>

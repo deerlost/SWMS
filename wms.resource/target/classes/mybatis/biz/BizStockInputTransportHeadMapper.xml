@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockInputTransportHeadMapper">
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.biz.BizStockInputTransportHead">
+		<id column="stock_transport_id" jdbcType="INTEGER" property="stockTransportId" />
+		<result column="stock_transport_code" jdbcType="CHAR"
+			property="stockTransportCode" />
+		<result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+		<result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+		<result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+		<result column="location_id" jdbcType="INTEGER" property="locationId" />
+		<result column="status" jdbcType="TINYINT" property="status" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="request_source" jdbcType="TINYINT" property="requestSource" />
+		<result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+		<result column="class_type_id" jdbcType="INTEGER" property="classTypeId" />
+		<result column="syn_type" jdbcType="INTEGER" property="synType" />
+		<result column="stock_input_id" jdbcType="INTEGER" property="stockInputId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		stock_transport_id, stock_transport_code, receipt_type,
+		move_type_id, fty_id,
+		location_id,
+		status, remark, request_source,
+		is_delete, create_user, create_time,
+		modify_time,stock_input_id,
+		class_type_id,
+		syn_type
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from biz_stock_input_transport_head
+		where stock_transport_id =
+		#{stockTransportId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		biz_stock_input_transport_head
+		where stock_transport_id =
+		#{stockTransportId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.inossem.wms.model.biz.BizStockInputTransportHead">
+		insert into biz_stock_input_transport_head
+		(stock_transport_id,
+		stock_transport_code,
+		receipt_type, move_type_id,
+		fty_id,
+		location_id, status, remark,
+		request_source, is_delete,
+		create_user,
+		create_time, modify_time, class_type_id,
+		syn_type)
+		values
+		(#{stockTransportId,jdbcType=INTEGER},
+		#{stockTransportCode,jdbcType=CHAR},
+		#{receiptType,jdbcType=TINYINT},
+		#{moveTypeId,jdbcType=INTEGER}, #{ftyId,jdbcType=INTEGER},
+		#{locationId,jdbcType=INTEGER}, #{status,jdbcType=TINYINT},
+		#{remark,jdbcType=VARCHAR},
+		#{requestSource,jdbcType=TINYINT},
+		#{isDelete,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+		#{classTypeId,jdbcType=INTEGER},
+		#{synType,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.inossem.wms.model.biz.BizStockInputTransportHead"
+		useGeneratedKeys="true" keyProperty="stockTransportId">
+		insert into biz_stock_input_transport_head
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="stockTransportId != null">
+				stock_transport_id,
+			</if>
+			<if test="stockTransportCode != null">
+				stock_transport_code,
+			</if>
+			<if test="receiptType != null">
+				receipt_type,
+			</if>
+			<if test="moveTypeId != null">
+				move_type_id,
+			</if>
+			<if test="ftyId != null">
+				fty_id,
+			</if>
+			<if test="locationId != null">
+				location_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="requestSource != null">
+				request_source,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="classTypeId != null">
+				class_type_id,
+			</if>
+			<if test="synType != null">
+				syn_type,
+			</if>
+			<if test="stockInputId != null">
+				stock_input_id,
+			</if>
+			<if test="docTime != null">
+				doc_time,
+			</if>
+			<if test="postingDate != null">
+				posting_date,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="stockTransportId != null">
+				#{stockTransportId,jdbcType=INTEGER},
+			</if>
+			<if test="stockTransportCode != null">
+				#{stockTransportCode,jdbcType=CHAR},
+			</if>
+			<if test="receiptType != null">
+				#{receiptType,jdbcType=TINYINT},
+			</if>
+			<if test="moveTypeId != null">
+				#{moveTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				#{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				#{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="requestSource != null">
+				#{requestSource,jdbcType=TINYINT},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="classTypeId != null">
+				#{classTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="synType != null">
+				#{synType,jdbcType=INTEGER},
+			</if>
+			<if test="stockInputId != null">
+				#{stockInputId,jdbcType=INTEGER},
+			</if>
+			<if test="docTime != null">
+				#{docTime,jdbcType=VARCHAR},
+			</if>
+			<if test="postingDate != null">
+				#{postingDate,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.inossem.wms.model.biz.BizStockInputTransportHead">
+		update biz_stock_input_transport_head
+		<set>
+			<if test="stockTransportCode != null">
+				stock_transport_code =
+				#{stockTransportCode,jdbcType=CHAR},
+			</if>
+			<if test="receiptType != null">
+				receipt_type = #{receiptType,jdbcType=TINYINT},
+			</if>
+			<if test="moveTypeId != null">
+				move_type_id = #{moveTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="ftyId != null">
+				fty_id = #{ftyId,jdbcType=INTEGER},
+			</if>
+			<if test="locationId != null">
+				location_id = #{locationId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="requestSource != null">
+				request_source = #{requestSource,jdbcType=TINYINT},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="classTypeId != null">
+				class_type_id = #{classTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="synType != null">
+				syn_type = #{synType,jdbcType=INTEGER},
+			</if>
+			<if test="docTime != null">
+				doc_time = #{docTime,jdbcType=VARCHAR},
+			</if>
+			<if test="postingDate != null">
+				posting_date = #{postingDate,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where stock_transport_id = #{stockTransportId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockInputTransportHead">
+		update biz_stock_input_transport_head
+		set
+		stock_transport_code = #{stockTransportCode,jdbcType=CHAR},
+		receipt_type = #{receiptType,jdbcType=TINYINT},
+		move_type_id =
+		#{moveTypeId,jdbcType=INTEGER},
+		fty_id = #{ftyId,jdbcType=INTEGER},
+		location_id = #{locationId,jdbcType=INTEGER},
+		status =
+		#{status,jdbcType=TINYINT},
+		remark = #{remark,jdbcType=VARCHAR},
+		request_source = #{requestSource,jdbcType=TINYINT},
+		is_delete =
+		#{isDelete,jdbcType=TINYINT},
+		create_user =
+		#{createUser,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP},
+		class_type_id =
+		#{classTypeId,jdbcType=INTEGER},
+		syn_type = #{synType,jdbcType=INTEGER}
+		where stock_transport_id = #{stockTransportId,jdbcType=INTEGER}
+	</update>
+
+
+
+
+	<select id="getTransportInputListOnPaging" parameterType="map"
+		resultType="map">
+	SELECT
+		DISTINCT
+	bh.stock_transport_id,
+	bh.stock_transport_code,
+	dt.receipt_type_name,
+	bh.move_type_id,
+	bh.fty_id,
+	bh.location_id,
+	bh. STATUS STATUS,
+	CASE bh. STATUS
+	WHEN '0' THEN
+		'未完成'
+	WHEN '1' THEN
+		'已完成'
+	WHEN '2' THEN
+		'已提交'
+	WHEN '3' THEN
+		'已作业'
+	WHEN '10' THEN
+		'已完成'
+	WHEN '20' THEN
+		'已冲销'
+	ELSE
+		''
+	END status_name,
+	 bh.remark,
+	 bh.request_source,
+	 bh.is_delete,
+	 u.user_name create_user,
+	 DATE_FORMAT(bh.create_time, '%Y-%m-%d %H:%i:%S') create_time,
+	 DATE_FORMAT(bh.modify_time, '%Y-%m-%d %H:%i:%S') modify_time,
+	 bh.class_type_id,
+	 f.fty_name,
+	 l.location_name,
+	 ct.class_type_name,
+	biz_stock_input_transport_item.mat_doc_code,
+	biz_stock_input_transport_item.mes_doc_code,
+	bh.syn_type,
+    case
+ 	  when bh.syn_type='0' then "不同步"
+      when bh.syn_type='1' then "同步ERP"
+      when bh.syn_type='2' then "同步ERP&amp;MES"
+      when bh.syn_type='3' then "同步MES"
+   	  else bh.syn_type 
+    end syn_type_name
+	FROM
+	biz_stock_input_transport_head bh	
+	LEFT JOIN	biz_stock_input_transport_item on biz_stock_input_transport_item.stock_transport_id=bh.stock_transport_id
+	LEFT JOIN dic_factory f ON bh.fty_id = f.fty_id
+	LEFT JOIN dic_stock_location l ON bh.location_id = l.location_id
+	LEFT JOIN dic_class_type ct ON ct.class_type_id = bh.class_type_id
+	LEFT JOIN dic_receipt_type dt ON dt.receipt_type = bh.receipt_type
+	LEFT JOIN wms_user u ON u.user_id = bh.create_user
+	left join dic_material on biz_stock_input_transport_item.mat_input=dic_material.mat_id
+	WHERE
+	bh.is_delete = 0
+		<if test="stock_transport_code != null and stock_transport_code != '' ">
+			AND (bh.stock_transport_code =#{stock_transport_code,jdbcType=VARCHAR} 
+			or biz_stock_input_transport_item.refer_receipt_code=#{stock_transport_code} 
+			or biz_stock_input_transport_item.mat_doc_code  like CONCAT('%',#{stock_transport_code},'%' ) 
+       		or biz_stock_input_transport_item.mes_doc_code  like CONCAT('%',#{stock_transport_code},'%' ) 
+			or dic_material.mat_code  like CONCAT('%',#{stock_transport_code},'%' ) or dic_material.mat_name  like CONCAT('%',#{stock_transport_code},'%' )
+			or u.user_name like CONCAT('%',#{stock_transport_code},'%'))
+			
+		</if>
+		<if test="statusList != null and statusList.size()>0">
+			AND bh.status in
+			<foreach collection="statusList" index="index" item="item"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="receiptType != null and receiptType != '' ">
+			AND bh.receipt_type =#{receiptType}
+		</if>	
+		<if test="createUser!=null and createUser!=''">		
+ 		  and 
+ 			if((select product_line_id from rel_product_user where user_id=#{createUser})!=0
+ 			,(select product_line_id from rel_product_user where user_id=bh.create_user) =(select product_line_id from rel_product_user where user_id=#{createUser})
+ 			,1=1)
+    	</if>	
+		ORDER BY bh.stock_transport_id DESC;
+	</select>
+
+
+
+	<select id="getTransportInputInfo" parameterType="map"
+		resultType="map">
+		SELECT
+		bh.stock_transport_id,
+		bh.stock_transport_code as
+		stock_input_code,
+		bh.receipt_type,
+		dt.receipt_type_name,
+		bh.move_type_id,
+		ifnull(dmt.move_type_name,'') move_type_name,
+		ifnull(dmt.move_type_code,'') move_type_code,
+		bh.fty_id,
+		bh.location_id,
+		bh.status,
+		CASE bh.status WHEN '0' THEN '未完成'
+		WHEN '1' THEN '草稿'
+		WHEN '2'
+		THEN '已提交'
+		WHEN '3' THEN '已作业'
+		WHEN '10' THEN '已完成'
+		WHEN '20' THEN '已冲销'
+		ELSE '' END status_name,
+		ifnull(bh.remark,'') remark,
+		bh.request_source,
+		bh.is_delete,
+		u.user_name create_user,
+		DATE_FORMAT(bh.create_time,'%Y-%m-%d %H:%i:%S') create_time,
+		DATE_FORMAT(bh.modify_time,'%Y-%m-%d %H:%i:%S') modify_time,
+		bh.class_type_id,
+		bh.syn_type,		
+		CASE bh.syn_type
+		WHEN '2' THEN
+			'同步ERP&amp;MES'
+		WHEN '1' THEN
+			'同步ERP'
+		WHEN '0' THEN
+			'不同步'
+		WHEN '3' THEN
+			'同步MES'	
+		ELSE
+			''
+		END syn_status_name,
+		f.fty_name,
+		l.location_name,
+		CONCAT(ct.class_type_name,'(' ,
+		DATE_FORMAT(ct.start_time,'%H:%i'),'-',DATE_FORMAT(ct.end_time,'%H:%i')
+		, ')') AS class_type_name	
+		FROM
+		biz_stock_input_transport_head bh
+		left JOIN dic_factory f ON bh.fty_id
+		= f.fty_id
+		left JOIN dic_stock_location l ON bh.location_id =
+		l.location_id
+		left JOIN dic_class_type ct ON ct.class_type_id =
+		bh.class_type_id
+		left JOIN dic_receipt_type dt ON dt.receipt_type =
+		bh.receipt_type
+		left JOIN dic_move_type dmt ON dmt.move_type_id =
+		bh.move_type_id
+		left JOIN wms_user u ON u.user_id = bh.create_user
+		where bh.stock_transport_id=#{stockInputId}
+	</select>
+
+
+	<select id="getInputTransportItemListByID" parameterType="int"
+		resultType="map">
+		SELECT
+		biz_stock_task_item_cw.item_id,
+		
+		dm.mat_id,
+		dm.mat_name,
+		dm.mat_code,
+		du.name_zh,
+		bi.transport_qty as qty,
+		f.fty_id,
+		f.fty_name,
+		f.fty_type as fty_input_type,
+		l.location_name,
+		l.location_code,
+		lo.location_code output_location_code,
+		l.location_id,
+		fo.fty_name
+		output_fty_name,
+		lo.location_name output_location_name,
+		bi.production_batch production_batch,
+		bi.erp_batch,
+		bi.refer_receipt_code stock_task_code,
+		bi.refer_receipt_id stock_task_id,
+		bi.stock_transport_id as refer_receipt_id,
+		bi.business_type,
+		bt.receipt_type_name as business_type_name,
+		bi.mat_doc_code,
+		bi.mes_doc_code,
+		bi.mes_fail_code,
+		bi.mat_off_code,
+		bi.batch,
+		bi.remark
+		FROM
+		biz_stock_input_transport_item bi
+		left JOIN dic_material dm ON
+		dm.mat_id = bi.mat_input
+		left JOIN dic_unit du ON dm.unit_id = du.unit_id
+		left JOIN dic_factory f ON bi.fty_id = f.fty_id
+		left JOIN
+		dic_stock_location l ON bi.location_id = l.location_id
+		left JOIN
+		dic_factory fo ON bi.fty_output_id = fo.fty_id
+		left JOIN dic_stock_location lo
+		ON bi.location_output_id = lo.location_id
+		left JOIN dic_receipt_type bt ON
+		bt.receipt_type = bi.business_type
+		LEFT JOIN biz_stock_task_item_cw ON biz_stock_task_item_cw.stock_task_id = bi.refer_receipt_id and biz_stock_task_item_cw.stock_task_rid=bi.refer_receipt_rid
+		where
+		bi.stock_transport_id=#{stockInputId}
+	</select>
+
+
+	<select id="selectNowClassType" resultType="int">
+		
+	SELECT
+	*
+	FROM
+	(
+		SELECT
+			class_type_id
+		
+		FROM
+			dic_class_type
+		WHERE
+			is_delete = 0
+		ORDER BY
+			(
+				CASE (
+					(
+						start_time &lt; end_time
+						AND start_time &lt;= CURTIME()
+						AND end_time &gt; CURTIME()
+					)
+					OR (
+						start_time &gt; end_time
+						AND (start_time &lt;= CURTIME()
+						or end_time&gt;=CURTIME())
+					)
+				)
+				WHEN TRUE THEN
+					1
+				ELSE
+					2
+				END
+			)
+	) a
+	limit 1
+	
+	</select>
+
+
+	<select id="select_stock_taskOnPaging" parameterType="map"
+		resultType="map">
+		SELECT
+		bh.stock_task_id,
+		biz_stock_transport_head_cw.stock_transport_code,
+		biz_stock_task_item_cw.stock_task_rid,
+		biz_stock_task_item_cw.item_id,		
+		bh.stock_task_code,
+		biz_stock_task_item_cw.qty,	
+		pt.package_type_code,
+		ceil(biz_stock_task_item_cw.qty/(pt.package_standard/ (case when u2.unit_code = 'KG' then 1 else 1000 end) )) as pkg_qty,
+		f.fty_name,
+		l.location_name,
+		l.location_code,	
+		u.user_name create_user
+		FROM
+		biz_stock_task_item_cw
+		left join biz_stock_task_head_cw bh on bh.stock_task_id=biz_stock_task_item_cw.stock_task_id		
+		left JOIN dic_stock_location l ON bh.location_id = l.location_id
+		left join biz_stock_task_req_head on biz_stock_task_req_head.stock_task_req_id=bh.stock_task_req_id
+		left join dic_unit u2 ON biz_stock_task_item_cw.unit_id = u2.unit_id
+		left JOIN wms_user u ON u.user_id = bh.create_user		
+		LEFT JOIN biz_stock_transport_item_cw ON biz_stock_transport_item_cw.stock_transport_id = biz_stock_task_item_cw.refer_receipt_id and biz_stock_transport_item_cw.stock_transport_rid=biz_stock_task_item_cw.refer_receipt_rid
+		left join biz_stock_transport_head_cw on biz_stock_transport_head_cw.stock_transport_id=biz_stock_transport_item_cw.stock_transport_id
+		left JOIN dic_factory f ON biz_stock_transport_item_cw.fty_input = f.fty_id
+		left JOIN dic_package_type pt ON biz_stock_task_item_cw.package_type_id = pt.package_type_id AND pt.is_delete=0
+		WHERE bh.is_delete = 0 
+		and biz_stock_task_item_cw.status!='10' and biz_stock_task_item_cw.status!='4'
+		and (bh.receipt_type='33' or bh.receipt_type='35' )
+		<if test="stock_task_code != null and stock_task_code!='' and receiptType=='2'.toString()">
+			and (bh.stock_task_code=#{stock_task_code,jdbcType=VARCHAR}
+			or biz_stock_task_req_head.stock_task_req_code=#{stock_task_code}  or biz_stock_transport_head_cw.stock_transport_code=#{stock_task_code})
+		</if>
+		<if test="stock_task_code != null and stock_task_code!='' and receiptType=='1'.toString()">
+			and (bh.stock_task_code=#{stock_task_code,jdbcType=VARCHAR}
+			or biz_stock_task_req_head.stock_task_req_code=#{stock_task_code}  or biz_stock_transport_head_cw.stock_transport_code=#{stock_task_code} or biz_stock_transport_item_cw.production_batch_input=#{stock_task_code} )
+		</if>
+		<if test="receiptType != null and receiptType!='' and  receiptType=='2'.toString()">
+			and biz_stock_task_item_cw.refer_receipt_type in ('51','52','53') 	
+		</if>
+		
+		<if test="receiptType != null and receiptType!='' and  receiptType=='1'.toString()">
+			and biz_stock_task_item_cw.refer_receipt_type in ('54') 	
+		</if>
+		<if test="time != null and time !=''" >
+			AND date_format(biz_stock_task_item_cw.create_time,'%Y-%m-%d') = #{time}
+		</if>
+	</select>
+	
+	
+	
+		<select id="select_stock_taskOnPagingUrgent" parameterType="map"
+		resultType="map">
+		SELECT
+		bh.stock_task_id,
+		biz_stock_transport_head_cw.stock_transport_code,
+		biz_stock_task_item_cw.stock_task_rid,
+		biz_stock_task_item_cw.item_id,		
+		bh.stock_task_code,
+		biz_stock_task_item_cw.qty,	
+		pt.package_type_code,
+		ceil(biz_stock_task_item_cw.qty/(pt.package_standard/ (case when u2.unit_code = 'KG' then 1 else 1000 end))) as pkg_qty,
+		f.fty_name,
+		l.location_name,
+		l.location_code,	
+		u.user_name create_user
+		FROM
+		biz_stock_task_item_cw
+		left join biz_stock_task_head_cw bh on bh.stock_task_id=biz_stock_task_item_cw.stock_task_id
+		
+		left JOIN dic_stock_location l ON bh.location_id = l.location_id
+		left join biz_stock_task_req_head on biz_stock_task_req_head.stock_task_req_id=bh.stock_task_req_id
+		left join dic_unit u2 ON biz_stock_task_item_cw.unit_id = u2.unit_id
+		left JOIN wms_user u ON u.user_id = bh.create_user		
+		LEFT JOIN biz_stock_transport_item_cw ON biz_stock_transport_item_cw.stock_transport_id = biz_stock_task_item_cw.refer_receipt_id and biz_stock_transport_item_cw.stock_transport_rid=biz_stock_task_item_cw.refer_receipt_rid
+		left join biz_stock_transport_head_cw on biz_stock_transport_head_cw.stock_transport_id=biz_stock_transport_item_cw.stock_transport_id
+		left JOIN dic_factory f ON biz_stock_transport_item_cw.fty_input = f.fty_id
+		left JOIN dic_package_type pt ON biz_stock_task_item_cw.package_type_id = pt.package_type_id AND pt.is_delete=0
+		WHERE bh.is_delete = 0 
+		and biz_stock_task_item_cw.status!='10' 
+		and (bh.receipt_type='33' or bh.receipt_type = '35' )
+		<if test="stock_task_code != null and stock_task_code!='' and receiptType=='2'.toString()">
+			and (bh.stock_task_code=#{stock_task_code,jdbcType=VARCHAR}
+			or biz_stock_task_req_head.stock_task_req_code=#{stock_task_code}  or biz_stock_transport_head_cw.stock_transport_code=#{stock_task_code})
+		</if>
+		<if test="stock_task_code != null and stock_task_code!='' and receiptType=='1'.toString()">
+			and (bh.stock_task_code=#{stock_task_code,jdbcType=VARCHAR}
+			or biz_stock_task_req_head.stock_task_req_code=#{stock_task_code}  or biz_stock_transport_head_cw.stock_transport_code=#{stock_task_code} or biz_stock_transport_item_cw.production_batch_input=#{stock_task_code} )
+		</if>
+		<if test="receiptType != null and receiptType!='' and  receiptType=='2'.toString()">
+			and biz_stock_task_item_cw.refer_receipt_type in ('51','52','53') 	
+		</if>
+		
+		<if test="receiptType != null and receiptType!='' and  receiptType=='1'.toString()">
+			and biz_stock_task_item_cw.refer_receipt_type in ('55') 	
+		</if>
+		<if test="time != null and time !=''" >
+			AND date_format(biz_stock_transport_head_cw.create_time,'%Y-%m-%d') = #{time}
+		</if>
+	</select>
+
+	<select id="getStockMatListByTaskId" parameterType="map"
+		resultType="map">
+
+		SELECT
+		bi.item_id,
+		bi.stock_task_rid,
+		dm.mat_id,
+		bi.wh_id,
+		dm.mat_name,
+		dm.mat_code,
+		du.name_zh,
+		bi.qty qty,
+		f.fty_name,
+		l.location_id,
+		l.location_name,
+		l.location_code,
+		fo.fty_name output_fty_name,
+		fo.fty_id output_fty_id,
+		lo.location_code output_location_code,
+		lo.location_name output_location_name,
+		lo.location_id output_location_id,
+		bi.production_batch production_batch,
+		bi.erp_batch,
+		biz_stock_task_head_cw.stock_task_code ,
+		biz_stock_task_head_cw.stock_task_id ,
+		biz_stock_task_head_cw.refer_receipt_code ,
+		bi.refer_receipt_id as refer_receipt_id,
+		bi.refer_receipt_type as business_type_id,
+		dic_receipt_type.receipt_type_name business_type_name,
+		bi.remark
+		FROM
+		biz_stock_task_item_cw bi
+		left JOIN dic_material dm ON dm.mat_id =bi.mat_id
+		left JOIN dic_unit du ON dm.unit_id = du.unit_id
+		left JOIN dic_factory f ON bi.fty_id = f.fty_id
+		left JOIN dic_stock_location l ON bi.location_id = l.location_id		
+		left join biz_stock_transport_head_cw on biz_stock_transport_head_cw.stock_transport_code=bi.refer_receipt_code
+		left JOIN dic_factory fo ON biz_stock_transport_head_cw.fty_id =fo.fty_id
+		left JOIN dic_stock_location lo ON biz_stock_transport_head_cw.location_id =lo.location_id
+		left JOIN biz_stock_task_head_cw  ON biz_stock_task_head_cw.stock_task_id =bi.stock_task_id
+		left JOIN dic_receipt_type on dic_receipt_type.receipt_type=bi.refer_receipt_type
+		where bi.item_id in
+		<foreach collection="task_id" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+
+	<select id="getMatListByID" parameterType="map" resultType="map">
+
+		SELECT
+		bi.item_id,
+		bi.stock_task_id,
+		bi.stock_task_rid,
+		biz_stock_task_head_cw.stock_task_code,
+		dm.mat_id,
+		du.unit_id,
+		f.fty_id,
+		bi.batch,
+		biz_stock_transport_item_cw.batch tran_batch,
+		bi.wh_id,
+		bi.status,
+		bi.location_id,
+		dm.mat_name,
+		dm.mat_code,
+		du.unit_code,
+		du.name_zh,
+		bi.qty,
+		f.fty_name,
+		f.fty_code,
+		l.location_name,
+		l.location_code,
+		fo.fty_name output_fty_name,
+		fo.fty_code output_fty_code,
+		fo.fty_id output_fty_id,
+		lo.location_name output_location_name,
+		lo.location_code output_location_code,
+		lo.location_id output_location_id,
+		bi.production_batch production_batch,	
+		bi.erp_batch,
+		bi.refer_receipt_code,
+		bi.refer_receipt_id as refer_receipt_id,
+		bi.refer_receipt_type,
+		dic_receipt_type.receipt_type_name business_type_name,
+		bi.remark,
+		biz_stock_transport_item_cw.mat_input tran_mat_id,
+		biz_stock_transport_item_cw.fty_input tran_fty_id,
+		biz_stock_transport_item_cw.location_input tran_location_id,
+		biz_stock_transport_item_cw.erp_batch tran_erp_batch,
+		dmc.mat_code tran_mat_code,
+		biz_stock_transport_item_cw.production_batch_input,
+		biz_stock_transport_item_cw.item_id as input_item_id,
+		biz_stock_transport_head_cw.move_type_id,
+		bi.stock_task_rid,
+		pt.package_standard / (case when du.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		bi.package_type_id
+		FROM
+		biz_stock_task_item_cw bi
+		left JOIN biz_stock_task_head_cw  ON biz_stock_task_head_cw.stock_task_id = bi.stock_task_id
+		left JOIN dic_stock_location l ON bi.location_id = l.location_id		
+		left JOIN biz_stock_transport_item_cw  ON biz_stock_transport_item_cw.stock_transport_id = bi.refer_receipt_id and biz_stock_transport_item_cw.stock_transport_rid=bi.refer_receipt_rid
+		left JOIN dic_material dmc ON dmc.mat_id =biz_stock_transport_item_cw.mat_input  
+		left join biz_stock_transport_head_cw on biz_stock_transport_head_cw.stock_transport_code=bi.refer_receipt_code
+		left JOIN dic_factory f ON bi.fty_id =f.fty_id
+		left JOIN dic_stock_location lo ON biz_stock_transport_item_cw.location_output =lo.location_id
+		left JOIN dic_factory fo ON biz_stock_transport_item_cw.fty_output = fo.fty_id
+		left JOIN dic_material dm ON biz_stock_transport_item_cw.mat_id = dm.mat_id
+		left JOIN dic_unit du ON dm.unit_id = du.unit_id
+		left JOIN dic_receipt_type on dic_receipt_type.receipt_type=bi.refer_receipt_type	
+		left JOIN dic_package_type pt ON bi.package_type_id = pt.package_type_id AND pt.is_delete=0
+		where
+		bi.item_id in
+		<foreach collection="myJsonArray" index="index" item="item"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+		<select id="getViItemInfo" parameterType="int" resultType="map">
+	
+		SELECT
+		bi.item_id,
+		bi.batch,
+		dm.mat_code,	
+		dm.mat_id,	
+		bi.transport_qty qty,
+		f.fty_code,
+		f.fty_id,
+		l.location_code,	
+		l.location_id location_input,	
+		fo.fty_code output_fty_code,
+		fo.fty_id output_fty_id,
+		lo.location_code output_location_code,
+		lo.location_id location_output_id,
+		bi.production_batch production_batch,	
+		batch_material.erp_batch,
+		bi.erp_batch tran_erp_batch,
+		dmc.mat_code tran_mat_code,
+		dmc.mat_id mat_input,
+		bi.production_batch,
+		bi.package_type_id,
+		du.unit_id,
+		du.unit_code,
+		pt.package_standard / (case when du.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		biz_stock_transport_head_cw.move_type_id
+		FROM
+		biz_stock_input_transport_item bi
+		left join biz_stock_input_transport_head on biz_stock_input_transport_head.stock_input_id=bi.stock_transport_id
+		left JOIN dic_stock_location l ON bi.location_input = l.location_id			
+		left JOIN dic_material dmc ON dmc.mat_id =bi.mat_input  
+		left JOIN dic_factory f ON bi.fty_input =f.fty_id
+		left JOIN dic_stock_location lo ON bi.location_output_id =lo.location_id
+		left JOIN dic_factory fo ON bi.fty_output_id = fo.fty_id
+		left JOIN dic_material dm ON bi.mat_id = dm.mat_id
+		left JOIN dic_unit du ON dm.unit_id = du.unit_id
+		left JOIN dic_package_type pt ON bi.package_type_id = pt.package_type_id AND pt.is_delete=0
+		left join  biz_stock_task_item_cw on  biz_stock_task_item_cw.stock_task_id=bi.refer_receipt_id and biz_stock_task_item_cw.stock_task_rid=bi.refer_receipt_rid
+		left JOIN biz_stock_task_head_cw  ON biz_stock_task_head_cw.stock_task_id = biz_stock_task_item_cw.stock_task_id
+		left join biz_stock_transport_head_cw on biz_stock_transport_head_cw.stock_transport_code=biz_stock_task_item_cw.refer_receipt_code
+		left JOIN batch_material  ON bi.fty_output_id=batch_material.fty_id 
+		and bi.batch=batch_material.batch
+		and bi.mat_id=batch_material.mat_id
+		where
+		bi.stock_transport_id =#{stock_input_id}
+		
+	</select>
+	
+	
+	<select id="selectItemIdAndRid" parameterType="int" resultType="map">
+	
+		SELECT
+		bi.refer_receipt_id,
+		bi.refer_receipt_rid
+		FROM
+		biz_stock_input_transport_item bi
+		where
+		bi.stock_transport_id =#{stock_input_id}
+		
+	</select>
+
+
+	<update id="setBeforeStatus" parameterType="map">
+	
+		update 
+		biz_stock_task_item_cw
+		set 
+		status ='0' 
+		where
+		stock_task_id=${id} and stock_task_rid=#{rid}	
+	 </update>
+	 
+	 
+	 <update id="updateStockInputIdIsNull" parameterType="map">
+		update 
+		biz_stock_input_transport_head
+		set 
+		stock_input_id =null
+		where
+		stock_transport_id=${stock_input_id}
+	 </update>
+	
+	
+		
+
+
+
+	<select id="selectAreaId" parameterType="map" resultType="String">
+		SELECT area_id
+		FROM
+		dic_warehouse_area
+		where area_code=#{areaId}
+		and wh_id=#{wh_id}
+	</select>
+
+	<select id="selectPositonId" parameterType="map" resultType="String">
+
+		SELECT position_id
+		FROM
+		dic_warehouse_position
+		where
+		position_code=#{positionid}
+		and wh_id=#{wh_id}
+	</select>
+
+	<select id="selectStockTransportHeadOnPaging" parameterType="java.util.Map"
+		resultType="java.util.Map">
+
+		SELECT
+		DISTINCT
+		sh.stock_input_code,
+		sh.stock_input_id,
+		bh.stock_transport_id,
+		bh.stock_transport_code,
+		CASE
+		bh.receipt_type
+		WHEN '51' THEN '工厂转储'
+		WHEN
+		'52' THEN '库存转储'
+		WHEN '53'
+		THEN '物料转储'
+		WHEN '54' THEN '生产转运 '
+		WHEN '55'
+		THEN '虚拟转储 '
+		ELSE '' END
+		receipt_type_name,
+		CASE bh.status WHEN '0' THEN '未完成'
+		WHEN '1' THEN '已完成'
+		WHEN '2'
+		THEN '已作业'
+		WHEN '3' THEN '已提交'
+		WHEN '10' THEN '已完成'
+		WHEN '20' THEN '已冲销'
+		ELSE '' END
+		status_name,
+		bh.remark,
+		u.user_name as create_user,
+		DATE_FORMAT(bh.create_time,'%Y-%m-%d %H:%i:%S') create_time,
+		f.fty_name,
+		l.location_code,
+		l.location_name,
+		ct.class_type_name,
+		item.mat_doc_code,
+		item.mes_doc_code,
+		item.mat_off_code,
+		item.mes_fail_code mes_off_code
+		FROM
+		biz_stock_input_transport_head bh
+		inner join biz_stock_input_transport_item item on item.stock_transport_id=bh.stock_transport_id
+		left join dic_material outmat on outmat.mat_id = item.mat_id
+		left join dic_material inmat on inmat.mat_id = item.mat_input
+		left join biz_stock_input_head sh on
+		sh.stock_input_id =
+		bh.stock_input_id
+		left JOIN dic_factory f ON
+		bh.fty_id = f.fty_id
+		left
+		JOIN dic_stock_location l ON bh.location_id =
+		l.location_id
+		left JOIN
+		dic_class_type ct ON ct.class_type_id =
+		bh.class_type_id
+		left JOIN
+		dic_receipt_type dt ON dt.receipt_type =
+		bh.receipt_type
+		inner join
+		wms_user u on u.user_id = bh.create_user
+		WHERE bh.is_delete = 0
+		<if test="receiptType != null">
+			AND bh.receipt_type
+			=#{receiptType,jdbcType=TINYINT}
+		</if>
+		<if test="statusList != null and statusList.size()>0">
+			AND bh.status in
+			<foreach collection="statusList" index="index" item="item"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="keyword != null">
+			and
+			(
+			bh.stock_transport_code = #{keyword,jdbcType =VARCHAR} or
+			sh.stock_input_code =#{keyword,jdbcType=VARCHAR} or 
+			u.user_name like CONCAT('%',#{keyword},'%' ) or
+			outmat.mat_code like CONCAT('%',#{keyword},'%' ) or
+			outmat.mat_name like CONCAT('%',#{keyword},'%' ) or
+			inmat.mat_code like CONCAT('%',#{keyword},'%' ) or
+			inmat.mat_name like CONCAT('%',#{keyword},'%' ) or
+			item.mat_doc_code like CONCAT('%',#{keyword},'%' ) 
+			)
+		</if>
+		 <if test="userId!=null and userId!=''">		
+   			and 
+	   			if((select product_line_id from rel_product_user where user_id=#{userId})!=0
+	   			,(select product_line_id from rel_product_user where user_id=bh.create_user) =(select product_line_id from rel_product_user where user_id=#{userId})
+	   			,1=1)
+         </if>	
+		order by bh.stock_transport_code desc
+	</select>
+
+	<select id="selectStockTransportHeadbyID" parameterType="java.lang.Integer"
+		resultType="java.util.Map">
+	 SELECT
+		head.stock_transport_id,
+		ih. stock_input_code,
+		head.stock_transport_code,
+		head.move_type_id,
+		move.move_type_name,
+		move.move_type_code,
+		u.user_name,
+		fty.fty_code as fty_input_code,
+		fty.fty_name as fty_input_name,
+		loc.location_code as location_input_code,
+		loc.location_name as location_input_name,
+		DATE_FORMAT(class.start_time,'%H:%i') class_type_start,
+		DATE_FORMAT(class.end_time,'%H:%i') class_type_end,
+		CONCAT(class.class_type_name,'(' ,
+		DATE_FORMAT(class.start_time,'%H:%i'),'-',DATE_FORMAT(class.end_time,'%H:%i')
+		, ')') AS class_name,
+		head.syn_type,
+		date_format(head.create_time,'%Y-%m-%d %H:%i:%S') as create_time,
+		head.status,
+		case head.status
+		when 0 then'未完成'
+		when 10 then'已完成'
+		when 20 then'已冲销'
+		end status_name,
+		head.remark,
+		class.class_type_name
+		from biz_stock_input_transport_head head
+		LEFT JOIN dic_move_type move on move.move_type_id = head.move_type_id
+		LEFT JOIN biz_stock_input_head ih on ih.stock_input_id =head.stock_input_id
+		INNER JOIN wms_user u on u.user_id = head.create_user
+		LEFT JOIN dic_factory fty on fty.fty_id = head.fty_id
+		LEFT JOIN dic_stock_location loc on loc.location_id = head.location_id
+		LEFT JOIN dic_class_type class on class.class_type_id =
+		head.class_type_id
+		
+		where head.is_delete = 0
+		
+		<if test="stockTransportId != null">
+			AND head.stock_transport_id = #{stockTransportId}
+		</if>
+
+	</select>
+
+	<select id="selectTotalTransportNum" parameterType="map" resultType="String">
+		SELECT sum(biz_stock_task_item_cw.qty)
+		from biz_stock_task_item_cw
+		inner JOIN biz_stock_transport_head_cw ON biz_stock_transport_head_cw.stock_transport_code = biz_stock_task_item_cw.refer_receipt_code
+		inner JOIN biz_stock_task_head_cw on biz_stock_task_item_cw.stock_task_id=biz_stock_task_head_cw.stock_task_id 
+		where biz_stock_task_item_cw.refer_receipt_code=#{refer_receipt_code}
+		and biz_stock_task_item_cw.status='10' and biz_stock_task_item_cw.is_delete =0 and biz_stock_transport_head_cw.is_delete =0 and biz_stock_task_head_cw.is_delete =0
+		<if test="receipt_type != null">
+			and biz_stock_task_head_cw.receipt_type=#{receipt_type}
+		</if>  
+	</select>
+	
+	<select id="getTransportSum" parameterType="map" resultType="String">
+		SELECT sum(transport_qty)
+		from biz_stock_transport_item_cw
+		inner join biz_stock_transport_head_cw on biz_stock_transport_head_cw.stock_transport_id=biz_stock_transport_item_cw.stock_transport_id
+		where biz_stock_transport_head_cw.stock_transport_code=#{refer_receipt_code} and biz_stock_transport_item_cw.is_delete = 0
+	</select>
+	
+	<update id="updateTransportStatus" parameterType="map">
+		update biz_stock_transport_head_cw set status='10'
+		where biz_stock_transport_head_cw.stock_transport_code=#{refer_receipt_code}
+	</update>
+
+	<select id="selectMoveType" resultType="map">
+    SELECT a.move_type_id, 
+           a.move_type_code, 
+           a.move_type_name  
+    FROM dic_move_type a
+ 	where a.move_type_id in(15,19)
+    ORDER BY a.move_type_code
+  </select>
+	
+
+	<select id="getTaskDownId" parameterType="string" resultType="String">
+		SELECT stock_task_id
+		from biz_stock_task_head_cw
+		where refer_receipt_code=#{string} and receipt_type='112'
+		limit 1
+	</select>
+	
+	<select id="getOtherId" parameterType="string" resultType="String">
+
+		SELECT stock_task_id
+		FROM
+		biz_stock_task_head_cw
+		where
+		refer_receipt_code=(select refer_receipt_code from biz_stock_task_head_cw where stock_task_id=#{stock_task_id})
+		and stock_task_id!=#{stock_task_id}
+		limit 1
+	</select>
+	
+	<select id="selectItemList" parameterType="int" resultType="map">
+
+		SELECT item_id
+		FROM
+		biz_stock_input_transport_item
+		where
+		stock_transport_id=#{stockTransportId}
+	</select>
+	
+	<select id="selectItemListRefer" parameterType="int" resultType="map">
+
+		SELECT biz_stock_task_item_cw.item_id item_id
+		FROM
+		biz_stock_input_transport_item
+		LEFT JOIN biz_stock_task_item_cw ON biz_stock_task_item_cw.stock_task_id=biz_stock_input_transport_item.refer_receipt_id AND biz_stock_task_item_cw.stock_task_rid=biz_stock_input_transport_item.refer_receipt_rid
+		where
+		biz_stock_input_transport_item.stock_transport_id=#{stockTransportId}
+	</select>
+	
+	<select id="selectItemStatus" parameterType="string" resultType="string">
+
+		SELECT status 
+		FROM
+		biz_stock_task_item_cw
+		where
+		stock_task_id=#{string}
+	</select>
+	
+	<update id="updateItemStatusStatus" parameterType="string" >
+
+		update biz_stock_task_item_cw
+		set status='10'
+		where stock_task_id=#{other_id}
+	</update>
+	
+	<update id="updateDownStaskStatus" parameterType="map" >
+
+		update biz_stock_task_item_cw
+		set status='10'
+		where biz_stock_task_item_cw.refer_receipt_id=#{referReceiptId}
+		and refer_receipt_type=#{referReceiptType}
+	</update>
+	
+	<update id="updateStatusByCode" parameterType="string" >
+
+		update biz_stock_task_item_cw
+		set status='10'
+		where refer_receipt_code=#{string}
+	</update>
+	<select id="selectTransItemForPrint"  parameterType="java.lang.Integer"  resultType="java.util.Map">
+	SELECT
+		dm.mat_name,
+		dm.mat_code,
+		bi.transport_qty AS qty,
+		lo.location_code location_input_code,
+		fo.fty_name fty_input_name,
+		fo.fty_code fty_input_code,
+		f.fty_name fty_output_name,
+		f.fty_code fty_output_code,
+		lo.location_name location_input_name,
+		bi.production_batch production_batch,
+		bi.erp_batch,
+		bi.refer_receipt_code stock_task_code,
+		bi.refer_receipt_id stock_task_id,
+		pack.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pack.package_type_name,
+		b.delivery_driver,
+		b.delivery_vehicle,
+		ware.wh_code,
+		ware.wh_name,
+		ifnull(bi.remark,'')remark
+		FROM
+			biz_stock_input_transport_item bi
+		INNER JOIN dic_material dm ON dm.mat_id = bi.mat_id
+		INNER JOIN dic_unit u2 ON dm.unit_id = u2.unit_id
+		INNER JOIN dic_factory fo ON bi.fty_input = fo.fty_id
+		INNER JOIN dic_factory f on f.fty_id = bi.fty_output_id
+		INNER JOIN dic_stock_location lo ON bi.location_input = lo.location_id
+		INNER JOIN biz_stock_task_head_cw hc ON hc.stock_task_id = bi.refer_receipt_id
+		INNER JOIN biz_stock_task_item_cw ic ON ic.stock_task_id = bi.refer_receipt_id
+		AND ic.stock_task_rid = bi.refer_receipt_rid
+		INNER JOIN dic_warehouse ware on ware.wh_id = ic.wh_id
+		INNER JOIN dic_package_type pack ON pack.package_type_id = ic.package_type_id
+		INNER JOIN biz_stock_task_req_head b ON hc.stock_task_req_id = b.stock_task_req_id
+		where
+		bi.stock_transport_id=#{stockTransportId}
+	</select>
+	
+
+
+</mapper>

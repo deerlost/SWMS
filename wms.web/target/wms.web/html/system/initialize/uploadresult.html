@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>文件处理</title>
+    <meta charset="utf-8" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+
+    <script>
+        $(function () {
+            parent.getExcelData(GetQueryString("fileName"),GetQueryString("type"))
+            parent.layer.close(parseInt(parent.$(".layui-layer-iframe").attr("times")));
+        });
+
+    </script>
+</head>
+<body class="dialog">
+</body>
+</html>

@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizMaterialDocItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizMaterialDocItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="mat_doc_id" jdbcType="INTEGER" property="matDocId" />
+    <result column="mat_doc_rid" jdbcType="INTEGER" property="matDocRid" />
+    <result column="mat_doc_year" jdbcType="INTEGER" property="matDocYear" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="spec_stock" jdbcType="VARCHAR" property="specStock" />
+    <result column="spec_stock_code" jdbcType="VARCHAR" property="specStockCode" />
+    <result column="spec_stock_name" jdbcType="VARCHAR" property="specStockName" />
+    <result column="supplier_code" jdbcType="VARCHAR" property="supplierCode" />
+    <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+    <result column="customer_code" jdbcType="VARCHAR" property="customerCode" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="demand_dept" jdbcType="VARCHAR" property="demandDept" />
+    <result column="sale_order_code" jdbcType="VARCHAR" property="saleOrderCode" />
+    <result column="sale_order_project_code" jdbcType="VARCHAR" property="saleOrderProjectCode" />
+    <result column="sale_order_delivered_plan" jdbcType="VARCHAR" property="saleOrderDeliveredPlan" />
+    <result column="standard_currency_money" jdbcType="DECIMAL" property="standardCurrencyMoney" />
+    <result column="order_qty" jdbcType="DECIMAL" property="orderQty" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="purchase_order_code" jdbcType="VARCHAR" property="purchaseOrderCode" />
+    <result column="purchase_order_rid" jdbcType="VARCHAR" property="purchaseOrderRid" />
+    <result column="contract_code" jdbcType="VARCHAR" property="contractCode" />
+    <result column="contract_name" jdbcType="VARCHAR" property="contractName" />
+    <result column="refer_receipt_id" jdbcType="INTEGER" property="referReceiptId" />
+    <result column="refer_receipt_code" jdbcType="VARCHAR" property="referReceiptCode" />
+    <result column="refer_receipt_rid" jdbcType="INTEGER" property="referReceiptRid" />
+    <result column="refer_mat_doc_id" jdbcType="INTEGER" property="referMatDocId" />
+    <result column="refer_mat_doc_rid" jdbcType="INTEGER" property="referMatDocRid" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="cost_obj_code" jdbcType="VARCHAR" property="costObjCode" />
+    <result column="cost_obj_name" jdbcType="VARCHAR" property="costObjName" />
+    <result column="cost_obj_level" jdbcType="VARCHAR" property="costObjLevel" />
+    <result column="reserve_id" jdbcType="VARCHAR" property="reserveId" />
+    <result column="reserve_rid" jdbcType="VARCHAR" property="reserveRid" />
+    <result column="decimal_place" jdbcType="TINYINT" property="decimalPlace" />
+    <result column="debit_credit" jdbcType="VARCHAR" property="debitCredit" />
+    <result column="write_off" jdbcType="TINYINT" property="writeOff" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  	<result column="move_type_code" jdbcType="VARCHAR" property="moveTypeCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_id, mat_doc_id, mat_doc_rid, mat_doc_year, batch, move_type_id, mat_id, fty_id, 
+    location_id, spec_stock, spec_stock_code, spec_stock_name, supplier_code, supplier_name, 
+    customer_code, customer_name, demand_dept, sale_order_code, sale_order_project_code, 
+    sale_order_delivered_plan, standard_currency_money, order_qty, qty, unit_id, purchase_order_code, 
+    purchase_order_rid, contract_code, contract_name, refer_receipt_id, refer_receipt_code, 
+    refer_receipt_rid, refer_mat_doc_id, refer_mat_doc_rid, remark, cost_obj_code, cost_obj_name, 
+    cost_obj_level, reserve_id, reserve_rid, decimal_place, debit_credit, write_off, 
+    status, is_delete, create_time, modify_time, move_type_code
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_material_doc_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizMaterialDocItem">
+    insert into biz_material_doc_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id,
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid,
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="specStock != null">
+        spec_stock,
+      </if>
+      <if test="specStockCode != null">
+        spec_stock_code,
+      </if>
+      <if test="specStockName != null">
+        spec_stock_name,
+      </if>
+      <if test="supplierCode != null">
+        supplier_code,
+      </if>
+      <if test="supplierName != null">
+        supplier_name,
+      </if>
+      <if test="customerCode != null">
+        customer_code,
+      </if>
+      <if test="customerName != null">
+        customer_name,
+      </if>
+      <if test="demandDept != null">
+        demand_dept,
+      </if>
+      <if test="saleOrderCode != null">
+        sale_order_code,
+      </if>
+      <if test="saleOrderProjectCode != null">
+        sale_order_project_code,
+      </if>
+      <if test="saleOrderDeliveredPlan != null">
+        sale_order_delivered_plan,
+      </if>
+      <if test="standardCurrencyMoney != null">
+        standard_currency_money,
+      </if>
+      <if test="orderQty != null">
+        order_qty,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code,
+      </if>
+      <if test="purchaseOrderRid != null">
+        purchase_order_rid,
+      </if>
+      <if test="contractCode != null">
+        contract_code,
+      </if>
+      <if test="contractName != null">
+        contract_name,
+      </if>
+      <if test="referReceiptId != null">
+        refer_receipt_id,
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code,
+      </if>
+      <if test="referReceiptRid != null">
+        refer_receipt_rid,
+      </if>
+      <if test="referMatDocId != null">
+        refer_mat_doc_id,
+      </if>
+      <if test="referMatDocRid != null">
+        refer_mat_doc_rid,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="costObjCode != null">
+        cost_obj_code,
+      </if>
+      <if test="costObjName != null">
+        cost_obj_name,
+      </if>
+      <if test="costObjLevel != null">
+        cost_obj_level,
+      </if>
+      <if test="reserveId != null">
+        reserve_id,
+      </if>
+      <if test="reserveRid != null">
+        reserve_rid,
+      </if>
+      <if test="decimalPlace != null">
+        decimal_place,
+      </if>
+      <if test="debitCredit != null">
+        debit_credit,
+      </if>
+      <if test="writeOff != null">
+        write_off,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="moveTypeCode != null">
+        move_type_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocId != null">
+        #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocYear != null">
+        #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="moveTypeId != null">
+        #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="specStock != null">
+        #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCode != null">
+        #{specStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockName != null">
+        #{specStockName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerCode != null">
+        #{customerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDept != null">
+        #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrderCode != null">
+        #{saleOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrderProjectCode != null">
+        #{saleOrderProjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrderDeliveredPlan != null">
+        #{saleOrderDeliveredPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="standardCurrencyMoney != null">
+        #{standardCurrencyMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderQty != null">
+        #{orderQty,jdbcType=DECIMAL},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderCode != null">
+        #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderRid != null">
+        #{purchaseOrderRid,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null">
+        #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptId != null">
+        #{referReceiptId,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptRid != null">
+        #{referReceiptRid,jdbcType=INTEGER},
+      </if>
+      <if test="referMatDocId != null">
+        #{referMatDocId,jdbcType=INTEGER},
+      </if>
+      <if test="referMatDocRid != null">
+        #{referMatDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjCode != null">
+        #{costObjCode,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjName != null">
+        #{costObjName,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjLevel != null">
+        #{costObjLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveId != null">
+        #{reserveId,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveRid != null">
+        #{reserveRid,jdbcType=VARCHAR},
+      </if>
+      <if test="decimalPlace != null">
+        #{decimalPlace,jdbcType=TINYINT},
+      </if>
+      <if test="debitCredit != null">
+        #{debitCredit,jdbcType=VARCHAR},
+      </if>
+      <if test="writeOff != null">
+        #{writeOff,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moveTypeCode != null">
+        #{moveTypeCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizMaterialDocItem">
+    update biz_material_doc_item
+    <set>
+      <if test="matDocId != null">
+        mat_doc_id = #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="matDocYear != null">
+        mat_doc_year = #{matDocYear,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="specStock != null">
+        spec_stock = #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockCode != null">
+        spec_stock_code = #{specStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStockName != null">
+        spec_stock_name = #{specStockName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null">
+        supplier_code = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null">
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerCode != null">
+        customer_code = #{customerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="demandDept != null">
+        demand_dept = #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrderCode != null">
+        sale_order_code = #{saleOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrderProjectCode != null">
+        sale_order_project_code = #{saleOrderProjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrderDeliveredPlan != null">
+        sale_order_delivered_plan = #{saleOrderDeliveredPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="standardCurrencyMoney != null">
+        standard_currency_money = #{standardCurrencyMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderQty != null">
+        order_qty = #{orderQty,jdbcType=DECIMAL},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderRid != null">
+        purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null">
+        contract_code = #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null">
+        contract_name = #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptId != null">
+        refer_receipt_id = #{referReceiptId,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptRid != null">
+        refer_receipt_rid = #{referReceiptRid,jdbcType=INTEGER},
+      </if>
+      <if test="referMatDocId != null">
+        refer_mat_doc_id = #{referMatDocId,jdbcType=INTEGER},
+      </if>
+      <if test="referMatDocRid != null">
+        refer_mat_doc_rid = #{referMatDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjCode != null">
+        cost_obj_code = #{costObjCode,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjName != null">
+        cost_obj_name = #{costObjName,jdbcType=VARCHAR},
+      </if>
+      <if test="costObjLevel != null">
+        cost_obj_level = #{costObjLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveId != null">
+        reserve_id = #{reserveId,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveRid != null">
+        reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+      </if>
+      <if test="decimalPlace != null">
+        decimal_place = #{decimalPlace,jdbcType=TINYINT},
+      </if>
+      <if test="debitCredit != null">
+        debit_credit = #{debitCredit,jdbcType=VARCHAR},
+      </if>
+      <if test="writeOff != null">
+        write_off = #{writeOff,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="moveTypeCode != null">
+       	move_type_code = #{moveTypeCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByReferenceOrder" parameterType="map" resultMap="BaseResultMap">
+    select DISTINCT mat_doc_id , mat_doc_rid ,mat_doc_year, refer_receipt_code , refer_receipt_rid
+    from biz_material_doc_item
+    where mat_doc_id = #{matDocId,jdbcType=BIGINT}
+      and refer_receipt_id = #{referReceiptId,jdbcType=VARCHAR}
+      and refer_receipt_rid = #{referReceiptRid,jdbcType=VARCHAR}
+      <if test="debitCredit != null">
+        and debit_credit = #{debitCredit,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <select id="selectDBRKItemByAllotIdAndDeliveryId" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+		m.mat_id,
+		m.qty,
+		dm.mat_name,
+		dm.mat_code,
+		t.fty_code fty_output_code,
+		t.fty_name fty_output_name,
+		t.location_name location_output_name,
+		t.location_code location_output_code,
+		m.batch,
+		m.fty_id,
+		m.location_id,
+		m.unit_id,
+		m.spec_stock,
+		m.spec_stock_code,
+		m.spec_stock_name,
+		u.unit_code,
+		u.decimal_place,
+		u.name_zh,
+		t.item_id,
+		t.delivery_item_id
+	FROM biz_material_doc_item m
+	INNER JOIN biz_material_doc_head h ON m.mat_doc_id = h.mat_doc_id AND h.mat_doc_type = 45
+	INNER JOIN dic_material dm ON m.mat_id = dm.mat_id 
+	INNER JOIN dic_unit u on m.unit_id = u.unit_id
+	INNER JOIN (
+		SELECT
+			ai.item_id,
+			ai.delivery_item_id,
+			ai.stock_output_id,
+			ai.stock_output_rid,
+			ai.fty_output,
+			ai.location_output,
+			ai.mat_id,
+			wout.fty_code,
+			wout.fty_name,
+			lout.location_name,
+			lout.location_code
+		FROM
+			biz_allocate_item ai
+		LEFT JOIN biz_allocate_delivery_item di ON ai.delivery_item_id = di.item_id
+		LEFT JOIN dic_factory wout ON wout.fty_id = ai.fty_output
+		LEFT JOIN dic_stock_location lout ON lout.location_id = ai.location_output
+		WHERE 1 = 1
+		<if test="status != null">
+        	and ai.status = #{status,jdbcType=TINYINT}
+    	</if>
+		<if test="allocateId != null">
+        	and ai.allocate_id = #{allocateId,jdbcType=BIGINT}
+    	</if>
+    	<if test="allocateDeliveryId != null">
+        	and di.allocate_delivery_id = #{allocateDeliveryId,jdbcType=BIGINT}
+    	</if>
+	) t ON m.refer_receipt_id = t.stock_output_id AND m.mat_id = t.mat_id 
+	AND m.refer_receipt_rid = t.stock_output_rid
+	AND m.debit_credit = 'S'
+	
+  </select>
+  
+   <!-- 出入库分页查询 刘宇 2018.02.24 -->
+   <select id="selectOutAndInStockOnPaging" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			dmt.biz_type,
+			bmdi.mat_id,
+			dm.mat_code,
+			dm.mat_name,
+			df.fty_name,
+			dcl.location_name,
+			dmt.move_type_code,
+			bmdi.batch,
+			bmdi.spec_stock_code,
+			bmdh.mat_doc_code,
+			bmdi.mat_doc_rid,
+			bmdh.mat_doc_type,
+			bmdi.refer_receipt_id,
+			bmdi.refer_receipt_code,
+			bmdi.refer_receipt_rid,	
+			du.name_zh,
+			bmdi.qty,
+			bmdi.create_time,
+			bmdh.posting_date,
+			wu.user_name,
+			df.fty_id,
+			df.fty_code
+		FROM biz_material_doc_item bmdi
+		INNER JOIN biz_material_doc_head bmdh ON bmdh.mat_doc_id = bmdi.mat_doc_id
+		<if test="ftyId != null and ftyId !=''">
+			AND bmdi.fty_id= #{ftyId,jdbcType=VARCHAR}
+		</if>	
+		<if test="locationId != null and locationId !=''">
+			AND bmdi.location_id = #{locationId,jdbcType=VARCHAR}
+		</if>
+		<if test="specStockCode != null and specStockCode !=''">
+			AND bmdi.spec_stock_code = #{specStockCode,jdbcType=VARCHAR}
+		</if>
+		<if test="createTimeBegin != null">
+  			AND bmdi.create_time <![CDATA[>=]]> #{createTimeBegin,jdbcType=TIMESTAMP} 
+  		</if>
+  		<if test="createTimeEnd != null">
+			AND bmdi.create_time <![CDATA[<=]]> #{createTimeEnd,jdbcType=TIMESTAMP} 
+  		</if>
+  		<if test="referReceiptCode != null and referReceiptCode !=''">
+			AND bmdi.refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR}
+		</if>
+		INNER JOIN dic_stock_location dcl ON dcl.location_id = bmdi.location_id
+		INNER JOIN dic_factory df ON df.fty_id = dcl.fty_id
+		INNER JOIN dic_move_type dmt ON dmt.move_type_id = bmdi.move_type_id
+		<if test="moveTypeCode != null and moveTypeCode !=''">
+			AND dmt.move_type_code = #{moveTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="manyBizTypes != null and manyBizTypes!=''">
+			AND dmt.biz_type in   				 
+   		<foreach collection="manyBizTypes" item="bizType" index="index" open="(" close=")" separator=",">  		
+    			#{bizType}
+  		</foreach>
+		</if>		
+		INNER JOIN dic_material dm ON dm.mat_id = bmdi.mat_id
+		<if test="matCode != null and matCode !=''">
+			AND (			
+			<foreach collection="utilMatCodes" item="item" index="index" separator="or">     	
+	    		  	(dm.mat_code BETWEEN #{item.begin} AND #{item.end} 
+	    		  	AND CHAR_LENGTH(dm.mat_code) IN (CHAR_LENGTH(#{item.begin}),CHAR_LENGTH(#{item.end}))  )   	
+	  		</foreach> 		   
+	  			 OR	dm.mat_code IN   				 
+	   		<foreach collection="utilMatCodes.get(0).strings" item="string" index="index" open="(" close=")" separator=",">  		
+	    			#{string}     			 
+	  		</foreach> 
+				)	
+		</if>
+		<if test="matName != null and matName !=''">
+			AND dm.mat_name LIKE CONCAT('%',#{matName,jdbcType=VARCHAR},'%')
+		</if>	
+		INNER JOIN wms_user wu ON wu.user_id = bmdh.create_user
+		<if test="userName != null and userName !=''">
+			AND wu.user_name LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+		</if>	
+		LEFT JOIN dic_unit du ON du.unit_id = dm.unit_id    
+		ORDER BY bmdi.create_time DESC;
+  </select>
+  <select id="selectByItemIds" parameterType="java.util.List" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_material_doc_item
+    where item_id in 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item}
+	</foreach>
+  </select>
+  
+  <select id="getInputAmount" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT g.fty_id,g.location_id,m.mat_group_id ,mg.mat_group_code,mg.mat_group_name, sum(ifnull(g.qty,0) * ifnull(g.standard_currency_money,0)) as inputAmount 
+	,dsl.location_name,df.fty_name
+	FROM biz_material_doc_item g
+	INNER JOIN biz_material_doc_head f on g.mat_doc_id = f.mat_doc_id
+	INNER JOIN dic_material m ON g.mat_id = m.mat_id 
+	INNER JOIN dic_factory df on df.fty_id = g.fty_id
+	INNER JOIN dic_stock_location dsl on dsl.location_id = g.location_id 
+	INNER JOIN dic_corp c on c.corp_id = df.corp_id
+  	LEFT JOIN dic_material_group mg ON m.mat_group_id = mg.mat_group_id 
+  	WHERE  g.debit_credit = 'S'
+	<if test="timeFr!=null and timeFr !=''">
+	  and f.posting_date <![CDATA[>=]]> #{timeFr,jdbcType=VARCHAR} 
+	</if>
+	<if test="timeTo!=null and timeTo !=''">
+	  and f.posting_date <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+	</if>	
+	<if test="ftyId!=null and ftyId !=''">
+	  and g.fty_id = #{ftyId,jdbcType=VARCHAR}
+  	</if>
+  	<if test="boardId!=null and boardId !=''">
+	  and c.board_id = #{boardId,jdbcType=VARCHAR}
+  	</if>
+	<if test="locationId!=null and locationId !=''">
+	  and g.location_id = #{locationId,jdbcType=VARCHAR}
+  	</if>
+  	<if test="matGroupId!=null and matGroupId !=''">
+	  and m.mat_group_id = #{matGroupId,jdbcType=VARCHAR}
+  	</if>	
+	GROUP BY g.fty_id,g.location_id,m.mat_group_id,mg.mat_group_code,mg.mat_group_name,dsl.location_name,df.fty_name
+	
+  </select>
+  
+  <select id="getOutputAmount" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT g.fty_id,g.location_id,m.mat_group_id , mg.mat_group_name,sum(ifnull(g.qty,0) * ifnull(g.standard_currency_money,0)) as outputAmount 
+	,dsl.location_name,df.fty_name
+	FROM biz_material_doc_item g
+	INNER JOIN biz_material_doc_head f on g.mat_doc_id = f.mat_doc_id
+	INNER JOIN dic_material m ON g.mat_id = m.mat_id 
+  	INNER JOIN dic_factory df on df.fty_id = g.fty_id
+	INNER JOIN dic_stock_location dsl on dsl.location_id = g.location_id 
+	INNER JOIN dic_corp c on c.corp_id = df.corp_id
+  	LEFT JOIN dic_material_group mg ON m.mat_group_id = mg.mat_group_id 
+  	WHERE  g.debit_credit = 'H'
+	<if test="timeFr!=null and timeFr !=''">
+	  and f.posting_date <![CDATA[>=]]> #{timeFr,jdbcType=VARCHAR} 
+	</if>
+	<if test="timeTo!=null and timeTo !=''">
+	  and f.posting_date <![CDATA[<=]]> #{timeTo,jdbcType=VARCHAR} 
+	</if>
+	<if test="ftyId!=null and ftyId !=''">
+	  and g.fty_id = #{ftyId,jdbcType=VARCHAR}
+  	</if>
+  	<if test="boardId!=null and boardId !=''">
+	  and c.board_id = #{boardId,jdbcType=VARCHAR}
+  	</if>
+	<if test="locationId!=null and locationId !=''">
+	  and g.location_id = #{locationId,jdbcType=VARCHAR}
+  	</if>
+  	<if test="matGroupId!=null and matGroupId !=''">
+	  and m.mat_group_id = #{matGroupId,jdbcType=VARCHAR}
+  	</if>	
+	GROUP BY g.fty_id,g.location_id,m.mat_group_id,mg.mat_group_name,dsl.location_name,df.fty_name
+  </select>
+    
+</mapper>

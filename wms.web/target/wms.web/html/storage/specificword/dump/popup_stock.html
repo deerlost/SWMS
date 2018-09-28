@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加物料</title>
+    <meta charset="utf-8" />
+    <script src="../../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../../part/layer/layer.js"></script>
+    <script src="../../../../js/common.js"></script>
+    <link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../../css/common.css" rel="stylesheet" />
+    <link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+    <script src="../../../../js/jquery.inossem.grid.js"></script>
+    <style>
+        .search div {
+            min-height:42px;
+            line-height:30px;
+        }
+        .icon-search{
+            background: url(../../../../img/icon-search.png) 4px 4px no-repeat;
+            position: absolute;
+            top: 3px;
+            right: 0;
+            width: 29px;
+            height: 28px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        var indexdata=null,g1=null;
+        //查找物料数据
+        function search(){
+            if($(".btn_search").val()==""){
+                layer.msg("请输入单据编号")
+                return false
+            }
+            var obj={
+                task_id:$(".btn_search").val(),
+                receipt_type:1
+            }
+            showloading();
+            var url=uriapi+"/biz/input/urgent/transport/select_stock_task";
+            ajax(url,"get",obj,function(data){
+                if(data.head.status==true){
+                    layer.close(indexloading);
+                    indexdata=data.body
+                    dataBindTable()
+                }else{
+                    layer.close(indexloading)
+                }
+            }, function(e) {
+                layer.close(indexloading);
+            })
+        }
+
+        //绑定表格
+        function dataBindTable(){
+            if(g1==null){
+                g1=$("#id_div_grid").iGrid({
+                    columns: [
+                        { th: '上架作业单号', col: 'stock_task_code', sort:false,width:150 },
+                        { th: '接收工厂', col: 'fty_name', sort:false},
+                        { th: '接收库存地点', col: ['location_code','location_name'], sort:false},
+                        { th: '创建人', col: 'create_user', sort:false,width:100 },
+                    ],
+                    data:null,
+                    checkbox:true,
+                    rownumbers:false,
+                    skin:"tablestyle4"
+                })
+            }else{
+                g1.showdata(indexdata)
+            }
+        }
+
+        //提交
+        function btn_submit(){
+            var data=[]
+            if($(".body .chk input:checked").length==0){
+                layer.msg("至少选择一条作业单")
+                return false
+            }
+            $(".body .chk input:checked").each(function(){
+                var index=$(this).val();
+                data.push(indexdata[index].item_id)
+            })
+            parent.init(data)
+            $(".btn_iframe_close_window").click()
+        }
+
+        $(function(){
+            dataBindTable()
+            $("input.btn_search").keyup(function (e) {
+                var keycode = e.which;
+                if (keycode == 13) {
+                    search();
+                }
+            });
+            $(".icon-search").click(function () {
+                search();
+            });
+        })
+    </script>
+</head>
+<body class="dialog">
+<div class="search">
+    <div class="col-xs-5 col-xs-offset-7 text-right">
+        <div style="position: relative">
+            <i class="icon-search"></i>
+            <input class="form-control btn_search" type="text" placeholder="输入单据编号">
+        </div>
+    </div>
+</div>
+<div id="id_div_grid"></div>
+<div class="submitbutton fixed">
+    <div class="col-xs-12">
+        <a href="javascript:void(0)" class="btn-lay-blue" onclick="btn_submit()">　添加　</a>
+        <a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　取消　</a>
+    </div>
+</div>
+</body>
+</html>

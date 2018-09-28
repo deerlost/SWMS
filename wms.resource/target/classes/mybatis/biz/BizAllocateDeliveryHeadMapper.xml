@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizAllocateDeliveryHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizAllocateDeliveryHead">
+    <id column="allocate_delivery_id" jdbcType="INTEGER" property="allocateDeliveryId" />
+    <result column="allocate_delivery_code" jdbcType="CHAR" property="allocateDeliveryCode" />
+    <result column="corp_id" jdbcType="INTEGER" property="corpId" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="delivery_date" jdbcType="TIMESTAMP" property="deliveryDate" />
+    <result column="delivery_vehicle" jdbcType="VARCHAR" property="deliveryVehicle" />
+    <result column="delivery_driver" jdbcType="VARCHAR" property="deliveryDriver" />
+    <result column="delivery_phone" jdbcType="VARCHAR" property="deliveryPhone" />
+    <result column="fty_output" jdbcType="INTEGER" property="ftyOutput" />
+    <result column="location_output" jdbcType="INTEGER" property="locationOutput" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    allocate_delivery_id, allocate_delivery_code, corp_id, create_user, delivery_date, 
+    delivery_vehicle, delivery_driver, delivery_phone, fty_output, location_output, remark, 
+    status, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_allocate_delivery_head
+    where allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_allocate_delivery_head
+    where allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryHead">
+    insert into biz_allocate_delivery_head (allocate_delivery_id, allocate_delivery_code, 
+      corp_id, create_user, delivery_date, 
+      delivery_vehicle, delivery_driver, delivery_phone, 
+      fty_output, location_output, remark, 
+      status, is_delete, create_time, 
+      modify_time)
+    values (#{allocateDeliveryId,jdbcType=INTEGER}, #{allocateDeliveryCode,jdbcType=CHAR}, 
+      #{corpId,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR}, #{deliveryDate,jdbcType=TIMESTAMP}, 
+      #{deliveryVehicle,jdbcType=VARCHAR}, #{deliveryDriver,jdbcType=VARCHAR}, #{deliveryPhone,jdbcType=VARCHAR}, 
+      #{ftyOutput,jdbcType=INTEGER}, #{locationOutput,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryHead">
+    <selectKey keyProperty="allocateDeliveryId" order="AFTER" resultType="java.lang.Integer">  
+        SELECT LAST_INSERT_ID()  
+    </selectKey>
+    
+    insert into biz_allocate_delivery_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="allocateDeliveryId != null">
+        allocate_delivery_id,
+      </if>
+      <if test="allocateDeliveryCode != null">
+        allocate_delivery_code,
+      </if>
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="deliveryDate != null">
+        delivery_date,
+      </if>
+      <if test="deliveryVehicle != null">
+        delivery_vehicle,
+      </if>
+      <if test="deliveryDriver != null">
+        delivery_driver,
+      </if>
+      <if test="deliveryPhone != null">
+        delivery_phone,
+      </if>
+      <if test="ftyOutput != null">
+        fty_output,
+      </if>
+      <if test="locationOutput != null">
+        location_output,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="allocateDeliveryId != null">
+        #{allocateDeliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="allocateDeliveryCode != null">
+        #{allocateDeliveryCode,jdbcType=CHAR},
+      </if>
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null">
+        #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deliveryVehicle != null">
+        #{deliveryVehicle,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDriver != null">
+        #{deliveryDriver,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryPhone != null">
+        #{deliveryPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="ftyOutput != null">
+        #{ftyOutput,jdbcType=INTEGER},
+      </if>
+      <if test="locationOutput != null">
+        #{locationOutput,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryHead">
+    update biz_allocate_delivery_head
+    <set>
+      <if test="allocateDeliveryCode != null">
+        allocate_delivery_code = #{allocateDeliveryCode,jdbcType=CHAR},
+      </if>
+      <if test="corpId != null">
+        corp_id = #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null">
+        delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deliveryVehicle != null">
+        delivery_vehicle = #{deliveryVehicle,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDriver != null">
+        delivery_driver = #{deliveryDriver,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryPhone != null">
+        delivery_phone = #{deliveryPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="ftyOutput != null">
+        fty_output = #{ftyOutput,jdbcType=INTEGER},
+      </if>
+      <if test="locationOutput != null">
+        location_output = #{locationOutput,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizAllocateDeliveryHead">
+    update biz_allocate_delivery_head
+    set allocate_delivery_code = #{allocateDeliveryCode,jdbcType=CHAR},
+      corp_id = #{corpId,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      delivery_vehicle = #{deliveryVehicle,jdbcType=VARCHAR},
+      delivery_driver = #{deliveryDriver,jdbcType=VARCHAR},
+      delivery_phone = #{deliveryPhone,jdbcType=VARCHAR},
+      fty_output = #{ftyOutput,jdbcType=INTEGER},
+      location_output = #{locationOutput,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where allocate_delivery_id = #{allocateDeliveryId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByConditionOnPagIng" parameterType="map" resultType="map">
+    SELECT
+		d.allocate_delivery_id,
+	    d.allocate_delivery_code,
+		d.corp_id,
+		d.create_user,
+		d.delivery_date,
+		d.delivery_vehicle,
+		d.delivery_driver,
+		d.delivery_phone,
+		d.fty_output,
+		d.location_output,
+		d.remark,
+		d.status,
+		d.create_time,
+		d.modify_time,
+		u.user_name create_user_name,
+		t1.corp_name,
+		t1.corp_code
+	FROM
+		biz_allocate_delivery_head d
+	INNER JOIN wms_user u ON u.user_Id = d.create_user
+	INNER JOIN dic_corp t1 ON t1.corp_id = u.corp_id
+	WHERE
+		d.is_delete = 0
+    <if test="createUser != null">
+       and d.create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+       and d.status = #{status,jdbcType=TINYINT}
+    </if>
+    <if test="allocateDeliveryId != null">
+       and d.allocate_delivery_id = #{allocateDeliveryId,jdbcType=BIGINT}
+    </if>
+    order by d.create_time desc
+  </select>
+</mapper>

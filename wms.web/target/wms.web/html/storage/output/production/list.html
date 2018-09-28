@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../../css/common.css" rel="stylesheet" />
+		<link href="../../../../css/datetimepicker.css" rel="stylesheet" />
+		<link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+		<script src="../../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../../part/layer/layer.js"></script>
+		<script src="../../../../js/jquery-bootstrap-pagination.js"></script>
+		<script src="../../../../js/datetimepicker.js"></script>
+		<script src="../../../../js/common.js"></script>
+		<script src="../../../../js/jquery.inossem.grid.js"></script>
+		<script src="../../../../js/jquery-bootstrap-pagination.js"></script>
+		<script type="text/javascript" src="../../../../js/page/storage/output/production/list.js"></script>
+	</head>
+	<style type="text/css">
+		.dateinfo {
+			position: absolute;
+			top: 0;
+			right: 30px;
+		}
+		.dateinfo input {
+			height: 30px;
+			line-height: 30px;
+			border: 1px #ccc solid;
+			border-radius: 3px;
+		}
+		.dateinfo a {
+			margin-left: 15px;
+		}
+	</style>
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article">
+				<div class="searchstyle3">
+					<a href="detail.html" class="btn-lay-blue">创建生产直发出库单</a>
+				</div>
+				<div class="search searchstyle1">
+				<input class="search ico ico-search" type="text" placeholder="创建生产直发出库单号,交货单号" />
+                <a href="javascript:void(0)" class="search"></a>
+					<div class="chkbox">
+						<div><label class="on"><input type="checkbox" checked="checked" value="0">&nbsp;未完成</label></div>
+						<div><label><input type="checkbox" checked="checked" value="5">&nbsp;已转储</label></div>
+						<div><label><input type="checkbox" checked="checked" value="8">&nbsp;已开票</label></div>
+						<div><label><input type="checkbox" checked="checked" value="10">&nbsp;已完成</label></div>
+					</div>
+				</div>
+				<div id="id_div_grid"></div>
+				<!-- 分页 -->
+				<div class="text-center" id="J_ListPagination"></div>
+			</div>
+
+		</div>
+	</body>
+
+</html>

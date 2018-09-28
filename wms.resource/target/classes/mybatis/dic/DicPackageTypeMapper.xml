@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicPackageTypeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.inossem.wms.model.dic.DicPackageType">
+		<id column="package_type_id" jdbcType="INTEGER"
+			property="packageTypeId" />
+		<result column="package_type_code" jdbcType="VARCHAR"
+			property="packageTypeCode" />
+		<result column="package_type_name" jdbcType="VARCHAR"
+			property="packageTypeName" />
+		<result column="package_standard_ch" jdbcType="VARCHAR"
+			property="packageStandardCh" />
+		<result column="package_standard" jdbcType="DECIMAL"
+			property="packageStandard" />
+		<result column="package_group_id" jdbcType="INTEGER"
+			property="packageGroupId" />
+		<result column="unit_id" jdbcType="INTEGER" property="unitId" />
+		<result column="size" jdbcType="VARCHAR" property="size" />
+		<result column="is_delete" jdbcType="TINYINT"
+			property="isDelete" />
+		<result column="sn_used" jdbcType="TINYINT" property="snUsed" />
+		<result column="classificat_id" jdbcType="INTEGER" property="classificatId" />
+		<result column="is_freeze" jdbcType="TINYINT" property="isFreeze" />
+		
+		
+		<result column="mat_unit_id" jdbcType="INTEGER" property="matUnitId" /> 
+		<result column="erp_batch_key" jdbcType="VARCHAR"	property="erpBatchKey" />
+		<result column="sn_serial_key" jdbcType="VARCHAR"	property="snSerialKey" />
+		
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		package_type_id, package_type_code, package_type_name, package_standard_ch,
+		package_standard,
+		package_group_id, unit_id, size, is_delete, sn_used,classificat_id,is_freeze,
+		mat_unit_id,erp_batch_key,sn_serial_key
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="classmap">
+		select
+		<include refid="Base_Column_List" />
+		from dic_package_type
+		where package_type_id = #{packageTypeId,jdbcType=INTEGER}
+	</select>
+	<select id="getPackageTypeAll" resultMap="BaseResultMap">
+	 select
+		<include refid="Base_Column_List" />
+		from dic_package_type
+	</select>
+	
+	<select id="getPackageTypeByMatUnitId" resultType="map" parameterType="java.lang.Integer">
+	     select
+	    t.*
+	    ,u.unit_code mat_unit_code,u.name_zh mat_unit_name
+		from dic_package_type t inner join dic_unit u on t.mat_unit_id=u.unit_id
+		<where>
+		<if test="_parameter!=null and _parameter!=''">		
+        t.mat_unit_id=#{id}
+		</if>		
+		</where>
+	</select>
+	
+	<select id="getPackageTypeBySnKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	     select
+	  <include refid="Base_Column_List" />
+		from dic_package_type t
+		<where>
+		<if test="_parameter!=null and _parameter!=''">		
+        t.sn_serial_key=#{snSerialKey}
+		</if>		
+		</where>
+	</select>
+	
+	<resultMap type="com.inossem.wms.model.dic.DicPackageType" id="classmap" extends="BaseResultMap">
+		<collection property="supplierList" column="package_type_id" select="com.inossem.wms.dao.dic.DicSupplierMapper.selectAllByPackageTypeId" />
+	</resultMap>
+	<select id="selectListByClass" resultMap="classmap">
+	 select
+		<include refid="Base_Column_List" />
+		from dic_package_type where is_delete=0 and is_freeze=0 and classificat_id=#{classificatId}
+	</select>
+	
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from dic_package_type
+		where package_type_id = #{packageTypeId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.inossem.wms.model.dic.DicPackageType">
+		insert into dic_package_type (package_type_id, package_type_code,
+		package_type_name,
+		package_standard_ch, package_standard, package_group_id,
+		unit_id, size, is_delete,
+		sn_used)
+		values (#{packageTypeId,jdbcType=INTEGER},
+		#{packageTypeCode,jdbcType=VARCHAR},
+		#{packageTypeName,jdbcType=VARCHAR},
+		#{packageStandardCh,jdbcType=VARCHAR},
+		#{packageStandard,jdbcType=DECIMAL},
+		#{packageGroupId,jdbcType=INTEGER},
+		#{unitId,jdbcType=INTEGER}, #{size,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT},
+		#{snUsed,jdbcType=TINYINT})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.inossem.wms.model.dic.DicPackageType">
+		insert into dic_package_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="packageTypeId != null">
+				package_type_id,
+			</if>
+			<if test="packageTypeCode != null">
+				package_type_code,
+			</if>
+			<if test="packageTypeName != null">
+				package_type_name,
+			</if>
+			<if test="packageStandardCh != null">
+				package_standard_ch,
+			</if>
+			<if test="packageStandard != null">
+				package_standard,
+			</if>
+			<if test="packageGroupId != null">
+				package_group_id,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="size != null">
+				size,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+			<if test="snUsed != null">
+				sn_used,
+			</if>
+			<if test="classificatId!=null">
+				classificat_id,
+			</if>
+			<if test="isFreeze!=null">
+				is_freeze,
+			</if>
+						
+				<if test="matUnitId!=null">
+				mat_unit_id,
+			</if>
+				<if test="erpBatchKey!=null">
+				erp_batch_key,
+			</if>
+				<if test="snSerialKey!=null">
+				sn_serial_key,
+			</if>
+			
+			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="packageTypeId != null">
+				#{packageTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="packageTypeCode != null">
+				#{packageTypeCode,jdbcType=VARCHAR},
+			</if>
+			<if test="packageTypeName != null">
+				#{packageTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="packageStandardCh != null">
+				#{packageStandardCh,jdbcType=VARCHAR},
+			</if>
+			<if test="packageStandard != null">
+				#{packageStandard,jdbcType=DECIMAL},
+			</if>
+			<if test="packageGroupId != null">
+				#{packageGroupId,jdbcType=INTEGER},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="size != null">
+				#{size,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="snUsed != null">
+				#{snUsed,jdbcType=TINYINT},
+			</if>
+			<if test="classificatId!=null">
+				#{classificatId,jdbcType=INTEGER},
+			</if>
+			<if test="isFreeze!=null">
+				#{isFreeze,jdbcType=TINYINT},
+			</if>
+			
+			<if test="matUnitId!=null">
+				#{matUnitId,jdbcType=TINYINT},
+			</if>
+			<if test="erpBatchKey!=null">
+				#{erpBatchKey,jdbcType=VARCHAR},
+			</if>
+			<if test="snSerialKey!=null">
+				#{snSerialKey,jdbcType=VARCHAR},
+			</if>		
+			
+			
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.inossem.wms.model.dic.DicPackageType">
+		update dic_package_type
+		<set>
+			<if test="packageTypeCode != null">
+				package_type_code = #{packageTypeCode,jdbcType=VARCHAR},
+			</if>
+			<if test="packageTypeName != null">
+				package_type_name = #{packageTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="packageStandardCh != null">
+				package_standard_ch = #{packageStandardCh,jdbcType=VARCHAR},
+			</if>
+			<if test="packageStandard != null">
+				package_standard = #{packageStandard,jdbcType=DECIMAL},
+			</if>
+			<if test="packageGroupId != null">
+				package_group_id = #{packageGroupId,jdbcType=INTEGER},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=INTEGER},
+			</if>
+			<if test="size != null">
+				size = #{size,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="snUsed != null">
+				sn_used = #{snUsed,jdbcType=TINYINT},
+			</if>
+			<if test="classificatId != null">
+				classificat_id = #{classificatId,jdbcType=TINYINT},
+			</if>
+			<if test="isFreeze != null">
+				is_freeze = #{isFreeze,jdbcType=TINYINT},
+			</if>
+			
+			<if test="matUnitId!=null">
+			mat_unit_id=	#{matUnitId,jdbcType=TINYINT},
+			</if>
+			<if test="erpBatchKey!=null">
+			erp_batch_key=	#{erpBatchKey,jdbcType=VARCHAR},
+			</if>
+			<if test="snSerialKey!=null">
+			sn_serial_key=	#{snSerialKey,jdbcType=VARCHAR},
+			</if>	
+			
+
+		</set>
+		where package_type_id = #{packageTypeId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.inossem.wms.model.dic.DicPackageType">
+		update dic_package_type
+		set package_type_code = #{packageTypeCode,jdbcType=VARCHAR},
+		package_type_name = #{packageTypeName,jdbcType=VARCHAR},
+		package_standard_ch = #{packageStandardCh,jdbcType=VARCHAR},
+		package_standard = #{packageStandard,jdbcType=DECIMAL},
+		package_group_id = #{packageGroupId,jdbcType=INTEGER},
+		unit_id = #{unitId,jdbcType=INTEGER},
+		size = #{size,jdbcType=VARCHAR},
+		is_delete = #{isDelete,jdbcType=TINYINT},
+		sn_used = #{snUsed,jdbcType=TINYINT}
+		where package_type_id = #{packageTypeId,jdbcType=INTEGER}
+	</update>
+
+	<resultMap type="com.inossem.wms.model.vo.DicPackageTypeVo"
+		id="BaseResultMapVo" extends="BaseResultMap">
+		<result column="unit_code" jdbcType="VARCHAR"
+			property="unitCode" />
+		<result column="name_zh" jdbcType="VARCHAR"
+			property="unitName" />	
+		<result column="package_id" jdbcType="INTEGER"
+			property="packageId" />
+		<result column="package_code" jdbcType="VARCHAR"
+			property="packageCode" />
+	</resultMap>
+
+	<!-- 包装页查询包类型集合 -->
+	<select id="selectDicPackageTypeList" parameterType="map"
+		resultMap="BaseResultMapVo">
+		SELECT
+		dic_unit.unit_id,
+		dic_unit.unit_code,
+		dic_unit.name_zh,
+		dic_package_type.sn_used,
+		dic_package_type.size,
+		dic_package_type.package_type_id,
+		dic_package_type.package_type_name,
+		dic_package_type.package_type_code,
+		dic_package_type.is_delete,
+		dic_package_type.package_group_id,
+		dic_package_type.package_standard,
+		dic_package_type.package_standard_ch,
+		serial_package.package_id,
+		serial_package.package_code
+		FROM serial_package
+		INNER JOIN dic_package_type ON
+		dic_package_type.`package_type_id`=serial_package.`package_type_id`
+		AND dic_package_type.`is_delete`=0  AND dic_package_type.is_freeze=0
+		INNER JOIN dic_unit ON dic_package_type.`unit_id`=dic_unit.`unit_id`
+		WHERE serial_package.package_code = #{keyword}
+	</select>
+
+	<!-- 判断包裹是否已经被包装单使用 -->
+	<select id="checkPkgIsUsed" resultType="int">
+		SELECT count(1) FROM biz_pkg_operation_position WHERE is_delete=0
+		 <if test="packageCode !=null and packageCode!=''">
+			 and package_code=#{packageCode}
+		 </if>
+		 <if test="packageId !=null">
+			 and package_id=#{packageId}
+		 </if>
+	</select>
+
+	<select id="selectDicPackageTypeById"
+		resultMap="BaseResultMapVo">
+		SELECT
+		dic_unit.unit_id,
+		dic_unit.unit_code,
+		dic_unit.name_en,
+		dic_unit.name_zh,
+		dic_package_type.sn_used,
+		dic_package_type.size,
+		dic_package_type.package_type_id,
+		dic_package_type.package_type_name,
+		dic_package_type.package_type_code,
+		dic_package_type.is_delete,
+		dic_package_type.package_group_id,
+		dic_package_type.package_standard,
+		dic_package_type.package_standard_ch
+		FROM dic_package_type INNER JOIN dic_unit ON
+		dic_package_type.`unit_id`=dic_unit.`unit_id`
+		where dic_package_type.package_type_id=#{packageTypeId}
+	</select>
+	<select id="selectByMatId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+		pt.package_type_id,
+		pt.package_type_code,
+		pt.package_type_name,
+		pt.package_standard_ch,
+		pt.package_standard / (case when u2.unit_code = 'KG' then 1 else 1000 end) package_standard,
+		pt.package_group_id,
+		pt.unit_id,
+		pt.size,
+		pt.is_delete,
+		pt.sn_used,
+		u.name_zh,
+		pt.erp_batch_key
+		FROM
+		dic_package_type pt
+		INNER JOIN dic_material_package_type mpt ON pt.package_type_id =
+		mpt.package_type_id
+		inner JOIN dic_material on mpt.mat_id=dic_material.mat_id
+		INNER JOIN dic_unit u2 ON dic_material.unit_id = u2.unit_id
+		INNER JOIN dic_unit u ON u.unit_id = pt.unit_id
+		WHERE
+		pt.is_delete = 0 and mpt.is_freeze=0
+		AND mpt.mat_id = #{matId,jdbcType=INTEGER}
+	</select>
+	<resultMap extends="BaseResultMap" id="BaseResultMapViewVo"
+		type="com.inossem.wms.model.vo.DicPackageTypeViewVo">
+		<result column="unit_code" jdbcType="VARCHAR"
+			property="unitCode" />
+		<result column="unit_name" jdbcType="VARCHAR"
+			property="unitName" />
+		<result column="classificat_name" jdbcType="VARCHAR"
+			property="classificatName" />
+		<result column="unit_code" jdbcType="VARCHAR"
+			property="unitCode" />
+		<result column="name_zh" jdbcType="VARCHAR" property="nameZh" />
+		
+		<result column="mat_unit_code" jdbcType="VARCHAR"
+			property="matUnitCode" />
+		<result column="mat_unit_name" jdbcType="VARCHAR"
+			property="matUnitName" />
+		<result column="mat_name_zh" jdbcType="VARCHAR" property="matNameZh" />
+		
+	</resultMap>
+
+	<select id="selectPackageOnpaging" parameterType="map"
+		resultMap="BaseResultMapViewVo">
+		select t.*,
+		c.classificat_id,
+		c.classificat_name,
+		u.unit_id,
+		u.unit_code,
+		u.name_zh,
+        mu.unit_id  mat_unit_id,
+		mu.unit_code  mat_unit_code,
+		mu.name_zh mat_name_zh
+		from dic_package_type t left join dic_pack_classification c on  t.classificat_id=c.classificat_id 
+	    inner join dic_unit u on 	t.unit_id=u.unit_id 
+	    inner join dic_unit mu on mu.unit_id=t.mat_unit_id
+	    where t.is_delete=0		
+		<if test="condition!=null and condition!=''">
+			and t.package_type_code like CONCAT('%',#{condition},'%' )
+			or
+			t.package_type_name like CONCAT('%',#{condition},'%' ) or
+			c.classificat_name like CONCAT('%',#{condition},'%' )
+		</if>
+	</select>
+
+	<update id="updateFreezeByPackIds" parameterType="Integer[]">
+		update dic_package_type t set t.is_freeze=1
+		<where>
+			package_type_id
+			<foreach collection="array" item="id" open="in (" close=")"
+				separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</update>
+
+
+	<update id="updateByPackId" parameterType="java.lang.Integer">
+		update dic_package_type t set t.is_delete=1
+		<where>
+			<if test="_parameter!=null and _parameter!=''">
+				t.package_type_id=#{id,jdbcType=INTEGER}
+			</if>
+		</where>
+	</update>
+
+   <select id="getCountByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+   select count(*) from dic_package_type p
+   <where>
+   <if test="_parameter!=null and _parameter!=''">
+    p.package_type_code =#{code}   
+   </if>
+   
+   </where>   
+
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,2164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizUrgenceHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizUrgenceHead">
+    <id column="urgence_id" jdbcType="INTEGER" property="urgenceId" />
+    <result column="urgence_code" jdbcType="CHAR" property="urgenceCode" />
+    <result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="demand_dept" jdbcType="VARCHAR" property="demandDept" />
+    <result column="demand_person" jdbcType="VARCHAR" property="demandPerson" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMapVo" type="com.inossem.wms.model.vo.BizUrgenceResVo">
+	<id column="urgence_id" jdbcType="INTEGER" property="urgenceId" />
+	<result column="urgence_code" jdbcType="CHAR" property="urgenceCode" />
+	<result column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="item_id" jdbcType="INTEGER" property="itemId" />
+	<result column="receipt_type_name" jdbcType="VARCHAR" property="receiptTypeName" />
+	<result column="urgence_rid" jdbcType="INTEGER" property="urgenceRid" />
+	<result column="mat_id" jdbcType="INTEGER" property="matId" />
+	<result column="mat_code" jdbcType="VARCHAR" property="matCode" />
+	<result column="mat_name" jdbcType="VARCHAR" property="matName" />
+	<result column="location_name" jdbcType="VARCHAR" property="locationName" />
+	<result column="location_code" jdbcType="VARCHAR" property="locationCode" />
+	<result column="fty_code" jdbcType="VARCHAR" property="ftyCode" />
+	<result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+	<result column="unit_id" jdbcType="INTEGER" property="unitId" />
+	<result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+	<result column="qty" jdbcType="DECIMAL" property="qty" />
+	<result column="status" jdbcType="TINYINT" property="status" />
+	<result column="status_name" jdbcType="VARCHAR" property="statusName" />
+	<result column="create_time" jdbcType="VARCHAR" property="createTime" />
+	<result column="demand_dept" jdbcType="VARCHAR" property="demandDept" />
+	<result column="demand_person" jdbcType="VARCHAR" property="demandPerson" />
+	<result column="user_name" jdbcType="VARCHAR" property="userName" />
+	<result column="operation_time" jdbcType="TIMESTAMP" property="operationTime" />
+	<result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="relate_receipt_code" jdbcType="VARCHAR" property="relateReceiptCode" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+	<result column="area_name" jdbcType="VARCHAR" property="areaName" />
+	<result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+	 <result column="position_id" jdbcType="INTEGER" property="positionId" />
+	<result column="position_code" jdbcType="VARCHAR" property="positionCode" />
+	 <result column="relate_receipt_id" jdbcType="INTEGER" property="relateReceiptId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    urgence_id, urgence_code, receipt_type, fty_id, location_id, demand_dept, demand_person, 
+    remark, create_user, modify_user, is_delete, create_time, modify_time
+  </sql>
+  
+   <select id="listBizUrgenceHeadOnPaging" parameterType="com.inossem.wms.model.vo.BizUrgenceReqVo" resultMap="BaseResultMapVo">
+		  SELECT CASE WHEN bh.receipt_type = '101' THEN '紧急入库'
+						WHEN bh.receipt_type = '102' THEN '紧急出库'
+						WHEN bh.receipt_type = '103' THEN '工器具借用' END receipt_type_name,
+						bh.receipt_type,
+						bh.urgence_id,
+						bh.urgence_code,
+						bt.urgence_rid,						
+						dm.mat_code,
+IF(bt.mat_id=0,bt.mat_name,dm.mat_name) mat_name,
+						df.fty_name,
+						bh.location_id,
+						dsl.location_name,
+IF(bt.unit_id=0,bt.unit_code,du.unit_code) unit_code,						
+						IFNULL(bt.qty,0) qty,
+					CASE WHEN bt.status = '1' THEN '草稿'
+						WHEN bt.status = '2' THEN '已提交'
+						WHEN bt.status = '3' THEN '已处理' END status_name,
+		date_format(bh.create_time,'%Y-%m-%d') create_time,
+						wu.user_name,
+						bh.demand_dept,
+						bh.demand_person,
+						bt.operator,
+		date_format(bt.operation_date,'%Y-%m-%d') operation_time,
+						
+						bh.remark
+		FROM biz_urgence_head bh 
+		INNER JOIN biz_urgence_item bt ON bh.urgence_id = bt.urgence_id
+		LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+	  LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id,
+dic_factory df,
+dic_stock_location dsl,
+wms_user wu 
+WHERE		 
+		 bh.fty_id = df.fty_id
+		AND bh.location_id = dsl.location_id
+		AND bh.create_user = wu.user_id
+		AND bh.is_delete='0'
+		AND bt.is_delete='0'		
+		AND df.is_delete='0'
+		AND dsl.is_delete='0'
+		<if test="receiptType != null and receiptType !='' " >
+		AND bh.receipt_type=#{receiptType}
+		</if>
+		<if test="status != null and status !='' " >
+		AND bt.status=#{status}
+		</if>
+		<if test="condition != null and condition!='' " >
+		  AND ( bh.urgence_code LIKE CONCAT('%',#{condition},'%' ) 
+		     OR dm.mat_code LIKE CONCAT('%',#{condition},'%' )
+		     OR dm.mat_name LIKE CONCAT('%',#{condition},'%' )
+		     OR bt.mat_name LIKE CONCAT('%',#{condition},'%' )
+		     OR df.fty_name LIKE CONCAT('%',#{condition},'%' )
+		     OR dsl.location_name LIKE CONCAT('%',#{condition},'%' )
+		   )
+	</if>
+	order by bh.urgence_code desc
+
+  </select>
+  
+  
+   <select id="listBizDocUrgenceHeadOnPaging" parameterType="java.util.HashMap" resultMap="BaseResultMapVo">
+		SELECT 
+			CASE 
+				WHEN bh.receipt_type = '101' THEN '紧急入库'
+				WHEN bh.receipt_type = '102' THEN '紧急出库'
+				WHEN bh.receipt_type = '103' THEN '工器具借用' 
+			END receipt_type_name,
+			bh.receipt_type,
+			bh.urgence_id,
+			bh.urgence_code,
+			bt.urgence_rid,						
+			dm.mat_code,
+			IF(bt.mat_id=0,bt.mat_name,dm.mat_name) mat_name,
+			df.fty_name,
+			bh.location_id,
+			dsl.location_name,
+			IF(bt.unit_id=0,'',du.name_zh) unit_code,						
+			IFNULL(bt.qty,0) qty,
+			bt.status,
+			CASE 
+				WHEN bt.status = '1' THEN '草稿'
+				WHEN bt.status = '2' THEN '已提交'
+				WHEN bt.status = '3' THEN '已处理' 
+			END status_name,
+			DATE_FORMAT(bh.create_time,'%Y-%m-%d') create_time,
+			wu.user_name,
+			bh.demand_dept,
+			bh.demand_person,
+			bt.operator,
+			bt.relate_receipt_code,
+			DATE_FORMAT(bt.operation_date,'%Y-%m-%d') operation_time,
+			bh.remark
+		FROM biz_urgence_head bh 
+		INNER JOIN biz_urgence_item bt ON bh.urgence_id = bt.urgence_id 
+			AND bh.is_delete='0' AND bt.is_delete='0'		
+		<if test="receiptTypeArray != null" >
+			AND bh.receipt_type IN 
+			<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+	        	#{item}  
+	    	</foreach> 
+		</if>
+		<if test="relateReceiptCode != null and relateReceiptCode !=''" >
+			AND bt.relate_receipt_code = #{relateReceiptCode,jdbcType=VARCHAR}
+		</if>
+		<if test="urgenceCode != null and urgenceCode !=''" >
+			AND bh.urgence_code = #{urgenceCode,jdbcType=VARCHAR}
+		</if>
+		<if test="state != null and state !='' " >
+			AND bt.status=#{state}
+		</if>
+		<if test="operationTime != null and operationTime !=''" >
+			AND DATE_FORMAT(bt.operation_date,'%Y-%m-%d') = #{operationTime,jdbcType=VARCHAR}
+		</if>
+		<if test="demandPerson != null and demandPerson !=''" >
+			AND bh.demand_person = #{demandPerson,jdbcType=VARCHAR}
+		</if>
+		<if test="demandDept != null and demandDept !=''" >
+			AND bh.demand_dept = #{demandDept,jdbcType=VARCHAR}
+		</if>
+   		<if test="startdate != null and startdate !=''" >
+			AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+		</if>
+		<if test="enddate != null and enddate !=''" >
+			AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+		</if>
+		INNER JOIN dic_stock_location dsl ON bh.location_id = dsl.location_id
+			AND dsl.is_delete='0'
+		INNER JOIN wms_user wu ON bh.create_user = wu.user_id
+		<if test="operator != null and operator !=''" >
+			AND wu.user_name = #{operator,jdbcType=VARCHAR}
+		</if>
+		LEFT JOIN dic_material dm ON bt.mat_id = dm.mat_id AND dm.is_delete='0'
+		LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+		LEFT JOIN dic_factory df ON bh.fty_id = df.fty_id	
+		WHERE df.is_delete='0'
+		<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						OR 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	AND 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+		
+		
+  </select>
+  
+  
+  
+   <select id="listBizDocUrgenceType" parameterType="java.util.HashMap" resultMap="BaseResultMapVo">
+		  SELECT DISTINCT bh.receipt_type 
+		FROM biz_urgence_head bh 
+		INNER JOIN biz_urgence_item bt ON bh.urgence_id = bt.urgence_id
+		LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+	  LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id,
+dic_factory df,
+dic_stock_location dsl,
+wms_user wu 
+WHERE		 
+		 bh.fty_id = df.fty_id
+		AND bh.location_id = dsl.location_id
+		AND bh.create_user = wu.user_id
+		AND bh.is_delete='0'
+		AND bt.is_delete='0'		
+		AND df.is_delete='0'
+		AND dsl.is_delete='0'
+		
+		<if test="receiptTypeArray != null" >
+		and bh.receipt_type in 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+               					#{item}  
+    	</foreach> 
+   		 </if>
+   		 <if test="startdate != null and startdate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+		</if>
+		<if test="enddate != null and enddate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+		</if>
+		<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+		</if>
+		<if test="matArray != null">
+			and dm.mat_code in
+			<foreach collection="matArray" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+		
+		<if test="relateReceiptCode != null and relateReceiptCode !=''" >
+		and bt.relate_receipt_code = #{relateReceiptCode,jdbcType=VARCHAR}
+		</if>
+		<if test="urgenceCode != null and urgenceCode !=''" >
+		and bh.urgence_code = #{urgenceCode,jdbcType=VARCHAR}
+		</if>
+		<if test="state != null and state !='' " >
+		AND bt.status=#{state}
+		</if>
+		<if test="operationTime != null and operationTime !=''" >
+		and date_format(bt.operation_date,'%Y-%m-%d') = #{operationTime,jdbcType=VARCHAR}
+		</if>
+		<if test="demandPerson != null and demandPerson !=''" >
+		and bh.demand_person = #{demandPerson,jdbcType=VARCHAR}
+		</if>
+		<if test="demandDept != null and demandDept !=''" >
+		and bh.demand_dept = #{demandDept,jdbcType=VARCHAR}
+		</if>
+
+
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   <select id="listBizUrgenceForApp" parameterType="com.inossem.wms.model.vo.BizUrgenceReqVo" resultMap="BaseResultMapVo">
+		  SELECT CASE WHEN bh.receipt_type = '101' THEN '紧急入库'
+						WHEN bh.receipt_type = '102' THEN '紧急出库'
+						WHEN bh.receipt_type = '103' THEN '工器具借用' END receipt_type_name,
+						bh.receipt_type,
+						bh.urgence_id,
+						bh.urgence_code,
+						bt.urgence_rid,						
+						dm.mat_code,
+	IF(bt.mat_id=0,bt.mat_name,dm.mat_name) mat_name,
+						df.fty_name,
+						bh.location_id,
+						dsl.location_name,
+	IF(bt.unit_id=0,bt.unit_code,du.unit_code) unit_code,						
+						IFNULL(bt.qty,0) qty,
+					CASE WHEN bt.status = '1' THEN '草稿'
+						WHEN bt.status = '2' THEN '已提交'
+						WHEN bt.status = '3' THEN '已处理' END status_name,
+		date_format(bh.create_time,'%Y-%m-%d') create_time,
+						wu.user_name,
+						bh.demand_dept,
+						bh.demand_person,
+						bt.operator,
+		date_format(bt.operation_date,'%Y-%m-%d') operation_time,
+						
+						bh.remark
+		FROM biz_urgence_head bh 
+		INNER JOIN biz_urgence_item bt ON bh.urgence_id = bt.urgence_id
+		LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+	  LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id,
+dic_factory df,
+dic_stock_location dsl,
+wms_user wu 
+WHERE		 
+		 bh.fty_id = df.fty_id
+		AND bh.location_id = dsl.location_id
+		AND bh.create_user = wu.user_id
+		AND bh.is_delete='0'
+		AND bt.is_delete='0'		
+		AND df.is_delete='0'
+		AND dsl.is_delete='0'
+		
+		<if test="condition != null and condition!='' " >
+		  AND ( bh.urgence_code LIKE CONCAT('%',#{condition},'%' ) 
+		     OR dm.mat_code LIKE CONCAT('%',#{condition},'%' )
+		     OR dm.mat_name LIKE CONCAT('%',#{condition},'%' )
+		     OR bt.mat_name LIKE CONCAT('%',#{condition},'%' )
+		     OR df.fty_name LIKE CONCAT('%',#{condition},'%' )
+		     OR dsl.location_name LIKE CONCAT('%',#{condition},'%' )
+		   )
+	</if>
+
+
+  </select>
+  
+   <select id="selectHeadById" parameterType="java.lang.Integer" resultMap="BaseResultMapVo">
+		  SELECT CASE WHEN bh.receipt_type = '101' THEN '紧急入库'
+						WHEN bh.receipt_type = '102' THEN '紧急出库'
+						WHEN bh.receipt_type = '103' THEN '工器具借用' END receipt_type_name,
+						bh.urgence_id,
+						bh.urgence_code,
+						bh.receipt_type,
+						bh.fty_id,
+						bh.location_id,
+						df.fty_name,
+						df.fty_code,
+						dsl.location_name,
+						dsl.location_code,
+		date_format(bh.create_time,'%Y-%m-%d') create_time,
+						wu.user_name,
+						bh.demand_dept,
+						bh.demand_person,
+						bh.remark
+		FROM biz_urgence_head bh,
+		dic_factory df,
+		dic_stock_location dsl,
+		wms_user wu 
+		WHERE bh.fty_id = df.fty_id
+		AND bh.location_id = dsl.location_id
+		AND bh.create_user = wu.user_id
+		AND bh.is_delete='0'
+		AND df.is_delete='0'
+		AND dsl.is_delete='0'
+		AND bh.urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="selectItemById" parameterType="java.lang.Integer" resultMap="BaseResultMapVo">
+		  			SELECT	
+		  			 bt.item_id,
+						bt.urgence_rid,
+						dm.mat_code,
+						bt.mat_id,
+						IF(bt.mat_id=0,bt.mat_name,dm.mat_name) mat_name,
+						bt.unit_id,
+						IF(bt.unit_id=0,bt.unit_code,du.unit_code) unit_code,
+						bt.area_id,
+						IF(bt.area_id=0,bt.area_code,da.area_code) area_code,
+						bt.position_id,
+						IF(bt.position_id=0,bt.position_code,dp.position_code) position_code,
+
+						IFNULL(bt.qty,0) qty,
+						bt.status,
+					CASE WHEN bt.status = '1' THEN '草稿'
+						WHEN bt.status = '2' THEN '已提交'
+						WHEN bt.status = '3' THEN '已处理' END status_name,
+						bt.operator,
+						wu.user_name,
+		date_format(bt.operation_date,'%Y-%m-%d') operation_time,
+		bt.relate_receipt_code,
+		bt.relate_receipt_id
+		FROM biz_urgence_item bt
+
+		LEFT JOIN dic_material dm ON  (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+		LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+		LEFT JOIN dic_warehouse_area da ON (bt.area_id = da.area_id AND da.is_delete='0')
+		LEFT JOIN dic_warehouse_position dp  ON (bt.position_id = 	dp.position_id AND dp.is_delete='0')
+		LEFT JOIN wms_user wu ON (bt.operator = wu.user_id)
+		WHERE	
+		 bt.is_delete='0'	  
+    AND bt.urgence_id=#{urgenceId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_urgence_head
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_urgence_head
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizUrgenceHead">
+    insert into biz_urgence_head (urgence_id, urgence_code, receipt_type, 
+      fty_id, location_id, demand_dept, 
+      demand_person, remark, create_user, 
+      modify_user, is_delete, create_time, 
+      modify_time)
+    values (#{urgenceId,jdbcType=INTEGER}, #{urgenceCode,jdbcType=CHAR}, #{receiptType,jdbcType=TINYINT}, 
+      #{ftyId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, #{demandDept,jdbcType=VARCHAR}, 
+      #{demandPerson,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{modifyUser,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizUrgenceHead"  useGeneratedKeys="true" keyProperty="urgenceId">
+    insert into biz_urgence_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="urgenceId != null">
+        urgence_id,
+      </if>
+      <if test="urgenceCode != null">
+        urgence_code,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="demandDept != null">
+        demand_dept,
+      </if>
+      <if test="demandPerson != null">
+        demand_person,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="modifyUser != null">
+        modify_user,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="urgenceId != null">
+        #{urgenceId,jdbcType=INTEGER},
+      </if>
+      <if test="urgenceCode != null">
+        #{urgenceCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="demandDept != null">
+        #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="demandPerson != null">
+        #{demandPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizUrgenceHead">
+    update biz_urgence_head
+    <set>
+      <if test="urgenceCode != null">
+        urgence_code = #{urgenceCode,jdbcType=CHAR},
+      </if>
+      <if test="receiptType != null">
+        receipt_type = #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="demandDept != null">
+        demand_dept = #{demandDept,jdbcType=VARCHAR},
+      </if>
+      <if test="demandPerson != null">
+        demand_person = #{demandPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizUrgenceHead">
+    update biz_urgence_head
+    set urgence_code = #{urgenceCode,jdbcType=CHAR},
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      demand_dept = #{demandDept,jdbcType=VARCHAR},
+      demand_person = #{demandPerson,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      modify_user = #{modifyUser,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateById" parameterType="com.inossem.wms.model.biz.BizUrgenceHead">
+    update biz_urgence_head
+    set 
+      receipt_type = #{receiptType,jdbcType=TINYINT},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      demand_dept = #{demandDept,jdbcType=VARCHAR},
+      demand_person = #{demandPerson,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      modify_user = #{modifyUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="deleteHead" parameterType="com.inossem.wms.model.biz.BizUrgenceHead">
+    update biz_urgence_head
+    set 
+      modify_user = #{modifyUser,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT}
+    where urgence_id = #{urgenceId,jdbcType=INTEGER}
+  </update>
+  
+   <!-- 查询入库关联号 -->
+  <select id="selectInOrder" parameterType="map" resultType ="map">
+		  SELECT 
+		DISTINCT bh.stock_input_id stock_input_id,
+		IFNULL(bh.purchase_order_code, '') purchase_order_code,
+		date_format(bh.create_time, '%Y-%m-%d') create_time,
+		bh.stock_input_code stock_input_code,
+		bh.supplier_name supplier_name
+		FROM  
+		biz_stock_input_head bh 
+		INNER JOIN biz_stock_input_item bt ON bh.stock_input_id = bt.stock_input_id
+		LEFT JOIN dic_material dm ON bt.mat_id = dm.mat_id
+		WHERE bh.receipt_type IN (21, 22, 27)
+		AND bh.is_delete = 0
+		AND bt.write_off = '0'
+		AND bt.is_delete = '0'
+		AND bt.location_id = #{locationId}
+		<if test="condition != null and condition !='' " >
+		AND (
+		dm.mat_code like CONCAT('%',#{condition},'%' ) 
+		OR dm.mat_name like CONCAT('%',#{condition},'%' )
+		OR bh.purchase_order_code like CONCAT('%',#{condition},'%' )
+		OR bh.supplier_name like CONCAT('%',#{condition},'%' )
+		OR bh.stock_input_code like CONCAT('%',#{condition},'%' )
+		)
+		</if>
+		ORDER BY purchase_order_code
+
+  </select>
+
+
+	<select id="selectOutOrder" parameterType="map" resultType="map">
+		SELECT DISTINCT 
+		bh.stock_output_id,
+		bh.refer_receipt_code,
+		date_format(bh.create_time, '%Y-%m-%d') create_time,
+		bh.stock_output_code,
+		u.user_name userName
+		FROM
+		biz_stock_output_head bh
+		INNER JOIN biz_stock_output_item bt ON bh.stock_output_id =
+		bt.stock_output_id
+		LEFT JOIN dic_material dm ON bt.mat_id = dm.mat_id
+		left join wms_user u on u.user_id = bh.create_user
+		WHERE bh.receipt_type = 41
+		AND bh.is_delete = 0
+		AND bt.location_id = #{locationId}
+		AND bt.write_off = '0'
+		AND bt.is_delete = '0'
+		<if test="condition != null and condition !='' ">
+			AND (
+			bh.stock_output_code LIKE CONCAT('%',#{condition},'%' )
+			OR dm.mat_code LIKE CONCAT('%',#{condition},'%' )
+			OR dm.mat_name LIKE CONCAT('%',#{condition},'%' )
+			OR bh.refer_receipt_code LIKE CONCAT('%',#{condition},'%' )
+			OR u.user_name like CONCAT('%',#{condition},'%' )
+			)
+		</if>
+		ORDER BY bh.stock_output_code
+	</select>
+	
+	<select id="getOutMat" parameterType="map" resultType="map">
+		   SELECT  <if test="receiptType != null and receiptType==53">
+						'1' target_mat_flag,
+				   </if>
+				   <if test="receiptType != null and receiptType!=53">
+						'0' target_mat_flag,
+				   </if>
+						dm.mat_id,
+						dm.mat_code,
+						dm.mat_name,
+		 CASE sp.spec_stock
+						WHEN 'E' THEN '现有订单'
+						WHEN 'K' THEN '寄售'
+						WHEN 'O' THEN '供应商分包库存'
+						WHEN 'P' THEN '项目库存'
+						ELSE '' END spec_stock_name,
+						sp.spec_stock,
+						sp.spec_stock_code,
+						da.area_code,
+						dp.position_code,
+						sp.batch,
+						sp.qty,
+						date_format(sp.input_date, '%Y-%m-%d') input_date,
+						sp.unit_id,
+						du.unit_code,
+						du.name_zh unit_name,
+						du.decimal_place,
+						sp.area_id,
+						sp.position_id,
+						sp.id stock_position_id,
+						sp.fty_id
+		FROM 
+		stock_position sp INNER JOIN dic_material dm ON sp.mat_id = dm.mat_id
+		LEFT JOIN dic_warehouse_area da on sp.area_id = da.area_id
+		LEFT JOIN dic_warehouse_position dp on sp.position_id = dp.position_id
+		LEFT JOIN dic_unit du ON sp.unit_id = du.unit_id
+		WHERE sp.location_id=#{locationId}
+		<if test="condition != null and condition !='' ">
+		AND (dm.mat_code like CONCAT('%',#{condition},'%' ) OR dm.mat_name like CONCAT('%',#{condition},'%' ))
+		</if>
+		<if test="specStock != null">
+		  <if test="specStock == ''">
+		  AND sp.spec_stock = ''
+		  </if>
+		  <if test="specStock != ''">
+		  AND sp.spec_stock = #{specStock}
+		  </if>
+		</if>
+		  limit 50;
+  </select>
+	
+	  <select id="selectUserByIdAndType" parameterType="map" resultType ="map">
+		 	SELECT
+				ru.id,
+				ru.user_id,
+				ru.receipt_type,
+				ru.receipt_id,
+			wu.user_name,
+			dc.corp_name,
+			wu.org_name,
+			ru.role_id,
+			wr.role_name,
+			IFNULL(CASE WHEN ru.approve = 1 THEN '通过' WHEN ru.approve = 2 THEN '不通过' ELSE '未审批' END,'') approveName
+			FROM
+				wf_receipt_user ru,wms_user wu,dic_corp dc,wms_role wr
+			WHERE ru.receipt_id = #{receiptId,jdbcType=INTEGER} AND ru.receipt_type = #{receiptType,jdbcType=INTEGER}
+			AND ru.user_id = wu.user_id AND wu.corp_id = dc.corp_id AND ru.role_id = wr.role_id
+  </select>
+	
+	
+	
+   <select id="listBizDocInstockType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		 select distinct
+
+bh.receipt_type receiptType
+
+ from 
+biz_stock_input_head bh INNER JOIN biz_stock_input_item bt on bh.stock_input_id = bt.stock_input_id
+		LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+		 LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+		LEFT JOIN dic_move_type dy ON bh.move_type_id = dy.move_type_id
+		LEFT JOIN dic_factory df ON bt.fty_id = df.fty_id
+		LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+		LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+		LEFT JOIN biz_allocate_item ba ON bh.allocate_id = ba.allocate_id and bt.stock_input_rid = ba.allocate_rid
+		LEFT JOIN dic_factory dfy on ba.fty_output = dfy.fty_id
+		LEFT JOIN dic_stock_location dsln ON ba.location_output = dsln.location_id
+		LEFT JOIN biz_allocate_head bah ON bh.allocate_id = bah.allocate_id
+		LEFT JOIN biz_allocate_delivery_head badh ON bh.allocate_delivery_id = badh.allocate_delivery_id
+		
+		where 1=1 and bh.is_delete='0' and bt.is_delete='0'
+
+	<if test="ftyId != null">
+	 and bt.fty_id = #{ftyId,jdbcType=INTEGER}
+	</if>
+	<if test="locationId != null">
+	 and bt.location_id = #{locationId,jdbcType=INTEGER}
+	</if>		
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>
+	<if test="purchaseOrderCode != null and purchaseOrderCode != ''">
+	 and bh.purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR}
+	</if>
+	<if test="contractCode != null and contractCode != ''">
+	 and bh.contract_code = #{contractCode,jdbcType=VARCHAR}
+	</if>
+	<if test="stockInputCode != null and stockInputCode != ''">
+	 and bh.stock_input_code = #{stockInputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="supplierName != null and supplierName != ''">
+	 and bh.supplier_name = #{supplierName,jdbcType=VARCHAR}
+	</if>	
+	 <if test="startdate != null and startdate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>	
+	<if test="receiptTypeArray != null" >
+		and bh.receipt_type in 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+               					#{item}  
+    	</foreach> 
+   	</if>	
+	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+   <select id="listBizDocInstockOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT 		
+		bh.receipt_type receiptType,
+		CASE bh.receipt_type
+			WHEN 21 THEN '验收入库'
+			WHEN 22 THEN '免检入库'
+			WHEN 24 THEN '其它入库'
+			WHEN 25 THEN '调拨入库'
+			WHEN 27 THEN '招采入库'
+		END AS receiptTypeName,
+		bh.stock_input_id stockInputId,
+		bh.stock_input_code stockInputCode,
+		bt.stock_input_rid stockInputRid,
+		dm.mat_code matCode,
+		dm.mat_name matName,
+		du.unit_code unitCode,
+		du.name_zh unitName,
+		bt.qty qty,
+		IFNULL(dy.move_type_code,'')  moveTypeCode,
+		IFNULL(dy.move_type_name,'') moveTypeName,
+		df.fty_code ftyCode,
+		df.fty_name ftyName,
+		dsl.location_code locationCode,
+		dsl.location_name locationName,
+		bh.status status,
+		CASE bh.status
+			WHEN 0 THEN '未入库'
+			WHEN 10 THEN '已入库'
+		END AS statusName,
+		CASE  bt.write_off
+					 	WHEN 0 THEN '未冲销'
+					 	WHEN 1 THEN '已冲销'
+						end  as writeOffName,
+		DATE_FORMAT(bt.create_time,'%Y-%m-%d') createTime,
+		bh.create_user createUser,
+		wu.user_name userName,
+		bh.purchase_order_code purchaseOrderCode,
+		bh.contract_code contractCode,
+		bt.refer_receipt_code referReceiptCode,
+		bh.supplier_name supplierName,
+		IFNULL(dfy.fty_code,'') ftyOutCode,
+		IFNULL(dfy.fty_name,'') ftyOutName,
+		IFNULL(dsln.location_code,'') locationOutCode,
+		IFNULL(dsln.location_name,'') locationOutName,
+		IFNULL(bah.allocate_code,'') allocateCode,
+		IFNULL(badh.allocate_delivery_code,'') allocateDeliveryCode
+	FROM biz_stock_input_head bh 
+	INNER JOIN biz_stock_input_item bt on bh.stock_input_id = bt.stock_input_id
+		AND bh.is_delete='0' and bt.is_delete='0'
+	<if test="ftyId != null">
+		AND bt.fty_id = #{ftyId,jdbcType=INTEGER}
+	</if>
+	<if test="locationId != null">
+		AND bt.location_id = #{locationId,jdbcType=INTEGER}
+	</if>		
+	<if test="state != null and state !='' " >
+		AND bh.status = #{state}
+	</if>
+	<if test="purchaseOrderCode != null and purchaseOrderCode != ''">
+		AND bh.purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR}
+	</if>
+	<if test="contractCode != null and contractCode != ''">
+		AND bh.contract_code = #{contractCode,jdbcType=VARCHAR}
+	</if>
+	<if test="stockInputCode != null and stockInputCode != ''">
+		AND bh.stock_input_code = #{stockInputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="supplierName != null and supplierName != ''">
+		AND bh.supplier_name = #{supplierName,jdbcType=VARCHAR}
+	</if>	
+	 <if test="startdate != null and startdate !=''" >
+		AND DATE_FORMAT(bt.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		AND DATE_FORMAT(bt.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>
+	<if test="receiptTypeArray != null" >
+		AND bh.receipt_type IN 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+			#{item}  
+    	</foreach> 
+   	</if>	
+	INNER JOIN wms_user wu ON bh.create_user = wu.user_id	
+	<if test="operator != null and operator !=''" >
+		AND wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>	
+	INNER JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						OR 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	AND 
+				<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+					open="(" separator="or" close=")">
+					(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+				</foreach>
+			</otherwise>
+		</choose>
+    </if>
+	LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+	LEFT JOIN dic_move_type dy ON bh.move_type_id = dy.move_type_id
+	LEFT JOIN dic_factory df ON bt.fty_id = df.fty_id
+	LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+	LEFT JOIN biz_allocate_item ba ON bh.allocate_id = ba.allocate_id and bt.stock_input_rid = ba.allocate_rid
+	LEFT JOIN dic_factory dfy on ba.fty_output = dfy.fty_id
+	LEFT JOIN dic_stock_location dsln ON ba.location_output = dsln.location_id
+	LEFT JOIN biz_allocate_head bah ON bh.allocate_id = bah.allocate_id
+	LEFT JOIN biz_allocate_delivery_head badh ON bh.allocate_delivery_id = badh.allocate_delivery_id
+  </select>
+  
+  
+  <select id="listBizDocOutstockOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	SELECT bh.stock_output_id stockOutputId,
+		bh.stock_output_code stockOutputCode,
+		bh.receipt_type receiptType,
+		CASE 
+			WHEN bh.receipt_type = '41' THEN '领料出库'
+			WHEN bh.receipt_type = '42' THEN '销售出库'
+			WHEN bh.receipt_type = '43' THEN '采购退货'
+			WHEN bh.receipt_type = '44' THEN '其他出库'
+			WHEN bh.receipt_type = '45' THEN '调拨出库' 
+		END receiptName,
+		bt.stock_output_rid stockOutputRid,
+		dm.mat_code matCode,
+		dm.mat_name matName,
+		du.unit_code unitCode,
+		du.name_zh unitName,
+		bt.output_qty outputQty,
+		CASE WHEN bh.receipt_type = '44' THEN IFNULL(dy.move_type_code,'') ELSE '' END moveTypeCode,
+		CASE WHEN bh.receipt_type = '44' THEN IFNULL(dy.move_type_name,'') ELSE '' END moveTypeName,
+		CASE WHEN bh.receipt_type = '44' THEN (IFNULL((
+			SELECT MAX(spec_stock) 
+			FROM biz_stock_output_position 
+			WHERE stock_output_id = bt.stock_output_id  
+			AND stock_output_rid = bt.stock_output_rid),'')
+			) ELSE '' END specStock,
+		CASE WHEN bh.receipt_type = '44' THEN (IFNULL((
+			SELECT MAX(spec_stock_code) 
+			FROM biz_stock_output_position 
+			WHERE stock_output_id = bt.stock_output_id  
+			AND stock_output_rid = bt.stock_output_rid),'')
+			) ELSE '' END specStockCode,
+		IFNULL(df.fty_code,'') ftyCode,
+		IFNULL(df.fty_name,'') ftyName,
+		IFNULL(dsl.location_code,'') locationCode,
+		IFNULL(dsl.location_name,'') locationName,
+		bh.status status,
+		CASE bh.status
+			WHEN 0 THEN '未出库'
+			WHEN 10 THEN '已出库'
+		END AS statusName,
+		IFNULL(bt.write_off,0) writeOff,
+		CASE IFNULL(bt.write_off,0)
+			WHEN 0 THEN '未冲销'
+			WHEN 1 THEN '已冲销'
+			END AS writeOffName,
+		DATE_FORMAT(bh.create_time,'%Y-%m-%d') createTime,
+		wu.user_name userName,
+		IFNULL(bh.refer_receipt_code,'') referReceiptCode,
+		IFNULL(bh.preorder_id,'') preorderId,
+		IFNULL(bh.receive_code,'') receiveCode,
+		IFNULL(bh.receive_name,'') receiveName,
+		IFNULL(bh.receive_name,'') supplierName,
+		dm.mat_type matType,
+		IFNULL(dfy.fty_code,'') ftyInCode,
+		IFNULL(dfy.fty_name,'') ftyInName,
+		IFNULL(dsln.location_code,'') locationInCode,
+		IFNULL(dsln.location_name,'') locationInName
+	FROM biz_stock_output_head bh 
+	INNER JOIN biz_stock_output_item bt ON bh.stock_output_id = bt.stock_output_id
+		AND bh.is_delete='0' AND bt.is_delete='0'
+	<if test="ftyId != null">
+		AND bt.fty_id = #{ftyId,jdbcType=INTEGER}
+	</if>
+	<if test="locationId != null">
+		AND bt.location_id = #{locationId,jdbcType=INTEGER}
+	</if>		
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>	
+	<if test="purchaseCode != null and purchaseCode !=''" >
+		AND bh.refer_receipt_code = #{purchaseCode,jdbcType=VARCHAR}
+	</if>
+	<if test="saleCode != null and saleCode !=''" >
+		AND bh.refer_receipt_code = #{saleCode,jdbcType=VARCHAR}
+	</if>
+	<if test="matReqCode != null and matReqCode !=''" >
+		AND bh.refer_receipt_code = #{matReqCode,jdbcType=VARCHAR}
+	</if>
+	<if test="allocateCode != null and allocateCode !=''" >
+		AND bh.refer_receipt_code = #{allocateCode,jdbcType=VARCHAR}
+	</if>
+	<if test="contractCode != null and contractCode != ''">
+		AND bh.preorder_id = #{contractCode,jdbcType=VARCHAR}
+	</if>
+	<if test="stockOutputCode != null and stockOutputCode != ''">
+		AND bh.stock_output_code = #{stockOutputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="supplierName != null and supplierName !=''" >
+		AND bh.receive_name LIKE CONCAT('%',#{supplierName,jdbcType=VARCHAR},'%' )
+	</if>
+	<if test="receiveName != null and receiveName !=''" >
+		AND bh.receive_name LIKE CONCAT('%',#{receiveName,jdbcType=VARCHAR},'%' )
+	</if>
+	<if test="startdate != null and startdate !=''" >
+		AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	<if test="receiptTypeArray != null" >
+		AND bh.receipt_type IN 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+        	#{item}  
+    	</foreach> 
+   	</if>	
+	INNER JOIN dic_material dm ON bt.mat_id = dm.mat_id AND dm.is_delete='0'	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						OR 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	AND 
+				<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+					open="(" separator="or" close=")">
+					(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+				</foreach>
+			</otherwise>
+		</choose>
+    </if>
+	INNER JOIN wms_user wu ON bh.create_user = wu.user_id
+	<if test="operator != null and operator !=''" >
+		AND wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>	
+	LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+	LEFT JOIN dic_move_type dy ON bt.move_type_id = dy.move_type_id
+	LEFT JOIN dic_factory df ON bt.fty_id = df.fty_id
+	LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+	LEFT JOIN biz_allocate_head bah ON bh.refer_receipt_code = bah.allocate_id
+	LEFT JOIN dic_factory dfy on bah.fty_input = dfy.fty_id
+	LEFT JOIN dic_stock_location dsln ON bah.location_input = dsln.location_id
+  </select>
+  
+  
+  <select id="listBizDocOutstockType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+				select distinct
+bh.receipt_type receiptType
+from 
+biz_stock_output_head bh INNER JOIN biz_stock_output_item bt ON bh.stock_output_id = bt.stock_output_id
+LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+LEFT JOIN dic_move_type dy ON bt.move_type_id = dy.move_type_id
+LEFT JOIN dic_factory df ON bt.fty_id = df.fty_id
+		LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+LEFT JOIN biz_allocate_head bah ON bh.refer_receipt_code = bah.allocate_id
+LEFT JOIN dic_factory dfy on bah.fty_input = dfy.fty_id
+LEFT JOIN dic_stock_location dsln ON bah.location_input = dsln.location_id
+where 1=1 and bh.is_delete='0' and bt.is_delete='0'
+	<if test="ftyId != null">
+	 and bt.fty_id = #{ftyId,jdbcType=INTEGER}
+	</if>
+	<if test="locationId != null">
+	 and bt.location_id = #{locationId,jdbcType=INTEGER}
+	</if>		
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>
+	
+	<if test="purchaseCode != null and purchaseCode !=''" >
+		and bh.refer_receipt_code = #{purchaseCode,jdbcType=VARCHAR}
+	</if>
+	<if test="saleCode != null and saleCode !=''" >
+		and bh.refer_receipt_code = #{saleCode,jdbcType=VARCHAR}
+		</if>
+	<if test="matReqCode != null and matReqCode !=''" >
+		and bh.refer_receipt_code = #{matReqCode,jdbcType=VARCHAR}
+	</if>
+	<if test="allocateCode != null and allocateCode !=''" >
+		and bh.refer_receipt_code = #{allocateCode,jdbcType=VARCHAR}
+	</if>
+	<if test="contractCode != null and contractCode != ''">
+	 and bh.preorder_id = #{contractCode,jdbcType=VARCHAR}
+	</if>
+	<if test="stockOutputCode != null and stockOutputCode != ''">
+	 and bh.stock_output_code = #{stockOutputCode,jdbcType=VARCHAR}
+	</if>
+	<if test="supplierName != null and supplierName !=''" >
+		and bh.receive_name like CONCAT('%',#{supplierName,jdbcType=VARCHAR},'%' )
+	</if>
+	<if test="receiveName != null and receiveName !=''" >
+		and bh.receive_name like CONCAT('%',#{receiveName,jdbcType=VARCHAR},'%' )
+	</if>
+	 <if test="startdate != null and startdate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>	
+	<if test="receiptTypeArray != null" >
+		and bh.receipt_type in 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+               					#{item}  
+    	</foreach> 
+   	</if>	
+	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+   <select id="listBizDocTaskOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			bh.stock_task_id stockTaskId,
+			bh.stock_task_code stockTaskCode,
+			bt.stock_task_rid stockTaskRid,
+			DATE_FORMAT(bh.create_time,'%Y-%m-%d') createTime,
+			IFNULL(dsl.location_code,'') locationCode,
+			IFNULL(dsl.location_name,'') locationName,
+			dm.mat_code matCode,
+			dm.mat_name matName,
+			du.unit_code unitCode,
+			du.name_zh unitName,
+			bt.qty qty,
+			dw.area_code areaCode,
+			dw.area_name areaName,
+			dp.position_code positionCode,
+			wu.user_name userName		
+		FROM biz_stock_task_head bh 
+		INNER JOIN biz_stock_task_item bt ON bh.stock_task_id = bt.stock_task_id 
+			AND bh.is_delete='0' AND bt.is_delete = '0' AND bh.shipping_type = 'E' 
+		<if test="startdate != null and startdate !=''" >
+			AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+		</if>
+		<if test="enddate != null and enddate !=''" >
+			AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+		</if>
+		<if test="locationId != null">
+			AND bt.location_id = #{locationId,jdbcType=INTEGER}
+		</if>
+		<if test="stockTaskCode != null and stockTaskCode != ''">
+			AND bh.stock_task_code = #{stockTaskCode,jdbcType=VARCHAR}
+		</if>
+		INNER JOIN dic_material dm ON bt.mat_id = dm.mat_id AND dm.is_delete='0'
+		<if test="matnrMap != null ">
+	    	<choose>
+	        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+	        		<choose>
+	        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+	        				AND (dm.mat_code IN
+							<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+								open="(" separator="," close=")">
+								#{item.matnr}
+							</foreach>
+							OR 
+							<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+								open="(" separator="or" close=")">
+								(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+							</foreach>
+							)
+						</when>
+	 					<otherwise>
+	            			AND dm.mat_code IN
+							<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+								open="(" separator="," close=")">
+								#{item.matnr}
+							</foreach>
+						</otherwise>
+					</choose>
+				</when>
+	 			<otherwise>
+	            	AND 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+				</otherwise>
+			</choose>    
+	    </if>
+		INNER JOIN wms_user wu ON bh.create_user = wu.user_id
+		<if test="operator != null and operator !=''" >
+			AND wu.user_name = #{operator,jdbcType=VARCHAR}
+		</if>	
+		LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+		LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+		LEFT JOIN dic_warehouse_area dw ON bt.target_area_id = dw.area_id AND bt.wh_id = dw.wh_id
+		LEFT JOIN dic_warehouse_position dp ON bt.target_position_id = dp.position_id
+  </select>
+  
+  <select id="listBizDocTaskReqOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			bh.stock_task_req_id stockTaskReqId,
+			bh.stock_task_req_code stockTaskReqCode,
+			ANY_VALUE(bt.status)  status,
+			ANY_VALUE(CASE WHEN bt.status = 0 THEN '未完成' WHEN bt.status = 1 THEN '已完成' END) AS statusName,
+			bt.stock_task_req_rid stockTaskReqRid,
+			ANY_VALUE(dm.mat_code) AS matCode,
+			ANY_VALUE(dm.mat_name) AS matName,
+			ANY_VALUE(du.unit_code) AS unitCode,
+			ANY_VALUE(du.name_zh) AS unitName,
+			ANY_VALUE(dsl.location_code) AS locationCode,
+			ANY_VALUE(dsl.location_name) AS locationName,
+			CASE 
+				WHEN ANY_VALUE(bt.qty  - sublp.ysjsl) IS NULL THEN bt.qty 
+				ELSE ANY_VALUE(bt.qty  - sublp.ysjsl)
+			END as notTaskQty,
+			ANY_VALUE(bt.qty) as qty,					
+			GROUP_CONCAT(DISTINCT DATE_FORMAT(bh.create_time,'%Y-%m-%d') separator ',') AS createTime,
+			GROUP_CONCAT(distinct wu.user_name separator ',') AS userName,
+			ANY_VALUE(bmh.mat_doc_type) as matDocType, 
+			ANY_VALUE(bmt.refer_receipt_code) as referReceiptCode,
+			GROUP_CONCAT(DISTINCT IFNULL(bsh.stock_task_code, '') separator ',') AS stockSaskCode,
+			GROUP_CONCAT(DISTINCT IFNULL(dwa.area_code, '') separator',') AS areaCode,
+			GROUP_CONCAT(DISTINCT IFNULL(dwa.area_name, '') separator ',') AS areaName,
+			GROUP_CONCAT(DISTINCT IFNULL(dwp.position_code, '') separator ',') AS positionCode	
+		FROM biz_stock_task_req_head bh 
+		INNER JOIN biz_stock_task_req_item bt ON bh.stock_task_req_id = bt.stock_task_req_id
+			AND bh.is_delete='0' AND bt.is_delete = '0' AND bh.shipping_type = 'E' 
+		<if test="startdate != null and startdate !=''" >
+			AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+		</if>
+		<if test="enddate != null and enddate !=''" >
+			AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+		</if>	
+		<if test="status != null and status != ''">
+		      AND bt.status = #{status}
+		 </if>
+		<if test="locationId != null">
+			AND bt.location_id = #{locationId,jdbcType=INTEGER}
+		</if>
+		<if test="stockTaskReqCode != null and stockTaskReqCode != ''">
+			AND bh.stock_task_req_code = #{stockTaskReqCode,jdbcType=VARCHAR}
+		</if>
+		INNER JOIN biz_material_doc_head bmh ON bmh.mat_doc_id = bt.mat_doc_id
+		<if test="matDocType != null and matDocType != ''">
+			AND bmh.mat_doc_type = #{matDocType} 
+		</if>
+		INNER JOIN biz_material_doc_item bmt ON bmt.mat_doc_id = bt.mat_doc_id AND bmt.mat_doc_rid = bt.mat_doc_rid
+		INNER JOIN wms_user wu ON bh.create_user = wu.user_id
+		<if test="operator != null and operator !=''" >
+			AND wu.user_name = #{operator,jdbcType=VARCHAR}
+		</if>	
+		INNER JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+		<if test="matnrMap != null ">
+	    	<choose>
+	        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+	        		<choose>
+	        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+	        				AND (dm.mat_code IN
+							<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+								open="(" separator="," close=")">
+								#{item.matnr}
+							</foreach>
+							OR 
+							<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+								open="(" separator="or" close=")">
+								(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+							</foreach>
+							)
+						</when>
+	 					<otherwise>
+	            			AND dm.mat_code IN
+							<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+								open="(" separator="," close=")">
+								#{item.matnr}
+							</foreach>
+						</otherwise>
+					</choose>
+				</when>
+	 			<otherwise>
+	            	AND 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code BETWEEN #{item.matnr_begin,jdbcType=VARCHAR} AND #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+				</otherwise>
+			</choose>	    
+	    </if>
+		LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+		LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+		LEFT JOIN biz_stock_task_item bst on bst.stock_task_req_id = bt.stock_task_req_id and bst.stock_listing_req_rid=bt.stock_task_req_rid
+		LEFT JOIN biz_stock_task_head bsh ON bsh.stock_task_req_id = bh.stock_task_req_id
+		LEFT JOIN (
+			SELECT SUM(qty) AS ysjsl, stock_task_req_id, stock_listing_req_rid 
+			FROM biz_stock_task_item 
+			GROUP BY  stock_task_req_id, stock_listing_req_rid
+		) sublp ON sublp.stock_task_req_id = bt.stock_task_req_id AND sublp.stock_listing_req_rid = bt.stock_task_req_rid
+		LEFT JOIN dic_warehouse_area dwa  ON bst.target_area_id = dwa.area_id AND bst.wh_id = dwa.wh_id
+		LEFT JOIN dic_warehouse_position dwp ON bst.target_position_id = dwp.position_id
+		<where>
+			<if test="stockTaskCode != null and stockTaskCode != ''">
+				AND bsh.stock_task_code = #{stockTaskCode} 
+			</if>
+		</where> 
+		GROUP BY stockTaskReqId,stockTaskReqRid,notTaskQty
+  </select>
+  
+  <select id="listBizDocStockZlOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	SELECT
+		bh.stock_task_id stockTaskId,
+		bh.stock_task_code stockTaskCode,
+		bh.receipt_type receiptType,
+		bt.stock_task_rid stockTaskRid,
+		IFNULL(df.fty_code,'') ftyCode,
+		IFNULL(df.fty_name,'') ftyName,
+		IFNULL(dsl.location_code,'') locationCode,
+		IFNULL(dsl.location_name,'') locationName,
+		IFNULL(dwh.wh_code,'') whCode,
+		IFNULL(dwh.wh_name,'') whName,
+		dm.mat_code matCode,
+		dm.mat_name matName,
+		du.unit_code unitCode,
+		du.name_zh unitName,
+		IFNULL(dwa.area_code,'') sourceAreaCode,
+		IFNULL(dwp.position_code,'') sourcePositionCode,
+		bt.batch batch,
+		IFNULL(sb.qty,0) batchQty,
+		IFNULL(drwa.area_code,'') targetAreaCode,
+		IFNULL(drwp.position_code,'') targetPositionCode,
+		bt.qty,
+		bt.spec_stock specStock,
+		bt.spec_stock_code specStockCode,
+		date_format(bh.create_time,'%Y-%m-%d') createTime,
+		bh.create_user createUser,
+		wu.user_name userName
+	FROM biz_stock_task_head bh 
+	INNER JOIN biz_stock_task_item bt ON bh.stock_task_id = bt.stock_task_id
+	LEFT JOIN dic_factory df ON bh.fty_id = df.fty_id
+	LEFT JOIN dic_stock_location dsl ON bh.location_id = dsl.location_id
+	LEFT JOIN dic_warehouse dwh ON dwh.wh_id = bh.wh_id
+	LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+	LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+	LEFT JOIN dic_warehouse_area dwa ON dwa.area_id = bt.source_area_id
+	LEFT JOIN dic_warehouse_position dwp on dwp.position_id = bt.source_position_id
+	LEFT JOIN stock_batch sb on bt.batch = sb.batch and bt.mat_id = sb.mat_id
+	LEFT JOIN dic_warehouse_area drwa ON drwa.area_id = bt.target_area_id
+	LEFT JOIN dic_warehouse_position drwp on drwp.position_id = bt.target_position_id
+	LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+	WHERE bh.is_delete='0' AND bt.is_delete='0'
+	<if test="locationId != null">
+		AND bh.location_id = #{locationId,jdbcType=INTEGER}
+	</if>
+	
+	<if test="sourceAreaId != null">
+		AND bt.source_area_id = #{sourceAreaId,jdbcType=INTEGER}
+	</if>
+	<if test="sourcePositionId != null">
+		AND bt.source_position_id = #{sourcePositionId,jdbcType=INTEGER}
+	</if>
+	<if test="targetAreaId != null">
+		AND bt.target_area_id = #{targetAreaId,jdbcType=INTEGER}
+	</if>
+	<if test="targetPositionId != null">
+		AND bt.target_position_id = #{targetPositionId,jdbcType=INTEGER}
+	</if>
+	<if test="stockTaskCode != null and stockTaskCode != ''">
+		AND bh.stock_task_code = #{stockTaskCode,jdbcType=VARCHAR}
+	</if>
+	
+	<if test="receiptType != null and receiptType != ''">
+		AND bh.receipt_type = #{receiptType}
+	</if>
+	
+	<if test="startdate != null and startdate !=''" >
+		AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		AND DATE_FORMAT(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	<if test="operator != null and operator !=''" >
+		AND wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+  
+  <select id="listBizDocstockTransportOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			select 
+			bh.stock_transport_id stockTransportId,
+			bh.stock_transport_code stockTransportCode,
+			bt.stock_transport_rid stockTransportRid,
+			bt.stock_position_id stockPositionId,
+			dm.mat_code matCode,
+			dm.mat_name matName,
+			bt.batch batch,
+			dwh.wh_code whCode,
+			dwa.area_code areaCode,
+			dwp.position_code positionCode,
+			IFNULL(bt.transport_qty,0) transportQty,
+			du.unit_code unitCode,
+			du.name_zh unitName,
+			dfi.fty_code ftyInputCode,
+			dfi.fty_name ftyInputName,
+			dli.location_code locationInputCode,
+			dli.location_name locationInputName,
+			dmi.mat_code matInputCode,
+			bt.spec_stock_input specStockInput,
+			bt.spec_stock_code_input specStockCodeInput,
+			date_format(bt.create_time,'%Y-%m-%d') createTime,
+			date_format(bt.modify_time,'%Y-%m-%d') modifyTime,
+			bt.spec_stock_output specStockOutput,
+			bt.spec_stock_code_output specStockCodeOutput,
+			dfo.fty_code ftyOutputCode,
+			dfo.fty_name ftyOutputName,
+			dlo.location_code locationOutputCode,
+			dlo.location_name locationOutputName,
+			IFNULL(sp.qty,0)  totalQty,
+			bh.receipt_type receiptType,
+			bh.status status,
+			(
+			CASE
+			WHEN bh.status = 0 THEN
+				'未通过'
+			WHEN bh.status = 10 THEN
+				'已完成'
+			END
+		) AS statusName,
+			bh.create_user createUser,
+			wu.user_name userName
+			from biz_stock_transport_head bh INNER JOIN biz_stock_transport_item bt ON bh.stock_transport_id = bt.stock_transport_id
+			LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+			LEFT JOIN dic_warehouse dwh ON bt.wh_id = dwh.wh_id
+			LEFT JOIN dic_warehouse_area dwa ON dwa.area_id = bt.area_id
+			LEFT JOIN dic_warehouse_position dwp ON dwp.position_id = bt.position_id
+			LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+			LEFT JOIN dic_factory dfi ON bt.fty_input = dfi.fty_id
+			LEFT JOIN dic_stock_location dli ON bt.location_input = dli.location_id
+			LEFT JOIN dic_material dmi ON bt.mat_input = dmi.mat_id
+			LEFT JOIN dic_factory dfo ON bt.fty_id = dfo.fty_id
+			LEFT JOIN dic_stock_location dlo ON bt.location_id = dlo.location_id
+			LEFT JOIN stock_position sp ON bt.stock_position_id = sp.id
+			LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+			where 1=1 and bh.is_delete='0' and bt.is_delete='0'
+
+
+	<if test="stockTransportCode != null and stockTransportCode != ''">
+	 and bh.stock_transport_code = #{stockTransportCode,jdbcType=VARCHAR}
+	</if>
+	<if test="startdate != null and startdate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>
+	<if test="ftyOutId != null">
+	 and bt.fty_id = #{ftyOutId,jdbcType=INTEGER}
+	</if>
+	<if test="locationOutId != null">
+	 and bt.location_id = #{locationOutId,jdbcType=INTEGER}
+	</if>
+	<if test="ftyInputId != null">
+	 and bt.fty_input = #{ftyInputId,jdbcType=INTEGER}
+	</if>
+	<if test="locationInputId != null">
+	 and bt.location_input = #{locationInputId,jdbcType=INTEGER}
+	</if>
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>
+	<if test="receiptTypeArray != null" >
+		and bh.receipt_type in 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+               					#{item}  
+    	</foreach> 
+   	</if>	
+	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+  
+  
+   <select id="listBizDocTransportType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			select DISTINCT bh.receipt_type receiptType
+			
+			from biz_stock_transport_head bh INNER JOIN biz_stock_transport_item bt ON bh.stock_transport_id = bt.stock_transport_id
+			LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+			LEFT JOIN dic_warehouse dwh ON bt.wh_id = dwh.wh_id
+			LEFT JOIN dic_warehouse_area dwa ON dwa.area_id = bt.area_id
+			LEFT JOIN dic_warehouse_position dwp ON dwp.position_id = bt.position_id
+			LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+			LEFT JOIN dic_factory dfi ON bt.fty_input = dfi.fty_id
+			LEFT JOIN dic_stock_location dli ON bt.location_input = dli.location_id
+			LEFT JOIN dic_material dmi ON bt.mat_input = dmi.mat_id
+			LEFT JOIN dic_factory dfo ON bt.fty_id = dfo.fty_id
+			LEFT JOIN dic_stock_location dlo ON bt.location_id = dlo.location_id
+			LEFT JOIN stock_position sp ON bt.stock_position_id = sp.id
+			LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+			where 1=1 and bh.is_delete='0' and bt.is_delete='0'
+
+
+	<if test="stockTransportCode != null and stockTransportCode != ''">
+	 and bh.stock_transport_code = #{stockTransportCode,jdbcType=VARCHAR}
+	</if>
+	<if test="startdate != null and startdate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>
+	<if test="ftyOutId != null">
+	 and bt.fty_id = #{ftyOutId,jdbcType=INTEGER}
+	</if>
+	<if test="locationOutId != null">
+	 and bt.location_id = #{locationOutId,jdbcType=INTEGER}
+	</if>
+	<if test="ftyInputId != null">
+	 and bt.fty_input = #{ftyInputId,jdbcType=INTEGER}
+	</if>
+	<if test="locationInputId != null">
+	 and bt.location_input = #{locationInputId,jdbcType=INTEGER}
+	</if>
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>
+	<if test="receiptTypeArray != null" >
+		and bh.receipt_type in 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+               					#{item}  
+    	</foreach> 
+   	</if>	
+	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+  
+  
+   <select id="listBizDocstockReturnOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT
+bh.receipt_type receiptType,
+(
+			CASE
+			WHEN bh.receipt_type = 61 THEN
+				'领料退库'
+			WHEN bh.receipt_type = 62 THEN
+				'销售退库'
+			WHEN bh.receipt_type = 63 THEN
+				'预留退库'
+			END
+		) AS receiptTypeName,
+bh.return_id returnId,
+bh.return_code returnCode,
+bt.return_rid returnRid,
+dm.mat_code matCode,
+dm.mat_name matName,
+du.unit_code unitCode,
+du.name_zh unitName,
+bt.qty qty,
+dmt.move_type_code moveTypeCode,
+dmt.move_type_name moveTypeName,
+IFNULL(df.fty_code,'') ftyCode,
+IFNULL(df.fty_name,'') ftyName,
+IFNULL(dsl.location_code,'') locationCode,
+IFNULL(dsl.location_name,'') locationName,
+bh.status status,
+		(
+			CASE
+			WHEN bh.status = 0 THEN
+				'未退库'
+			WHEN bh.status = 10 THEN
+				'已退库'
+			END
+		) AS statusName,
+date_format(bh.create_time,'%Y-%m-%d') createTime,
+wu.user_name userName,
+ifnull(bh.refer_receipt_code,'') AS referReceiptCode,
+ifnull(bsh.stock_output_code ,'') stockOutputCode,
+ifnull(bh.refer_receipt_code,'') AS saleCode,
+		ifnull(bh.preorder_id,'') AS preorderId,
+		ifnull(bh.customer_name,'') AS customerName,
+		ifnull(bt.reserve_id,'') AS reserveCode,
+		ifnull(bh.reserve_cost_obj_code, '') as reserveCostObjCode,
+		ifnull(bh.reserve_cost_obj_name,'') AS reserveCostObjName
+from biz_stock_output_return_head bh INNER JOIN biz_stock_output_return_item bt ON bh.return_id = bt.return_id
+LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+LEFT JOIN dic_move_type dmt ON bt.move_type_id = dmt.move_type_id
+LEFT JOIN dic_factory df ON bt.fty_id = df.fty_id
+LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+LEFT JOIN biz_stock_output_head bsh ON bt.stock_output_id = bsh.stock_output_id
+			where 1=1 and bh.is_delete='0' and bt.is_delete='0'
+	<if test="ftyId != null">
+	 and bt.fty_id = #{ftyId,jdbcType=INTEGER}
+	</if>
+	<if test="locationId != null">
+	 and bt.location_id = #{locationId,jdbcType=INTEGER}
+	</if>
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>
+	<if test="returnCode != null and returnCode != ''">
+	 and bh.return_code = #{returnCode,jdbcType=VARCHAR}
+	</if>
+	
+	<if test="saleCode != null and saleCode != ''">
+	 and bh.refer_receipt_code = #{saleCode,jdbcType=VARCHAR}
+	</if>
+	
+	<if test="referReceiptCode != null and referReceiptCode != ''">
+	 and bh.refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR}
+	</if>
+	<if test="reserveCode != null and reserveCode != ''">
+	 and bt.reserve_id = #{reserveCode,jdbcType=VARCHAR}
+	</if>
+
+	<if test="startdate != null and startdate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	
+	<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>		
+	
+	<if test="receiptTypeArray != null" >
+		and bh.receipt_type in 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+               					#{item}  
+    	</foreach> 
+   	</if>	
+	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+  
+  
+   <select id="listBizDocReturnType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT
+ distinct bh.receipt_type receiptType
+from biz_stock_output_return_head bh INNER JOIN biz_stock_output_return_item bt ON bh.return_id = bt.return_id
+LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+LEFT JOIN dic_move_type dmt ON bt.move_type_id = dmt.move_type_id
+LEFT JOIN dic_factory df ON bt.fty_id = df.fty_id
+LEFT JOIN dic_stock_location dsl ON bt.location_id = dsl.location_id
+LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+LEFT JOIN biz_stock_output_head bsh ON bt.stock_output_id = bsh.stock_output_id
+			where 1=1 and bh.is_delete='0' and bt.is_delete='0'
+	<if test="ftyId != null">
+	 and bt.fty_id = #{ftyId,jdbcType=INTEGER}
+	</if>
+	<if test="locationId != null">
+	 and bt.location_id = #{locationId,jdbcType=INTEGER}
+	</if>
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>
+	<if test="returnCode != null and returnCode != ''">
+	 and bh.return_code = #{returnCode,jdbcType=VARCHAR}
+	</if>
+	
+	<if test="saleCode != null and saleCode != ''">
+	 and bh.refer_receipt_code = #{saleCode,jdbcType=VARCHAR}
+	</if>
+	
+	<if test="referReceiptCode != null and referReceiptCode != ''">
+	 and bh.refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR}
+	</if>
+	<if test="reserveCode != null and reserveCode != ''">
+	 and bt.reserve_id = #{reserveCode,jdbcType=VARCHAR}
+	</if>
+
+	<if test="startdate != null and startdate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		and date_format(bh.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	
+	<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>		
+	
+	<if test="receiptTypeArray != null" >
+		and bh.receipt_type in 
+		<foreach item="item" index="index" collection="receiptTypeArray" open="(" separator="," close=")">  
+               					#{item}  
+    	</foreach> 
+   	</if>	
+	
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+  
+  
+   <select id="listBizDocAllocateOnPaging" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT
+			bt.item_id itemId,
+			bh.allocate_id  allocateId,
+			bh.allocate_code allocateCode,
+			bt.allocate_rid allocateRid,
+			bt.delivery_item_id deliveryItemId,
+			dm.mat_code matCode,
+					dm.mat_name matName,
+					du.unit_code unitCode,
+					du.name_zh unitName,
+			IFNULL(df.fty_code,'') ftyOutCode,
+			IFNULL(df.fty_name,'') ftyOutName,
+			IFNULL(dsl.location_code,'') locationOutCode,
+			IFNULL(dsl.location_name,'') locationOutName,
+			bt.stock_qty stockQty,
+			bt.allocate_qty allocateQty,
+			bt.status status,
+			date_format(bt.create_time,'%Y-%m-%d') createTime,
+			date_format(bt.modify_time,'%Y-%m-%d') modifyTime,
+			dc.corp_name corpName,
+			IFNULL(dfi.fty_code,'') ftyInCode,
+			IFNULL(dfi.fty_name,'') ftyInName,
+			IFNULL(dsli.location_code,'') locationInCode,
+			IFNULL(dsli.location_name,'') locationInName,
+			date_format(bh.demand_date,'%Y-%m-%d') demandDate,
+			bah.allocate_delivery_code allocateDeliveryCode,
+			date_format(bah.delivery_date,'%Y-%m-%d') deliveryDate,
+			bah.delivery_vehicle deliveryVehicle,
+			bah.delivery_driver deliveryDriver,
+			bah.delivery_phone deliveryPhone,
+			wu.user_name userName
+			
+			from biz_allocate_head bh INNER JOIN biz_allocate_item bt ON bh.allocate_id = bt.allocate_id
+			LEFT JOIN dic_material dm ON (bt.mat_id = dm.mat_id AND  dm.is_delete='0')
+			LEFT JOIN dic_unit du ON bt.unit_id = du.unit_id
+			LEFT JOIN dic_factory df ON bt.fty_output = df.fty_id
+			LEFT JOIN dic_stock_location dsl ON bt.location_output = dsl.location_id
+			LEFT JOIN dic_corp dc ON bh.corp_id = dc.corp_id
+			LEFT JOIN dic_factory dfi ON bh.fty_input = dfi.fty_id
+			LEFT JOIN dic_stock_location dsli ON bh.location_input = dsli.location_id
+			LEFT JOIN biz_allocate_delivery_item bat ON bat.allocate_item_id = bt.item_id
+			LEFT JOIN biz_allocate_delivery_head bah ON bat.allocate_delivery_id = bah.allocate_delivery_id
+			LEFT JOIN wms_user wu ON bh.create_user = wu.user_id
+			where 1=1 and bh.is_delete='0' and bt.is_delete='0'
+	<if test="startdate != null and startdate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &gt;= #{startdate,jdbcType=VARCHAR}
+	</if>
+	<if test="enddate != null and enddate !=''" >
+		and date_format(bt.create_time,'%Y-%m-%d') &lt;= #{enddate,jdbcType=VARCHAR}
+	</if>	
+	<if test="operator != null and operator !=''" >
+		and wu.user_name = #{operator,jdbcType=VARCHAR}
+	</if>	
+	 <if test=" demandDate !=null and demandDate !=''">
+        and date_format(bh.demand_date,'%Y-%m-%d') = #{demandDate,jdbcType=VARCHAR}
+    </if>
+    <if test="distributed != null  and distributed !='' ">
+        and bh.distributed = #{distributed}
+    </if>
+	<if test="state != null and state !='' " >
+		AND bh.status=#{state}
+	</if>
+	<if test="allocateCode != null and allocateCode != ''">
+	 and bh.allocate_code = #{allocateCode,jdbcType=VARCHAR}
+	</if>
+	<if test="allocateDeliveryCode != null and allocateDeliveryCode != ''">
+	 and bah.allocate_delivery_code = #{allocateDeliveryCode,jdbcType=VARCHAR}
+	</if>
+	
+	<if test="ftyInputId != null">
+	 and bh.fty_input = #{ftyInputId,jdbcType=INTEGER}
+	</if>
+	<if test="locationInputId != null">
+	 and bh.location_input = #{locationInputId,jdbcType=INTEGER}
+	</if>
+	
+	<if test="ftyOutId != null">
+	 and bt.fty_output= #{ftyOutId,jdbcType=INTEGER}
+	</if>
+	<if test="locationOutId != null">
+	 and bt.location_output = #{locationOutId,jdbcType=INTEGER}
+	</if>		
+	<if test="matnrMap != null ">
+    	<choose>
+        	<when test="matnrMap.matnr_one_List != null and matnrMap.matnr_one_List.size()>0 ">
+        		<choose>
+        			<when test="matnrMap.matnr_interval_List != null and matnrMap.matnr_interval_List.size()>0">
+        				AND (dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+						or 
+						<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+							open="(" separator="or" close=")">
+							(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+						</foreach>
+						)
+					</when>
+ 					<otherwise>
+            			AND dm.mat_code IN
+						<foreach item="item" index="index" collection="matnrMap.matnr_one_List"
+							open="(" separator="," close=")">
+							#{item.matnr}
+						</foreach>
+					</otherwise>
+				</choose>
+			</when>
+ 			<otherwise>
+            	and 
+					<foreach item="item" index="index" collection="matnrMap.matnr_interval_List"
+						open="(" separator="or" close=")">
+						(dm.mat_code between #{item.matnr_begin,jdbcType=VARCHAR} and #{item.matnr_end,jdbcType=VARCHAR})
+					</foreach>
+			</otherwise>
+		</choose>
+    
+    </if>
+  </select>
+  
+
+  
+</mapper>

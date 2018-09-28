@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/bootstrapgrid.css" rel="stylesheet" />
+    <link href="../../../css/datetimepicker.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/datetimepicker.js"></script>
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/echarts.js"></script>
+    <script src="../../../js/page/search/countloc/list.js"></script>
+</head>
+<style>
+    .input-group .col-xs-3{width:33.3%}
+    .form-search{margin-top:20px}
+</style>
+<body>
+<div c-template="menu"></div>
+<div class="articlebox">
+    <div class="article">
+        <div class="mapadress">
+            <h2 class="h2black">库存结构统计</h2>
+        </div>
+
+        <div class="clearfix"></div>
+        <div id="Chart" style="height:400px;margin-top:20px;"></div>
+    </div>
+</div>
+<form id="download" method="get" class="hidden">
+    <input type="text"  name="location_id">
+    <input type="text"  name="wh_id">
+</form>
+
+
+</body>
+</html>

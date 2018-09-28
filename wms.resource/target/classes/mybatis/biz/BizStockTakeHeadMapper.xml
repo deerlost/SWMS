@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockTakeHeadMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockTakeHead">
+    <id column="stock_take_id" jdbcType="INTEGER" property="stockTakeId" />
+    <result column="stock_take_code" jdbcType="VARCHAR" property="stockTakeCode" />
+    <result column="stock_take_type" jdbcType="TINYINT" property="stockTakeType" />
+    <result column="stock_take_mode" jdbcType="TINYINT" property="stockTakeMode" />
+    <result column="stock_take_time" jdbcType="TIMESTAMP" property="stockTakeTime" />
+    <result column="work_shift" jdbcType="TINYINT" property="workShift" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="stock_take_status" jdbcType="TINYINT" property="stockTakeStatus" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="stock_take_freeze" jdbcType="TINYINT" property="stockTakeFreeze" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+    <result column="fty_name" jdbcType="VARCHAR" property="ftyName" />
+    <result column="work_shift_name" jdbcType="VARCHAR" property="workShiftName" />  
+  </resultMap>
+  <sql id="Base_Column_List">
+    stock_take_id, stock_take_code, stock_take_type, stock_take_mode, stock_take_time, 
+    work_shift, fty_id, location_id, stock_take_status, remark, status, stock_take_freeze, 
+    create_user, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_take_head
+    where stock_take_id = #{stockTakeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_take_head
+    where stock_take_id = #{stockTakeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockTakeHead">
+    insert into biz_stock_take_head (stock_take_id, stock_take_code, stock_take_type, 
+      stock_take_mode, stock_take_time, work_shift, 
+      fty_id, location_id, stock_take_status, 
+      remark, status, stock_take_freeze, 
+      create_user, is_delete, create_time, 
+      modify_time)
+    values (#{stockTakeId,jdbcType=INTEGER}, #{stockTakeCode,jdbcType=VARCHAR}, #{stockTakeType,jdbcType=TINYINT}, 
+      #{stockTakeMode,jdbcType=TINYINT}, #{stockTakeTime,jdbcType=TIMESTAMP}, #{workShift,jdbcType=TINYINT}, 
+      #{ftyId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, #{stockTakeStatus,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{stockTakeFreeze,jdbcType=TINYINT}, 
+      #{createUser,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockTakeHead"
+  	useGeneratedKeys="true" keyProperty="stockTakeId">
+    insert into biz_stock_take_head
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stockTakeId != null">
+        stock_take_id,
+      </if>
+      <if test="stockTakeCode != null">
+        stock_take_code,
+      </if>
+      <if test="stockTakeType != null">
+        stock_take_type,
+      </if>
+      <if test="stockTakeMode != null">
+        stock_take_mode,
+      </if>
+      <if test="stockTakeTime != null">
+        stock_take_time,
+      </if>
+      <if test="workShift != null">
+        work_shift,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="stockTakeStatus != null">
+        stock_take_status,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="stockTakeFreeze != null">
+        stock_take_freeze,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stockTakeId != null">
+        #{stockTakeId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTakeCode != null">
+        #{stockTakeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stockTakeType != null">
+        #{stockTakeType,jdbcType=TINYINT},
+      </if>
+      <if test="stockTakeMode != null">
+        #{stockTakeMode,jdbcType=TINYINT},
+      </if>
+      <if test="stockTakeTime != null">
+        #{stockTakeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workShift != null">
+        #{workShift,jdbcType=TINYINT},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTakeStatus != null">
+        #{stockTakeStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="stockTakeFreeze != null">
+        #{stockTakeFreeze,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockTakeHead">
+    update biz_stock_take_head
+    <set>
+      <if test="stockTakeCode != null">
+        stock_take_code = #{stockTakeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stockTakeType != null">
+        stock_take_type = #{stockTakeType,jdbcType=TINYINT},
+      </if>
+      <if test="stockTakeMode != null">
+        stock_take_mode = #{stockTakeMode,jdbcType=TINYINT},
+      </if>
+      <if test="stockTakeTime != null">
+        stock_take_time = #{stockTakeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workShift != null">
+        work_shift = #{workShift,jdbcType=TINYINT},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="stockTakeStatus != null">
+        stock_take_status = #{stockTakeStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="stockTakeFreeze != null">
+        stock_take_freeze = #{stockTakeFreeze,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where stock_take_id = #{stockTakeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockTakeHead">
+    update biz_stock_take_head
+    set stock_take_code = #{stockTakeCode,jdbcType=VARCHAR},
+      stock_take_type = #{stockTakeType,jdbcType=TINYINT},
+      stock_take_mode = #{stockTakeMode,jdbcType=TINYINT},
+      stock_take_time = #{stockTakeTime,jdbcType=TIMESTAMP},
+      work_shift = #{workShift,jdbcType=TINYINT},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      stock_take_status = #{stockTakeStatus,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      stock_take_freeze = #{stockTakeFreeze,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where stock_take_id = #{stockTakeId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="listOnPaging" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT
+		h.stock_take_id,
+		h.stock_take_code,
+		h.stock_take_type,
+		h.stock_take_mode,
+		h.stock_take_time,
+		h.work_shift,
+		h.fty_id,
+		h.location_id,
+		h.stock_take_status,
+		h.remark,
+		h.status,
+		h.stock_take_freeze,
+		h.create_user,
+		h.is_delete,
+		h.create_time,
+		h.modify_time,
+		u.user_name create_user_name,
+		l.location_code,
+		l.location_name
+	FROM
+		biz_stock_take_head h,
+		wms_user u,
+		dic_stock_location l
+	where 
+		h.create_user = u.user_id
+	AND h.location_id = l.location_id
+	<if test="condition != null and condition !=''">
+		AND (
+			h.stock_take_code like CONCAT('%',#{condition},'%' ) 
+			OR l.location_id like CONCAT('%',#{condition},'%' )
+			OR l.location_code like CONCAT('%',#{condition},'%' )
+			OR l.location_name like CONCAT('%',#{condition},'%' )
+		)
+	</if> 
+	<if test="statusArray != null">
+		and h.status in
+		<foreach collection="statusArray" index="index" item="item"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</if>
+	<if test="createUser!=null and createUser!=''">		
+	  and 
+		if((select product_line_id from rel_product_user where user_id=#{createUser})!=0
+		,(select product_line_id from rel_product_user where user_id=h.create_user) =(select product_line_id from rel_product_user where user_id=#{createUser})
+		,1=1)
+   	</if>	
+	ORDER BY
+		h.create_time DESC
+  </select>
+  
+  <select id="selectInfoByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+		h.stock_take_id,
+		h.stock_take_code,
+		h.stock_take_type,
+		h.stock_take_mode,
+		h.stock_take_time,
+		h.work_shift,
+		h.fty_id,
+		f.fty_name,
+		h.location_id,
+		h.stock_take_status,
+		h.remark,
+		h.status,
+		h.stock_take_freeze,
+		h.create_user,
+		h.is_delete,
+		h.create_time,
+		h.modify_time,
+		u.user_name create_user_name,
+		l.location_name,
+		CONCAT(t.class_type_name,'(' ,
+		DATE_FORMAT(t.start_time,'%H:%i'),'-',DATE_FORMAT(t.end_time,'%H:%i')
+		, ')') AS work_shift_name
+	FROM
+		biz_stock_take_head h,
+		wms_user u,
+		dic_stock_location l,
+		dic_factory f,
+        dic_class_type t
+	where 
+		h.create_user = u.user_id
+	AND h.location_id = l.location_id
+	AND h.fty_id = f.fty_id
+	AND h.work_shift = t.class_type_id
+    AND h.stock_take_id = #{stockTakeId,jdbcType=INTEGER}
+  </select>
+  
+</mapper>

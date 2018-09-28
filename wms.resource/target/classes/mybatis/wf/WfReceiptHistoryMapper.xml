@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.wf.WfReceiptHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.wf.WfReceiptHistory">
+    <id column="receipt_id" jdbcType="INTEGER" property="receiptId" />
+    <id column="receipt_type" jdbcType="TINYINT" property="receiptType" />
+    <id column="piid" jdbcType="VARCHAR" property="piid" />
+    <result column="receipt_code" jdbcType="VARCHAR" property="receiptCode" />
+    <result column="receipt_user_id" jdbcType="VARCHAR" property="receiptUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    receipt_id, receipt_type,receipt_code, piid, receipt_user_id, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.inossem.wms.model.wf.WfReceiptHistoryKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wf_receipt_history
+    where receipt_id = #{receiptId,jdbcType=INTEGER}
+      and receipt_type = #{receiptType,jdbcType=TINYINT}
+      and piid = #{piid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.inossem.wms.model.wf.WfReceiptHistoryKey">
+    delete from wf_receipt_history
+    where receipt_id = #{receiptId,jdbcType=INTEGER}
+      and receipt_type = #{receiptType,jdbcType=TINYINT}
+      and piid = #{piid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.wf.WfReceiptHistory">
+    insert into wf_receipt_history (receipt_id, receipt_type, piid, receipt_code,
+      receipt_user_id, create_time, modify_time
+      )
+    values (#{receiptId,jdbcType=INTEGER}, #{receiptType,jdbcType=TINYINT}, #{piid,jdbcType=VARCHAR}, #{receiptCode,jdbcType=VARCHAR}, 
+      #{receiptUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.wf.WfReceiptHistory">
+    insert into wf_receipt_history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="receiptId != null">
+        receipt_id,
+      </if>
+      <if test="receiptCode != null">
+        receipt_code,
+      </if>
+      <if test="receiptType != null">
+        receipt_type,
+      </if>
+      <if test="piid != null">
+        piid,
+      </if>
+      <if test="receiptUserId != null">
+        receipt_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="receiptId != null">
+        #{receiptId,jdbcType=INTEGER},
+      </if>
+      <if test="receiptCode != null">
+        #{receiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptType != null">
+        #{receiptType,jdbcType=TINYINT},
+      </if>
+      <if test="piid != null">
+        #{piid,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptUserId != null">
+        #{receiptUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.wf.WfReceiptHistory">
+    update wf_receipt_history
+    <set>
+      <if test="receiptUserId != null">
+        receipt_user_id = #{receiptUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptCode != null">
+        receipt_code = #{receiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where receipt_id = #{receiptId,jdbcType=INTEGER}
+      and receipt_type = #{receiptType,jdbcType=TINYINT}
+      and piid = #{piid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.wf.WfReceiptHistory">
+    update wf_receipt_history
+    set receipt_user_id = #{receiptUserId,jdbcType=VARCHAR},
+      receipt_code = #{receiptCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where receipt_id = #{receiptId,jdbcType=INTEGER}
+      and receipt_type = #{receiptType,jdbcType=TINYINT}
+      and piid = #{piid,jdbcType=VARCHAR}
+  </update>
+</mapper>

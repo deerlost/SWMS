@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicCorpMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicCorp">
+    <id column="corp_id" jdbcType="INTEGER" property="corpId" />
+    <result column="corp_code" jdbcType="VARCHAR" property="corpCode" />
+    <result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+    <result column="city_id" jdbcType="INTEGER" property="cityId" />
+    <result column="board_id" jdbcType="INTEGER" property="boardId" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    corp_id, corp_code, corp_name, city_id, board_id, is_delete, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_corp
+    where corp_id = #{corpId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_corp
+    where corp_code = #{corpCode,jdbcType=VARCHAR}
+    and is_delete = 0
+  </select>
+  <select id="selectAllCorpList" resultMap="BaseResultMap">
+	select 
+	<include refid="Base_Column_List"/>
+	from dic_corp 
+	order by create_time 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_corp
+    where corp_id = #{corpId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicCorp">
+    insert into dic_corp (corp_id, corp_code, corp_name, 
+      city_id, board_id, is_delete, 
+      create_time, modify_time)
+    values (#{corpId,jdbcType=INTEGER}, #{corpCode,jdbcType=VARCHAR}, #{corpName,jdbcType=VARCHAR}, 
+      #{cityId,jdbcType=INTEGER}, #{boardId,jdbcType=INTEGER}, #{isDelete,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicCorp">
+    insert into dic_corp
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="corpId != null">
+        corp_id,
+      </if>
+      <if test="corpCode != null">
+        corp_code,
+      </if>
+      <if test="corpName != null">
+        corp_name,
+      </if>
+      <if test="cityId != null">
+        city_id,
+      </if>
+      <if test="boardId != null">
+        board_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="corpId != null">
+        #{corpId,jdbcType=INTEGER},
+      </if>
+      <if test="corpCode != null">
+        #{corpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null">
+        #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="boardId != null">
+        #{boardId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicCorp">
+    update dic_corp
+    <set>
+      <if test="corpCode != null">
+        corp_code = #{corpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null">
+        corp_name = #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="boardId != null">
+        board_id = #{boardId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where corp_id = #{corpId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicCorp">
+    update dic_corp
+    set corp_code = #{corpCode,jdbcType=VARCHAR},
+      corp_name = #{corpName,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=INTEGER},
+      board_id = #{boardId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where corp_id = #{corpId,jdbcType=INTEGER}
+  </update>
+  
+    <select id="selectAllCorpIdAndCorpNameOfCorpList" resultMap="BaseResultMap">
+	select 
+	<include refid="Base_Column_List" />
+	from dic_corp
+  </select>
+  
+   <!-- 公司分页查询 刘宇 2018.03.02 -->
+    <select id="selectCorpOnPaging" parameterType="java.util.Map" resultType="java.util.Map" >
+		SELECT
+			dp.corp_id,
+			dp.corp_code,
+			dp.corp_name,
+			dp.city_id,
+			dp.create_time,
+			db.board_id,
+			db.board_name
+		FROM dic_corp dp
+		inner join dic_board db on db.board_id = dp.board_id
+		and dp.is_delete = 0
+		<if test="condition != null and condition !=''">
+			and
+			(dp.corp_code LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			or dp.corp_name LIKE CONCAT('%',#{condition,jdbcType=VARCHAR},'%')
+			)
+		</if>
+ORDER BY  dp.create_time DESC
+  </select>
+</mapper>

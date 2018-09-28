@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicMoveTypeMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicMoveType">
+    <id column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="move_type_code" jdbcType="VARCHAR" property="moveTypeCode" />
+    <result column="spec_stock" jdbcType="VARCHAR" property="specStock" />
+    <result column="move_type_name" jdbcType="VARCHAR" property="moveTypeName" />
+    <result column="biz_type" jdbcType="TINYINT" property="bizType" />
+  </resultMap>
+  <resultMap id="BaseResultMapVo" type="com.inossem.wms.model.vo.DicMoveTypeVo">
+    <id column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="move_type_code" jdbcType="VARCHAR" property="moveTypeCode" />
+    <result column="spec_stock" jdbcType="VARCHAR" property="specStock" />
+    <result column="move_type_name" jdbcType="VARCHAR" property="moveTypeName" />
+    <result column="biz_type" jdbcType="TINYINT" property="bizType" />
+    <result column="reason_id" jdbcType="INTEGER" property="reasonId" />
+    <result column="reason_code" jdbcType="VARCHAR" property="reasonCode" />
+    <result column="reason_name" jdbcType="VARCHAR" property="reasonName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    move_type_id, move_type_code, spec_stock, move_type_name, biz_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_move_type
+    where move_type_id = #{moveTypeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_move_type
+    where move_type_id = #{moveTypeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicMoveType">
+    insert into dic_move_type (move_type_id, move_type_code, spec_stock, 
+      move_type_name, biz_type)
+    values (#{moveTypeId,jdbcType=INTEGER}, #{moveTypeCode,jdbcType=VARCHAR}, #{specStock,jdbcType=VARCHAR}, 
+      #{moveTypeName,jdbcType=VARCHAR}, #{bizType,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicMoveType">
+    insert into dic_move_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="moveTypeId != null">
+        move_type_id,
+      </if>
+      <if test="moveTypeCode != null">
+        move_type_code,
+      </if>
+      <if test="specStock != null">
+        spec_stock,
+      </if>
+      <if test="moveTypeName != null">
+        move_type_name,
+      </if>
+      <if test="bizType != null">
+        biz_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="moveTypeId != null">
+        #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="moveTypeCode != null">
+        #{moveTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStock != null">
+        #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="moveTypeName != null">
+        #{moveTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null">
+        #{bizType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicMoveType">
+    update dic_move_type
+    <set>
+      <if test="moveTypeCode != null">
+        move_type_code = #{moveTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="specStock != null">
+        spec_stock = #{specStock,jdbcType=VARCHAR},
+      </if>
+      <if test="moveTypeName != null">
+        move_type_name = #{moveTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null">
+        biz_type = #{bizType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where move_type_id = #{moveTypeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicMoveType">
+    update dic_move_type
+    set move_type_code = #{moveTypeCode,jdbcType=VARCHAR},
+      spec_stock = #{specStock,jdbcType=VARCHAR},
+      move_type_name = #{moveTypeName,jdbcType=VARCHAR},
+      biz_type = #{bizType,jdbcType=TINYINT}
+    where move_type_id = #{moveTypeId,jdbcType=INTEGER}
+  </update>
+
+  
+  
+ <!-- 添加移动类型 2018.01.22 刘宇-->
+  <insert id="insertMoveType" parameterType="com.inossem.wms.model.dic.DicMoveType">
+    insert into dic_move_type (move_type_code, spec_stock, move_type_name, biz_type
+      )
+    values (#{moveTypeCode,jdbcType=VARCHAR}, #{specStock,jdbcType=VARCHAR}, #{moveTypeName,jdbcType=VARCHAR}, #{bizType,jdbcType=TINYINT}
+      )
+  </insert>
+  
+  
+  <!-- 修改移动类型 2018.01.22 刘宇-->
+   <update id="updateMoveTypeByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicMoveType">
+    update dic_move_type
+    <set>
+      <if test="moveTypeName != null">
+        move_type_name = #{moveTypeName,jdbcType=VARCHAR},        
+      </if>
+       <if test="bizType != null">
+       	biz_type = #{bizType,jdbcType=TINYINT}
+      </if>
+    </set>
+    where move_type_code = #{moveTypeCode,jdbcType=VARCHAR}
+      and spec_stock = #{specStock,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 移动类型列表and关键字查询 2018.01.24 刘宇-->
+    <select id="listMoveTypeOnPaging"  parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+  	 move_type_id, move_type_code, spec_stock,move_type_name,biz_type,
+  	 case biz_type
+		 	WHEN 20 THEN '入库'
+		 	WHEN 40 THEN '出库'
+		 	WHEN 50 THEN '转储'
+		 	WHEN 71 THEN '库存盘点'
+			end  as bizTypeName 
+    from dic_move_type
+     where 1=1
+    <if test="keyword != null and keyword != ''">
+  	 	and (move_type_id = #{keyword} or move_type_code = #{keyword}
+	     or spec_stock = #{keyword}  or move_type_name = #{keyword} or biz_type = #{keyword} 
+	     )      
+    </if>
+  	
+  </select>
+  
+  <!-- 查询移动类型-用于添加判断 2018.01.24 刘宇-->
+  <select id="getMoveTypeByMoveTypeAndSpecStock" parameterType="com.inossem.wms.model.dic.DicMoveType" resultMap="BaseResultMap">
+    select 
+     move_type_id, move_type_code, spec_stock,move_type_name,biz_type,
+     case biz_type
+		 	WHEN 20 THEN '入库'
+		 	WHEN 40 THEN '出库'
+		 	WHEN 50 THEN '转储'
+		 	WHEN 71 THEN '库存盘点'
+			end  as bizTypeName 
+    from dic_move_type
+    where move_type_code = #{moveTypeCode,jdbcType=VARCHAR}
+      and spec_stock = #{specStock,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM dic_move_type
+  </select>
+  <select id="selectByReceiptType" resultMap="BaseResultMap">
+    SELECT 
+		a.move_type_id, a.move_type_code, a.spec_stock, a.move_type_name, a.biz_type
+    FROM dic_move_type a
+    INNER JOIN rel_move_type b ON a.move_type_id = b.move_type_id AND b.receipt_type = #{receiptType,jdbcType=INTEGER}
+  </select>
+  <select id="selectByBizType" resultMap="BaseResultMap">
+    SELECT 
+		move_type_id, move_type_code, spec_stock, move_type_name, biz_type
+    FROM dic_move_type 
+    WHERE biz_type = #{bizType,jdbcType=INTEGER}
+  </select>
+  <select id="selectVoByReceiptType" resultMap="BaseResultMapVo">
+   	SELECT
+		l.move_type_id,
+		l.move_type_code,
+		l.spec_stock,
+		l.move_type_name
+		
+	FROM
+		dic_move_type l
+	INNER JOIN rel_move_type b ON l.move_type_id = b.move_type_id AND b.receipt_type = #{receiptType,jdbcType=TINYINT}
+  </select>
+
+</mapper>

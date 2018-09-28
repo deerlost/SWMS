@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicMaterialReqBizTypeMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicMaterialReqBizType">
+    <id column="mat_req_biz_type_id" jdbcType="INTEGER" property="matReqBizTypeId" />
+    <result column="board_id" jdbcType="INTEGER" property="boardId" />
+    <result column="biz_type_name" jdbcType="VARCHAR" property="bizTypeName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    mat_req_biz_type_id, board_id, biz_type_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_material_req_biz_type
+    where mat_req_biz_type_id = #{matReqBizTypeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_material_req_biz_type
+    where mat_req_biz_type_id = #{matReqBizTypeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicMaterialReqBizType">
+    insert into dic_material_req_biz_type (mat_req_biz_type_id, board_id, biz_type_name
+      )
+    values (#{matReqBizTypeId,jdbcType=INTEGER}, #{boardId,jdbcType=INTEGER}, #{bizTypeName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicMaterialReqBizType">
+    insert into dic_material_req_biz_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="matReqBizTypeId != null">
+        mat_req_biz_type_id,
+      </if>
+      <if test="boardId != null">
+        board_id,
+      </if>
+      <if test="bizTypeName != null">
+        biz_type_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="matReqBizTypeId != null">
+        #{matReqBizTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="boardId != null">
+        #{boardId,jdbcType=INTEGER},
+      </if>
+      <if test="bizTypeName != null">
+        #{bizTypeName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicMaterialReqBizType">
+    update dic_material_req_biz_type
+    <set>
+      <if test="boardId != null">
+        board_id = #{boardId,jdbcType=INTEGER},
+      </if>
+      <if test="bizTypeName != null">
+        biz_type_name = #{bizTypeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where mat_req_biz_type_id = #{matReqBizTypeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicMaterialReqBizType">
+    update dic_material_req_biz_type
+    set board_id = #{boardId,jdbcType=INTEGER},
+      biz_type_name = #{bizTypeName,jdbcType=VARCHAR}
+    where mat_req_biz_type_id = #{matReqBizTypeId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByReceiptTypeAndBoardId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_material_req_biz_type
+    where board_id = #{boardId,jdbcType=INTEGER}
+  </select>
+  
+</mapper>

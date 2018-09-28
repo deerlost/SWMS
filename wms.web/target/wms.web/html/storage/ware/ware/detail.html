@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>仓储管理系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../../../../css/common.css" rel="stylesheet" />
+		<link href="../../../../css/inossem.grid.css" rel="stylesheet" />
+		<link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../../css/bootstrapgrid.css" rel="stylesheet" />
+		<link href="../../../../css/datetimepicker.css" rel="stylesheet" />
+		<script src="../../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../../part/layer/layer.js"></script>
+		<script src="../../../../js/common.js"></script>
+		<script src="../../../../js/page/storage/ware/ware/detail.js"></script>
+		<script src="../../../../js/jquery.inossem.grid.js"></script>
+		<style type="text/css">
+			.margn {
+				margin-right: 30px;
+			}
+			.pos_content {
+				padding: 6px 12px;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 1;
+				color: #555;
+			}
+			.wlinfo .col-xs-2{
+				width:12%;
+			}			
+			input.ico-search {
+				background: url(../../../../img/icon-search-blue.png) no-repeat right 5px center
+			}
+			a.btn-search {
+				position: absolute;
+				width: 30px;
+				height: 30px;
+				right: 16px;
+				top: 2px;
+			}
+			.input-group-text{
+				padding-top:4px;
+			}
+			a.btn_tp{
+				position: absolute;
+			    width: 30px;
+			    height: 30px;
+			    right: 55%;
+			    top: 106px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div c-template="menu"></div>
+		<div class="articlebox">
+			<div class="article" c-app="zmkpf">
+				<div class="mapadress">
+					<a href="list.html">仓库整理列表</a>
+					<span>&nbsp;&nbsp;&nbsp;&rsaquo;&nbsp;&nbsp;&nbsp;</span>
+					<span class="spanno">创建仓库整理作业单</span>
+				</div>
+				<h2 class="h2red status_name">创建</h2>
+				<div class="form-search">
+					<div class="col-xs-12 row ">
+						<div class="col-lg-8 col-xs-10 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">业务类型：</span>
+								<div class="bustype">
+									<label class="margn"><input type="radio" name="check" value="0" />&nbsp;基于仓位整理</label>
+									
+									<label class="margn"><input type="radio" name="check" value="1" />&nbsp;基于托盘整理&nbsp;&nbsp;</label>
+									
+									<label class="margn"><input type="radio" name="check" value="2" />&nbsp;基于包装整理&nbsp;&nbsp;</label>
+									
+									<label><input type="radio" name="check" value="3" />&nbsp;基于物料整理&nbsp;&nbsp;<label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group getloc">
+								<span class="input-group-addon">库存地点：</span>
+								<select class="loc_info form-control">
+									<option value="" data-index="-1">请选择</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">仓库名称：</span>
+								<div class="wh_info input-group-text"></div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">工厂：</span>
+								<div class="fty_info input-group-text"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group tallyinfo">
+								<span class="input-group-addon">理货员：</span>
+								<select class="form-control tally">
+									
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group truckinfo">
+								<span class="input-group-addon">叉车工：</span>
+								<select class="form-control truck">
+									
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group hamalinfo">
+								<span class="input-group-addon">搬运工：</span>
+								<select class="form-control hamal"></select>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 row">
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group vehicle">
+								<span class="input-group-addon">创建人：</span>
+								<div class="create_user input-group-text">--</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group driver">
+								<span class="input-group-addon">创建日期：</span>
+								<div class="create_time input-group-text">--</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-xs-4 div-group">
+							<div class="input-group">
+								<span class="input-group-addon">备注：</span>
+								<div class="input-group-text">
+									<a href="javascript:void(0)" data-title="备注" data-href="note.html" data-size="500px,400px" class="btn_table_edit btn_remark">查看</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12"><hr /></div>
+				<h2 class="h2grey col-lg-11 col-xs-10 cpinfo" style="display: none;"> 产品信息 </h2>
+				<div class="col-xs-12 wlinfo form-search">
+					<div class="col-xs-5 source" style="display: none;">
+						<h2 class="h2grey col-xs-12">源仓位</h2>
+						<div class="yarea">
+							<span class="col-xs-2" style="padding-top: 5px">存储区:</span>
+							<select class="yarea_info col-xs-3 form-control">
+								<option value="" data-index="-1">请选择</option>
+							</select>
+						</div>
+						<div class="ypos">
+							<span class="col-xs-2" style="padding-top: 5px">仓位:</span>
+							<select class="ypos_info col-xs-3 form-control">
+								<option value="">请选择</option>
+							</select>
+						</div>
+						<div class="addinfo col-xs-2">
+							<a href="javascript:void(0)" class="btn-lay-default btn_pos">查询</a>
+						</div>
+					</div>
+					<div class="col-xs-5 trays" style="display: none;">
+						<h2 class="h2grey col-xs-12">源托盘</h2>
+						<div class="ypalle">
+							<span class="col-xs-2" style="padding-top: 5px">托盘号:</span>
+							<input type="text" class="col-xs-4 form-control ypalletnum">
+						</div>
+						<div class="addinfo col-xs-2">
+							<a href="javascript:void(0)" class="btn-lay-default btn_trays">查询</a>
+						</div>
+					</div>
+					<div class="col-xs-5 targets" style="display: none;">
+						<h2 class="h2grey col-xs-12">目标仓位</h2>
+						<div class="marea">
+							<span class="col-xs-2" style="padding-top: 5px">存储区:</span>
+							<select class="marea_info col-xs-3 form-control">
+								<option value="" data-index="-1">请选择</option>
+							</select>
+						</div>
+						<div class="mpos">
+							<span class="col-xs-2" style="padding-top: 5px;">仓位:</span>
+							<select class="mpos_info col-xs-3 form-control" style="z-index: 1000;">
+								<option value="">请选择</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-5 trays" style="position:absolute;right:-200px;top:0px; display: none;">
+						<h2 class="h2grey col-xs-12"></h2>
+						<div class="mpalle">
+							<span class="col-xs-2" style="padding-top: 5px">托盘号:</span>
+							<input type="text" class="col-xs-4 form-control mpalletnum ico-search">
+							<a href="javascript:void(0)" class="btn_tp"></a>
+						</div>
+						<div class="col-xs-2">
+							<a href="javascript:void(0)" class="btn-lay-default addtp">添加</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 row jhdh" style="display: none;">
+					<div class="col-lg-3 col-xs-4 div-group">
+						<input type="text" class="ico-search form-control yldh" placeholder="包装物序号、生产批次、ERP批次">
+						<a href="javascript:void(0)" class="btn-search"></a>
+						</div>
+				</div>
+				<div class="col-xs-12 clearfix">&nbsp;</div>
+				<div id="id_div_grid" style="margin-top:20px;clear:both;"></div>
+				<div class="col-xs-12">
+					<a class="delet" style="display:none" href="javascript:void(0)">删除选中物料</a>
+				</div>
+				<div class="col-xs-12 submitbutton">
+					<a href="javascript:void(0)" class="btn-lay-blue btnsubmit">　提交　</a>
+					<a href="javascript:void(0)" class="btn-lay-default btnsave">　保存　</a>
+					<a href="./list.html" class="btn-lay-default">　返回　</a>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

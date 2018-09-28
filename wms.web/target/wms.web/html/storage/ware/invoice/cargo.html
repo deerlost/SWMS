@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>采购订单信息</title>
+		<meta charset="utf-8" />
+		<script src="../../../../js/jquery-1.11.0.min.js"></script>
+		<script src="../../../../part/layer/layer.js"></script>
+		<script src="../../../../js/common.js"></script>
+		<link href="../../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../../../css/common.css" rel="stylesheet" />
+		<style>
+			body {
+				padding: 4px;
+			}
+			
+			.search {
+				padding: 10px 0px;
+				overflow-y: auto;
+				overflow-x: hidden;
+			}
+			
+			.search div {
+				min-height: 42px;
+				line-height: 30px;
+			}
+			
+			.col-xs-2 {
+				padding-right: 0px;
+				text-align: right;
+			}
+			
+			.col-xs-3 {
+				padding-left: 10px;
+				padding-right: 0px;
+			}
+			
+			.row .btn-lay-blue {
+				margin-top: -3px;
+				float: left;
+			}
+			
+			.search div.clearfx {
+				min-height: 1px;
+			}
+			
+			.row {
+				margin-bottom: 10px;
+			}
+			
+			table.tablestyle3 th,
+			table.tablestyle3 td {
+				padding: 7px 4px;
+			}
+			
+			td .form-control {
+				width: 70px;
+				text-align: center;
+			}
+		</style>
+		<script>
+			var pardata = null;
+			$(function() {
+				pardata = parent.getCargo(GetQueryString("index"));
+				pardata.surplus_qty=countData.sub(pardata.order_qty,pardata.output_qty);
+				pardata.order_qty=toThousands(pardata.order_qty);
+				pardata.output_qty=toThousands(pardata.output_qty);
+				CApp.initBase("base", pardata);
+				if(pardata.surplus_qty==0){
+					$("[c-model='surplus_qty']").html(0)
+				}
+				getdata();
+
+			});
+
+			function getdata() {
+				$(".tablestyle3 tr:gt(0)").remove();
+				$.each(pardata.position_list, function(i, item) {
+					item.numbercount=Math.ceil(countData.div(item.cargo_qty,item.package_standard))
+					var strtext = "";
+					strtext += ("<tr>");
+					strtext += ("<td>" + (i + 1) + "</td>");
+					strtext += ("<td>" + item.stock_type_name + "</td>"); //库存类型
+					strtext += ("<td>" + item.product_batch + "</td>"); //生产批次
+					strtext += ("<td>" + item.package_type_code + "</td>"); //包装类型
+					strtext += ("<td>" + item.package_standard_ch + "</td>"); //包装规格
+					strtext += ("<td>" + toThousands(item.stock_qty) + "</td>"); //库存数量
+					strtext += ("<td>" + item.input_date + "</td>"); //入库日期(收货日期)EDATU
+					strtext += ("<td>" + item.numbercount + "</td>");
+					strtext += ("<td>" + toThousands(item.cargo_qty) + "</td>");
+					strtext += ("</tr>");
+					$(".tablestyle3").append(strtext);
+				});
+				dataIsNull($(".tablestyle3"));
+
+			}
+		</script>
+	</head>
+
+	<body class="dialog">
+		<div c-app="base" class="searchinfo">
+			<div class="col-xs-12 row">
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>物料编码:&nbsp;&nbsp;</span>
+						<span c-model="mat_code">-</span>
+					</div>
+				</div>
+				<div class="col-lg-5 col-xs-6">
+					<div class="input-group">
+						<span>物料描述:&nbsp;&nbsp;</span>
+						<span c-model="mat_name">-</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 row">
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>ERP批次:&nbsp;&nbsp;</span>
+						<span c-model="erp_batch">-</span>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-4 div-group">
+					<div class="input-group">
+						<span>ERP备注:&nbsp;&nbsp;</span>
+						<span c-model="erp_remark">-</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 row">
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>交货数量:&nbsp;&nbsp;</span>
+						<span c-model="order_qty">-</span>&nbsp;&nbsp;
+						<span c-model="name_zh">-</span>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>本次配货数量:&nbsp;&nbsp;</span>
+						<span c-model="output_qty">-</span>&nbsp;&nbsp;
+						<span c-model="name_zh">-</span>
+					</div>
+				</div>
+				<div class="col-lg-3 col-xs-4">
+					<div class="input-group">
+						<span>剩余配货数量:&nbsp;&nbsp;</span>
+						<span c-model="surplus_qty">-</span>&nbsp;&nbsp;
+						<span c-model="name_zh">-</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tablebox">
+			<table class="tablestyle3">
+				<tr>
+					<th>序号</th>
+					<th>库存类型</th>
+					<th>生产批次</th>
+					<th>包装类型</th>
+					<th>包装规格</th>
+					<th>库存数量</th>
+					<th>入库时间</th>
+					<th>件数</th>
+					<th>配货数量</th>
+				</tr>
+				<tr class="datanull">
+					<td class="datanull" colspan="10">没有可显示的数据</td>
+				</tr>
+			</table>
+		</div>
+		<div class="submitbutton fixed">
+			<a href="javascript:void(0)" class="btn-lay-default btn_iframe_close_window">　关闭　</a>
+		</div>
+	</body>
+
+</html>

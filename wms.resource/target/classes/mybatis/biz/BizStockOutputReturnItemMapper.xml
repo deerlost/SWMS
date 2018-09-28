@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.BizStockOutputReturnItemMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.biz.BizStockOutputReturnItem">
+    <id column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="return_id" jdbcType="INTEGER" property="returnId" />
+    <result column="return_rid" jdbcType="INTEGER" property="returnRid" />
+    <result column="stock_output_id" jdbcType="INTEGER" property="stockOutputId" />
+    <result column="stock_output_rid" jdbcType="INTEGER" property="stockOutputRid" />
+    <result column="refer_receipt_code" jdbcType="VARCHAR" property="referReceiptCode" />
+    <result column="refer_receipt_rid" jdbcType="VARCHAR" property="referReceiptRid" />
+    <result column="mat_id" jdbcType="INTEGER" property="matId" />
+    <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="fty_id" jdbcType="INTEGER" property="ftyId" />
+    <result column="location_id" jdbcType="INTEGER" property="locationId" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="move_type_id" jdbcType="INTEGER" property="moveTypeId" />
+    <result column="batch" jdbcType="BIGINT" property="batch" />
+    <result column="batch_output" jdbcType="BIGINT" property="batchOutput" />
+    <result column="erp_batch" jdbcType="VARCHAR" property="erpBatch" />
+    <result column="reserve_id" jdbcType="VARCHAR" property="reserveId" />
+    <result column="reserve_rid" jdbcType="VARCHAR" property="reserveRid" />
+    <result column="purchase_order_code" jdbcType="VARCHAR" property="purchaseOrderCode" />
+    <result column="purchase_order_rid" jdbcType="VARCHAR" property="purchaseOrderRid" />
+    <result column="reserve_cost_obj_code" jdbcType="VARCHAR" property="reserveCostObjCode" />
+    <result column="reserve_cost_obj_name" jdbcType="VARCHAR" property="reserveCostObjName" />
+    <result column="write_off" jdbcType="TINYINT" property="writeOff" />
+    <result column="sale_qty" jdbcType="DECIMAL" property="saleQty" />
+    <result column="send_qty" jdbcType="DECIMAL" property="sendQty" />
+    <result column="mat_doc_id" jdbcType="INTEGER" property="matDocId" />
+    <result column="mat_doc_rid" jdbcType="INTEGER" property="matDocRid" />
+    <result column="mat_doc_year" jdbcType="INTEGER" property="matDocYear" />
+    <result column="mat_doc_code" jdbcType="VARCHAR" property="matDocCode" />
+    <result column="mes_doc_code" jdbcType="VARCHAR" property="mesDocCode" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+     <result column="remark" jdbcType="VARCHAR" property="remark" />
+     <result column="erp_remark" jdbcType="VARCHAR" property="erpRemark" />
+     <result column="mes_write_off_code" jdbcType="VARCHAR" property="mesWriteOffCode" />
+    <result column="mat_write_off_code" jdbcType="VARCHAR" property="matWriteOffCode"/>   
+        
+  </resultMap>
+  <sql id="Base_Column_List">
+    item_id, return_id, return_rid, stock_output_id, stock_output_rid, refer_receipt_code, 
+    refer_receipt_rid, mat_id, unit_id, fty_id, location_id, qty, move_type_id, batch, 
+    batch_output, reserve_id, reserve_rid, purchase_order_code, purchase_order_rid, 
+    reserve_cost_obj_code, reserve_cost_obj_name,
+    write_off, sale_qty, send_qty, mat_doc_id, mat_doc_rid, is_delete, modify_time, 
+    create_time,remark,erp_remark,erp_batch,mat_doc_year,mat_doc_code,mes_doc_code,
+    mes_write_off_code,mat_write_off_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_stock_output_return_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from biz_stock_output_return_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnItem">
+    insert into biz_stock_output_return_item (item_id, return_id, return_rid, 
+      stock_output_id, stock_output_rid, refer_receipt_code, 
+      refer_receipt_rid, mat_id, unit_id, 
+      fty_id, location_id, qty, 
+      move_type_id, batch, batch_output, 
+      reserve_id, reserve_rid, purchase_order_code, 
+      purchase_order_rid, write_off, sale_qty, 
+      send_qty, mat_doc_id, mat_doc_rid, 
+      is_delete, modify_time, create_time
+      )
+    values (#{itemId,jdbcType=INTEGER}, #{returnId,jdbcType=INTEGER}, #{returnRid,jdbcType=INTEGER}, 
+      #{stockOutputId,jdbcType=INTEGER}, #{stockOutputRid,jdbcType=INTEGER}, #{referReceiptCode,jdbcType=VARCHAR}, 
+      #{referReceiptRid,jdbcType=VARCHAR}, #{matId,jdbcType=INTEGER}, #{unitId,jdbcType=INTEGER}, 
+      #{ftyId,jdbcType=INTEGER}, #{locationId,jdbcType=INTEGER}, #{qty,jdbcType=DECIMAL}, 
+      #{moveTypeId,jdbcType=INTEGER}, #{batch,jdbcType=BIGINT}, #{batchOutput,jdbcType=BIGINT}, 
+      #{reserveId,jdbcType=VARCHAR}, #{reserveRid,jdbcType=VARCHAR}, #{purchaseOrderCode,jdbcType=VARCHAR}, 
+      #{purchaseOrderRid,jdbcType=VARCHAR}, #{writeOff,jdbcType=TINYINT}, #{saleQty,jdbcType=DECIMAL}, 
+      #{sendQty,jdbcType=DECIMAL}, #{matDocId,jdbcType=INTEGER}, #{matDocRid,jdbcType=INTEGER}, 
+      #{isDelete,jdbcType=TINYINT}, #{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnItem">
+    insert into biz_stock_output_return_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        item_id,
+      </if>
+      <if test="returnId != null">
+        return_id,
+      </if>
+      <if test="returnRid != null">
+        return_rid,
+      </if>
+      <if test="stockOutputId != null">
+        stock_output_id,
+      </if>
+      <if test="stockOutputRid != null">
+        stock_output_rid,
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code,
+      </if>
+      <if test="referReceiptRid != null">
+        refer_receipt_rid,
+      </if>
+      <if test="matId != null">
+        mat_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="ftyId != null">
+        fty_id,
+      </if>
+      <if test="locationId != null">
+        location_id,
+      </if>
+      <if test="qty != null">
+        qty,
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id,
+      </if>
+      <if test="batch != null">
+        batch,
+      </if>
+      <if test="erpBatch != null">
+        erp_batch,
+      </if>
+      <if test="batchOutput != null">
+        batch_output,
+      </if>
+      <if test="reserveId != null">
+        reserve_id,
+      </if>
+      <if test="reserveRid != null">
+        reserve_rid,
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code,
+      </if>
+      <if test="purchaseOrderRid != null">
+        purchase_order_rid,
+      </if>
+      
+      
+       <if test="reserveCostObjCode != null">
+        reserve_cost_obj_code,
+      </if>
+      <if test="reserveCostObjName != null">
+        reserve_cost_obj_name,
+      </if>
+            
+      
+      <if test="writeOff != null">
+        write_off,
+      </if>
+      <if test="saleQty != null">
+        sale_qty,
+      </if>
+      <if test="sendQty != null">
+        send_qty,
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id,
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="erpRemark != null">
+        erp_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="returnId != null">
+        #{returnId,jdbcType=INTEGER},
+      </if>
+      <if test="returnRid != null">
+        #{returnRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputId != null">
+        #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputRid != null">
+        #{stockOutputRid,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptRid != null">
+        #{referReceiptRid,jdbcType=VARCHAR},
+      </if>
+      <if test="matId != null">
+        #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="moveTypeId != null">
+        #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=BIGINT},
+      </if>    
+      <if test="erpBatch != null">
+         #{erpBatch,jdbcType=VARCHAR},
+      </if>     
+      <if test="batchOutput != null">
+        #{batchOutput,jdbcType=BIGINT},
+      </if>
+      <if test="reserveId != null">
+        #{reserveId,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveRid != null">
+        #{reserveRid,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderRid != null">
+        #{purchaseOrderRid,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="reserveCostObjCode != null">
+        #{reserveCostObjCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveCostObjName != null">
+        #{reserveCostObjName,jdbcType=VARCHAR},
+      </if>
+      
+      
+      <if test="writeOff != null">
+        #{writeOff,jdbcType=TINYINT},
+      </if>
+      <if test="saleQty != null">
+        #{saleQty,jdbcType=DECIMAL},
+      </if>
+      <if test="sendQty != null">
+        #{sendQty,jdbcType=DECIMAL},
+      </if>
+      <if test="matDocId != null">
+        #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+       <if test="erpRemark != null">
+        #{erpRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+   
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnItem">
+    update biz_stock_output_return_item
+    <set>
+      <if test="returnId != null">
+        return_id = #{returnId,jdbcType=INTEGER},
+      </if>
+      <if test="returnRid != null">
+        return_rid = #{returnRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputId != null">
+        stock_output_id = #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputRid != null">
+        stock_output_rid = #{stockOutputRid,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptRid != null">
+        refer_receipt_rid = #{referReceiptRid,jdbcType=VARCHAR},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="batchOutput != null">
+        batch_output = #{batchOutput,jdbcType=BIGINT},
+      </if>
+      <if test="reserveId != null">
+        reserve_id = #{reserveId,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveRid != null">
+        reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderRid != null">
+        purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+      </if>
+      <if test="writeOff != null">
+        write_off = #{writeOff,jdbcType=TINYINT},
+      </if>
+      <if test="saleQty != null">
+        sale_qty = #{saleQty,jdbcType=DECIMAL},
+      </if>
+      <if test="sendQty != null">
+        send_qty = #{sendQty,jdbcType=DECIMAL},
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id = #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  
+   <update id="updateForMatDocIdAndMatDocRid" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnItem">
+    update biz_stock_output_return_item
+    <set>
+      <if test="returnId != null">
+        return_id = #{returnId,jdbcType=INTEGER},
+      </if>
+      <if test="returnRid != null">
+        return_rid = #{returnRid,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputId != null">
+        stock_output_id = #{stockOutputId,jdbcType=INTEGER},
+      </if>
+      <if test="stockOutputRid != null">
+        stock_output_rid = #{stockOutputRid,jdbcType=INTEGER},
+      </if>
+      <if test="referReceiptCode != null">
+        refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="referReceiptRid != null">
+        refer_receipt_rid = #{referReceiptRid,jdbcType=VARCHAR},
+      </if>
+      <if test="matId != null">
+        mat_id = #{matId,jdbcType=INTEGER},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="ftyId != null">
+        fty_id = #{ftyId,jdbcType=INTEGER},
+      </if>
+      <if test="locationId != null">
+        location_id = #{locationId,jdbcType=INTEGER},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="moveTypeId != null">
+        move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="batch != null">
+        batch = #{batch,jdbcType=BIGINT},
+      </if>
+      <if test="batchOutput != null">
+        batch_output = #{batchOutput,jdbcType=BIGINT},
+      </if>
+      <if test="reserveId != null">
+        reserve_id = #{reserveId,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveRid != null">
+        reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderCode != null">
+        purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseOrderRid != null">
+        purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+      </if>
+      <if test="writeOff != null">
+        write_off = #{writeOff,jdbcType=TINYINT},
+      </if>
+      <if test="saleQty != null">
+        sale_qty = #{saleQty,jdbcType=DECIMAL},
+      </if>
+      <if test="sendQty != null">
+        send_qty = #{sendQty,jdbcType=DECIMAL},
+      </if>
+      <if test="matDocId != null">
+        mat_doc_id = #{matDocId,jdbcType=INTEGER},
+      </if>
+      <if test="matDocRid != null">
+        mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where 1=1
+    
+     <if test="returnId != null">
+        and return_id = #{returnId,jdbcType=INTEGER} 
+      </if>
+      <if test="returnRid != null">
+        and return_rid = #{returnRid,jdbcType=INTEGER} 
+      </if>
+    
+    
+  </update>
+  
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.biz.BizStockOutputReturnItem">
+    update biz_stock_output_return_item
+    set return_id = #{returnId,jdbcType=INTEGER},
+      return_rid = #{returnRid,jdbcType=INTEGER},
+      stock_output_id = #{stockOutputId,jdbcType=INTEGER},
+      stock_output_rid = #{stockOutputRid,jdbcType=INTEGER},
+      refer_receipt_code = #{referReceiptCode,jdbcType=VARCHAR},
+      refer_receipt_rid = #{referReceiptRid,jdbcType=VARCHAR},
+      mat_id = #{matId,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      fty_id = #{ftyId,jdbcType=INTEGER},
+      location_id = #{locationId,jdbcType=INTEGER},
+      qty = #{qty,jdbcType=DECIMAL},
+      move_type_id = #{moveTypeId,jdbcType=INTEGER},
+      batch = #{batch,jdbcType=BIGINT},
+      batch_output = #{batchOutput,jdbcType=BIGINT},
+      reserve_id = #{reserveId,jdbcType=VARCHAR},
+      reserve_rid = #{reserveRid,jdbcType=VARCHAR},
+      purchase_order_code = #{purchaseOrderCode,jdbcType=VARCHAR},
+      purchase_order_rid = #{purchaseOrderRid,jdbcType=VARCHAR},
+      write_off = #{writeOff,jdbcType=TINYINT},
+      sale_qty = #{saleQty,jdbcType=DECIMAL},
+      send_qty = #{sendQty,jdbcType=DECIMAL},
+      mat_doc_id = #{matDocId,jdbcType=INTEGER},
+      mat_doc_rid = #{matDocRid,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectSaleOrReserveReturnItem" parameterType="java.lang.Integer" resultType="com.inossem.wms.model.vo.BizStockOutputReturnItemVo">
+  select
+	im.return_id returnId, im.return_rid returnRid,  
+    im.refer_receipt_code referReceiptCode, im.refer_receipt_rid referReceiptRid,  -- 销售单号 预留单号
+    im.mat_id matId, mat.mat_code matCode,mat.mat_name matName,  -- 物料
+    im.unit_id unitId, ut.name_en unitEn,ut.name_zh unitName, ut.decimal_place decimalPlace,-- 单位
+    im.fty_id ftyId, fty.fty_code ftyCode,fty.fty_name ftyName, -- 工厂
+    im.location_id locationId, tn.location_code locationCode,tn.location_name locationName, -- 库存地点
+    im.batch, -- 批次号
+    im.qty,  -- 本次退货数量
+    im.sale_qty orderQty,  -- 订单数量
+    im.sale_qty demandQty, -- 需求数量
+    im.send_qty haveReturnQty, -- 已退货数量
+    
+    im.reserve_cost_obj_code  reserveCostObjCode, im.reserve_cost_obj_name  reserveCostObjName,
+    
+    im.move_type_id moveTypeId, -- 移动类型
+    tp.move_type_code moveTypeCode,
+    tp.move_type_name moveTypeName
+    from biz_stock_output_return_item im 
+    inner join dic_factory fty on im.fty_id = fty.fty_id
+    inner join dic_stock_location tn on im.location_id = tn.location_id
+    inner join dic_material mat on im.mat_id = mat.mat_id
+    left join dic_unit ut on im.unit_id = ut.unit_id
+    left join dic_move_type tp on im.move_type_id = tp.move_type_id   
+    where im.return_id = #{returnId,jdbcType=INTEGER}
+  
+  </select>
+  
+  <select id="selectSaleReturnItems" parameterType="java.lang.Integer" resultType="com.inossem.wms.model.vo.BizStockOutputReturnItemVo">
+    select
+	im.return_id returnId, im.return_rid returnRid,  
+    im.refer_receipt_code referReceiptCode, im.refer_receipt_rid referReceiptRid,  -- 销售单号 预留单号
+    im.mat_id matId, mat.mat_code matCode,mat.mat_name matName,  -- 物料
+    im.unit_id unitId, ut.name_en unitEn,ut.name_zh unitName, ut.decimal_place decimalPlace,-- 单位
+    im.fty_id ftyId, fty.fty_code ftyCode,fty.fty_name ftyName, -- 工厂
+    im.location_id locationId, tn.location_code locationCode,tn.location_name locationName, -- 库存地点
+    im.batch, -- 批次号
+    im.erp_batch erpBatch, -- 批次号
+    im.qty,  -- 本次退货数量
+    im.sale_qty orderQty,  -- 订单数量
+    im.sale_qty demandQty, -- 需求数量
+    im.send_qty haveReturnQty, -- 已退货数量
+    im.remark ,
+    im.reserve_cost_obj_code  reserveCostObjCode, im.reserve_cost_obj_name  reserveCostObjName,
+    
+    im.move_type_id moveTypeId, -- 移动类型
+    tp.move_type_code moveTypeCode,
+    tp.move_type_name moveTypeName,
+   	im.mat_doc_code matDocCode,
+    im.mes_doc_code mesDocCode,
+    im.mat_write_off_code matWriteOffCode,
+    im.mes_write_off_code mesWriteOffCode 
+    from biz_stock_output_return_item im 
+    inner join dic_factory fty on im.fty_id = fty.fty_id
+    inner join dic_stock_location tn on im.location_id = tn.location_id
+    inner join dic_material mat on im.mat_id = mat.mat_id
+    left join dic_unit ut on im.unit_id = ut.unit_id
+    left join dic_move_type tp on im.move_type_id = tp.move_type_id  
+    where im.return_id = #{returnId,jdbcType=INTEGER}
+  
+  </select>
+  
+  
+  
+  <select id="selectItemsByReturnId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from biz_stock_output_return_item
+    where return_id = #{returnId,jdbcType=INTEGER}
+  
+  </select>
+  
+  <select id="selectItemByReturnIdAndReturnRid" parameterType="map" resultMap="BaseResultMap">
+  select 
+    <include refid="Base_Column_List" />
+    from biz_stock_output_return_item
+    where return_id = #{returnId,jdbcType=INTEGER}
+    and return_rid = #{returnRid,jdbcType=INTEGER} 
+  </select>
+  
+  
+  <delete id="deleteItemsByReturnId" parameterType="java.lang.Integer">
+  	delete from biz_stock_output_return_item where return_id = #{returnId,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="selectCountByLocation" resultType="int">
+  	SELECT COUNT(1) FROM ( SELECT DISTINCT location_id FROM biz_stock_output_return_item WHERE return_id=#{returnId}) a
+  </select>
+  
+  <update id="updateMesDocCodeByReturnId" parameterType="map" >
+    UPDATE
+      biz_stock_output_return_item
+    <set>
+      <if test="mat_doc_year != null">
+        mat_doc_year = #{mat_doc_year},
+      </if>
+      <if test="mat_doc_code != null">
+        mat_doc_code = #{mat_doc_code},
+      </if>
+      <if test="mat_write_off_code != null">
+        mat_write_off_code = #{mat_write_off_code},
+      </if>
+      <if test="mes_doc_code != null">
+        mes_doc_code = #{mes_doc_code},
+      </if>
+      <if test="mes_write_off_code != null">
+        mes_write_off_code = #{mes_write_off_code},
+      </if>    
+    </set>
+    WHERE return_id=#{return_id}
+  </update>
+  
+   <update id="updateItemsToDelete" parameterType="java.lang.Integer" >
+    UPDATE
+      biz_stock_output_return_item
+    SET 
+      is_delete = 1 
+    WHERE return_id=#{return_id}
+  </update>
+
+  
+  
+</mapper>

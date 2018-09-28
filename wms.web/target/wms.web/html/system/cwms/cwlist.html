@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scorll">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>仓储管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../../../part/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../css/common.css" rel="stylesheet" />
+    <link href="../../../css/inossem.grid.css" rel="stylesheet" />
+    <link href="../../../css/mod.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.11.0.min.js"></script>
+    <script src="../../../part/layer/layer.js"></script>
+    <script src="../../../js/common.js"></script>
+    <script src="../../../js/jquery-bootstrap-pagination.js"></script>
+    <script src="../../../js/page/system/cwms/cwlist.js"></script>
+    <script src="../../../js/jquery.inossem.grid.js"></script>
+    <style>
+        .form-group{
+            line-height: 30px;
+            margin-top:10px;
+        }
+        .form-group .col-xs-1{
+            text-align: right;
+        }
+        input.form-control[disabled], fieldset[disabled] input.form-control {
+            background-color: #eee;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div c-template="menu"></div>
+    <div class="articlebox">
+        <div class="article">
+            <div class="topstyle1 bottomborder">
+                <a href="javascript:void(0)" class="btn-lay-blue btn_table_edit"  data-title='新增' data-size='600px,450px' data-href='editcw.html'>新增</a>	　
+                <a href="javascript:void(0)" class="btn-lay-default print">打印</a>		　
+            </div>
+            <div class="u-p20">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-1">公司：</div>
+                        <div class="col-xs-2"><select class="form-control bukrs"></select></div>
+                        <div class="col-xs-1">工厂：</div>
+                        <div class="col-xs-2"><select class="form-control werks">
+                        	<option value="">请选择</option>
+                        </select></div>
+                        <div class="col-xs-1">库存地点：</div>
+                        <div class="col-xs-2"><select class="form-control lgort">
+                        	<option value="">请选择</option>
+                        </select></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-1">仓库号：</div>
+                        <div class="col-xs-2"><select type="text" class="form-control lgnum">
+                        	<option value="">请选择</option>
+                        </select>
+                        </div>
+                        <div class="col-xs-1">存储区：</div>
+                        <div class="col-xs-2"><input type="text" class="form-control lgtyp"></div>
+                        <div class="col-xs-1">仓位号：</div>
+                        <div class="col-xs-2"><input type="text" class="form-control lgpla"></div>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-1">仓储类型：</div>
+                        <div class="col-xs-2"><select class="form-control pack_type">
+                        	<option value="">请选择</option>
+                        </select></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 text-center u-p20">
+                <a class="btn-lay-blue btn_search" href="javascript:void(0)">查询</a>
+            </div>
+            <div id="id_div_grid"></div>
+            <div class="text-center" id="J_ListPagination"></div>
+        </div>
+    </div>
+</body>
+</html>

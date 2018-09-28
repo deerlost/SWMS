@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.dic.DicUnitMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.dic.DicUnit">
+    <id column="unit_id" jdbcType="INTEGER" property="unitId" />
+    <result column="name_en" jdbcType="VARCHAR" property="nameEn" />
+    <result column="name_zh" jdbcType="VARCHAR" property="nameZh" />
+    <result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+    <result column="decimal_place" jdbcType="TINYINT" property="decimalPlace" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    unit_id, name_en, name_zh, unit_code, decimal_place
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_unit
+    where unit_id = #{unitId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_unit
+    where unit_id = #{unitId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.dic.DicUnit">
+    insert into dic_unit (unit_id, name_en, name_zh, 
+      unit_code, decimal_place)
+    values (#{unitId,jdbcType=INTEGER}, #{nameEn,jdbcType=VARCHAR}, #{nameZh,jdbcType=VARCHAR}, 
+      #{unitCode,jdbcType=VARCHAR}, #{decimalPlace,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.dic.DicUnit">
+    insert into dic_unit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="nameEn != null">
+        name_en,
+      </if>
+      <if test="nameZh != null">
+        name_zh,
+      </if>
+      <if test="unitCode != null">
+        unit_code,
+      </if>
+      <if test="decimalPlace != null">
+        decimal_place,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="unitId != null">
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="nameEn != null">
+        #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="nameZh != null">
+        #{nameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null">
+        #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="decimalPlace != null">
+        #{decimalPlace,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.inossem.wms.model.dic.DicUnit">
+    update dic_unit
+    <set>
+      <if test="nameEn != null">
+        name_en = #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="nameZh != null">
+        name_zh = #{nameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null">
+        unit_code = #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="decimalPlace != null">
+        decimal_place = #{decimalPlace,jdbcType=TINYINT},
+      </if>
+    </set>
+    where unit_id = #{unitId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.inossem.wms.model.dic.DicUnit">
+    update dic_unit
+    set name_en = #{nameEn,jdbcType=VARCHAR},
+      name_zh = #{nameZh,jdbcType=VARCHAR},
+      unit_code = #{unitCode,jdbcType=VARCHAR},
+      decimal_place = #{decimalPlace,jdbcType=TINYINT}
+    where unit_id = #{unitId,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_unit
+  </select>
+  <select id="selectAllCode" resultType="java.lang.String">
+    select 
+    	unit_code
+    from dic_unit
+  </select>
+  <select id="getByCode" parameterType="java.lang.String" resultMap="BaseResultMap">  
+  select 
+   <include refid="Base_Column_List" />  
+  from dic_unit u 
+  <where>
+   <if test="_parameter!=null and _parameter!=''">
+     u.unit_code=#{unitCode,jdbcType=VARCHAR}
+  </if> 
+  </where>
+  
+
+  </select>
+  
+</mapper>

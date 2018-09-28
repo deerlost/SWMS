@@ -1,0 +1,1275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.biz.IndexMapper">
+  
+ 
+  
+  
+  
+  <select id="countCompletedBills" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	select 
+		COUNT(1) countNum,
+		'0' type	
+	<if test="type305 != null">
+		UNION ALL     --  临期库存预警			
+		SELECT 
+    	COUNT(*) countNum,
+    	'305' type
+	FROM
+	    (
+		SELECT
+			IFNULL(stock.mat_id, '') mat_id,
+			TO_DAYS(
+				DATE_ADD(
+					bm.create_time,
+					INTERVAL ANY_VALUE (m.shelf_life) DAY
+				)
+			) - TO_DAYS(NOW()) warranty_date,
+			IFNULL(
+				ANY_VALUE (m.reminding_day_one),
+				''
+			) reminding_day_one,
+			IFNULL(
+				ANY_VALUE (m.reminding_day_two),
+				''
+			) reminding_day_two
+			
+		FROM
+			stock_position stock
+		INNER JOIN dic_warehouse_area wa ON stock.area_id = wa.area_id
+		AND stock. STATUS = 1
+		INNER JOIN dic_warehouse_position wp ON stock.position_id = wp.position_id
+		INNER JOIN batch_material bm ON stock.batch = bm.batch
+		AND stock.mat_id = bm.mat_id
+		AND stock.fty_id = bm.fty_id
+		INNER JOIN dic_factory fty ON fty.fty_id = stock.fty_id
+		AND (
+			fty.fty_type = 2
+			AND wp.is_default = 0
+			OR fty.fty_type != 2
+		)
+		INNER JOIN dic_material m ON m.mat_id = stock.mat_id
+		INNER JOIN dic_unit u ON u.unit_id = m.unit_id
+		INNER JOIN dic_stock_location location ON stock.location_id = location.location_id
+		INNER JOIN stock_type st ON st.stock_type_id = stock.stock_type_id
+		INNER JOIN dic_package_type pt ON pt.package_type_id = stock.package_type_id
+		WHERE
+			stock.stock_type_id != 4
+		GROUP BY
+			stock.mat_id,
+			stock.location_id,
+			stock.area_id,
+			wp.position_code,
+			stock.stock_type_id,
+			stock.package_type_id,
+			m.unit_id,
+			bm.product_batch,
+			bm.create_time
+		HAVING
+			1 = 1
+		AND warranty_date <![CDATA[<=]]> reminding_day_two
+		AND warranty_date <![CDATA[>]]> reminding_day_one
+		ORDER BY
+			stock.mat_id,
+			stock.location_id,
+			stock.area_id,
+			wp.position_code,
+			stock.stock_type_id,
+			stock.package_type_id,
+			m.unit_id,
+			bm.product_batch,
+			bm.create_time
+	) t
+	</if>
+	<if test="type20101 != null">
+			UNION ALL     --  包装管理
+		SELECT
+			COUNT(1) countNum,
+			'20101' type
+		FROM
+			biz_pkg_operation_head
+		WHERE status= 4 
+		and is_delete =0
+		<if test="timeFr!=null">
+	  	and create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+	<if test="type21001 != null">
+			UNION ALL     --  库存盘点
+		SELECT
+			COUNT(1) countNum,
+			'21001' type
+		FROM
+			biz_stock_take_head
+		WHERE status= 20 
+		and is_delete =0 
+		<if test="timeFr!=null">
+	  	and create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	<if test="type20201 != null">
+			UNION ALL    --  生产入库
+		SELECT
+			COUNT(1) countNum,
+			'20201' type
+		FROM
+	    biz_stock_input_head sh
+	        INNER JOIN
+	    wms_user u ON u.user_id = sh.create_user
+	        LEFT JOIN
+	    dic_corp c ON sh.corp_id = c.corp_id
+	        LEFT JOIN
+	    dic_factory f ON f.fty_id = sh.fty_id
+	        LEFT JOIN
+	    dic_receipt_type dt ON dt.receipt_type = sh.receipt_type
+	        LEFT JOIN
+	    dic_product_line line ON line.product_line_id = sh.product_line_id
+	        AND line.product_line_id IN (SELECT 
+	            product_line_id
+	        FROM
+	            rel_product_user
+	        WHERE
+	            user_id = ${userId})
+		WHERE
+	    sh.is_delete = 0 AND sh.status IN (10)
+	        AND dt.receipt_type = 12
+			
+		<if test="timeFr!=null">
+	  	and sh.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and sh.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	<if test="type20202 != null">
+			UNION ALL    --  转储入库
+		SELECT
+			COUNT(1) countNum,
+			'20202' type
+		FROM
+			biz_stock_input_transport_head t1
+		WHERE
+		 	t1.status = 10
+		AND t1.is_delete = '0'
+		AND t1.receipt_type =41
+		<!-- AND t1.create_user = ${userId}
+		AND t1.stock_transport_id IN (SELECT t.stock_transport_id FROM biz_stock_input_transport_item t where 1=1 and t.is_delete =0 and ${sql} ) -->	
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	<if test="type20203 != null">
+			UNION ALL    --  其它入库
+		SELECT
+			COUNT(1) countNum,
+			'20203' type
+		FROM
+			biz_stock_input_head t1
+		WHERE	
+			t1.receipt_type = 13
+		AND t1.status = 10
+		AND t1.is_delete = '0'
+		<!-- AND t1.create_user = ${userId}
+		AND t1.stock_input_id IN (SELECT t.stock_input_id FROM biz_stock_input_item t where 1=1 and t.is_delete =0 and ${sql} ) -->	
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+		
+	<if test="type20301 != null">
+		UNION ALL    --  销售出库
+		SELECT
+			COUNT(1) countNum,
+			'20301' type
+		FROM
+			biz_stock_output_head oh
+		INNER JOIN biz_stock_output_item oi ON oh.stock_output_id = oi.stock_output_id
+		INNER JOIN dic_factory f ON oi.fty_id = f.fty_id
+		INNER JOIN dic_stock_location l ON oi.location_id = l.location_id
+		INNER JOIN wms_user u ON oh.create_user = u.user_id
+		WHERE
+			oh.is_delete = 0
+		AND oi.is_delete = 0
+		AND oh. STATUS =10
+		AND oh.receipt_type = 22
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+		<if test="timeFr!=null">
+	  	and oh.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and oh.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	<if test="type20302 != null">
+		UNION ALL    --  报废出库
+		SELECT
+			COUNT(1) countNum,
+			'20302' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 23
+		AND t1.status = 10
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+		<if test="timeFr!=null">
+	  	and t1.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t1.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	<if test="type20303 != null">
+			UNION ALL    --  其它出库
+		SELECT
+			COUNT(1) countNum,
+			'20303' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 24
+		AND t1.status = 10
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+		<if test="timeFr!=null">
+	  	and t1.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t1.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	
+	<if test="type20601 != null">
+		UNION ALL    --  虚拟生产入库
+	SELECT
+		COUNT(1) countNum,
+		'20601' type
+	FROM	
+	biz_stock_input_head sh
+	INNER JOIN wms_user u ON u.user_id = sh.create_user
+	LEFT JOIN dic_corp c ON sh.corp_id = c.corp_id
+	LEFT JOIN dic_factory f ON f.fty_id = sh.fty_id
+	LEFT JOIN dic_receipt_type dt ON dt.receipt_type = sh.receipt_type
+	LEFT JOIN dic_product_line line ON line.product_line_id = sh.product_line_id
+	AND line.product_line_id IN (
+		SELECT
+			product_line_id
+		FROM
+			rel_product_user
+		WHERE
+			user_id ='admin'
+	)
+	WHERE
+		sh.is_delete = 0
+	AND sh. STATUS =10
+	AND dt.receipt_type =14	
+	</if>
+	<if test="type20602 != null">
+		UNION ALL    --  虚拟转储入库
+	SELECT
+		COUNT(1) countNum,
+		'20602' type
+	FROM
+		biz_stock_input_transport_head t1
+	WHERE
+	 	t1.status = 10
+	AND t1.receipt_type = 42
+	AND t1.is_delete = '0'
+	<!-- AND t1.create_user = ${userId}
+	AND t1.stock_transport_id IN (SELECT t.stock_transport_id FROM biz_stock_input_transport_item t where 1=1 and t.is_delete =0 and ${sql} ) -->	
+	</if>
+	<if test="type20603 != null">
+		UNION ALL    --  生产直发入库
+	SELECT
+		COUNT(1) countNum,
+		'20603' type
+	FROM
+		biz_stock_input_head t1
+	WHERE	
+		t1.receipt_type = 15
+	AND t1.status = 10
+	AND t1.is_delete = '0'
+	<!-- AND t1.create_user = ${userId}
+	AND t1.stock_input_id IN (SELECT t.stock_input_id FROM biz_stock_input_item t where 1=1 and t.is_delete =0 and ${sql} )	 -->
+	</if>
+
+	<if test="type20604 != null">
+			UNION ALL    --  生产直发出库
+		SELECT
+			COUNT(1) countNum,
+			'20604' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 25
+		AND t1.status = 10
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+		<if test="timeFr!=null">
+	  	and t1.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t1.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	<if test="type20701 != null">
+			UNION ALL    --  临时作业生产入库
+		SELECT
+			COUNT(1) countNum,
+			'20701' type
+		FROM
+			biz_stock_input_head sh
+		INNER JOIN wms_user u ON u.user_id = sh.create_user
+		LEFT JOIN dic_corp c ON sh.corp_id = c.corp_id
+		LEFT JOIN dic_factory f ON f.fty_id = sh.fty_id
+		LEFT JOIN dic_receipt_type dt ON dt.receipt_type = sh.receipt_type
+		LEFT JOIN dic_product_line line ON line.product_line_id = sh.product_line_id
+		AND line.product_line_id IN (
+			SELECT
+				product_line_id
+			FROM
+				rel_product_user
+			WHERE
+				user_id =${userId}
+		)
+		WHERE
+			sh.is_delete = 0
+		AND sh. STATUS =10
+		AND dt.receipt_type =16	
+	</if>
+	<if test="type20702 != null">
+			UNION ALL    --  紧急作业生产转运
+		SELECT
+			COUNT(1) countNum,
+			'20702' type
+		FROM
+			biz_stock_transport_head_cw h
+		INNER JOIN dic_factory f ON h.fty_id = f.fty_id
+		AND h. STATUS =10
+		AND h.receipt_type = 55
+		INNER JOIN dic_stock_location l ON h.location_id = l.location_id
+		INNER JOIN dic_class_type c ON h.class_type_id = c.class_type_id
+		INNER JOIN wms_user u ON h.create_user = u.user_id	
+	</if>
+	
+	<if test="type20703 != null">
+			UNION ALL    --  临时作业转储入库
+		SELECT
+			COUNT(1) countNum,
+			'20703' type	 	
+		FROM
+		biz_stock_input_transport_head bh 
+		WHERE
+		bh.is_delete = 0
+		AND bh. STATUS =10
+		AND bh.receipt_type =43
+	</if>
+	
+	<if test="type20704 != null">
+			UNION ALL    --  紧急作业销售出库
+		SELECT
+			COUNT(1) countNum,
+			'20704' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type in ( 26 , 27 )
+		AND t1.status = 10
+		AND t1.is_delete = '0'
+		AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} )
+		<if test="timeFr!=null">
+	  	and t1.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t1.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+	<if test="type20801 != null">
+			UNION ALL    --  紧急记账生产入库
+		SELECT
+			COUNT(1) countNum,
+			'20801' type
+		FROM
+			biz_stock_input_head sh
+		INNER JOIN wms_user u ON u.user_id = sh.create_user
+		LEFT JOIN dic_product_line line ON line.product_line_id = sh.product_line_id
+		AND line.product_line_id IN (
+			SELECT
+				product_line_id
+			FROM
+				rel_product_user
+			WHERE
+				user_id ='admin'
+		)
+		WHERE
+			sh.is_delete = 0
+		AND sh. STATUS =10
+		AND sh.receipt_type =17		
+	</if>
+	<if test="type20802 != null">
+			UNION ALL    --  紧急记账转储入库
+		SELECT
+			COUNT(1) countNum,
+			'20802' type 
+		FROM
+			biz_stock_input_transport_head t1
+		WHERE
+		 	t1.status = 10
+		AND t1.receipt_type = 44
+		AND t1.is_delete = '0'
+		<!-- AND t1.create_user = ${userId}
+		AND t1.stock_transport_id IN (SELECT t.stock_transport_id FROM biz_stock_input_transport_item t where 1=1 and t.is_delete =0 and ${sql} ) -->	
+	</if>
+	<if test="type20803 != null">
+			UNION ALL    --  紧急记账销售出库
+		SELECT
+			COUNT(1) countNum,
+			'20803' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 28
+		AND t1.status = 10
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+		<if test="timeFr!=null">
+	  	and t1.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t1.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+		
+	<if test="type20401 != null">
+			UNION ALL    --  生产转运
+		SELECT
+			COUNT(1) countNum,
+			'20401' type		
+		FROM
+			biz_stock_transport_head_cw t	
+		WHERE	
+			t.receipt_type = 54
+		AND t.status = 10
+		AND t.is_delete = '0'
+		<!-- AND t.create_user = ${userId}
+		AND ${sql} -->
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+	<if test="type20402 != null">
+			UNION ALL    --  物料转储
+		SELECT
+			COUNT(1) countNum,
+			'20402' type
+		FROM
+			biz_stock_transport_head_cw t	
+		WHERE	
+			t.receipt_type = 53
+		AND t.status = 10
+		AND t.is_delete = '0'
+		<!-- AND t.create_user = ${userId}
+		AND ${sql} -->
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>		
+		
+		
+	<if test="type20501 != null">
+			UNION ALL    --  销售退货
+		SELECT
+			COUNT(1) countNum,
+			'20501' type
+		FROM
+		    biz_stock_output_return_head t1
+		WHERE 
+			t1.receipt_type = 62 
+		AND t1.status= 10 
+		AND t1.is_delete =0 
+		<!-- AND t1.return_id IN (SELECT t.return_id FROM biz_stock_output_return_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+		 <if test="timeFr!=null">
+	  	and t1.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t1.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+		
+	<if test="type20901 != null">
+		UNION ALL    --  上架作业
+		SELECT
+			COUNT(1) countNum,
+			'20901' type
+		FROM
+			biz_stock_task_req_head t1
+		INNER JOIN rel_user_stock_location ul ON t1.location_id = ul.location_id AND ul.user_id = ${userId}
+		WHERE 
+			t1.receipt_type = 31 
+		AND t1.status =10
+		AND t1.is_delete =0 
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+	<if test="type20904 != null">
+		UNION ALL    --  下架作业
+		SELECT
+			COUNT(1) countNum,
+			'20904' type
+		FROM
+			biz_stock_task_req_head t1
+		INNER JOIN rel_user_stock_location ul ON t1.location_id = ul.location_id AND ul.user_id = ${userId}
+		WHERE 
+			t1.receipt_type = 32 
+		AND t1.status =10
+		AND t1.is_delete =0
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>		
+	<if test="type20905 != null">
+		UNION ALL    --  仓库整理
+		SELECT
+			COUNT(1) countNum,
+			'20905' type
+		FROM
+			biz_stock_task_head_cw th
+		INNER JOIN rel_user_stock_location ul ON th.location_id = ul.location_id
+		AND th.create_user = ul.user_id
+		INNER JOIN dic_receipt_type drt ON th.receipt_type = drt.receipt_type
+		AND th.receipt_type IN (38, 36, 37, 39)
+		AND th. STATUS IN (2)
+		AND ul.user_id = ${userId} 
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+	<if test="type20903 != null">
+		UNION ALL    --  配货单管理
+		SELECT
+			COUNT(1) countNum,
+			'20903' type
+		FROM
+			biz_allocate_cargo_head t1
+		WHERE 
+			t1.status =3 
+		AND t1.is_delete =0 
+		AND t1.allocate_cargo_id IN (SELECT t.allocate_cargo_id FROM biz_allocate_cargo_item t where 1=1 and t.is_delete =0 and ${sql} )
+		 <if test="timeFr!=null">
+	  	and t1.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t1.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+	<if test="type20902 != null">
+		UNION ALL    --  组盘上架
+		SELECT
+			COUNT(1) countNum,
+			'20902' type
+		FROM			 
+			biz_stock_task_head_cw th
+		INNER JOIN dic_factory f ON th.fty_id = f.fty_id
+		AND th.is_delete = 0 AND th.status =10
+		INNER JOIN rel_user_stock_location ul ON th.location_id = ul.location_id
+		AND ul.user_id = ${userId} 
+		AND th.receipt_type IN (35)		
+		
+		<if test="timeFr!=null">
+	  	and t.create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and t.create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>	
+	
+	<if test="type314 != null">
+		UNION ALL    -- mes同步记录
+		SELECT
+			COUNT(1) countNum,
+			'314' type 
+		FROM
+			biz_fail_mes 
+			where
+			create_user = ${userId} 
+	</if>	
+		
+
+  </select>
+  
+  
+  <select id="countBills" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select 
+		COUNT(1) countNum,
+		'0' type
+		
+	<if test="type305 != null">
+		UNION ALL     --  临期库存预警
+	SELECT 
+    COUNT(*) countNum,
+    '305' type
+	FROM
+	(
+		SELECT
+			IFNULL(stock.mat_id, '') mat_id,
+			TO_DAYS(
+				DATE_ADD(
+					bm.create_time,
+					INTERVAL ANY_VALUE (m.shelf_life) DAY
+				)
+			) - TO_DAYS(NOW()) warranty_date,
+			IFNULL(
+				ANY_VALUE (m.reminding_day_one),
+				''
+			) reminding_day_one,
+			IFNULL(
+				ANY_VALUE (m.reminding_day_two),
+				''
+			) reminding_day_two		
+		FROM
+			stock_position stock
+		INNER JOIN dic_warehouse_area wa ON stock.area_id = wa.area_id
+		AND stock. STATUS = 1
+		INNER JOIN dic_warehouse_position wp ON stock.position_id = wp.position_id
+		INNER JOIN batch_material bm ON stock.batch = bm.batch
+		AND stock.mat_id = bm.mat_id
+		AND stock.fty_id = bm.fty_id
+		INNER JOIN dic_factory fty ON fty.fty_id = stock.fty_id
+		AND (
+			fty.fty_type = 2
+			AND wp.is_default = 0
+			OR fty.fty_type != 2
+		)
+		INNER JOIN dic_material m ON m.mat_id = stock.mat_id
+		INNER JOIN dic_unit u ON u.unit_id = m.unit_id
+		INNER JOIN dic_stock_location location ON stock.location_id = location.location_id
+		INNER JOIN stock_type st ON st.stock_type_id = stock.stock_type_id
+		INNER JOIN dic_package_type pt ON pt.package_type_id = stock.package_type_id
+		WHERE
+			stock.stock_type_id != 4
+		GROUP BY
+			stock.mat_id,
+			stock.location_id,
+			stock.area_id,
+			wp.position_code,
+			stock.stock_type_id,
+			stock.package_type_id,
+			m.unit_id,
+			bm.product_batch,
+			bm.create_time
+		HAVING
+			1 = 1
+		AND warranty_date <![CDATA[<=]]>  reminding_day_two
+		ORDER BY
+			stock.mat_id,
+			stock.location_id,
+			stock.area_id,
+			wp.position_code,
+			stock.stock_type_id,
+			stock.package_type_id,
+			m.unit_id,
+			bm.product_batch,
+			bm.create_time
+	) t
+		
+	</if>
+	<if test="type20101 != null">
+			UNION ALL     --  包装管理
+		SELECT
+			COUNT(1) countNum,
+			'20101' type
+		FROM
+			biz_pkg_operation_head
+		WHERE is_delete =0
+	</if>	
+
+	<if test="type21001 != null">
+			UNION ALL     --  库存盘点
+		SELECT
+			COUNT(1) countNum,
+			'21001' type
+		FROM
+			biz_stock_take_head
+		WHERE is_delete =0
+		<if test="timeFr!=null">
+	  	and create_time <![CDATA[>=]]> #{timeFr,jdbcType=TIMESTAMP} 
+	  	</if>
+	  	<if test="timeTo!=null">
+		and create_time <![CDATA[<=]]> #{timeTo,jdbcType=TIMESTAMP} 
+	  	</if>
+	
+	</if>
+		
+	<if test="type20201 != null">
+			UNION ALL    --  生产入库
+		SELECT
+			COUNT(1) countNum,
+			'20201' type		
+			FROM
+	    biz_stock_input_head sh
+	        INNER JOIN
+	    wms_user u ON u.user_id = sh.create_user
+	        LEFT JOIN
+	    dic_corp c ON sh.corp_id = c.corp_id
+	        LEFT JOIN
+	    dic_factory f ON f.fty_id = sh.fty_id
+	        LEFT JOIN
+	    dic_receipt_type dt ON dt.receipt_type = sh.receipt_type
+	        LEFT JOIN
+	    dic_product_line line ON line.product_line_id = sh.product_line_id
+	        AND line.product_line_id IN (SELECT 
+	            product_line_id
+	        FROM
+	            rel_product_user
+	        WHERE
+	            user_id = ${userId})
+		WHERE
+	    sh.is_delete = 0 AND sh.status IN (0,10)
+	        AND dt.receipt_type = 12
+		
+	</if>	
+
+	<if test="type20202 != null">
+			UNION ALL    --  转储入库
+		SELECT
+			COUNT(1) countNum,
+			'20202' type
+		FROM	 	
+			biz_stock_input_transport_head t1
+		WHERE
+		 	t1.status != 20
+		AND t1.is_delete = '0'
+		AND t1.receipt_type =41
+		<!-- AND t1.create_user = ${userId}
+		AND t1.stock_transport_id IN (SELECT t.stock_transport_id FROM biz_stock_input_transport_item t where 1=1 and t.is_delete =0 and ${sql} )	 	 -->
+		 		 	
+	</if>	
+	<if test="type20203 != null">
+			UNION ALL    --  其它入库
+		SELECT
+			COUNT(1) countNum,
+			'20203' type	
+		FROM
+			biz_stock_input_head t1
+		WHERE	
+			t1.receipt_type = 13
+		AND t1.status != 20
+		AND t1.is_delete = '0'
+		<!-- AND t1.create_user = ${userId}
+		AND t1.stock_input_id IN (SELECT t.stock_input_id FROM biz_stock_input_item t where 1=1 and t.is_delete =0 and ${sql} )	 -->
+	</if>		
+	
+	<if test="type20301 != null">
+		UNION ALL    --  销售出库
+		SELECT
+			COUNT(1) countNum,
+			'20301' type
+		FROM		
+			biz_stock_output_head oh
+		INNER JOIN biz_stock_output_item oi ON oh.stock_output_id = oi.stock_output_id
+		INNER JOIN dic_factory f ON oi.fty_id = f.fty_id
+		INNER JOIN dic_stock_location l ON oi.location_id = l.location_id
+		INNER JOIN wms_user u ON oh.create_user = u.user_id
+		WHERE
+			oh.is_delete = 0
+		AND oi.is_delete = 0
+		AND oh. STATUS !=20
+		AND oh.receipt_type = 22
+		
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+	</if>
+	<if test="type20302 != null">
+		UNION ALL    --  报废出库
+		SELECT
+			COUNT(1) countNum,
+			'20302' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 23
+		AND t1.status != 20
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+	</if>
+	<if test="type20303 != null">
+			UNION ALL    --  其它出库
+		SELECT
+			COUNT(1) countNum,
+			'20303' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 24
+		AND t1.status != 20
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+	</if>
+	
+	
+	<if test="type20601 != null">
+		UNION ALL    --  虚拟生产入库
+	SELECT
+		COUNT(1) countNum,
+		'20601' type
+	FROM	
+	biz_stock_input_head sh
+	INNER JOIN wms_user u ON u.user_id = sh.create_user
+	LEFT JOIN dic_corp c ON sh.corp_id = c.corp_id
+	LEFT JOIN dic_factory f ON f.fty_id = sh.fty_id
+	LEFT JOIN dic_receipt_type dt ON dt.receipt_type = sh.receipt_type
+	LEFT JOIN dic_product_line line ON line.product_line_id = sh.product_line_id
+	AND line.product_line_id IN (
+		SELECT
+			product_line_id
+		FROM
+			rel_product_user
+		WHERE
+			user_id ='admin'
+	)
+	WHERE
+		sh.is_delete = 0
+	AND sh. STATUS !=20
+	AND dt.receipt_type =14
+	</if>
+	<if test="type20602 != null">
+		UNION ALL    --  虚拟转储入库
+	SELECT
+		COUNT(1) countNum,
+		'20602' type
+	FROM
+		biz_stock_input_transport_head t1
+	WHERE
+	 	t1.status != 20
+	AND t1.receipt_type = 42
+	AND t1.is_delete = '0'
+	<!-- AND t1.create_user = ${userId}
+	AND t1.stock_transport_id IN (SELECT t.stock_transport_id FROM biz_stock_input_transport_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+	</if>
+	<if test="type20603 != null">
+		UNION ALL    --  生产直发入库
+	SELECT
+		COUNT(1) countNum,
+		'20603' type
+	FROM
+		biz_stock_input_head t1
+	WHERE	
+		t1.receipt_type = 15
+	AND t1.status != 20
+	AND t1.is_delete = '0'
+	<!-- AND t1.create_user = ${userId}
+	AND t1.stock_input_id IN (SELECT t.stock_input_id FROM biz_stock_input_item t where 1=1 and t.is_delete =0 and ${sql} )	 -->
+	</if>
+	
+	<if test="type20604 != null">
+			UNION ALL    --  生产直发出库
+		SELECT
+			COUNT(1) countNum,
+			'20604' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 25
+		AND t1.status != 20
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+	</if>
+	
+	<if test="type20701 != null">
+			UNION ALL    --  紧急作业生产入库
+		SELECT
+			COUNT(1) countNum,
+			'20701' type
+		FROM
+			biz_stock_input_head sh
+		INNER JOIN wms_user u ON u.user_id = sh.create_user
+		LEFT JOIN dic_corp c ON sh.corp_id = c.corp_id
+		LEFT JOIN dic_factory f ON f.fty_id = sh.fty_id
+		LEFT JOIN dic_receipt_type dt ON dt.receipt_type = sh.receipt_type
+		LEFT JOIN dic_product_line line ON line.product_line_id = sh.product_line_id
+		AND line.product_line_id IN (
+			SELECT
+				product_line_id
+			FROM
+				rel_product_user
+			WHERE
+				user_id =${userId}
+		)
+		WHERE
+			sh.is_delete = 0
+		AND sh. STATUS !=20
+		AND dt.receipt_type =16	
+	</if>
+	<if test="type20702 != null">
+			UNION ALL    --  临时作业生产转运
+		SELECT
+			COUNT(1) countNum,
+			'20702' type
+		FROM
+			biz_stock_transport_head_cw h
+		INNER JOIN dic_factory f ON h.fty_id = f.fty_id
+		AND h. STATUS !=20
+		AND h.receipt_type = 55
+		INNER JOIN dic_stock_location l ON h.location_id = l.location_id
+		INNER JOIN dic_class_type c ON h.class_type_id = c.class_type_id
+		INNER JOIN wms_user u ON h.create_user = u.user_id
+	</if>
+	
+	<if test="type20703 != null">
+			UNION ALL    --  临时作业转储入库
+		SELECT
+			COUNT(1) countNum,
+			'20703' type
+		FROM
+			biz_stock_input_transport_head bh 
+		WHERE
+		bh.is_delete = 0
+		AND bh. STATUS !=20
+		AND bh.receipt_type =43
+	</if>
+	
+	<if test="type20704 != null">
+			UNION ALL    --  紧急作业销售出库
+		SELECT
+			COUNT(1) countNum,
+			'20704' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type in ( 26 , 27 )
+		AND t1.status != 20
+		AND t1.is_delete = '0'
+		AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} )
+	</if>	
+	<if test="type20801 != null">
+			UNION ALL    --  紧急记账生产入库
+		SELECT
+			COUNT(1) countNum,
+			'20801' type 
+		FROM
+			biz_stock_input_head sh
+		INNER JOIN wms_user u ON u.user_id = sh.create_user
+		LEFT JOIN dic_product_line line ON line.product_line_id = sh.product_line_id
+		AND line.product_line_id IN (
+			SELECT
+				product_line_id
+			FROM
+				rel_product_user
+			WHERE
+				user_id ='admin'
+		)
+		WHERE
+			sh.is_delete = 0
+		AND sh. STATUS !=20
+		AND sh.receipt_type =17		
+	</if>
+	<if test="type20802 != null">
+			UNION ALL    --  紧急记账转储入库
+		SELECT
+			COUNT(1) countNum,
+			'20802' type
+		FROM
+			biz_stock_input_transport_head t1
+		WHERE
+		 	t1.status != 20
+		AND t1.receipt_type = 44
+		AND t1.is_delete = '0'
+		<!-- AND t1.create_user = ${userId}
+		AND t1.stock_transport_id IN (SELECT t.stock_transport_id FROM biz_stock_input_transport_item t where 1=1 and t.is_delete =0 and ${sql} )		 -->
+	</if>
+	<if test="type20803 != null">
+			UNION ALL    --  紧急记账销售出库
+		SELECT
+			COUNT(1) countNum,
+			'20803' type
+		FROM
+			biz_stock_output_head t1
+		WHERE
+			t1.receipt_type = 28
+		AND t1.status != 20
+		AND t1.is_delete = '0'
+		<!-- AND t1.stock_output_id IN (SELECT t.stock_output_id FROM biz_stock_output_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+	</if>	
+	
+	<if test="type20401 != null">
+			UNION ALL    --  生产转运
+		SELECT
+			COUNT(1) countNum,
+			'20401' type	
+		FROM
+			biz_stock_transport_head_cw t	
+		WHERE	
+			t.receipt_type = 54
+		AND t.status != 20
+		AND t.is_delete = '0'
+		<!-- AND t.create_user = ${userId}
+		AND ${sql} -->
+	</if>	
+	<if test="type20402 != null">
+			UNION ALL    --  物料转储
+		SELECT
+			COUNT(1) countNum,
+			'20402' type
+		FROM
+			biz_stock_transport_head_cw t	
+		WHERE	
+			t.receipt_type = 53
+		AND t.status != 20
+		AND t.is_delete = '0'
+		<!-- AND t.create_user = ${userId}
+		AND ${sql} -->
+	</if>	
+	
+	<if test="type20501 != null">
+			UNION ALL    --  销售退货
+		SELECT
+			COUNT(1) countNum,
+			'20501' type
+		FROM
+		    biz_stock_output_return_head t1
+		WHERE 
+			t1.receipt_type = 62 
+		AND t1.status !=20 
+		AND t1.is_delete =0 
+		<!-- AND t1.return_id IN (SELECT t.return_id FROM biz_stock_output_return_item t where 1=1 and t.is_delete =0 and ${sql} ) -->
+	</if>	
+	
+	<if test="type20901 != null">
+		UNION ALL    --  上架作业
+		SELECT
+			COUNT(1) countNum,
+			'20901' type 		
+		FROM
+			biz_stock_task_req_head t1
+		INNER JOIN rel_user_stock_location ul ON t1.location_id = ul.location_id AND ul.user_id = ${userId}
+		WHERE 
+			t1.receipt_type = 31 
+		AND t1.status in (0,10)
+		AND t1.is_delete =0 
+		
+
+	</if>	
+	<if test="type20904 != null">
+		UNION ALL    --  下架作业
+		SELECT
+			COUNT(1) countNum,
+			'20904' type
+		FROM
+			biz_stock_task_req_head t1
+		INNER JOIN rel_user_stock_location ul ON t1.location_id = ul.location_id AND ul.user_id = ${userId}
+		WHERE 
+			t1.receipt_type = 32 
+		AND t1.status in (0,10)
+		AND t1.is_delete =0 
+	</if>	
+		
+	<if test="type20905 != null">
+		UNION ALL    --  仓库整理
+		SELECT
+			COUNT(1) countNum,
+			'20905' type
+		FROM
+			biz_stock_task_head_cw th
+		INNER JOIN rel_user_stock_location ul ON th.location_id = ul.location_id
+		AND th.create_user = ul.user_id
+		INNER JOIN dic_receipt_type drt ON th.receipt_type = drt.receipt_type
+		AND th.receipt_type IN (38, 36, 37, 39)
+		AND th. STATUS IN (1, 2)
+		AND ul.user_id = ${userId}
+	</if>	
+	<if test="type20903 != null">
+		UNION ALL    --  配货单管理
+		SELECT
+			COUNT(1) countNum,
+			'20903' type
+		FROM
+			biz_allocate_cargo_head t1
+		WHERE t1.is_delete =0 
+		 AND t1.allocate_cargo_id IN (SELECT t.allocate_cargo_id FROM biz_allocate_cargo_item t where 1=1 and t.is_delete =0 and ${sql} )
+	</if>
+	<if test="type20902 != null">
+		UNION ALL    --  组盘上架
+		SELECT
+			COUNT(1) countNum,
+			'20902' type 
+		FROM
+			biz_stock_task_head_cw th
+		INNER JOIN dic_factory f ON th.fty_id = f.fty_id
+		AND th.is_delete = 0
+		INNER JOIN rel_user_stock_location ul ON th.location_id = ul.location_id
+		AND ul.user_id = ${userId} 
+		AND th.receipt_type IN (35) 
+	</if>		
+	<if test="type314 != null">
+		UNION ALL    -- mes同步记录
+		SELECT
+			COUNT(1) countNum,
+			'314' type 
+		FROM
+			biz_fail_mes 
+			where
+			create_user = ${userId} 
+	</if>		
+  </select>
+  
+  
+  <select id="selectCurrentUserResources" parameterType="list" resultType="com.inossem.wms.model.auth.Resources">
+  	SELECT
+  		distinct 
+		r.resources_id resourcesId,
+		r.resources_name resourcesName,
+		r.resources_desc resourcesDesc,
+		r.resources_path resourcesPath,
+		r.resources_url resourcesUrl,
+		r.portable_index portableIndex,
+		r.parent_id parentId,
+		r.display_index displayIndex,
+		r.enabled
+	FROM
+		wms_resources r
+	inner join wms_resources_role m ON r.resources_id = m.resources_id and m.role_id in
+	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+    </foreach>
+    
+	WHERE 
+		r.enabled = 1 AND 
+		r.parent_id IN (
+			SELECT
+				r1.resources_id
+			FROM
+				wms_resources r1
+			WHERE
+				r1.parent_id = 2
+			AND r1.enabled = 1
+		)
+   </select>
+   
+   
+   <select id="selectCurrentUserResourcesChecked" parameterType="java.util.HashMap" resultType="com.inossem.wms.model.auth.Resources">
+  	SELECT
+  		distinct 
+		r.resources_id resourcesId,
+		r.resources_name resourcesName,
+		r.resources_desc resourcesDesc,
+		r.resources_path resourcesPath,
+		r.resources_url resourcesUrl,
+		r.portable_index portableIndex,
+		r.parent_id parentId,
+		r.display_index displayIndex,
+		r.enabled,
+		case 
+			when sr.resources_id is null then 0
+			else 1 end isChecked
+	FROM
+		wms_resources r
+	inner join wms_resources_role m ON r.resources_id = m.resources_id and m.role_id in
+	
+	<foreach collection="roles" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+    </foreach>
+    LEFT JOIN rel_user_resources sr on r.resources_id = sr.resources_id AND sr.user_id = #{userId}
+	<if test="todolist != null">
+		and sr.type = 1
+	</if>
+	<if test="shortcut != null">
+		and sr.type = 2
+	</if>
+	WHERE 
+		r.enabled = 1 
+		<if test="shortcut != null">
+				and r.shortcut = #{shortcut}
+				
+		</if>
+		<if test="todolist != null">
+				and r.todolist = #{todolist}	
+		</if>
+		<if test="checked != null">
+				and sr.resources_id is not null
+		</if>
+   </select>
+   
+   
+   <select id="selectResourceById" parameterType="java.lang.Integer" resultType="com.inossem.wms.model.auth.Resources">
+  	SELECT
+  		distinct 
+		r.resources_id resourcesId,
+		r.resources_name resourcesName,
+		r.resources_desc resourcesDesc,
+		r.resources_path resourcesPath,
+		r.resources_url resourcesUrl,
+		r.portable_index portableIndex,
+		r.parent_id parentId,
+		r.display_index displayIndex,
+		r.enabled 
+		
+	FROM
+		wms_resources r
+	
+	WHERE 
+		r.resources_id = #{resourcesId}
+   </select>
+   
+   <insert id="insertCheckedResources" parameterType="java.util.ArrayList">
+   		<if test="list != null and list.size()>0 ">
+			 insert into rel_user_resources (user_id, type, resources_id)
+    			values 
+    			<foreach collection="list" item="item" index="index" separator=",">
+    				(#{item.userId,jdbcType=VARCHAR}, #{item.type,jdbcType=TINYINT}, #{item.resourcesId,jdbcType=VARCHAR})
+    			</foreach>	
+		</if> 
+   </insert>
+   
+   <delete id="deleteCheckedResources" parameterType="java.util.HashMap">
+    delete from rel_user_resources
+    where user_id = #{userId,jdbcType=VARCHAR}
+    		and type = #{type,jdbcType=TINYINT}
+  </delete>
+   
+</mapper>

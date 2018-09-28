@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inossem.wms.dao.rel.RelPackageScanCountMapper">
+  <resultMap id="BaseResultMap" type="com.inossem.wms.model.rel.RelPackageScanCountKey">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="package_id" jdbcType="INTEGER" property="packageId" />
+    <id column="count" jdbcType="INTEGER" property="count" />
+    <result column="query_time" jdbcType="VARCHAR" property="queryTime" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.inossem.wms.model.rel.RelPackageScanCountKey">
+    delete from rel_package_scan_count
+    where id = #{id,jdbcType=INTEGER}
+      and package_id = #{packageId,jdbcType=INTEGER}
+      and count = #{count,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.inossem.wms.model.rel.RelPackageScanCountKey" keyProperty="id" useGeneratedKeys="true">
+    insert into rel_package_scan_count ( package_id, count,query_time,create_time)
+    values ( #{packageId,jdbcType=INTEGER}, #{count,jdbcType=INTEGER} ,now(),now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.inossem.wms.model.rel.RelPackageScanCountKey">
+    insert into rel_package_scan_count
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	query_time,create_time,
+      <if test="id != null">
+        id,
+      </if>
+      <if test="packageId != null">
+        package_id,
+      </if>
+      <if test="count != null">
+        count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    	now(),now(),
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="packageId != null">
+        #{packageId,jdbcType=INTEGER},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectByPkgId" resultMap="BaseResultMap">
+  	select  
+  			id,
+  			package_id,
+  			count,
+  			date_format(create_time,'%Y-%m-%d') as create_time,
+  			date_format(query_time,'%Y-%m-%d') as query_time
+  		from rel_package_scan_count where package_id=#{packageId}
+  </select>
+  <update id="update" parameterType="com.inossem.wms.model.rel.RelPackageScanCountKey">
+  	update rel_package_scan_count
+  		set 
+	  	count=count+1,
+	  	query_time=now()
+  	 where package_id=#{packageId}
+  </update>
+</mapper>
